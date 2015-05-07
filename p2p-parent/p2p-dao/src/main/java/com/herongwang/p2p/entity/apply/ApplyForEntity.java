@@ -38,12 +38,12 @@ public class ApplyForEntity extends Pagable implements Serializable {
     @Column(name = "MEMBER_ID")
     private String memberId;
     /**
-     * 会员id
+     * 金额
      */
     @Column(name = "MONEY")
     private Double MONEY;
     /**
-     * 会员id
+     * 申请时间
      */
     @Column(name = "FOR_TIME")
     private Date forTime;
