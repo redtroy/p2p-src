@@ -3,6 +3,7 @@ package com.herongwang.p2p.dao.apply;
 import java.util.List;
 
 import com.herongwang.p2p.entity.apply.ApplyForEntity;
+import com.herongwang.p2p.model.apply.ApplyForModel;
 import com.sxj.mybatis.orm.annotations.Delete;
 import com.sxj.mybatis.orm.annotations.Get;
 import com.sxj.mybatis.orm.annotations.Insert;
@@ -38,12 +39,12 @@ public interface IApplyForDao {
 	 * @param id
 	 */
 	@Get
-	public void applyForEntity(String id);
+	public ApplyForEntity getApplyFor(String id);
 	/**
 	 * 融资申请高级查询
 	 * @param query
 	 * @return
 	 */
-	public List<ApplyForEntity> query(QueryCondition<ApplyForEntity> query);
+	public List<ApplyForModel> query(QueryCondition<ApplyForModel> query);
 	
 }
