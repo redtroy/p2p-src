@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop.xsd"
+	default-lazy-init="false">
+	
+	<bean id="p2pManageRealm"
+		class="com.herongwang.p2p.manage.auth.P2pManageShiroRealm">
+		<property name="authorizationCacheName" value="${manage.authorization.cache.name}"></property>
+		<property name="authenticationCacheName" value="${manage.authentication.cache.name}"></property>
+	</bean>
+	<bean id="authenticationFilter"
+		class="com.herongwang.p2p.manage.auth.P2pManageAuthenticationFilter" />
+
+	<!-- 权限管理器 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<!-- 数据库认证的实现 -->
+		<property name="realm" ref="p2pManageRealm" />
+		<!-- session 管理器 -->
+		<property name="sessionManager" ref="sessionManager" />
+		<!-- 缓存管理器 -->
+		<property name="cacheManager" ref="shiroCacheManager"></property>
+		<property name="rememberMeManager.cookie.name" value="rememberMe" />
+		<property name="rememberMeManager.cookie.path" value="/" />
+		<property name="rememberMeManager.cookie.maxAge" value="1209600" />
+	</bean>
+	
+	<!-- session管理器 -->
+	<bean id="sessionManager"
+		class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+		<!-- 超时时间 24*60*60*1000(30min) -->
+		<property name="globalSessionTimeout" value="86400000" />
+		<!-- session存储的实现 -->
+		<property name="sessionDAO" ref="shiroSessionDao" />
+		<!-- sessionIdCookie的实现,用于重写覆盖容器默认的JSESSIONID -->
+		<property name="sessionIdCookie" ref="sharesession" />
+		<!-- 定时检查失效的session -->
+		<property name="sessionValidationSchedulerEnabled" value="true" />
+		<!-- session 监听 -->
+		<property name="sessionListeners">
+			<list>
+				<ref bean="sessionListener" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="sessionListener"
+		class="com.herongwang.p2p.manage.shiro.ShiroSessionListener">
+		<property name="securityManager" ref="securityManager"></property>
+	</bean>
+
+	<bean id="shiroCacheManager"
+		class="com.herongwang.p2p.manage.login.SupervisorShiroRedisCacheManager">
+		<property name="level" value="REDIS"></property>
+	</bean>
+
+	<!-- sessionIdCookie的实现,用于重写覆盖容器默认的JSESSIONID -->
+	<bean id="sharesession" class="org.apache.shiro.web.servlet.SimpleCookie">
+		<!-- cookie的name,对应的默认是 JSESSIONID -->
+		<constructor-arg name="name" value="SHAREJSESSIONID_WEBSITE" />
+		<!-- jsessionId的path为 / 用于多个系统共享jsessionId -->
+		<property name="path" value="/" />
+		<property name="domain" value="menchuang.org.cn"></property>
+	</bean>
+	<!-- session存储的实现 -->
+	<bean id="shiroSessionDao"
+		class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
+		<property name="activeSessionsCacheName" value="${manage.session.cache.name}"></property>
+	</bean>
+
+	<!-- 单机session -->
+	<!-- <bean id="shiroCacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager" 
+		/> -->
+
+	<!-- session 集群 <bean id="shiroCacheManager" class="org.springrain.frame.shiro.ShiroRedisCacheManager"> 
+		<property name="cached" ref="redisCached" /> </bean> -->
+
+	<!--<bean id="shiroCacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager"> 
+		<property name="cacheManager" ref="cacheManager" /> </bean> -->
+
+
+	<!-- shiro的主过滤器,beanId 和web.xml中配置的filter name需要保持一致 -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<!-- 安全管理器 -->
+		<property name="securityManager" ref="securityManager" />
+		<!-- 默认的登陆访问url -->
+		<property name="loginUrl" value="/to_login.htm" />
+		<!-- 登陆成功后跳转的url -->
+		<property name="successUrl" value="/index.htm" />
+		<!-- 没有权限跳转的url -->
+		<property name="unauthorizedUrl" value="/index.htm" />
+		<!-- 访问地址的过滤规则,从上至下的优先级,如果有匹配的规则,就会返回,不会再进行匹配 -->
+		<property name="filterChainDefinitions">
+			<value>
+				
+			</value>
+		</property>
+		<!-- 声明自定义的过滤器 -->
+		<property name="filters">
+			<map>
+				<entry key="frameperms" value-ref="authenticationFilter"></entry>
+			</map>
+		</property>
+	</bean>
+	<!-- 起效权限注解,这个很少在web项目中用到,一般是控制url的访问,不是在controller中声明权限注解 -->
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+</beans>
