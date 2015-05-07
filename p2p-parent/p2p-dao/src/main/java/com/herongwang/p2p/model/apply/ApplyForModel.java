@@ -28,15 +28,15 @@ public class ApplyForModel extends Pagable implements Serializable {
      */
     private String memberId;
     /**
-     * 会员id
+     * 申请金额
      */
     private Double MONEY;
     /**
-     * 会员id
+     * 申请时间
      */
     private Date forTime;
     /**
-     * 会员id
+     * 处理结果
      * 0：未处理；1：未通过；2：通过。
      */
     private Integer status;
