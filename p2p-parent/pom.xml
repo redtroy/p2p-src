@@ -41,6 +41,12 @@
 			</dependency>
 			<dependency>
 				<groupId>com.sxj</groupId>
+				<artifactId>spring-test</artifactId>
+				<version>${com.sxj.spring}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.sxj</groupId>
 				<artifactId>spring-extension</artifactId>
 				<version>${com.sxj.spring}</version>
 			</dependency>
