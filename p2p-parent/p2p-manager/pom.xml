@@ -22,11 +22,6 @@
     	<artifactId>javax.servlet-api</artifactId>
     </dependency>
     <dependency>
-    	<groupId>com.herongwang</groupId>
-    	<artifactId>p2p-service</artifactId>
-    	<version>${project.version}</version>
-    </dependency>
-    <dependency>
 			<groupId>org.apache.shiro</groupId>
 			<artifactId>shiro-all</artifactId>
 			<version>1.2.3</version>
@@ -208,6 +203,11 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.herongwang</groupId>
+			<artifactId>p2p-service</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
   </dependencies>
   <build>
