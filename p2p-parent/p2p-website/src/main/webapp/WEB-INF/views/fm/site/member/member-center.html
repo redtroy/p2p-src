@@ -39,31 +39,31 @@
         <table border="0" cellpadding="0" cellspacing="0" class="table tabList tableMember mb20">
     <tbody><tr>
       <th>会员ID</th>
-      <td>M000001</td>
+      <td>${member.memberCode}</td>
     </tr>
     <tr>
       <th>会员姓名</th>
-      <td>陈绍伟</td>
+      <td>${member.memberName}</td>
     </tr>
     <tr>
       <th>常用邮箱</th>
-      <td>20961427@qq.com</td>
+      <td>${member.email}</td>
     </tr>
     <tr>
       <th>关联银行卡</th>
-      <td><input type="text" class="input input-w270h30" value="6222 6840 2100 1799 690" /></td>
+      <td><input type="text" class="input input-w270h30" value="${member.bankCode}" /></td>
     </tr>
     <tr>
       <th>银行卡姓名</th>
-      <td><input type="text" name="textfield9" id="textfield9" class=" input input-w180h30" value="陈绍伟"></td>
+      <td><input type="text" name="textfield9" id="textfield9" class=" input input-w180h30" value="${member.codeName}"></td>
     </tr>
     <tr>
       <th>联系人手机</th>
-      <td>18695462365</td>
+      <td>${member.tel}</td>
     </tr>
     <tr>
       <th>注册时间</th>
-      <td>2014年06月27日</td>
+      <td><#if (member.registerTime??)> ${member.registerTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
     </tr>
   </tbody>
   </table>

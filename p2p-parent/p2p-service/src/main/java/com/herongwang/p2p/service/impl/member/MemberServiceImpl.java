@@ -32,8 +32,8 @@ public class MemberServiceImpl implements IMemberService
             {
                 return memberList;
             }
-            /*condition.addCondition("name", query.getName());// 姓名
-            condition.addCondition("parentId", query.getMemberNo());// 父会员号
+            condition.addCondition("memberCode", member.getMemberCode());// 姓名
+            /* condition.addCondition("parentId", query.getMemberNo());// 父会员号
             condition.addCondition("accountNo", query.getAccountNo());// 子会员
             condition.addCondition("accountName", query.getAccountName());// 子会员名称
             condition.addCondition("state", query.getState());// 子账户状态
@@ -81,6 +81,36 @@ public class MemberServiceImpl implements IMemberService
             throw new ServiceException("查询会员信息错误", e);
         }
         
+    }
+    
+    @Override
+    public MemberEntity addMember(MemberEntity member) throws ServiceException
+    {
+        try
+        {
+            memberDao.addMember(member);
+            return member;
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("新增会员信息错误", e);
+        }
+        
+    }
+    
+    @Override
+    public MemberModel getMmeberByMemberId(String id) throws ServiceException
+    {
+        try
+        {
+            return memberDao.getMemberModelByMemberId(id);
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("查询会员详细信息错误", e);
+        }
     }
     
 }

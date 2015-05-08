@@ -33,4 +33,9 @@ public interface IMemberDao
      */
     @Get
     public MemberEntity getMemberById(String id);
+    
+    /**
+     * 根据会员Id查询会员信息
+     */
+    public MemberModel getMemberModelByMemberId(String memberId);
 }

@@ -8,7 +8,7 @@
 		<result property="memberCode" column="MEMBER_CODE" jdbcType="VARCHAR" />
 		<result property="password" column="PASSWORD" jdbcType="VARCHAR" />
 		<result property="memberName" column="MEMBER_NAME" jdbcType="VARCHAR" />
-		<result property="availableM" column="AVAILABLE_M" jdbcType="VARCHAR" />
+		<result property="availableM" column="AVAILABLE_M" jdbcType="DOUBLE" />
 		<result property="registerTime" column="REGISTER_TIME" jdbcType="TIMESTAMP" />
 		<result property="email" column="EMAIL" jdbcType="VARCHAR" />
 		<result property="tel" column="TEL" jdbcType="VARCHAR" />
@@ -20,7 +20,7 @@
 		<result property="memberCode" column="MEMBER_CODE" jdbcType="VARCHAR" />
 		<result property="password" column="PASSWORD" jdbcType="VARCHAR" />
 		<result property="memberName" column="MEMBER_NAME" jdbcType="VARCHAR" />
-		<result property="availableM" column="AVAILABLE_M" jdbcType="VARCHAR" />
+		<result property="availableM" column="AVAILABLE_M" jdbcType="DOUBLE" />
 		<result property="registerTime" column="REGISTER_TIME" jdbcType="TIMESTAMP" />
 		<result property="email" column="EMAIL" jdbcType="VARCHAR" />
 		<result property="tel" column="TEL" jdbcType="VARCHAR" />
@@ -40,5 +40,13 @@
 		parameterType="com.sxj.util.persistent.QueryCondition">
 		<![CDATA[SELECT M.MEMBER_CODE,M.MEMBER_NAME,M.EMAIL,M.TEL,A.BANK_CODE,A.CODE_NAME,M.REGISTER_TIME
 		 FROM MEMBER M,ACCOUNT  A WHERE M.MEMBER_ID=A.MEMBER_ID]]>
+		 <if test="condition.memberCode != null and condition.memberCode != ''">
+		 <![CDATA[AND M.MEMBER_CODE=#{condition.memberId}]]>
+		 </if>
+	</select>
+	<select id="getMemberModelByMemberId" resultMap="MemberInfoResultMap"
+		parameterType="String">
+		<![CDATA[SELECT M.MEMBER_CODE,M.MEMBER_NAME,M.EMAIL,M.TEL,A.BANK_CODE,A.CODE_NAME,M.REGISTER_TIME
+		 FROM MEMBER M,ACCOUNT  A WHERE M.MEMBER_ID=A.MEMBER_ID AND M.MEMBER_ID=#{memberId}]]>
 	</select>
 </mapper>

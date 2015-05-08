@@ -49,7 +49,7 @@ public class MemberEntity implements Serializable
      * 可用金额
      */
     @Column(name = "AVAILABLE_M")
-    private String availableM;
+    private Double availableM;
     
     /**
      * 注册时间
@@ -121,12 +121,12 @@ public class MemberEntity implements Serializable
         this.memberName = memberName;
     }
     
-    public String getAvailableM()
+    public Double getAvailableM()
     {
         return availableM;
     }
     
-    public void setAvailableM(String availableM)
+    public void setAvailableM(Double availableM)
     {
         this.availableM = availableM;
     }

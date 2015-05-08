@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.herongwang.p2p.dao.member.IMemberDao">
+	<resultMap id="AccountResultMap" type="com.herongwang.p2p.entity.account.AccountEntity">
+		<id property="accountId" column="ACCOUNT_ID" jdbcType="VARCHAR" />
+		<result property="memberId" column="MEMBER_ID" jdbcType="VARCHAR" />
+		<result property="openingBank" column="OPENING_BANK" jdbcType="VARCHAR" />
+		<result property="branchBank" column="BRANCH_BANK" jdbcType="VARCHAR" />
+		<result property="availableM" column="AVAILABLE_M" jdbcType="DOUBLE" />
+		<result property="ststus" column="STSTUS" jdbcType="INTEGER" />
+		<result property="bankCode" column="BANK_CODE" jdbcType="VARCHAR" />
+		<result property="codeName" column="CODE_NAME" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 条件查询会员 -->
+	<select id="queryAccount" resultMap="MemberInfoResultMap"
+		parameterType="com.sxj.util.persistent.QueryCondition">
+		<![CDATA[SELECT * FROM ACCOUNT WHER 1=1]]>
+	</select>
+</mapper>
