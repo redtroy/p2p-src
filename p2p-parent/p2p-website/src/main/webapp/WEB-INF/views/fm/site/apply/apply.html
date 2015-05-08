@@ -15,30 +15,30 @@
 		});
 
 	});
-	
-	function saveApply(){
-		if (!validform.check()){
+
+	function saveApply() {
+		if (!validform.check()) {
 			return false;
 		}
 		var success = dialog({
-		    title: '消息',
-		    cancel: false,
-		    ok: function () {
-		    	window.location.href="${basePath}index.htm";
-		    }
+			title : '消息',
+			cancel : false,
+			ok : function() {
+				window.location.href = "${basePath}index.htm";
+			}
 		});
-
+		var show = dialog();
 		var d = dialog({
-			title: '消息',
-			content: '是否提交贷款申请?',
-			okValue: '确 定',
-			ok: function () {
+			title : '消息',
+			content : '是否提交贷款申请?',
+			okValue : '确 定',
+			ok : function() {
 				var that = this;
-				setTimeout(function () {
-					that.title('提交中..');
-				}, 2000);
-				$.post("saveApply.htm", $("#applyForm").serialize(), function(data) {
+				show.showModal();
+				$.post("saveApply.htm", $("#applyForm").serialize(), function(
+						data) {
 					if (data.isOK == 'ok') {
+						show.close().remove();
 						success.content('提交融资申请成功！');
 						success.showModal();
 					} else {
@@ -47,8 +47,9 @@
 					}
 				})
 			},
-			cancelValue: '取消',
-			cancel: function () {}
+			cancelValue : '取消',
+			cancel : function() {
+			}
 		});
 		d.showModal();
 	}
@@ -106,12 +107,13 @@
 						</div>
 						<div class="item">
 							<label><span class="color-red mr5 fb">*</span>简单说明</label>
-							<textarea class="textarea textarea-w600" datatype="*1-200" name="remark"
-								errormsg="请输入1~200位之间的字符！" nullmsg="请输入简单说明！"></textarea>
+							<textarea class="textarea textarea-w600" datatype="*1-200"
+								name="remark" errormsg="请输入1~200位之间的字符！" nullmsg="请输入简单说明！"></textarea>
 						</div>
 						<div class="item">
 							<label>&nbsp;</label> <a href="javascript:void(0)"
-								class="button button-orange btn-regin btn-disable" onclick="saveApply();">提交</a>
+								class="button button-orange btn-regin btn-disable"
+								onclick="saveApply();">提交</a>
 						</div>
 					</form>
 				</div>

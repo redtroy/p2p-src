@@ -31,12 +31,18 @@ public class ApplyController
      * @return
      */
     @RequestMapping("toApply")
-    public String accountList(HttpSession session, ModelMap map)
+    public String toApply(HttpSession session, ModelMap map)
     {
         //会员信息传到页面
         return "site/apply/apply";
     }
-    
+    /**
+     * 新增融资申请
+     * @param session
+     * @param apply
+     * @return
+     * @throws WebException
+     */
     @RequestMapping("saveApply")
     public @ResponseBody Map<String, String> saveApply(HttpSession session,
             ApplyForEntity apply) throws WebException
