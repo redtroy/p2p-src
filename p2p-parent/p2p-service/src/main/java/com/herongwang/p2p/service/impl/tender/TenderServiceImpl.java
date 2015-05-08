@@ -21,7 +21,7 @@ public class TenderServiceImpl implements ITenderService {
 
 	@Override
 	public void addTender(TenderEntity tender) throws ServiceException {
-		// TODO Auto-generated method stub
+		tenderDao.addTender(tender);
 		
 	}
 
@@ -33,8 +33,7 @@ public class TenderServiceImpl implements ITenderService {
 
 	@Override
 	public TenderEntity getTenderEntity(String id) throws ServiceException {
-		// TODO Auto-generated method stub
-		return null;
+		return tenderDao.getTenderFor(id);
 	}
 
 	@Override
