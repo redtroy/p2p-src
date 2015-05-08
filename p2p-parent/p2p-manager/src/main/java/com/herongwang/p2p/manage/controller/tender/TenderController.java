@@ -84,7 +84,7 @@ public class TenderController extends BaseController
 	public @ResponseBody Map<String, String> addApply(String id,
 			String title,String borrower,Integer repaymentType,
 			Integer borrpwTime,Double interest,Double minAmount,
-			Double maxAmount,Double borrowingAmount,Date createTime,Integer status)throws WebException {
+			Double maxAmount,Double borrowingAmount,Integer status)throws WebException {
     	TenderEntity tender = new TenderEntity();
     	tender.setTitle(title);
     	tender.setBorrower(borrower);
@@ -101,7 +101,8 @@ public class TenderController extends BaseController
 				tender.setStatus(1);
 				tenderService.addTender(tender);
 			}else{
-				tender.setCreateTime(createTime);
+				TenderEntity info = tenderService.getTenderEntity(id);
+				tender.setCreateTime(info.getCreateTime());
 				tender.setId(id);
 				tender.setStatus(status);
 				tenderService.updateTender(tender);
