@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.herongwang.p2p.dao.member.IMemberDao;
+import com.herongwang.p2p.entity.member.MemberEntity;
 import com.herongwang.p2p.model.member.MemberModel;
 import com.herongwang.p2p.service.member.IMemberService;
 import com.sxj.util.exception.ServiceException;
@@ -48,7 +49,22 @@ public class MemberServiceImpl implements IMemberService
         catch (Exception e)
         {
             SxjLogger.error(e.getMessage(), e, this.getClass());
-            throw new ServiceException("查询会员信息错误", e);
+            throw new ServiceException("查询会员列表信息错误", e);
+        }
+    }
+    
+    @Override
+    public MemberEntity getMmeberByAccount(String account)
+            throws ServiceException
+    {
+        try
+        {
+            return memberDao.getMmeberByAccount(account);
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("查询会员列表信息错误", e);
         }
     }
     

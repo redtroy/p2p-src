@@ -30,9 +30,9 @@
 		<result property="codeName" column="CODE_NAME" jdbcType="VARCHAR" />
 	</resultMap>
 	
-	<select id="getMemberByName" resultMap="MemberResultMap"
+	<select id="getMmeberByAccount" resultMap="MemberResultMap"
 		parameterType="String">
-		<![CDATA[SELECT * FROM MEMBER WHERE MEMBER_CODE=#{name}]]>
+		<![CDATA[SELECT * FROM MEMBER WHERE MEMBER_CODE=#{account}]]>
 	</select>
 
 	<!-- 条件查询会员 -->
