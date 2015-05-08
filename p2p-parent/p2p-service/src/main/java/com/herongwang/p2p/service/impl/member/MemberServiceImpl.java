@@ -68,4 +68,19 @@ public class MemberServiceImpl implements IMemberService
         }
     }
     
+    @Override
+    public MemberEntity getMmeberById(String id) throws ServiceException
+    {
+        try
+        {
+            return memberDao.getMemberById(id);
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("查询会员信息错误", e);
+        }
+        
+    }
+    
 }
