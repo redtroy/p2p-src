@@ -8,7 +8,7 @@ import com.sxj.util.exception.ServiceException;
 public interface IApplyForService {
 	/**
 	 * 新增融资申请
-	 * 
+	 * aa
 	 * @param apply
 	 */
 	public void addApplyFor(ApplyForEntity apply) throws ServiceException;
