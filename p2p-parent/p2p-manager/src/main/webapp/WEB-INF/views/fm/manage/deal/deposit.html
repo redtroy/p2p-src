@@ -23,48 +23,53 @@
     <div class="yard-180 ly-left leftMenu fontYH">
       <ul>
         <li><a href="member-center.html">会员管理</a></li>
-        <li><a href="applyList.htm" class="on">融资申请管理</a></li>
+        <li><a href="../apply/applyList.htm">融资申请管理</a></li>
         <li><a href="tender-list.html">投资标书管理</a></li>
-        <li><a href="../deal/recharge.htm">充值管理</a></li>
-        <li><a href="../deal/deposit.htm">提现管理</a></li>
+        <li><a href="recharge.htm">充值管理</a></li>
+        <li><a href="deposit.htm" class="on">提现管理</a></li>
       </ul>
     </div>
     <div class="yard-1000 ly-left">
       <div class="rightSide">
-        <div class="heading fontYH f20">融资申请管理</div>
+        <div class="heading fontYH f20">提现管理</div>
         <div class="mainBox">
           <table border="0" cellspacing="0" cellpadding="0" class="tabList">
+            <col width="8%" />
+            <col width="12%" />
+            <col width="13%" />
+            <col width="20%" />
             <col width="10%" />
+            <col width="7%" />
+            <col width="12%" />
             <col width="10%" />
-            <col width="10%" />
-            <col width="15%" />
-            <col width="40%" />
-            <col width="15%" />
+            <col width="8%" />
             <tr>
-              <th>ID</th>
-              <th>姓名</th>
-              <th>融资金额</th>
-              <th>申请时间</th>
-              <th>说明 </th>
+              <th>会员名称</th>
+              <th>提现时间</th>
+              <th>订单号 </th>
+              <th>通联支付单号</th>
+              <th>提现金额</th>
+              <th>手续费</th>
+              <th>实际到账时间</th>
+              <th>实际到帐金额</th>
               <th>操作</th>
             </tr>
-          <#list list as apply>
-	         <#if (apply.status==0)>
-	          <tr class="bColor-red" title="有报名未处理的客户记录">
-	          <#else>
-	          <tr>
-			</#if>
-			<td>${apply.applyId}</td>
-              <td>${apply.name}</td>
-              <td class="color-orange fb">${apply.money}元</td>
-              <td><span class="edit"><#if (apply.forTime??)> ${apply.forTime?string("yyyy-MM-dd HH:mm:ss")}</#if></span></td>
-              <td class="tl">${apply.remark}</td>
-              <td class="edit"><a href="new-tender.html" class="reset">生成投资标书</a></td>
+            <#list list as deal>
+            <tr>
+	         <td>${deal.name}</td>
+              <td><#if (deal.dealTime??)> ${deal.dealTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
+              <td>${deal.orderNo}</td>
+              <td>${deal.payNo}</td>
+              <td>${deal.dealFee}元</td>
+              <td>${deal.manageFee}</td>
+              <td><#if (deal.actuaTime??)> ${deal.actuaTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
+              <td>${deal.actuaFee}元</td>
+              <td><button class="button btn-examine">审核</button></td>
             </tr>
-		</#list>
+			</#list>
           </table>
 		  <div class="ly-clearFix">
-          <@b.pager/>
+           <@b.pager/>
         </div>
         </div>
       </div>

@@ -14,20 +14,20 @@ import com.sxj.util.persistent.QueryCondition;
  * @author nishaotang
  *
  */
-public interface IDealDetail {
+public interface IDealDetailDao {
 
 	/**
 	 * 添加交易明细
 	 * @param Deal
 	 */
 	@Insert
-	public void addDeal(DealDetailEntity Deal);
+	public void addDeal(DealDetailEntity deal);
 	/**
 	 * 修改交易明细
 	 * @param Deal
 	 */
 	@Update
-	public void updateDeal(DealDetailEntity Deal);
+	public void updateDeal(DealDetailEntity deal);
 	/**
 	 * 删除交易明细
 	 * @param id
