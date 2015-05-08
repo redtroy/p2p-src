@@ -15,9 +15,9 @@ import com.sxj.util.logger.SxjLogger;
 public class BaseController
 {
     
-    public static final String LOGIN = "manage/login";
+    public static final String LOGIN = "manage/index";
     
-    public static final String INDEX = "manage/index";
+    // public static final String INDEX = "manage/index";
     
     public static final String SPRING_SECURITY_CONTEXT = "SPRING_SECURITY_CONTEXT";
     

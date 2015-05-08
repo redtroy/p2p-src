@@ -24,7 +24,7 @@
       <ul>
         <li><a href="member-center.html">会员管理</a></li>
         <li><a href="applyList.htm" class="on">融资申请管理</a></li>
-        <li><a href="tender-list.html">投资标书管理</a></li>
+        <li><a href="../tender/tenderList.htm">投资标书管理</a></li>
         <li><a href="../deal/recharge.htm">充值管理</a></li>
         <li><a href="../deal/deposit.htm">提现管理</a></li>
       </ul>
@@ -36,12 +36,10 @@
           <table border="0" cellspacing="0" cellpadding="0" class="tabList">
             <col width="10%" />
             <col width="10%" />
-            <col width="10%" />
-            <col width="15%" />
+            <col width="25%" />
             <col width="40%" />
             <col width="15%" />
             <tr>
-              <th>ID</th>
               <th>姓名</th>
               <th>融资金额</th>
               <th>申请时间</th>
@@ -54,7 +52,6 @@
 	          <#else>
 	          <tr>
 			</#if>
-			<td>${apply.applyId}</td>
               <td>${apply.name}</td>
               <td class="color-orange fb">${apply.money}元</td>
               <td><span class="edit"><#if (apply.forTime??)> ${apply.forTime?string("yyyy-MM-dd HH:mm:ss")}</#if></span></td>
