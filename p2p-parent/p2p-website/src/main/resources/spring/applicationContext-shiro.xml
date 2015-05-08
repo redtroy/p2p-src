@@ -60,7 +60,7 @@
 	</bean>
 
 	<bean id="shiroCacheManager"
-		class="com.sxj.supervisor.website.login.SupervisorShiroRedisCacheManager">
+		class="com.herongwang.p2p.website.login.SupervisorShiroRedisCacheManager">
 		<property name="level" value="REDIS"></property>
 	</bean>
 
@@ -102,29 +102,7 @@
 		<!-- 访问地址的过滤规则,从上至下的优先级,如果有匹配的规则,就会返回,不会再进行匹配 -->
 		<property name="filterChainDefinitions">
 			<value>
-				/index.htm=anon
-				/unauth.htm =anon
-				/member/memberInfo.htm=user
-				/member/account/accountList.htm=user,frameperms
-				/record/to_apply.htm=user,frameperms
-				/record/query.htm=user,frameperms
-				/contract/finance.htm=user,frameperms
-				/contract/paylist.htm=user,frameperms
-				/rfid/logistics/to_apply.htm=user,frameperms
-				/rfid/logistics/apply_list.htm=user,frameperms
-				/rfid/logistics/queryList.htm=user,frameperms
-				/rfid/window/to_apply.htm=user,frameperms
-				/rfid/window/apply_list.htm=user,frameperms
-				/rfid/window/query.htm=user,frameperms
-				/rfid/window/logistics/query.htm=user,frameperms
-				/rfid/window/startmrfid_list.htm=user,frameperms
-				/rfid/window/to_loss.htm=user,frameperms
-				/finance/finance.htm=user,frameperms
-				/pay/paylist.htm=user,frameperms
-				/sysMessage/query.htm=user,frameperms
-				/transMessage/query.htm=user,frameperms
-				/systender/query.htm=user,frameperms
-				/apply/apply_list.htm=user,frameperms
+				
 			</value>
 		</property>
 		<!-- 声明自定义的过滤器 -->
