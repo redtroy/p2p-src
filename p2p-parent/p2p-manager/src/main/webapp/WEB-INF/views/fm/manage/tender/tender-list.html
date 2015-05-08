@@ -10,6 +10,44 @@
 <script src="${b.staticPath}js/datepicker.js"></script>
 <script src="${b.staticPath}js/jquery.paginate.js"></script>
 <@b.pageScript/> 
+<@b.validate/>
+<@b.dialog/>
+<script type="text/javascript">
+function delTender(id){
+	var success = dialog({
+		title : '消息',
+		cancel : false,
+		ok : function() {
+			window.location.href = "${basePath}/tender/tenderList.htm";
+		}
+	});
+	var show = dialog();
+	var d = dialog({
+		title : '消息',
+		content : '是否删除借款标记录?',
+		okValue : '确 定',
+		ok : function() {
+			var that = this;
+			show.showModal();
+			$.post("delete.htm",{id:id}, function(
+					data) {
+				if (data.isOK == 'ok') {
+					show.close().remove();
+					success.content('删除借款标成功！');
+					success.showModal();
+				} else {
+					success.content('删除借款标失败！');
+					success.showModal();
+				}
+			})
+		},
+		cancelValue : '取消',
+		cancel : function() {
+		}
+	});
+	d.showModal();
+}
+</script>
 </head>
 <body>
 <div id="header" class="fence">
@@ -69,6 +107,7 @@
 	          <a href="#" class=" button btn-link">满标审核</a>
 			</#if>
               <a href="toEdit.htm?id=${tender.id}" class="ml10 lnk-blue lnk-underline">修改</a>
+              <a href="javascript:delTender('${tender.id}');"  class="ml10 lnk-blue lnk-underline">删除</a>
               <a href="investor-list.html" class="ml10 lnk-blue lnk-underline">投资人记录</a>
               </td>
             </tr>
