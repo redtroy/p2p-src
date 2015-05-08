@@ -1,5 +1,6 @@
 package com.herongwang.p2p.website.controller.apply;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +43,11 @@ public class ApplyController
     {
         try
         {
+            //获取登陆会员ID 
             Map<String, String> map = new HashMap<String, String>();
+            apply.setMemberId("M999999");
+            apply.setForTime(new Date());//申请时间
+            apply.setStatus(0);
             applyForService.addApplyFor(apply);
             map.put("isOK", "ok");
             return map;

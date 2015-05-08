@@ -46,7 +46,7 @@ public class ApplyForEntity extends Pagable implements Serializable {
      *联系电话
      */
     @Column(name = "TEL")
-    private Double tel;
+    private String tel;
     /**
      * 申请时间
      */
@@ -113,10 +113,10 @@ public class ApplyForEntity extends Pagable implements Serializable {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-	public Double getTel() {
+	public String getTel() {
 		return tel;
 	}
-	public void setTel(Double tel) {
+	public void setTel(String tel) {
 		this.tel = tel;
 	}
 	
