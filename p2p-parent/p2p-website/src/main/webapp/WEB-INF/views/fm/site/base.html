@@ -21,12 +21,11 @@ $(function(){
 });
 </script>
 </#macro>
-<#macro errorInfo>
-<script>
-
-</script>
-
+<#macro dialog>
+<script src="${staticPath}js/dialog.js"></script>
+<link rel="stylesheet" href="${staticPath}style/ui-dialog.css" />
 </#macro>
+
 <#macro pageScript>
 <!--<script src="${staticPath}js/jquery.paginate.js"></script>  -->
 <script src="${staticPath}js/jquery.pagination_2.js"></script>
@@ -336,10 +335,21 @@ $(document).ready(function(){
 	$("#yearSapn").text(year);
 });
 </script>
-<div class="f12" id="footer">
-	&copy; <span id="yearSapn"></span> 私享家绿色门窗平台&nbsp;版权所有<span class="ml10"><a
-		target="_blank" href="http://www.miitbeian.gov.cn/">苏ICP备14040094号-1</a></span>
-</div>
+<div class="fence-wide bgBlack">
+		<div id="footer" class="yard-1100 f14 fontYH ly-clearFix">
+			<div class="menuCont tc">
+				<ul class="ly-clearFix f18">
+					<li><a href="about-us.html">关于我们</a></li>
+					<li><a href="products.html">产品优势</a></li>
+					<li><a href="contact-us.html" class="borderNone">联系我们</a></li>
+				</ul>
+				<p class="f12">
+					<span>&copy;&nbsp;<span id="yearSapn"></span>&nbsp;和融网&nbsp;版权所有</span><span>www.herongwangnt.com</span>苏ICP备14047993号-2
+				</p>
+				<p class="f12">地址：江苏省南京市栖霞区马群街道仙林大道18号</p>
+			</div>
+		</div>
+	</div>
 </#macro> <#macro leftMenu isLoad>
 <div id="leftList"></div>
 <script>

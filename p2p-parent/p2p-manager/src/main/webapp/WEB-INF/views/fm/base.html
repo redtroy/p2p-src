@@ -274,11 +274,9 @@ $(function(){
 <!--<script src="${staticPath}js/jquery.paginate.js"></script>  -->
 <script src="${staticPath}js/jquery.pagination_2.js"></script>
 <link rel="stylesheet" href="${staticPath}style/pagination_2.css" />
-<script src="${staticPath}js/layer.min.js"></script>
-<script src="${staticPath}js/layer.ext.js"></script>
 <script>
 function loadPage(currentPage,totalPage) {
-	layer.closeAll();
+	//layer.closeAll();
 	// 创建分页
 	$(".pagination").attr("currentPage",currentPage);
 	$(".pagination").attr("totalPage",totalPage);

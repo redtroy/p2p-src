@@ -9,7 +9,6 @@
 <script src="${b.staticPath}js/jquery.js" type="text/javascript"></script>
 <script src="${b.staticPath}js/datepicker.js"></script>
 <script src="${b.staticPath}js/jquery.paginate.js"></script>
-<@b.pageScript/> 
 </head>
 <body>
 <div id="header" class="fence">
@@ -24,53 +23,61 @@
       <ul>
         <li><a href="member-center.html">会员管理</a></li>
         <li><a href="../apply/applyList.htm">融资申请管理</a></li>
-        <li><a href="../tender/tenderList.htm">投资标书管理</a></li>
-        <li><a href="recharge.htm">充值管理</a></li>
-        <li><a href="deposit.htm" class="on">提现管理</a></li>
+        <li><a href="tenderList.htm" class="on">投资标书管理</a></li>
+        <li><a href="../deal/recharge.htm">充值管理</a></li>
+        <li><a href="../deal/deposit.htm">提现管理</a></li>
       </ul>
     </div>
     <div class="yard-1000 ly-left">
       <div class="rightSide">
-        <div class="heading fontYH f20">提现管理</div>
+        <div class="heading fontYH f20">生成投资标书</div>
         <div class="mainBox">
-          <table border="0" cellspacing="0" cellpadding="0" class="tabList">
-            <col width="8%" />
-            <col width="12%" />
-            <col width="13%" />
+          <table border="0" cellspacing="0" cellpadding="0" class=" tabTender">
             <col width="20%" />
-            <col width="10%" />
-            <col width="7%" />
-            <col width="12%" />
-            <col width="10%" />
-            <col width="8%" />
+            <col width="80%" />
             <tr>
-              <th>会员名称</th>
-              <th>提现时间</th>
-              <th>订单号 </th>
-              <th>通联支付单号</th>
-              <th>提现金额</th>
-              <th>手续费</th>
-              <th>实际到账时间</th>
-              <th>实际到帐金额</th>
-              <th>操作</th>
+              <th>标题</th>
+              <td><input type="text" name="textfield" id="textfield" class="input input-w270h30"/></td>
             </tr>
-            <#list list as deal>
             <tr>
-	         <td>${deal.name}</td>
-              <td><#if (deal.dealTime??)> ${deal.dealTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
-              <td>${deal.orderNo}</td>
-              <td>${deal.payNo}</td>
-              <td>${deal.dealFee}元</td>
-              <td>${deal.manageFee}</td>
-              <td><#if (deal.actuaTime??)> ${deal.actuaTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
-              <td>${deal.actuaFee}元</td>
-              <td><button class="button btn-examine">审核</button></td>
+              <th>借款人</th>
+              <td><input type="text" name="textfield2" id="textfield2" class="input input-w270h30"/></td>
             </tr>
-			</#list>
+            <tr>
+              <th>还款类型</th>
+              <td><select name="repayment_type" id="repayment_type" onchange="test_duration()" class="c_select"><option value="">--请选择--</option><option value="1">按月分期还款</option><option value="2">每月还息到期还本</option><option value="3">一次性还款</option></select></td>
+            </tr>
+            <tr>
+              <th>借款期限</th>
+              <td><select name="borrow_duration" id="borrow_duration" title="借款成功后,打算以几(天)个月的时间来还清贷款。" onchange="test_duration()" class="c_select x_select"><option value="">--请选择--</option><option value="1">1个月</option><option value="2">2个月</option><option value="3">3个月</option><option value="4">4个月</option><option value="5">5个月</option><option value="6">6个月</option><option value="7">7个月</option><option value="8">8个月</option><option value="9">9个月</option><option value="10">10个月</option><option value="11">11个月</option><option value="12">12个月</option></select></td>
+            </tr>
+            <tr>
+              <th>年化利率</th>
+              <td><input type="text" name="textfield5" id="textfield5" class="input input-w270h30"/>
+                %</td>
+            </tr>
+            <tr>
+              <th>最小投资金额</th>
+              <td><input type="text" name="textfield3" id="textfield3" class="input input-w270h30"/></td>
+            </tr>
+            <tr>
+              <th>最大投资金额</th>
+              <td><select name="borrow_max" id="borrow_max" class="c_select x_select"><option value="0">没有限制</option><option value="1500">1500元</option><option value="2000">2000元</option><option value="3000">3000元</option><option value="4000">4000元</option><option value="5000">5000元</option><option value="6000">6000元</option><option value="10000">10000元</option></select></td>
+            </tr>
+            <tr>
+              <th>管理费</th>
+              <td><input type="text" name="textfield6" id="textfield6" class="input input-w270h30"/></td>
+            </tr>
+            <tr>
+              <th>借款金额</th>
+              <td><input type="text" name="textfield4" id="textfield4" class="input input-w270h30"/></td>
+            </tr>
+            <tr>
+              <th>创建时间</th>
+              <td>2015-05-07 09:10:45</td>
+            </tr>
           </table>
-		  <div class="ly-clearFix">
-           <@b.pager/>
-        </div>
+          <div class="tc mt20 mb20"><a href="#" class="button button-orange">确认生成</a></div>
         </div>
       </div>
     </div>
