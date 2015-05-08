@@ -41,7 +41,7 @@ public class ApplyForEntity extends Pagable implements Serializable {
      * 金额
      */
     @Column(name = "MONEY")
-    private Double MONEY;
+    private Double money;
     /**
      * 申请时间
      */
@@ -59,6 +59,19 @@ public class ApplyForEntity extends Pagable implements Serializable {
     @Column(name = "REMARK")
     private String remark;
     
+    /**
+     * 会员姓名
+     */
+    private String name;
+    
+    
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+    
     public String getApplyId() {
 		return applyId;
 	}
@@ -71,11 +84,11 @@ public class ApplyForEntity extends Pagable implements Serializable {
 	public void setMemberId(String memberId) {
 		this.memberId = memberId;
 	}
-	public Double getMONEY() {
-		return MONEY;
+	public Double getMoney() {
+		return money;
 	}
-	public void setMONEY(Double mONEY) {
-		MONEY = mONEY;
+	public void setMoney(Double money) {
+		this.money = money;
 	}
 	public Date getForTime() {
 		return forTime;

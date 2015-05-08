@@ -24,7 +24,7 @@
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
 		<property name="viewClass"
-			value="com.sxj.supervisor.website.view.MyFreeMarkerView" />
+			value="com.herongwang.p2p.website.view.MyFreeMarkerView" />
 		<property name="requestContextAttribute" value="ctp" />
 		<property name="cache" value="true" />
 		<!-- <property name="prefix" value="/WEB-INF/views/fm/manage/" /> -->
