@@ -1,6 +1,7 @@
 package com.herongwang.p2p.entity.member;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import com.herongwang.p2p.dao.member.IMemberDao;
 import com.sxj.mybatis.orm.annotations.Column;
@@ -54,7 +55,7 @@ public class MemberEntity implements Serializable
      * 注册时间
      */
     @Column(name = "REGISTER_TIME")
-    private String registerTime;
+    private Date registerTime;
     
     /**
      * 邮箱
@@ -130,12 +131,12 @@ public class MemberEntity implements Serializable
         this.availableM = availableM;
     }
     
-    public String getRegisterTime()
+    public Date getRegisterTime()
     {
         return registerTime;
     }
     
-    public void setRegisterTime(String registerTime)
+    public void setRegisterTime(Date registerTime)
     {
         this.registerTime = registerTime;
     }
