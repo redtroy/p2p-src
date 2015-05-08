@@ -3,7 +3,7 @@ package com.herongwang.p2p.entity.deal;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.herongwang.p2p.dao.deal.IDealDetail;
+import com.herongwang.p2p.dao.deal.IDealDetailDao;
 import com.sxj.mybatis.orm.annotations.Column;
 import com.sxj.mybatis.orm.annotations.Entity;
 import com.sxj.mybatis.orm.annotations.GeneratedValue;
@@ -17,7 +17,7 @@ import com.sxj.mybatis.pagination.Pagable;
  * @author nishaotang
  *
  */
-@Entity(mapper = IDealDetail.class)
+@Entity(mapper = IDealDetailDao.class)
 @Table(name = "DEAL_DETAIL")
 public class DealDetailEntity  extends Pagable implements Serializable {
 
@@ -45,14 +45,40 @@ public class DealDetailEntity  extends Pagable implements Serializable {
     private Integer dealType;
     /**
      * 交易时间
+     * 1：充值；2：投标；3：还款；4：提现。
      */
     @Column(name = "DEAL_TIME")
     private Date dealTime;
+    /**
+     * 订单号
+     */
+    @Column(name = "ORDER_NO")
+    private String orderNo;
+    /**
+     * 通联支付单号
+     */
+    @Column(name = "PAY_NO")
+    private String payNo;
     /**
      * 交易金额
      */
     @Column(name = "DEAL_FEE")
     private Double dealFee;
+    /**
+     * 实际到账金额
+     */
+    @Column(name = "ACTUA_FEE")
+    private Double actuaFee;
+    /**
+     * 手续费
+     */
+    @Column(name = "MANAGE_FEE")
+    private Double manageFee;
+    /**
+     * 实际到账时间
+     */
+    @Column(name = "ACTUA_TIME")
+    private Date actuaTime;
     /**
      * 账户余额
      */
@@ -78,6 +104,16 @@ public class DealDetailEntity  extends Pagable implements Serializable {
      */
     @Column(name = "PLAN_ID")
     private String planId;
+    /**
+     * 会员姓名
+     */
+    private String name;
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 	public String getDealId() {
 		return dealId;
 	}
@@ -137,6 +173,36 @@ public class DealDetailEntity  extends Pagable implements Serializable {
 	}
 	public void setPlanId(String planId) {
 		this.planId = planId;
+	}
+	public String getOrderNo() {
+		return orderNo;
+	}
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
+	}
+	public String getPayNo() {
+		return payNo;
+	}
+	public void setPayNo(String payNo) {
+		this.payNo = payNo;
+	}
+	public Double getActuaFee() {
+		return actuaFee;
+	}
+	public void setActuaFee(Double actuaFee) {
+		this.actuaFee = actuaFee;
+	}
+	public Date getActuaTime() {
+		return actuaTime;
+	}
+	public void setActuaTime(Date actuaTime) {
+		this.actuaTime = actuaTime;
+	}
+	public Double getManageFee() {
+		return manageFee;
+	}
+	public void setManageFee(Double manageFee) {
+		this.manageFee = manageFee;
 	}
     
 }

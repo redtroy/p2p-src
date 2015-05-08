@@ -43,6 +43,7 @@ public class ApplyForController extends BaseController
             map.put("query", entity);
 			return "manage/apply/apply-list";
     	}catch(Exception e){
+    		e.printStackTrace();
             SxjLogger.error("查询融资申请错误", e, this.getClass());
             throw new WebException("查询融资申请错误");
     	}
@@ -59,7 +60,7 @@ public class ApplyForController extends BaseController
         
     }
     @RequestMapping("edit")
-	public @ResponseBody Map<String, String> addApply(String applyId,String name,String city,String url,String address,String telPhone)
+	public @ResponseBody Map<String, String> addApply(String applyId)
 			throws WebException {
     	ApplyForEntity entity = new ApplyForEntity();
     	entity.setApplyId(applyId);
