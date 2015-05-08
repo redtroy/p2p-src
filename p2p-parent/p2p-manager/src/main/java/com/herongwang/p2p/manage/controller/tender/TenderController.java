@@ -15,6 +15,7 @@ import com.alibaba.druid.util.StringUtils;
 import com.herongwang.p2p.entity.parameters.ParametersEntity;
 import com.herongwang.p2p.entity.tender.TenderEntity;
 import com.herongwang.p2p.manage.controller.BaseController;
+import com.herongwang.p2p.service.member.IMemberService;
 import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.tender.ITenderService;
 import com.sxj.util.exception.WebException;
@@ -30,6 +31,8 @@ public class TenderController extends BaseController
     private ITenderService tenderService;
     @Autowired
     private IParametersService parametersService;
+    @Autowired
+    private IMemberService memberService;
 	/**
 	 * 借款标列表
 	 * @param entity
@@ -72,7 +75,8 @@ public class TenderController extends BaseController
         	TenderEntity info = tenderService.getTenderEntity(id);
             map.put("info", info);
        	 map.put("applyId", info.getBorrower());
-       	 map.put("name", info.getName());
+       	memberService.getMmeberByAccount(info.getBorrower());
+       	 map.put("name", memberService.getMmeberByAccount(info.getBorrower()));
             return "manage/tender/new-tender";
         }
     	}catch(Exception e){
