@@ -13,7 +13,7 @@
 		<property name="defaultErrorView" value="failure" />
 		<property name="exceptionMappings">
 			<props>
-				<prop key="com.jscn.pay.exception.WebException">site/500</prop>
+				<!-- <prop key="com.jscn.pay.exception.WebException">site/500</prop> -->
 				<prop key="java.lang.Exception">site/500</prop>
 				<prop key="java.lang.Throwable">site/500</prop>
 			</props>
@@ -24,7 +24,7 @@
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
 		<property name="viewClass"
-			value="com.sxj.supervisor.website.view.MyFreeMarkerView" />
+			value="com.herongwang.p2p.website.view.MyFreeMarkerView" />
 		<property name="requestContextAttribute" value="ctp" />
 		<property name="cache" value="true" />
 		<!-- <property name="prefix" value="/WEB-INF/views/fm/manage/" /> -->
