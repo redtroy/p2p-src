@@ -63,12 +63,12 @@
               <td>${tender.interest}%</td>
               <td>${tender.minAmount}元</td>
               <td>${tender.maxAmount}元</td>
-              <td><#if (tender.fullTime??)> ${tender.fullTime?string("yyyy-MM-dd")}</#if></td>
+              <td><#if (tender.createTime??)> ${tender.createTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
               <td>
               <#if (tender.status==3)>
 	          <a href="#" class=" button btn-link">满标审核</a>
 			</#if>
-              <a href="investor-list.html" class="ml10 lnk-blue lnk-underline">修改</a>
+              <a href="toEdit.htm?id=${tender.id}" class="ml10 lnk-blue lnk-underline">修改</a>
               <a href="investor-list.html" class="ml10 lnk-blue lnk-underline">投资人记录</a>
               </td>
             </tr>
