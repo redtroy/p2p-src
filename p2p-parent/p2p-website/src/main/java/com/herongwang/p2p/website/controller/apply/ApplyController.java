@@ -22,7 +22,7 @@ public class ApplyController
     @RequestMapping("toApply")
     public String accountList(HttpSession session,
             ModelMap map) {
-        System.err.println(213123);
+        //会员信息传到页面
         return "site/apply/apply";
     }
 }
