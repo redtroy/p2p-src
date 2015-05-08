@@ -1,7 +1,5 @@
 package com.herongwang.p2p.manage.controller;
 
-import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -10,15 +8,20 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.herongwang.p2p.entity.admin.AdminEntity;
 import com.herongwang.p2p.manage.login.SupervisorShiroRedisCache;
+import com.herongwang.p2p.service.admin.IAdminService;
 
 @Controller
 public class BasicController extends BaseController
 {
+    @Autowired
+    private IAdminService adminService;
     
     private static final HttpServletRequest DefaultMultipartHttpServletRequest = null;
     
@@ -26,8 +29,8 @@ public class BasicController extends BaseController
     public String login(String account, String password, HttpSession session,
             HttpServletRequest request, ModelMap map)
     {
-        SystemAccountEntity user = accountService.getAccountByAccount(account);
-        if (user == null)
+        AdminEntity admin = adminService.getAdminEntityByName(account);
+        if (admin == null)
         {
             map.put("message", "用户名不存在");
             return LOGIN;
@@ -40,8 +43,8 @@ public class BasicController extends BaseController
             currentUser.login(token);
             PrincipalCollection principals = SecurityUtils.getSubject()
                     .getPrincipals();
-            String accountNo = user.getAccountNo();
-            SupervisorShiroRedisCache.addToMap(accountNo, principals);
+            String userNo = admin.getUserNo();
+            SupervisorShiroRedisCache.addToMap(userNo, principals);
         }
         catch (AuthenticationException e)
         {
@@ -52,10 +55,9 @@ public class BasicController extends BaseController
         }
         if (currentUser.isAuthenticated())
         {
-            session.setAttribute("userinfo", user);
-            user.setLastLogin(new Date());
-            accountService.updateLoginTime(user.getId());
-            return "redirect:" + getBasePath(request) + "index.htm";
+            session.setAttribute("adminInfo", admin);
+            
+            return "redirect:" + getBasePath(request) + "member/manage.htm";
         }
         else
         {
