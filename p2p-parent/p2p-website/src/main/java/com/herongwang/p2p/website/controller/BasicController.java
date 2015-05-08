@@ -3,14 +3,20 @@ package com.herongwang.p2p.website.controller;
 import java.util.Calendar;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.herongwang.p2p.entity.member.MemberEntity;
+import com.herongwang.p2p.service.member.IMemberService;
 import com.sxj.redis.core.pubsub.RedisTopics;
 
 @Controller
@@ -19,6 +25,9 @@ public class BasicController extends BaseController
     
     @Autowired
     private RedisTopics topics;
+    
+    @Autowired
+    private IMemberService memberService;
     
     @RequestMapping("to_login")
     public String ToLogin()
@@ -45,6 +54,48 @@ public class BasicController extends BaseController
     public String To404()
     {
         return "site/404";
+    }
+    
+    @RequestMapping("login")
+    public String login(String account, String password, HttpSession session,
+            HttpServletRequest request, ModelMap map)
+    {
+        MemberEntity member = memberService.getMmeberByAccount(account);
+        if (member == null)
+        {
+            map.put("message", "用户名不存在");
+            return LOGIN;
+        }
+        Subject currentUser = SecurityUtils.getSubject();
+        UsernamePasswordToken token = new UsernamePasswordToken(account,
+                password);
+        try
+        {
+            currentUser.login(token);
+            PrincipalCollection principals = SecurityUtils.getSubject()
+                    .getPrincipals();
+            String userNo = member.getMemberCode();
+            // SupervisorShiroRedisCache.addToMap(userNo, principals);
+        }
+        catch (AuthenticationException e)
+        {
+            map.put("account", account);
+            map.put("message", "用户名或密码错误");
+            return LOGIN;
+            
+        }
+        if (currentUser.isAuthenticated())
+        {
+            session.setAttribute("memberInfo", member);
+            
+            return "redirect:" + getBasePath(request) + "member/memberInfo.htm";
+        }
+        else
+        {
+            map.put("account", account);
+            map.put("message", "登陆失败");
+            return LOGIN;
+        }
     }
     
     private String stringDate()
