@@ -26,7 +26,7 @@ public class ApplyForEntity extends Pagable implements Serializable {
 	 */
 	private static final long serialVersionUID = -2444843981481631279L;
 	/**
-	 * 主键
+	 * 主键1
 	 */
 	@Id(column = "APPLY_ID")
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -38,17 +38,22 @@ public class ApplyForEntity extends Pagable implements Serializable {
     @Column(name = "MEMBER_ID")
     private String memberId;
     /**
-     * 会员id
+     * 金额
      */
     @Column(name = "MONEY")
-    private Double MONEY;
+    private Double money;
     /**
-     * 会员id
+     *联系电话
+     */
+    @Column(name = "TEL")
+    private String tel;
+    /**
+     * 申请时间
      */
     @Column(name = "FOR_TIME")
     private Date forTime;
     /**
-     * 会员id
+     * 申请融资状态
      * 0：未处理；1：未通过；2：通过。
      */
     @Column(name = "STATUS")
@@ -58,6 +63,19 @@ public class ApplyForEntity extends Pagable implements Serializable {
      */
     @Column(name = "REMARK")
     private String remark;
+    
+    /**
+     * 会员姓名
+     */
+    private String name;
+    
+    
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
     
     public String getApplyId() {
 		return applyId;
@@ -71,11 +89,11 @@ public class ApplyForEntity extends Pagable implements Serializable {
 	public void setMemberId(String memberId) {
 		this.memberId = memberId;
 	}
-	public Double getMONEY() {
-		return MONEY;
+	public Double getMoney() {
+		return money;
 	}
-	public void setMONEY(Double mONEY) {
-		MONEY = mONEY;
+	public void setMoney(Double money) {
+		this.money = money;
 	}
 	public Date getForTime() {
 		return forTime;
@@ -94,6 +112,12 @@ public class ApplyForEntity extends Pagable implements Serializable {
 	}
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+	public String getTel() {
+		return tel;
+	}
+	public void setTel(String tel) {
+		this.tel = tel;
 	}
 	
     

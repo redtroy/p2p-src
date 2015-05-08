@@ -11,7 +11,7 @@ import com.sxj.mybatis.orm.annotations.Update;
 import com.sxj.util.persistent.QueryCondition;
 
 /**
- * 融资申请
+ * 融资申请1
  * @author nishaotang
  *
  */
@@ -45,6 +45,6 @@ public interface IApplyForDao {
 	 * @param query
 	 * @return
 	 */
-	public List<ApplyForModel> query(QueryCondition<ApplyForModel> query);
+	public List<ApplyForEntity> query(QueryCondition<ApplyForEntity> query);
 	
 }

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.herongwang.p2p.dao.apply.IApplyForDao">
+	<resultMap id="ApplyForEntity"
+		type="com.herongwang.p2p.entity.apply.ApplyForEntity">
+		<id property="applyId" column="APPLY_ID" jdbcType="VARCHAR" />
+		<result property="memberId" column="MEMBER_ID" jdbcType="VARCHAR" />
+		<result property="money" column="MONEY" jdbcType="DOUBLE" />
+		<result property="forTime" column="FOR_TIME" jdbcType="TIMESTAMP" />
+		<result property="status" column="STATUS" jdbcType="INTEGER" />
+		<result property="remark" column="REMARK" jdbcType="VARCHAR" />
+		<result property="name" column="MEMBER_NAME" jdbcType="VARCHAR" />
+		<result property="tel" column="TEL" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 条件查询融资申请 -->
+	<select id="query" resultMap="ApplyForEntity"
+		parameterType="com.sxj.util.persistent.QueryCondition">
+		<![CDATA[SELECT AF.*,M.MEMBER_NAME FROM APPLY_FOR AF 
+LEFT JOIN MEMBER M ON M.MEMBER_ID = AF.MEMBER_ID WHERE 1=1 ]]>
+
+		<if test="condition.name != null and condition.name != ''">
+			<![CDATA[AND M.MEMBER_NAME LIKE CONCAT('%',#{condition.name},'%')]]>
+		</if>
+		<![CDATA[ ORDER BY AF.FOR_TIME DESC]]>
+	</select>
+</mapper>

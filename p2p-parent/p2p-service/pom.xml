@@ -22,7 +22,7 @@
     <dependency>
     	<groupId>com.herongwang</groupId>
     	<artifactId>p2p-dao</artifactId>
-    	<version>${project.version}</version>
+    	<version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>

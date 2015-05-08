@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>和融网管理平台</title>
+<meta name="keywords" content="和融网管理平台">
+<meta name="description" content="和融网管理平台">
+<link href="${b.staticPath}style/style.css" rel="stylesheet" type="text/css" />
+<script src="${b.staticPath}js/jquery.js" type="text/javascript"></script>
+<script src="${b.staticPath}js/datepicker.js"></script>
+<script src="${b.staticPath}js/jquery.paginate.js"></script>
+<@b.pageScript/> 
+</head>
+<body>
+<div id="header" class="fence">
+  <div class="fence-wide">
+    <p class="ly-right logOut">杜金鑫，您好！<a href="#">退出当前帐户</a></p>
+    <h1 class="fontYH fb ly-left" title="和融网">管理平台</h1>
+  </div>
+</div>
+<div class="fence">
+  <div class="fence-wide pt10 pb10 ly-clearFix">
+    <div class="yard-180 ly-left leftMenu fontYH">
+      <ul>
+        <li><a href="member-center.html">会员管理</a></li>
+        <li><a href="../apply/applyList.htm">融资申请管理</a></li>
+        <li><a href="../tender/tenderList.htm">投资标书管理</a></li>
+        <li><a href="recharge.htm">充值管理</a></li>
+        <li><a href="deposit.htm" class="on">提现管理</a></li>
+      </ul>
+    </div>
+    <div class="yard-1000 ly-left">
+      <div class="rightSide">
+        <div class="heading fontYH f20">提现管理</div>
+        <div class="mainBox">
+          <table border="0" cellspacing="0" cellpadding="0" class="tabList">
+            <col width="8%" />
+            <col width="12%" />
+            <col width="13%" />
+            <col width="20%" />
+            <col width="10%" />
+            <col width="7%" />
+            <col width="12%" />
+            <col width="10%" />
+            <col width="8%" />
+            <tr>
+              <th>会员名称</th>
+              <th>提现时间</th>
+              <th>订单号 </th>
+              <th>通联支付单号</th>
+              <th>提现金额</th>
+              <th>手续费</th>
+              <th>实际到账时间</th>
+              <th>实际到帐金额</th>
+              <th>操作</th>
+            </tr>
+            <#list list as deal>
+            <tr>
+	         <td>${deal.name}</td>
+              <td><#if (deal.dealTime??)> ${deal.dealTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
+              <td>${deal.orderNo}</td>
+              <td>${deal.payNo}</td>
+              <td>${deal.dealFee}元</td>
+              <td>${deal.manageFee}</td>
+              <td><#if (deal.actuaTime??)> ${deal.actuaTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
+              <td>${deal.actuaFee}元</td>
+              <td><button class="button btn-examine">审核</button></td>
+            </tr>
+			</#list>
+          </table>
+		  <div class="ly-clearFix">
+           <@b.pager/>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="footer" class="fence">
+  <div class="fence-wide">&copy; 2015 南京紫金财富企业管理有限公司&nbsp;版权所有<span class="ml10"><a href="http://www.miitbeian.gov.cn/" target="_blank">苏ICP备14047993号-1</a></span></div>
+</div>
+<div class="modal-wrap popDemo remList" style="display:none;">
+      <div class="modal-header"><span class="close">关闭</span></div>
+     <div class="modal-body memberBox" title="优先显示通过UnionID匹配到的员工编号，如果没有的情况下显示UnionID">
+       <div class="item fontYH color-blue">第一度推荐 ：<span title="陈绍伟">oO_eAjtxCKoRnicolAYtKcx3cu8c</span></div>
+	   <div class="item fontYH color-blue">第二度推荐 ：<span title="陈绍伟">oO_eAjtxCKoRnicolAYtKcx3cu8c</span></div>
+	   <div class="item fontYH color-blue">第三度推荐 ：<span title="陈绍伟">oO_eAjtxCKoRnicolAYtKcx3cu8c</span></div>
+	   <div class="item fontYH color-blue">第四度推荐 ：<span title="陈绍伟">oO_eAjtxCKoRnicolAYtKcx3cu8c</span></div>
+	   <div class="item fontYH color-blue">第五度推荐 ：<span title="陈绍伟">oO_eAjtxCKoRnicolAYtKcx3cu8c</span></div>
+  </div>
+  </div>
+<div class="modal-wrap popDemo memLevel" style="display:none;">
+  <div class="modal-header"><span class="close">关闭</span></div>
+  <div class="modal-body memberBox">
+    <div class="item fontYH color-blue">客户分级 :
+      <select name="select4" id="select4" class="fontYH">
+                <option>新客户</option>
+                <option>准客户</option>
+                <option>大客户</option>
+                <option>VIP客户</option>
+              </select>
+    </div>
+    <button class="popBtn">确认</button>
+  </div>
+</div>
+<div class="modal-wrap popDemo memberList" style="display:none;">
+      <div class="modal-header"><span class="close">关闭</span></div>
+     <div class="modal-body memberBox">
+       <div class="item fontYH color-blue">
+         归属员工 :<input name="" type="text" class="input input-w220h30 ml5 fontYH" title="联想输入员工编号" value="请输入员工编号" /> </div>
+  <button class="popBtn">确认</button></div>
+  </div>
+<div class="maskdivgen" style="display:none"></div>
+<script type="text/javascript">
+		$(function() {
+			$("#pager").paginate({
+				count 		: 50,
+				start 		: 1,
+				display     : 10,
+				border					: true,
+				border_color			: '#CCC',
+				text_color  			: '#333',
+				background_color    	: '',	
+				border_hover_color		: '#ff4400',
+				text_hover_color  		: '',
+				background_hover_color	: '', 
+				images					: false,
+				mouse					: 'press'
+			});
+});
+		</script>
+</body>
+</html>

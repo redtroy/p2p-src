@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>和融网</title>
+<link href="${b.staticPath}style/style.css" rel="stylesheet"
+	type="text/css" />
+<script src="${b.staticPath}js/jquery.js"></script>
+<@b.validate/> <@b.dialog/>
+<script>
+	var validform;
+	$(document).ready(function() {
+		validform = $("#applyForm").Validform({
+			tiptype : 3
+		});
+
+	});
+
+	function saveApply() {
+		if (!validform.check()) {
+			return false;
+		}
+		var success = dialog({
+			title : '消息',
+			cancel : false,
+			ok : function() {
+				window.location.href = "${basePath}index.htm";
+			}
+		});
+		var show = dialog();
+		var d = dialog({
+			title : '消息',
+			content : '是否提交贷款申请?',
+			okValue : '确 定',
+			ok : function() {
+				var that = this;
+				show.showModal();
+				$.post("saveApply.htm", $("#applyForm").serialize(), function(
+						data) {
+					if (data.isOK == 'ok') {
+						show.close().remove();
+						success.content('提交融资申请成功！');
+						success.showModal();
+					} else {
+						success.content('提交融资申请失败！');
+						success.showModal();
+					}
+				})
+			},
+			cancelValue : '取消',
+			cancel : function() {
+			}
+		});
+		d.showModal();
+	}
+</script>
+</head>
+<body>
+	<div class="fence-wide bgBlack">
+		<div class="yard-1100 topMenu fontYH ly-clearFix">
+			<ul class="ly-clearFix ly-right">
+				<li><a href="login.html">登录</a>|</li>
+				<li><a href="register.html">注册</a></li>
+			</ul>
+		</div>
+	</div>
+	<div id="header" class="fence-wide">
+		<div class="yard-1100 ly-clearFix">
+			<h1 title="和融网" class="ly-left">和融网</h1>
+			<ul class="navMenu fontYH ly-left">
+				<li><a href="../index.html">首页</a></li>
+				<li><a href="prod-list.html">我要投资</a></li>
+				<li class="current"><a href="apply.html">我要融资</a></li>
+				<li><a href="#">我的账户</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="fence-wide product">
+		<div class="yard-1100 prodCont">
+			<div class="titMain">
+				<h2 class="fontYH">快速申请借款</h2>
+			</div>
+
+			<div class="aboutBox fontYH f16">
+				<div class="mb20 f18 fontYH">和融网--是中小微企业快速获取低成本融资服务的便捷平台。若您是信誉良好且有足够还款来源的企业，请填写如下信息，我们会尽快与您联系。</div>
+				<div class="regInfo fontYH">
+					<form action="" id="applyForm">
+						<div class="item">
+							<label><span class="color-red mr5 fb">*</span>所需资金</label> <input
+								class="input input-w270h36" type="text" autocomplete="off"
+								placeholder="" id="input" name="money" value=""
+								datatype="/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/"
+								errormsg="请输入1~20位之间的数字！" nullmsg="请输入所需资金！" />
+						</div>
+						<div class="item">
+							<label><span class="color-red mr5 fb">*</span>怎么称呼您</label> <input
+								class="input input-w270h36" type="text" autocomplete="off"
+								placeholder="" id="input" name="name" value="" datatype="*1-20"
+								errormsg="请输入1~20位之间的字符！" nullmsg="请输入您的姓名！" />
+						</div>
+						<div class="item">
+							<label><span class="color-red mr5 fb">*</span>您的联系方式</label> <input
+								class="input input-w270h36" type="text" autocomplete="off"
+								placeholder="" id="input" name="tel" value=""
+								datatype="/^(13|15|17|18)[0-9]{9}$/" errormsg="请输入正确的手机号码！"
+								nullmsg="请输入您的联系方式！" />
+						</div>
+						<div class="item">
+							<label><span class="color-red mr5 fb">*</span>简单说明</label>
+							<textarea class="textarea textarea-w600" datatype="*1-200"
+								name="remark" errormsg="请输入1~200位之间的字符！" nullmsg="请输入简单说明！"></textarea>
+						</div>
+						<div class="item">
+							<label>&nbsp;</label> <a href="javascript:void(0)"
+								class="button button-orange btn-regin btn-disable"
+								onclick="saveApply();">提交</a>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<@b.footer />
+</body>
+</html>

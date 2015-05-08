@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>和融网</title>
+<meta name="keywords" content="私享家绿色门窗平台,门窗,型材厂,玻璃厂,门窗">
+	<meta name="description"
+		content="私享家绿色门窗平台,为门窗行业的玻璃厂,型材厂提供产品盘点,物流跟踪,质量溯源服务。致力于推动江苏省房地产建筑行业绿色环保事业。">
+		<link href="${b.staticPath}style/style.css" rel="stylesheet"
+			type="text/css" />
+		<script language="javascript" type="text/javascript">
+			var i = 5;
+			var intervalid;
+			intervalid = setInterval("fun()", 1000);
+			function fun() {
+				if (i == 0) {
+					window.location.href = "${basePath}index.htm";
+					clearInterval(intervalid);
+				}
+				document.getElementById("mes").innerHTML = i;
+				i--;
+			}
+		</script>
+</head>
+<body>
+	<div id="main-error" class="err404 fence-wide">
+		<div class="cont err404">
+			<p class="fontYH f24">很抱歉，没有找到您需要的页面</p>
+			<p class="f14">
+				<span id="mes">5</span>秒后自动返回首页，也可立即<a href="${basePath}index.htm">返回首页</a>
+			</p>
+		</div>
+	</div>
+</body>
+</html>

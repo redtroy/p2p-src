@@ -1,0 +1,374 @@
+<#assign staticPath="http://static.menchuang.org.cn/p2p-website/"/>
+<#assign imagePath="http://storage.menchuang.org.cn/" />
+<#macro validate>
+<!--<script src="${staticPath}js/jquery.validate.js"></script>-->
+<script src="${staticPath}js/Validform_v5.3.2.js"></script>
+<script src="${staticPath}js/jquery.poshytip.min.js"></script>
+<script>
+$(function(){
+	$(":input").each(function(){
+		if($(this).attr("title"))
+			$(this).poshytip({
+		className: 'tipMsg msg-gray ml5',
+		showOn: 'focus',
+		alignTo: 'target',
+		alignX: 'right',
+		alignY: 'inner-top',
+		offsetX: 5
+	});
+	
+	});
+});
+</script>
+</#macro>
+<#macro dialog>
+<script src="${staticPath}js/dialog.js"></script>
+<link rel="stylesheet" href="${staticPath}style/ui-dialog.css" />
+</#macro>
+
+<#macro pageScript>
+<!--<script src="${staticPath}js/jquery.paginate.js"></script>  -->
+<script src="${staticPath}js/jquery.pagination_2.js"></script>
+<script src="${staticPath}js/layer.min.js"></script>
+<script src="${staticPath}js/layer.ext.js"></script>
+<link rel="stylesheet" href="${staticPath}style/pagination_2.css" />
+<script>
+function loadPage(currentPage,totalPage) {
+	$(".jump").die("click");
+	layer.closeAll();
+	// 创建分页
+	$(".pagination").attr("currentPage",currentPage);
+	$(".pagination").attr("totalPage",totalPage);
+	$(".pagination").pagination(totalPage, {
+		num_edge_entries: 1, //边缘页数
+		num_display_entries: 4, //主体页数
+		callback: function(page_index,jp){
+			loadingImg();
+			query(page_index+1);
+			$(".pagination").attr("currentPage",page_index+1);
+			return false;
+		},
+		current_page:currentPage-1,
+		items_per_page:1, //每页显示1项
+		prev_text: "前一页",
+		next_text: "后一页"
+	});
+	jump(currentPage);
+ }
+$(".pagination").ready(function(){
+	
+	loadPage(${query.currentPage},${query.totalPage});
+});
+var jump = function(currentPage){
+	$(".pagination").append("&nbsp;<span style='color:#15b;'>到第<input name=''class='pageNumber' style=' width: 35px;margin:0 3px;' value='"+currentPage+"'/>页</span><a class='next jump' >确定</a>");
+	$(".jump").live("click",function(){
+		$(".pageNumber").each(function(i){
+			if(i==0){
+				var totalPage=$(".pagination").attr("totalPage");
+				var pageNumber = $(this).val();
+				$(this).val(pageNumber.replace(/\D/gi, ""));
+				pageNumber=pageNumber.replace(/\D/gi, "");
+				if(pageNumber!=''){
+					if(parseInt(pageNumber)>parseInt(totalPage)){
+						//数值大于当前最大页码,返回当前最大页码
+						$(this).val(totalPage);
+						pageNumber=totalPage;
+					}
+					query(pageNumber);
+				}
+			}
+		})
+	});
+}
+$(".pageNumber").live("keyup",function(){
+	var $val = $(this).val();
+	$(".pageNumber").each(function(){
+		$(this).val($val);
+	})
+})
+</script>
+</#macro>
+<#macro upload>
+<script src="${staticPath}js/jquery.uploadify.js"></script>
+<link href="${staticPath}style/uploadify.css" rel="stylesheet"
+	type="text/css" />
+<script>
+var iviewer;
+var msie=$.browser.msie
+var elastislideConfig={
+		count:6//当前显示数量
+}
+var slideTimes=elastislideConfig.count;
+var currentHiddenImages;
+var currentLi;
+var closeViewer;
+$(document).ready(function(){
+	$(".iviewer_del").live("click",function(){
+		var url=$(this).siblings("img").attr("src");
+		var prefix="${b.imagePath}";
+		var image=url.substring(url.indexOf(prefix)+prefix.length);
+		var images=currentHiddenImages.attr("value");
+		var result=images.replace(image+",","").replace(","+image,"").replace(image,"");
+		currentHiddenImages.attr("value",result)
+		currentLi.remove();
+		closeViewer();
+	});
+});
+var refreshIviewer=function($viewer,src,$container){
+	$viewer.find("img").attr("src","");
+	if($viewer.children().length==0){
+		iviewer=$viewer.iviewer({
+			src : src,
+			mousewheel : true
+		});
+	}else{
+		iviewer.iviewer('loadImage', src);
+	}
+	if($container){
+		$container.css("top",$(window).scrollTop());
+		$container.show();
+		$container.find(".modal-header").show();
+	}else{
+		$(".modal-wrap").show();
+		$(".modal-header").show();
+	}
+	$viewer.show();
+}
+var errorImage=function($this){
+	var times=parseInt($($this).attr("times"));
+	if(times<3){
+		$($this).attr("src", $($this).attr("src"));
+		$($this).attr("times",times+1);
+	}else if(times==3){
+		$($this).attr("src", "http://static.menchuang.org.cn/images/bg404.jpg");
+		$($this).attr("times",times+1);
+	}
+}
+
+var imageSrc=function(src){
+	if($.browser.msie) {
+		return src;
+	} 
+	return "";
+}
+
+var refreshElastislide=function($container,$carousel,data,empty){
+	if(!data)
+		return;
+	var start=0;
+	if(empty)
+		$carousel.empty();
+	if(data){
+		if(data instanceof Array){
+			for (var i = 0; i < data.length; i++) {
+				var suffix=/\.[^\.]+$/.exec(data[i]);
+				var $img,$a;
+				if(suffix==".PDF"){
+					 $img=$('<img src="${b.staticPath}images/pdf.png" times="0" title="点击下载文件"/>');
+					 $a=$('<a href="javascript:void(0);" class="demo-pdf" data-pdf="'+data[i]+'"></a>');
+				}else{
+					 $img=$('<img data-image="${b.imagePath}'+data[i]+'80x100.JPG" alt="" src="'+imageSrc(data[i])+'" onerror="errorImage(this)" times="0"/>');
+					 $a=$('<a href="javascript:void(0);" class="demo-image" data-image="${b.imagePath}'+data[i]+'"></a>');
+				}
+				
+				$a.append($img);
+				var $p=$('<p>'+(i+1)+'</p>');
+				var $li=$('<li></li>');
+				$li.append($a);
+				$li.append($p);
+				$carousel.append($li);
+			}
+		}else{
+			var suffix=/\.[^\.]+$/.exec(data.fileIds);
+			var $img,$a;
+			if(suffix==".PDF"){
+				 $img=$('<img src="${b.staticPath}images/pdf.png" times="0" title="点击下载文件"/>');
+				 $a=$('<a href="javascript:void(0);" class="demo-pdf" data-pdf="'+data.fileIds+'"></a>');
+			}else{
+				 $img=$('<img src="${b.imagePath}'+data.fileIds+'80x100.JPG" src="'+imageSrc(data.fileIds)+'"  onerror="errorImage(this)" times="0"/>');
+				 $a=$('<a href="javascript:void(0);" class="demo-image" data-image="${b.imagePath}'+data.fileIds+'"></a>');
+			}
+			
+			$a.append($img);
+			var $li=$('<li></li>');
+			$li.append($a);
+			
+			$carousel.append($li);
+			var $p=$('<p>'+$carousel.children().length+'</p>');
+			$li.append($p);
+			start=$carousel.children().length;
+		}
+	}
+	$container.empty();
+	$container.append($carousel);
+	$carousel.elastislide({
+		orientation : 'horizontal',
+		speed : 500,
+		easing : 'ease-in-out',
+		minItems : elastislideConfig.count,
+		start : start,
+		onClick : function( el, position, evt ) { 
+			return false; 
+		},
+		onReady : function() { 
+			$carousel.children("li:lt("+elastislideConfig.count+")").each(function(){
+				var $image=$(this).find("img");
+				if($image.attr("data-image"))
+					$image.attr("src",$image.attr("data-image"));
+			});
+			if($carousel.children("li").length<elastislideConfig.count)
+				$(".elastislide-prev").hide();
+			return false; },
+		onBeforeSlide : function() { return false; },
+		onAfterSlide : function() { 
+			if(start>0)
+				slideTimes=slideTimes+start;
+			$carousel.children("li:lt("+slideTimes+")").each(function(){
+				var $image=$(this).find("img");
+				if($image.attr("data-image"))
+					$image.attr("src",$image.attr("data-image"));
+			});
+			slideTimes=slideTimes+elastislideConfig.count;
+			return false; }
+	});
+	$container.show();
+	
+}
+
+function loadUpload(id,url,isMulti,text,fn){
+	  $("#"+id).uploadify({
+	        swf: '${basePath}upload/uploadify.swf',
+	        uploader: url,
+	        fileTypeExts: '*.jpg',
+	        auto: true,
+	        multi: false,
+	        simUploadLimit:1,
+	        height:30,
+	        width:200,
+	        buttonText:text,
+	        onUploadSuccess : function(file, data, response) {
+	        	fn(data);
+	        }
+	        
+	    });
+}
+function loadUploadMember(id,url,isMulti,text,fn){
+	  $("#"+id).uploadify({
+	        swf: '${basePath}upload/uploadify.swf',
+	        uploader: url,
+	        fileTypeExts: '*.jpg',
+	        auto: true,
+	        multi: false,
+	        simUploadLimit:1,
+	        height:30,
+	        width:100,
+	        buttonText:text,
+	        onUploadSuccess : function(file, data, response) {
+	        	fn(data);
+	        }
+	        
+	    });
+}
+</script>
+</#macro>
+<#macro header>
+<meta name="renderer" content="webkit">
+<@csrf.ajaxenabled>
+<script>
+function createXmlHttpRequest(){  
+    if(window.ActiveXObject){ //如果是IE浏览器  
+        return new ActiveXObject("Microsoft.XMLHTTP");  
+    }else if(window.XMLHttpRequest){ //非IE浏览器  
+        return new XMLHttpRequest();  
+    }  
+}
+(function() {
+	XMLHttpRequest.prototype._send = XMLHttpRequest.prototype.send;
+	XMLHttpRequest.prototype.send = function(data) {
+		this.setRequestHeader("X-Requested-With", "COM_SXJ_CSRFGUARD")
+		this.setRequestHeader("<@csrf.tokenname/>", "<@csrf.tokenvalue/>");
+		this._send.apply(this, arguments);
+	};
+	
+})();
+</script>
+</@csrf.ajaxenabled>
+<div id="header">
+	<div class="fence-wide">
+		<#if Session.userinfo?exists>
+		<div class="logOut ly-right">
+			<#if Session.userinfo.account?exists> <span class="mr10">${Session.userinfo.account.name}，您好！</span>
+			<#else> <span class="mr10">${Session.userinfo.member.name}，您好！</span>
+			</#if> <a href="${basePath}logout.htm">退出当前帐户</a>
+		</div>
+		</#if>
+	</div>
+	<h1 class="fence-wide">
+		<a href="javascript:void(0);" class="logo" title="私享家绿色门窗平台">私享家绿色门窗平台</a>
+	</h1>
+	<h1 class="fence-wide">
+		<a href="${staticPath}html/register.html" class="logo"
+			title="私享家绿色门窗平台">私享家绿色门窗平台</a>
+	</h1>
+</div>
+<#if Session.userinfo?exists>
+<script>
+$(document).ready(function(){
+	var currentUrl=window.location.href;
+	var functionId=getUrlParam("function");
+	$.get("${basePath}enter.htm?functionId="+functionId+"&url="+currentUrl);
+});
+
+function getUrlParam(name){
+	var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+	var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+	if (r!=null) return unescape(r[2]); return null; //返回参数值
+}
+</script>
+</#if>
+</#macro>
+<#macro footer>
+<script type="text/javascript">
+$(document).ready(function(){
+	var newDate = new Date();
+	var year = newDate.getFullYear();
+	$("#yearSapn").text(year);
+});
+</script>
+<div class="fence-wide bgBlack">
+		<div id="footer" class="yard-1100 f14 fontYH ly-clearFix">
+			<div class="menuCont tc">
+				<ul class="ly-clearFix f18">
+					<li><a href="about-us.html">关于我们</a></li>
+					<li><a href="products.html">产品优势</a></li>
+					<li><a href="contact-us.html" class="borderNone">联系我们</a></li>
+				</ul>
+				<p class="f12">
+					<span>&copy;&nbsp;<span id="yearSapn"></span>&nbsp;和融网&nbsp;版权所有</span><span>www.herongwangnt.com</span>苏ICP备14047993号-2
+				</p>
+				<p class="f12">地址：江苏省南京市栖霞区马群街道仙林大道18号</p>
+			</div>
+		</div>
+	</div>
+</#macro> <#macro leftMenu isLoad>
+<div id="leftList"></div>
+<script>
+	var isLoad="${isLoad}";
+	var account="${Session.userinfo.account.accountNo}";
+	if(account==""){
+		account="${Session.userinfo.member.memberNo}"
+	}
+	if(isLoad=="true"){
+		$("#leftList").load("${basePath}menu.htm?account="+account+"&"+ Math.random());
+	}else{
+		$("#leftList").load("${basePath}menu.htm?account="+account);
+	}
+</script>
+
+</#macro>
+<#macro pager>
+<div id="pager" class="pagination f12 mt10 ly-right"
+	totalPage="${query.totalPage}" currentPage="${query.currentPage}"></div>
+</#macro>
+
+

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.herongwang.p2p.dao.admin.IAdminDao">
+	<resultMap id="AdminResultMap" type="com.herongwang.p2p.entity.admin.AdminEntity">
+		<id property="userId" column="USER_ID" jdbcType="VARCHAR" />
+		<result property="userNo" column="USER_NO" jdbcType="VARCHAR" />
+		<result property="userName" column="USER_NAME" jdbcType="VARCHAR" />
+		<result property="password" column="PASSWORD" jdbcType="VARCHAR" />
+		<result property="tel" column="TEL" jdbcType="VARCHAR" />
+		<result property="status" column="STATUS" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<select id="getAdminByName" resultMap="AdminResultMap"
+		parameterType="String">
+		<![CDATA[SELECT * FROM USER_INFO  WHERE USER_NO=#{name}]]>
+	</select>
+</mapper>

@@ -21,7 +21,7 @@
 	<aop:aspectj-autoproxy />
 	
 	<!-- 使用annotation 自动注册bean,并检查@Required,@Autowired的属性已被注入 -->
-	<context:component-scan base-package="com.sxj.supervisor.service">
+	<context:component-scan base-package="com.herongwang.p2p.service">
 		<context:exclude-filter type="annotation"
 			expression="org.springframework.stereotype.Controller" />
 		<context:exclude-filter type="annotation"
@@ -40,14 +40,14 @@
 		<property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
 		<property name="dataSource" ref="dataSource" />
 		<!-- 自动扫描entity目录, 省掉Configuration.xml里的手工配置 -->
-		<property name="typeAliasesPackage" value="com.sxj.supervisor.entity" />
+		<property name="typeAliasesPackage" value="com.herongwang.p2p.entity" />
 		<!-- 显式指定Mapper文件位置 -->
 		<property name="mapperLocations" value="classpath*:/mapper/**/*Mapper.xml" />
 
 	</bean>
 	<!-- 扫描basePackage下所有以@MyBatisRepository标识的 接口 -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.sxj.supervisor.dao" />
+		<property name="basePackage" value="com.herongwang.p2p.dao" />
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
 	</bean>
 	<!-- 配置多级缓存 -->
@@ -56,7 +56,7 @@
 		<!-- <property name="configFile" value="cache.properties"></property> -->
 		<property name="databaseId" value="2"></property>
 	</bean>
-	<bean id="redisConcurrent" class="com.sxj.redis.advance.RedisConcurrent">
+	 <!-- <bean id="redisConcurrent" class="com.sxj.redis.advance.RedisConcurrent">
 		<constructor-arg index="0">
 			<bean class="com.sxj.redis.advance.Config">
 				<property name="singleServerConfig">
@@ -91,8 +91,23 @@
 				</property>
 			</bean>
 		</constructor-arg>
+	</bean>  -->
+	<bean id="redisConcurrent" class="com.sxj.redis.core.concurrent.RedisConcurrent">
+		<constructor-arg index="0">
+			<value>config/redis-advance.properties</value>
+		</constructor-arg>
 	</bean>
-	<bean class="com.sxj.supervisor.service.CometServiceImpl" />
+	<bean id="redisCollections" class="com.sxj.redis.core.collections.RedisCollections">
+		<constructor-arg index="0">
+			<value>config/redis-advance.properties</value>
+		</constructor-arg>
+	</bean>
+	<bean id="redisTopics" class="com.sxj.redis.core.pubsub.RedisTopics">
+		<constructor-arg index="0">
+			<value>config/redis-advance.properties</value>
+		</constructor-arg>
+	</bean>
+	<!-- <bean class="com.sxj.supervisor.service.CometServiceImpl" /> -->
 	
 	<bean id="httpClient" class="com.sxj.util.common.SxjHttpClientImpl">
 		<property name="charset" value="${httpclient.charset}" />

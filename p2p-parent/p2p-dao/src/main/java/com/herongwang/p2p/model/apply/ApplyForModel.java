@@ -7,7 +7,7 @@ import com.herongwang.p2p.entity.apply.ApplyForEntity;
 import com.sxj.mybatis.pagination.Pagable;
 
 /**
- * 融资申请模型
+ * 融资申请模型1
  * @author nishaotang
  *
  */

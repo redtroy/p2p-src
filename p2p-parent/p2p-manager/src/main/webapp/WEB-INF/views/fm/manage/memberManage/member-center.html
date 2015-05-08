@@ -92,56 +92,18 @@ jQuery(document).ready(function($) {
               <th>注册时间</th>
               <th>管理</th>
             </tr>
-            <tr class="bColor-red" title="有报名未处理的客户记录">
-              <td>M000005</td>
-              <td>姚岩岩</td>
-              <td>yaoyy@163.com</td>
-              <td>13357835399</td>
-              <td>6222 6840 2100 1799 690</td>
-              <td>姚岩岩</td>
-              <td class="edit">2015-05-06 09:10:00</td>
-              <td class="edit"><a href="#" class="del">删除</a> <a href="#" class="allot">修改</a></td>
-            </tr>
+            <#list list as model>
             <tr>
-              <td>M000004</td>
-              <td>钱佳佳</td>
-              <td>qianjiaj@qq.com</td>
-              <td>13357835399</td>
-              <td>6222 6840 2100 1799 690</td>
-              <td>钱佳佳</td>
-              <td class="edit">&nbsp;</td>
+              <td>${model.memberCode}</td>
+              <td>${model.memberName}</td>
+              <td>${model.email}</td>
+              <td>${model.tel}</td>
+              <td>${model.bankCode}</td>
+              <td>${model.codeName}</td>
+              <td class="edit"><#if (model.registerTime??)> ${model.registerTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
               <td class="edit"><a href="#" class="del">删除</a> <a href="#" class="allot">修改</a></td>
             </tr>
-            <tr>
-              <td>M000003</td>
-              <td>倪绍堂</td>
-              <td>nishaotang@qq.com</td>
-              <td>13357835399</td>
-              <td>6222 6840 2100 1799 690</td>
-              <td>倪绍堂</td>
-              <td class="edit">&nbsp;</td>
-              <td class="edit"><a href="#" class="del">删除</a> <a href="#" class="allot">修改</a></td>
-            </tr>
-            <tr>
-              <td>M000002</td>
-              <td>安少帅</td>
-              <td>anshaoshuai@sina.com</td>
-              <td>13357835399</td>
-              <td>6222 6840 2100 1799 690</td>
-              <td>安少帅</td>
-              <td class="edit">&nbsp;</td>
-              <td class="edit"><a href="#" class="del">删除</a> <a href="#" class="allot">修改</a></td>
-            </tr>
-            <tr>
-              <td>M000001</td>
-              <td>陈绍伟</td>
-              <td>chensw@qq.com</td>
-              <td>13357835399</td>
-              <td>6222 6840 2100 1799 690</td>
-              <td>陈绍伟</td>
-              <td class="edit">&nbsp;</td>
-              <td class="edit"><a href="#" class="del">删除</a> <a href="#" class="allot">修改</a></td>
-            </tr>
+            </#list>
           </table>
 		  <div class="ly-clearFix">
           <div id="pager" class="jPaginate"></div>

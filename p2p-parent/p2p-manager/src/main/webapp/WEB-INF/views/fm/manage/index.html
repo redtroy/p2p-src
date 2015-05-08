@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>和融网管理平台</title>
+<meta name="keywords" content="和融网管理平台">
+<meta name="description" content="和融网管理平台">
+<link href="${b.staticPath}style/style.css" rel="stylesheet" type="text/css" />
+<link href="${b.staticPath}style/msg.css" rel="stylesheet" type="text/css" />
+<script src="${b.staticPath}js/jquery.js" type="text/javascript"></script>
+<script>
+ function sub(){
+	 $("#login_form").submit();
+ }
+</script>
+</head>
+
+<body>
+<div id="header" class="fence">
+  <div class="fence-wide">
+    <p class="ly-right logOut"></p>
+    <h1 class="fontYH fb ly-left" title="和融网">管理平台</h1>
+  </div>	
+</div>
+<div id="login" class="fence">
+  <div class="fence-wide">
+  <div class="loginBox fontYH">
+      <div class="title fontYH f20">管理员登录<span class="f14 ml10">ADMIN LOGIN</span></div>
+        <div class="regCont">
+        <form id="login_form" action="login.htm" method="post">
+        <div class="item">
+          <label class="f16">登录帐号	</label>
+          <input class="input" type="text" autocomplete="off" placeholder="" title="" id="" name="account" value="" />
+        </div>
+        <div class="item">
+          <label class="f16">登录密码</label>
+          <input class="input" type="password" autocomplete="off" placeholder="" title="" name="password"/>
+          <p></p>
+        </div>
+        </form>
+      <a href="javascript:sub();" class="button btn-login">立即登录</a> </div>
+</div>
+  </div>
+</div>
+<div id="footer" class="fence">
+  <div class="fence-wide">&copy; 2015 南京紫金财富企业管理有限公司&nbsp;版权所有<span class="ml10"><a href="http://www.miitbeian.gov.cn/" target="_blank">苏ICP备14047993号-1</a></span></div>
+</div>
+</body>
+</html>
