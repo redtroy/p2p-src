@@ -34,7 +34,7 @@ public interface IApplyForService {
 	 * @param query
 	 * @return
 	 */
-	public List<ApplyForModel> queryApplyFors(ApplyForModel query)
+	public List<ApplyForEntity> queryApplyFors(ApplyForEntity query)
 			throws ServiceException;
 
 	/**

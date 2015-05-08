@@ -11,15 +11,17 @@
 		<result property="forTime" column="FOR_TIME" jdbcType="TIMESTAMP" />
 		<result property="status" column="STATUS" jdbcType="INTEGER" />
 		<result property="remark" column="REMARK" jdbcType="VARCHAR" />
+		<result property="name" column="MEMBER_NAME" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<!-- 条件查询财务统计 -->
 	<select id="query" resultMap="ApplyForEntity"
 		parameterType="com.sxj.util.persistent.QueryCondition">
-		<![CDATA[SELECT APPLY_ID,FOR_TIME,MEMBER_ID,MONEY,REMARK,STATUS FROM APPLY_FOR WHERE 1=1 ]]>
+		<![CDATA[SELECT AF.APPLY_ID,AF.FOR_TIME,AF.MEMBER_ID,AF.MONEY,AF.REMARK,AF.`STATUS`,M.MEMBER_NAME FROM APPLY_FOR AF 
+LEFT JOIN MEMBER M ON M.MEMBER_ID = AF.MEMBER_ID WHERE 1=1 ]]>
 
 		<if test="condition.name != null and condition.name != ''">
-			<![CDATA[AND MEMBER_ID LIKE CONCAT('%',#{condition.memberId},'%')]]>
+			<![CDATA[AND M.MEMBER_NAME LIKE CONCAT('%',#{condition.name},'%')]]>
 		</if>
 		<![CDATA[ ORDER BY FOR_TIME DESC]]>
 	</select>
