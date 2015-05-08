@@ -5,6 +5,7 @@ import java.util.List;
 import com.herongwang.p2p.service.apply.IApplyForService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.herongwang.p2p.dao.apply.IApplyForDao;
@@ -13,6 +14,8 @@ import com.herongwang.p2p.model.apply.ApplyForModel;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.persistent.QueryCondition;
 
+@Service
+@Transactional
 public class ApplyForServiceImpl implements IApplyForService {
 	
 	@Autowired
@@ -42,7 +45,7 @@ public class ApplyForServiceImpl implements IApplyForService {
 	}
 
 	@Override
-    @Transactional
+    @Transactional(readOnly = true)
 	public ApplyForModel getApplyForEntity(String id)throws ServiceException {
 		ApplyForModel applyModel = new ApplyForModel();
 		try{
@@ -56,7 +59,7 @@ public class ApplyForServiceImpl implements IApplyForService {
 	}
 
 	@Override
-    @Transactional
+    @Transactional(readOnly = true)
 	public List<ApplyForModel> queryApplyFors(ApplyForModel query) throws ServiceException{
 		QueryCondition<ApplyForModel> condition = new QueryCondition<ApplyForModel>();
         condition.addCondition("name", query.getName());
