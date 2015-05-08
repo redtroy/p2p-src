@@ -26,6 +26,9 @@ public class ApplyForServiceImpl implements IApplyForService {
     @Transactional
 	public void addApplyFor(ApplyForEntity apply)throws ServiceException {
 		try{
+			/**
+			 * 
+			 */
 			applyForDao.addApply(apply);
 		}catch(Exception e){
 			e.printStackTrace();
