@@ -23,6 +23,6 @@ LEFT JOIN MEMBER M ON M.MEMBER_ID = AF.MEMBER_ID WHERE 1=1 ]]>
 		<if test="condition.name != null and condition.name != ''">
 			<![CDATA[AND M.MEMBER_NAME LIKE CONCAT('%',#{condition.name},'%')]]>
 		</if>
-		<![CDATA[ ORDER BY FOR_TIME DESC]]>
+		<![CDATA[ ORDER BY AF.FOR_TIME DESC]]>
 	</select>
 </mapper>
