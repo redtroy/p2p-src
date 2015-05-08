@@ -11,7 +11,7 @@ import com.sxj.mybatis.orm.annotations.Update;
 import com.sxj.util.persistent.QueryCondition;
 
 /**
- * 融资申请
+ * 融资申请1
  * @author nishaotang
  *
  */

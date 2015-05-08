@@ -26,7 +26,7 @@ public class ApplyForEntity extends Pagable implements Serializable {
 	 */
 	private static final long serialVersionUID = -2444843981481631279L;
 	/**
-	 * 主键
+	 * 主键1
 	 */
 	@Id(column = "APPLY_ID")
     @GeneratedValue(strategy = GenerationType.UUID)

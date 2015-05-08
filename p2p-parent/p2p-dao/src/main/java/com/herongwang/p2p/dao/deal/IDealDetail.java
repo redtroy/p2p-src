@@ -10,7 +10,7 @@ import com.sxj.mybatis.orm.annotations.Update;
 import com.sxj.util.persistent.QueryCondition;
 
 /**
- * 交易明细
+ * 交易明细1
  * @author nishaotang
  *
  */
