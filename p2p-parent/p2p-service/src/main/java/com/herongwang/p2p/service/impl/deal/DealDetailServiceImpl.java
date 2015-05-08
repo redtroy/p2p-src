@@ -53,8 +53,9 @@ public class DealDetailServiceImpl implements IDealDetailService {
 	@Override
 	public List<DealDetailEntity> queryApplyFors(DealDetailEntity query) throws ServiceException {
 		QueryCondition<DealDetailEntity> condition = new QueryCondition<DealDetailEntity>();
-        condition.addCondition("name", query.getName());
-        condition.addCondition("dealType", query.getDealType());//1：充值；2：投标；3：还款；4：提现。
+//        condition.addCondition("name", query.getName());
+//        condition.addCondition("dealType", query.getDealType());//1：充值；2：投标；3：还款；4：提现。
+		 condition.addCondition("memberId", query.getMemberId());//会员id
         condition.setPage(query);
 		 List<DealDetailEntity> contractList = dealDetailDao.query(condition);
 		return contractList;
