@@ -124,7 +124,7 @@
 				/sysMessage/query.htm=user,frameperms
 				/transMessage/query.htm=user,frameperms
 				/systender/query.htm=user,frameperms
-				/developer/developers.htm=user,frameperms
+				/apply/apply_list.htm=user,frameperms
 			</value>
 		</property>
 		<!-- 声明自定义的过滤器 -->

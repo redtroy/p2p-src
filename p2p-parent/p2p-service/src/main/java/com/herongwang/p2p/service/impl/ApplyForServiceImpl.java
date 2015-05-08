@@ -1,8 +1,8 @@
-package mian.java.com.herongwang.p2p.service.impl;
+package com.herongwang.p2p.service.impl;
 
 import java.util.List;
 
-import mian.java.com.herongwang.p2p.service.apply.IApplyForService;
+import com.herongwang.p2p.service.apply.IApplyForService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
