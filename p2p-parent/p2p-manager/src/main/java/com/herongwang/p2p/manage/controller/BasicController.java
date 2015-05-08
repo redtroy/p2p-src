@@ -14,7 +14,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.herongwang.p2p.entity.admin.AdminEntity;
-import com.herongwang.p2p.manage.login.SupervisorShiroRedisCache;
 import com.herongwang.p2p.service.admin.IAdminService;
 
 @Controller
@@ -44,7 +43,7 @@ public class BasicController extends BaseController
             PrincipalCollection principals = SecurityUtils.getSubject()
                     .getPrincipals();
             String userNo = admin.getUserNo();
-            SupervisorShiroRedisCache.addToMap(userNo, principals);
+            // SupervisorShiroRedisCache.addToMap(userNo, principals);
         }
         catch (AuthenticationException e)
         {

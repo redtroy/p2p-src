@@ -8,6 +8,11 @@
 <link href="${b.staticPath}style/style.css" rel="stylesheet" type="text/css" />
 <link href="${b.staticPath}style/msg.css" rel="stylesheet" type="text/css" />
 <script src="${b.staticPath}js/jquery.js" type="text/javascript"></script>
+<script>
+ function sub(){
+	 $("#login_form").submit();
+ }
+</script>
 </head>
 
 <body>
@@ -22,16 +27,18 @@
   <div class="loginBox fontYH">
       <div class="title fontYH f20">管理员登录<span class="f14 ml10">ADMIN LOGIN</span></div>
         <div class="regCont">
+        <form id="login_form" action="login.htm" method="post">
         <div class="item">
           <label class="f16">登录帐号	</label>
-          <input class="input" type="text" autocomplete="off" placeholder="" title="" id="" name="" value="" />
+          <input class="input" type="text" autocomplete="off" placeholder="" title="" id="" name="account" value="" />
         </div>
         <div class="item">
           <label class="f16">登录密码</label>
-          <input class="input" type="password" autocomplete="off" placeholder="" title="" />
+          <input class="input" type="password" autocomplete="off" placeholder="" title="" name="password"/>
           <p></p>
         </div>
-      <a href="html/member-center.html" class="button btn-login">立即登录</a> </div>
+        </form>
+      <a href="javascript:sub();" class="button btn-login">立即登录</a> </div>
 </div>
   </div>
 </div>
