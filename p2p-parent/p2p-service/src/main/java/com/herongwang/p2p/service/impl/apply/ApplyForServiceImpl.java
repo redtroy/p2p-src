@@ -1,4 +1,4 @@
-package com.herongwang.p2p.service.impl;
+package com.herongwang.p2p.service.impl.apply;
 
 import java.util.List;
 
@@ -63,11 +63,11 @@ public class ApplyForServiceImpl implements IApplyForService {
 
 	@Override
     @Transactional(readOnly = true)
-	public List<ApplyForModel> queryApplyFors(ApplyForModel query) throws ServiceException{
-		QueryCondition<ApplyForModel> condition = new QueryCondition<ApplyForModel>();
+	public List<ApplyForEntity> queryApplyFors(ApplyForEntity query) throws ServiceException{
+		QueryCondition<ApplyForEntity> condition = new QueryCondition<ApplyForEntity>();
         condition.addCondition("name", query.getName());
         condition.setPage(query);
-		 List<ApplyForModel> contractList = applyForDao.query(condition);
+		 List<ApplyForEntity> contractList = applyForDao.query(condition);
 		return contractList;
 	}
 

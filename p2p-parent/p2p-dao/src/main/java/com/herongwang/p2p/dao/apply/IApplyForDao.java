@@ -45,6 +45,6 @@ public interface IApplyForDao {
 	 * @param query
 	 * @return
 	 */
-	public List<ApplyForModel> query(QueryCondition<ApplyForModel> query);
+	public List<ApplyForEntity> query(QueryCondition<ApplyForEntity> query);
 	
 }

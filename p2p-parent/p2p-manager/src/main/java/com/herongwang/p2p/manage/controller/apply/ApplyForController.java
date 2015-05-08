@@ -32,13 +32,13 @@ public class ApplyForController extends BaseController
 	 * @return
 	 */
     @RequestMapping("/applyList")
-	public String developerList(ApplyForModel entity, ModelMap map) throws WebException{
+	public String developerList(ApplyForEntity entity, ModelMap map) throws WebException{
     	try{
     		if (entity != null)
             {
     			entity.setPagable(true);
             }
-	    	List<ApplyForModel> list = applyService.queryApplyFors(entity);
+	    	List<ApplyForEntity> list = applyService.queryApplyFors(entity);
             map.put("list", list);
             map.put("query", entity);
 			return "manage/apply/apply-list";
