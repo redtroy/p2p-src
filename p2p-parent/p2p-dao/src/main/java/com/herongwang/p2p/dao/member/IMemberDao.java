@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.herongwang.p2p.entity.member.MemberEntity;
 import com.herongwang.p2p.model.member.MemberModel;
+import com.sxj.mybatis.orm.annotations.Insert;
 import com.sxj.util.persistent.QueryCondition;
 
 public interface IMemberDao
@@ -19,4 +20,10 @@ public interface IMemberDao
      * @return
      */
     public MemberEntity getMmeberByAccount(String account);
+    
+    /**
+     * 新增会员
+     */
+    @Insert
+    public void addMember(MemberEntity member);
 }

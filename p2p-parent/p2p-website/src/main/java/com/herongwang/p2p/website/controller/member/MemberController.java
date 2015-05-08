@@ -40,4 +40,18 @@ public class MemberController
         }
         return "site/member/member-center";
     }
+    
+    @RequestMapping("saveMember")
+    public String saveMember(MemberEntity member) throws WebException
+    {
+        try
+        {
+            
+        }
+        catch (Exception e)
+        {
+            // TODO: handle exception
+        }
+        return null;
+    }
 }
