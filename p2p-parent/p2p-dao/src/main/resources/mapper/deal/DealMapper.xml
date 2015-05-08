@@ -23,7 +23,7 @@
 		<result property="name" column="MEMBER_NAME" jdbcType="VARCHAR" />
 	</resultMap>
 
-	<!-- 条件查询财务统计 -->
+	<!-- 条件查询交易明细-->
 	<select id="query" resultMap="DealDetailEntity"
 		parameterType="com.sxj.util.persistent.QueryCondition">
 		<![CDATA[SELECT D.*,M.MEMBER_NAME FROM DEAL_DETAIL D LEFT JOIN MEMBER M ON M.MEMBER_ID = D.USER_ID WHERE 1=1 ]]>

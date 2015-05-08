@@ -22,54 +22,60 @@
   <div class="fence-wide pt10 pb10 ly-clearFix">
     <div class="yard-180 ly-left leftMenu fontYH">
       <ul>
-        <li><a href="member-center.html">会员管理</a></li>
+         <li><a href="member-center.html">会员管理</a></li>
         <li><a href="../apply/applyList.htm">融资申请管理</a></li>
-        <li><a href="../tender/tenderList.htm">投资标书管理</a></li>
-        <li><a href="recharge.htm">充值管理</a></li>
-        <li><a href="deposit.htm" class="on">提现管理</a></li>
+        <li><a href="tenderList.htm" class="on">投资标书管理</a></li>
+        <li><a href="../deal/recharge.htm">充值管理</a></li>
+        <li><a href="../deal/deposit.htm">提现管理</a></li>
       </ul>
     </div>
     <div class="yard-1000 ly-left">
       <div class="rightSide">
-        <div class="heading fontYH f20">提现管理</div>
+        <div class="heading fontYH f20">投资标书管理</div>
         <div class="mainBox">
           <table border="0" cellspacing="0" cellpadding="0" class="tabList">
-            <col width="8%" />
-            <col width="12%" />
-            <col width="13%" />
-            <col width="20%" />
+            <col width="18%" />
+            <col width="5%" />
             <col width="10%" />
             <col width="7%" />
-            <col width="12%" />
-            <col width="10%" />
+            <col width="5%" />
             <col width="8%" />
+            <col width="8%" />
+            <col width="13%" />
+            <col width="16%" />
             <tr>
-              <th>会员名称</th>
-              <th>提现时间</th>
-              <th>订单号 </th>
-              <th>通联支付单号</th>
-              <th>提现金额</th>
-              <th>手续费</th>
-              <th>实际到账时间</th>
-              <th>实际到帐金额</th>
+              <th>标题</th>
+              <th>借款人</th>
+              <th>还款类型</th>
+              <th>借款期限</th>
+              <th>年化率 </th>
+              <th>最小投资金额</th>
+              <th>最大投资金额</th>
+              <th>创建时间</th>
               <th>操作</th>
             </tr>
-            <#list list as deal>
+            <#list list as tender>
             <tr>
-	         <td>${deal.name}</td>
-              <td><#if (deal.dealTime??)> ${deal.dealTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
-              <td>${deal.orderNo}</td>
-              <td>${deal.payNo}</td>
-              <td>${deal.dealFee}元</td>
-              <td>${deal.manageFee}</td>
-              <td><#if (deal.actuaTime??)> ${deal.actuaTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
-              <td>${deal.actuaFee}元</td>
-              <td><button class="button btn-examine">审核</button></td>
+	         <td>${tender.title}</td>
+	         <td>${tender.name}</td>
+              <td>${tender.repaymentText}</td>
+              <td>${tender.borrpwTime}个月</td>
+              <td>${tender.interest}%</td>
+              <td>${tender.minAmount}元</td>
+              <td>${tender.maxAmount}元</td>
+              <td><#if (tender.fullTime??)> ${tender.fullTime?string("yyyy-MM-dd")}</#if></td>
+              <td>
+              <#if (tender.status==3)>
+	          <a href="#" class=" button btn-link">满标审核</a>
+			</#if>
+              <a href="investor-list.html" class="ml10 lnk-blue lnk-underline">修改</a>
+              <a href="investor-list.html" class="ml10 lnk-blue lnk-underline">投资人记录</a>
+              </td>
             </tr>
 			</#list>
           </table>
 		  <div class="ly-clearFix">
-           <@b.pager/>
+          <@b.pager/>
         </div>
         </div>
       </div>
