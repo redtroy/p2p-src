@@ -48,7 +48,7 @@ public class ApplyForEntity extends Pagable implements Serializable {
     @Column(name = "FOR_TIME")
     private Date forTime;
     /**
-     * 会员id
+     * 申请融资状态
      * 0：未处理；1：未通过；2：通过。
      */
     @Column(name = "STATUS")
