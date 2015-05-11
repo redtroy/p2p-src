@@ -18,7 +18,7 @@ import com.sxj.mybatis.pagination.Pagable;
  *
  */
 @Entity(mapper = IDebtApplicationDao.class)
-@Table(name = "DEBTAPPLICATION")
+@Table(name = "DebtApplication")
 public class DebtApplicationEntity extends Pagable implements Serializable {
 
 	/**
@@ -28,40 +28,40 @@ public class DebtApplicationEntity extends Pagable implements Serializable {
 	/**
 	 * 主键1
 	 */
-	@Id(column = "APPLICATIONID")
+	@Id(column = "applicationId")
     @GeneratedValue(strategy = GenerationType.UUID)
     private String applicationId;
 	
 	 /**
      * 会员id
      */
-    @Column(name = "CUSTOMERID")
+    @Column(name = "customerId")
     private String customerId;
     /**
      * 金额
      */
-    @Column(name = "AMOUNT")
+    @Column(name = "amount")
     private Double amount;
     /**
      *联系电话
      */
-    @Column(name = "TEL")
+    @Column(name = "tel")
     private String tel;
     /**
      * 申请时间
      */
-    @Column(name = "APPLYTIME")
+    @Column(name = "applyTime")
     private Date applyTime;
     /**
      * 申请融资状态
      * 0：未处理；1：未通过；2：通过。
      */
-    @Column(name = "STATUS")
+    @Column(name = "status")
     private Integer status;
     /**
      * 说明
      */
-    @Column(name = "REMARK")
+    @Column(name = "remark")
     private String remark;
     
     /**
