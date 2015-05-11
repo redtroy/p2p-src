@@ -1,5 +1,6 @@
 package com.herongwang.p2p.service.impl.investOrder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,9 @@ import com.herongwang.p2p.dao.investOrder.IInvestOrderDao;
 import com.herongwang.p2p.entity.investOrder.InvestOrderEntity;
 import com.herongwang.p2p.service.investOrder.IInvestOrderService;
 import com.sxj.util.exception.ServiceException;
+import com.sxj.util.logger.SxjLogger;
 import com.sxj.util.persistent.QueryCondition;
+
 @Service
 @Transactional
 public class InvestOrderServiceImpl implements IInvestOrderService
@@ -44,11 +47,24 @@ public class InvestOrderServiceImpl implements IInvestOrderService
     public List<InvestOrderEntity> queryorderList(InvestOrderEntity query)
             throws ServiceException
     {
-        QueryCondition<InvestOrderEntity> condition = new QueryCondition<InvestOrderEntity>();
-        condition.addCondition("debtId", query.getDebtId());
-        condition.setPage(query);
-         List<InvestOrderEntity> contractList = investOrderDao.query(condition);
-        return contractList;
+        try
+        {
+            QueryCondition<InvestOrderEntity> condition = new QueryCondition<InvestOrderEntity>();
+            List<InvestOrderEntity> investList = new ArrayList<InvestOrderEntity>();
+            if (query == null)
+            {
+                return investList;
+            }
+            condition.addCondition("debtId", query.getDebtId());
+            investList = investOrderDao.query(condition);
+            return investList;
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("查询订单列表信息错误", e);
+        }
+        
     }
     
     @Override
