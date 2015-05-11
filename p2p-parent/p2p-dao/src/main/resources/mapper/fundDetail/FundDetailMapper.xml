@@ -6,8 +6,8 @@
 	<resultMap id="FundDetailEntity"
 		type="com.herongwang.p2p.entity.fundDetail.FundDetailEntity">
 		<id property="detailId" column="detailId" jdbcType="VARCHAR" />
-		<id property="orderId" column="orderId" jdbcType="VARCHAR" />
-		<id property="accountId" column="accountId" jdbcType="VARCHAR" />
+		<result property="orderId" column="orderId" jdbcType="VARCHAR" />
+		<result property="accountId" column="accountId" jdbcType="VARCHAR" />
 		<result property="customerId" column="customerId" jdbcType="VARCHAR" />
 		<result property="type" column="type" jdbcType="INTEGER" />
 		<result property="amount" column="amount" jdbcType="BIGINT" />
