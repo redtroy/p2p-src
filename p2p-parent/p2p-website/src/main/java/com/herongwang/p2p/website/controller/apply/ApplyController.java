@@ -51,10 +51,10 @@ public class ApplyController
         {
             //获取登陆会员ID 
             Map<String, String> map = new HashMap<String, String>();
-            apply.setMemberId("M999999");
-            apply.setForTime(new Date());//申请时间
+            apply.setCustomerId("M999999");
+            apply.setApplyTime(new Date());//申请时间
             apply.setStatus(0);
-            applyForService.addApplyFor(apply);
+            applyForService.addApply(apply);
             map.put("isOK", "ok");
             return map;
         }

@@ -25,7 +25,7 @@
 	<!-- 条件查询交易明细 -->
 	<select id="queryFundDetail" resultMap="FundDetailEntity"
 		parameterType="com.sxj.util.persistent.QueryCondition">
-		<![CDATA[SELECT D.* FROM FUND_DETAIL D  WHERE 1=1 ]]>
+		<![CDATA[SELECT D.* FROM FundDetail D  WHERE 1=1 ]]>
 		<!-- 会员名称 -->
 		<if test="condition.customerId != null and condition.customerId != ''">
 			<![CDATA[AND D.customerId =#{condition.customerId}]]>

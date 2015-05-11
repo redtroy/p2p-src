@@ -1,6 +1,7 @@
 package com.herongwang.p2p.entity.fundDetail;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.herongwang.p2p.dao.fundDetail.IFundDetailDao;
@@ -14,11 +15,11 @@ import com.sxj.mybatis.pagination.Pagable;
 
 /**
  * 资金明细
- * @author Administrator
+ * @author anshaoshuai
  *
  */
 @Entity(mapper = IFundDetailDao.class)
-@Table(name = "FUND_DETAIL")
+@Table(name = "FundDetail")
 public class FundDetailEntity extends Pagable implements Serializable
 {
     
@@ -62,25 +63,25 @@ public class FundDetailEntity extends Pagable implements Serializable
      * 金额
      */
     @Column(name = "amount")
-    private Long amount;
+    private BigDecimal amount;
     
     /**
      * 账户余额
      */
     @Column(name = "balance")
-    private Long balance;
+    private BigDecimal balance;
     
     /**
      * 冻结金额
      */
     @Column(name = "frozenAmount")
-    private Long frozenAmount;
+    private BigDecimal frozenAmount;
     
     /**
      * 待收金额
      */
     @Column(name = "dueAmount")
-    private Long dueAmount;
+    private BigDecimal dueAmount;
     
     /**
      * 交易时间
@@ -157,42 +158,42 @@ public class FundDetailEntity extends Pagable implements Serializable
         this.type = type;
     }
     
-    public Long getAmount()
+    public BigDecimal getAmount()
     {
         return amount;
     }
     
-    public void setAmount(Long amount)
+    public void setAmount(BigDecimal amount)
     {
         this.amount = amount;
     }
     
-    public Long getBalance()
+    public BigDecimal getBalance()
     {
         return balance;
     }
     
-    public void setBalance(Long balance)
+    public void setBalance(BigDecimal balance)
     {
         this.balance = balance;
     }
     
-    public Long getFrozenAmount()
+    public BigDecimal getFrozenAmount()
     {
         return frozenAmount;
     }
     
-    public void setFrozenAmount(Long frozenAmount)
+    public void setFrozenAmount(BigDecimal frozenAmount)
     {
         this.frozenAmount = frozenAmount;
     }
     
-    public Long getDueAmount()
+    public BigDecimal getDueAmount()
     {
         return dueAmount;
     }
     
-    public void setDueAmount(Long dueAmount)
+    public void setDueAmount(BigDecimal dueAmount)
     {
         this.dueAmount = dueAmount;
     }
