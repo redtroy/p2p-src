@@ -1,24 +1,22 @@
-package com.herongwang.p2p.website.controller.member;
+package com.herongwang.p2p.website.controller.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
-import com.herongwang.p2p.model.users.UserModel;
 import com.herongwang.p2p.service.account.IAccountService;
 import com.herongwang.p2p.service.users.IUserService;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
 
 @Controller
-@RequestMapping("member")
-public class MemberController
+@RequestMapping("user")
+public class UserController
 {
     @Autowired
-    private IUserService memberservice;
+    private IUserService userService;
     
     @Autowired
     private IAccountService accountService;
@@ -45,14 +43,14 @@ public class MemberController
         return "site/member/member-center";
     }
     
-    @RequestMapping("saveMember")
-    public String saveMember(UsersEntity member, ModelMap map)
+    @RequestMapping("saveUser")
+    public String saveMember(UsersEntity user, ModelMap map)
             throws WebException
     {
         try
         {
-            UsersEntity info = memberservice.addUser(member);
-            map.put("member", info);
+            UsersEntity info = userService.addUser(user);
+            map.put("user", info);
         }
         catch (Exception e)
         {
@@ -62,19 +60,19 @@ public class MemberController
         return "site/member/member-center";
     }
     
-    @RequestMapping("saveAccount")
-    public String saveAccount(AccountEntity account, ModelMap map)
+    @RequestMapping("updateUser")
+    public String updateUser(ModelMap map, UsersEntity user)
             throws WebException
     {
         try
         {
-            UserModel memberInfo = accountService.addAccount(account);
-            map.put("member", memberInfo);
+            UsersEntity info = userService.updateUser(user);
+            map.put("user", info);
         }
         catch (Exception e)
         {
             SxjLogger.error(e.getMessage(), e, this.getClass());
-            throw new WebException("保存账户信息出错", e);
+            throw new WebException("保存用户信息出错", e);
         }
         return "site/member/member-center";
     }

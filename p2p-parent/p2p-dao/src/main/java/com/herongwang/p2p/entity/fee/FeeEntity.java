@@ -41,6 +41,9 @@ public class FeeEntity
     @Column(name = "level")
     private int level;
     
+    @Column(name = "name")
+    private String name;
+    
     /** 状态
      * 
      * @pdOid 36eaa55f-354d-4dbe-9404-b4676f856dc8 */
@@ -130,6 +133,16 @@ public class FeeEntity
     public void setStatus(FeeStatus status)
     {
         this.status = status;
+    }
+    
+    public String getName()
+    {
+        return name;
+    }
+    
+    public void setName(String name)
+    {
+        this.name = name;
     }
     
 }

@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.herongwang</groupId>
 		<artifactId>p2p-parent</artifactId>
-		<version>${project.version}</version>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>p2p-website</artifactId>
 	<packaging>war</packaging>

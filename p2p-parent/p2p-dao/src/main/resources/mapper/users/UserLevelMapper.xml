@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.herongwang.p2p.dao.member.IUserLevelDAO">
+	<resultMap id="UserLevelEntity" type="com.herongwang.p2p.entity.member.UserLevel">
+		<id property="levelId" column="levelId" jdbcType="VARCHAR" />
+		<result property="name" column="name" jdbcType="VARCHAR" />
+		<result property="status" column="status" jdbcType="INTEGER" />
+		<result property="createTime" column="createTime" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="updateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+</mapper>
