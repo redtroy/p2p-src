@@ -2,7 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link href="../style/member.css" rel="stylesheet" type="text/css" />
+<link href="${b.staticPath}style/style.css" rel="stylesheet"
+	type="text/css" />
+<script src="${b.staticPath}js/jquery.js"></script>
+<@b.validate/> <@b.dialog/>
+<script>
+	function postInfo() {
+		postForm.submit();
+	}
+</script>
 </head>
 
 <body>
@@ -36,27 +44,58 @@
       <div class="rightSide">
         <div class="heading fontYH f20"><span>账户充值</span></div>
         <div class="mainBox fontYH">
+        <form name="postForm" action="${serverip}" method="post">
+		<input type="hidden" name="inputCharset" value="1"/>
+		<input type="hidden" name="pickupUrl" value="${pickupUrl}"/>
+		<input type="hidden" name="receiveUrl" value="${receiveUrl}" />
+		<input type="hidden" name="version" value="v1.0"/>
+		<input type="hidden" name="language" value="1" />
+		<input type="hidden" name="signType" value="1"/>
+		<input type="hidden" name="merchantId" value="${merchantId}" />
+		<input type="hidden" name="payerName" value=""/><!-- 付款人姓名  跨境支付商户若采用直连模式，必须填写该值 -->
+		<input type="hidden" name="payerEmail" value="" /><!-- 付款人邮件联系方式 -->
+		<input type="hidden" name="payerTelephone" value="" /><!-- 付款人电话联系方式 -->
+		<input type="hidden" name="payerIDCard" value="" /><!-- 付款人类型及证件号 -->
+		<input type="hidden" name="pid" value=""/><!-- 合作伙伴的商户号 -->
+		<input type="hidden" name="orderNo" value="${orderNo}" />
+		<input type="hidden" name="orderAmount" value="${amount}"/>
+		<input type="hidden" name="orderCurrency" value="0" />
+		<input type="hidden" name="orderDatetime" value="${createTime}" />
+		<input type="hidden" name="orderExpireDatetime" value="${orderExpireDatetime}"/>
+		<input type="hidden" name="productName" value="${productName}" />
+		<input type="hidden" name="productPrice" value="" />
+		<input type="hidden" name="productNum" value=""/>
+		<input type="hidden" name="productId" value="" />
+		<input type="hidden" name="productDesc" value="" />
+		<input type="hidden" name="ext1" value="" />
+		<input type="hidden" name="ext2" value="" />
+		<input type="hidden" name="payType" value="${payType}" />
+		<input type="hidden" name="issuerId" value="" />
+		<input type="hidden" name="pan" value="" />
+		<input type="hidden" name="tradeNature" value="" />
+		<input type="hidden" name="signMsg" value="" />
+	 </form>
         <table border="0" cellpadding="0" cellspacing="0" class="table tabList mb20">
         <col width="20%" />
         <col width="80%" />
-      <tr>
-        <th>订单名称</th>
-        <td>订单名称订单名称</td>
-      </tr>
-      <tr>
-        <th>订单金额</th>
-        <td class=" money color-purple">500元</td>
-      </tr>
-      <tr>
-      <th>订单手续费</th>
-      <td class="color-blue">25元</td>
-    </tr>
-      <tr>
-        <th>账户余额</th>
-        <td class="color-red">34500元</td>
-      </tr>
-  </table>
-        <div class="tc"> <a href="results.html" class="button button-orange">确认充值</a></div>
+	      <tr>
+	        <th>订单名称</th>
+	        <td>${orderName}</td>
+	      </tr>
+	      <tr>
+	        <th>订单金额</th>
+	        <td class=" money color-purple">${amount}元</td>
+	      </tr>
+	      <tr>
+	      <th>订单手续费</th>
+	      <td class="color-blue">0元</td>
+	    </tr>
+	      <tr>
+	        <th>账户余额</th>
+	        <td class="color-red">${balance}元</td>
+	      </tr>
+	  </table>
+        <div class="tc"> <a href="javascript:postInfo();" class="button button-orange">确认充值</a></div>
         </div>
       </div>
     </div>
