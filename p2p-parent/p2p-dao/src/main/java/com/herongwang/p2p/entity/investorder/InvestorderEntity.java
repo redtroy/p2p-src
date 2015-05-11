@@ -1,24 +1,32 @@
-package com.herongwang.p2p.entity.investorder;
+package com.herongwang.p2p.entity.investOrder;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
-import com.herongwang.p2p.dao.investorder.IInvestorderDao;
+import com.herongwang.p2p.dao.investOrder.IInvestOrderDao;
 import com.sxj.mybatis.orm.annotations.Column;
 import com.sxj.mybatis.orm.annotations.Entity;
 import com.sxj.mybatis.orm.annotations.GeneratedValue;
 import com.sxj.mybatis.orm.annotations.GenerationType;
 import com.sxj.mybatis.orm.annotations.Id;
 import com.sxj.mybatis.orm.annotations.Table;
+import com.sxj.mybatis.pagination.Pagable;
 
-@Entity(mapper = IInvestorderDao.class)
+/**
+ * 融资申请
+ * @author nishaotang
+ *
+ */
+@Entity(mapper = IInvestOrderDao.class)
 @Table(name = "InvestOrder")
-public class InvestorderEntity implements Serializable
+public class InvestOrderEntity extends Pagable implements Serializable
 {
+    
     /**
      * 
      */
-    private static final long serialVersionUID = 8198952267890045283L;
+    private static final long serialVersionUID = -2444843981481631279L;
     
     /**
      * 订单ID
@@ -28,22 +36,22 @@ public class InvestorderEntity implements Serializable
     private String orderId;
     
     /**
+    * 客户ID
+    */
+    @Column(name = "customerId")
+    private String customerId;
+    
+    /**
      * 标的ID
      */
     @Column(name = "debtId")
     private String debtId;
     
     /**
-     * 客户ID
-     */
-    @Column(name = "customerId")
-    private String customerId;
-    
-    /**
      * 订单金额
      */
     @Column(name = "amount")
-    private Long amount;
+    private BigDecimal amount;
     
     /**
      * 创建时间
@@ -70,13 +78,13 @@ public class InvestorderEntity implements Serializable
     private Date payTime;
     
     /**
-     * 到账时间
+     * 到帐时间
      */
     @Column(name = "arriveTime")
     private Date arriveTime;
     
     /**
-     *
+     * specifAttr
      */
     @Column(name = "specifAttr")
     private Integer specifAttr;
@@ -85,13 +93,13 @@ public class InvestorderEntity implements Serializable
      * 应收本息总额
      */
     @Column(name = "dueTotalAmount")
-    private Long dueTotalAmount;
+    private BigDecimal dueTotalAmount;
     
     /**
      * 应收收益总额
      */
     @Column(name = "dueProfitAmount")
-    private Long dueProfitAmount;
+    private BigDecimal dueProfitAmount;
     
     /**
      * 综合年利率
@@ -112,10 +120,10 @@ public class InvestorderEntity implements Serializable
     private Float dayRatio;
     
     /**
-     * 总费用
+     *总费用
      */
     @Column(name = "totalFee")
-    private Long totalFee;
+    private BigDecimal totalFee;
     
     public String getOrderId()
     {
@@ -125,16 +133,6 @@ public class InvestorderEntity implements Serializable
     public void setOrderId(String orderId)
     {
         this.orderId = orderId;
-    }
-    
-    public String getDebtId()
-    {
-        return debtId;
-    }
-    
-    public void setDebtId(String debtId)
-    {
-        this.debtId = debtId;
     }
     
     public String getCustomerId()
@@ -147,12 +145,22 @@ public class InvestorderEntity implements Serializable
         this.customerId = customerId;
     }
     
-    public Long getAmount()
+    public String getDebtId()
+    {
+        return debtId;
+    }
+    
+    public void setDebtId(String debtId)
+    {
+        this.debtId = debtId;
+    }
+    
+    public BigDecimal getAmount()
     {
         return amount;
     }
     
-    public void setAmount(Long amount)
+    public void setAmount(BigDecimal amount)
     {
         this.amount = amount;
     }
@@ -217,22 +225,22 @@ public class InvestorderEntity implements Serializable
         this.specifAttr = specifAttr;
     }
     
-    public Long getDueTotalAmount()
+    public BigDecimal getDueTotalAmount()
     {
         return dueTotalAmount;
     }
     
-    public void setDueTotalAmount(Long dueTotalAmount)
+    public void setDueTotalAmount(BigDecimal dueTotalAmount)
     {
         this.dueTotalAmount = dueTotalAmount;
     }
     
-    public Long getDueProfitAmount()
+    public BigDecimal getDueProfitAmount()
     {
         return dueProfitAmount;
     }
     
-    public void setDueProfitAmount(Long dueProfitAmount)
+    public void setDueProfitAmount(BigDecimal dueProfitAmount)
     {
         this.dueProfitAmount = dueProfitAmount;
     }
@@ -267,12 +275,12 @@ public class InvestorderEntity implements Serializable
         this.dayRatio = dayRatio;
     }
     
-    public Long getTotalFee()
+    public BigDecimal getTotalFee()
     {
         return totalFee;
     }
     
-    public void setTotalFee(Long totalFee)
+    public void setTotalFee(BigDecimal totalFee)
     {
         this.totalFee = totalFee;
     }
