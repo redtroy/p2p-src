@@ -3,7 +3,6 @@ package com.herongwang.p2p.service.apply;
 import java.util.List;
 
 import com.herongwang.p2p.entity.apply.DebtApplicationEntity;
-import com.herongwang.p2p.model.apply.ApplyForModel;
 import com.sxj.util.exception.ServiceException;
 
 public interface IDebtApplicationService {

@@ -21,7 +21,7 @@ public class TenderServiceImpl implements ITenderService {
 
 	@Override
 	public void addTender(DebtEntity tender) throws ServiceException {
-		tenderDao.addTender(tender);
+		tenderDao.addDebt(tender);
 		
 	}
 

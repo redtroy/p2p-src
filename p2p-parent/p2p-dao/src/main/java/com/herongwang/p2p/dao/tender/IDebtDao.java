@@ -17,28 +17,28 @@ import com.sxj.util.persistent.QueryCondition;
 public interface IDebtDao {
 	/**
 	 * 添加借款标
-	 * @param tender
+	 * @param Debt
 	 */
 	@Insert
-	public void addTender(DebtEntity tender);
+	public void addDebt(DebtEntity Debt);
 	/**
 	 * 修改借款标
-	 * @param tender
+	 * @param Debt
 	 */
 	@Update
-	public void updateTender(DebtEntity tender);
+	public void updateDebt(DebtEntity Debt);
 	/**
 	 * 删除借款标
 	 * @param id
 	 */
 	@Delete
-	public void delTender(String id);
+	public void delDebt(String id);
 	/**
 	 * 查询借款标
 	 * @param id
 	 */
 	@Get
-	public DebtEntity getTenderFor(String id);
+	public DebtEntity getDebtFor(String id);
 	/**
 	 * 借款标高级查询
 	 * @param query

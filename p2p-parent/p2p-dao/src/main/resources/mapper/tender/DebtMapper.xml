@@ -11,7 +11,7 @@
 		<result property="title" column="title" jdbcType="VARCHAR" />
 		<result property="repayType" column="repayType" jdbcType="INTEGER" />
 		<result property="deadLine" column="deadLine" jdbcType="TIMESTAMP" />
-		<result property="borrpwTime" column="borrpwTime" jdbcType="INTEGER" />
+		<result property="borrowTime" column="borrowTime" jdbcType="INTEGER" />
 		<result property="annualizedRate" column="annualizedRate" jdbcType="DOUBLE" />
 		<result property="minInvest" column="minInvest" jdbcType="DOUBLE" />
 		<result property="maxInvest" column="maxInvest" jdbcType="DOUBLE" />

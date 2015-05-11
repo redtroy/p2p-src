@@ -69,8 +69,8 @@ public class DebtEntity extends Pagable implements Serializable
     /**
      *借款期限月
      */
-    @Column(name = "borrpwTime")
-    private Integer borrpwTime;
+    @Column(name = "borrowTime")
+    private Integer borrowTime;
     
     /**
      *年化利率
@@ -196,14 +196,14 @@ public class DebtEntity extends Pagable implements Serializable
         this.deadLine = deadLine;
     }
     
-    public Integer getBorrpwTime()
+    public Integer getBorrowTime()
     {
-        return borrpwTime;
+        return borrowTime;
     }
     
-    public void setBorrpwTime(Integer borrpwTime)
+    public void setBorrowTime(Integer borrowTime)
     {
-        this.borrpwTime = borrpwTime;
+        this.borrowTime = borrowTime;
     }
     
     public Double getAnnualizedRate()
