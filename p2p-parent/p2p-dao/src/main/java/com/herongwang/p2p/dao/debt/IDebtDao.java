@@ -1,6 +1,5 @@
 package com.herongwang.p2p.dao.debt;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import com.herongwang.p2p.entity.debt.DebtEntity;

@@ -3,7 +3,6 @@ package com.herongwang.p2p.service.users;
 import java.util.List;
 
 import com.herongwang.p2p.entity.users.UsersEntity;
-import com.herongwang.p2p.model.users.UserModel;
 
 public interface IUserService
 {
@@ -12,7 +11,7 @@ public interface IUserService
      * @param member
      * @return
      */
-    public List<UserModel> queryUsers(UserModel member);
+    public List<UsersEntity> queryUsers(UsersEntity user);
     
     /**
      * 更具帐号名称查询会员信息
@@ -37,7 +36,7 @@ public interface IUserService
     /**
      * 根据会员ID查询会员详细信息
      */
-    public UserModel getUserByUserId(String id);
+    public UsersEntity getUserByUserId(String id);
     
     /**
      * 查询会员数量

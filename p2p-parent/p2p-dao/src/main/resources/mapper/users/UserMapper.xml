@@ -3,7 +3,7 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.herongwang.p2p.dao.users.IUsersDao">
-	<resultMap id="MemberResultMap" type="com.herongwang.p2p.entity.users.UsersEntity">
+	<resultMap id="UserResultMap" type="com.herongwang.p2p.entity.users.UsersEntity">
 		<id property="customerId" column="customerId" jdbcType="VARCHAR" />
 		<result property="customerNo" column="customerNo" jdbcType="VARCHAR" />
 		<result property="password" column="PASSWORD" jdbcType="VARCHAR" />
@@ -18,29 +18,27 @@
 		<result property="updateTime" column="updateTime" jdbcType="TIMESTAMP" />
 		<result property="levelId" column="levelId" jdbcType="VARCHAR" />
 	</resultMap>
-	<resultMap id="MemberInfoResultMap" type="com.herongwang.p2p.model.member.MemberModel">
-		
-	</resultMap>
 	
-	<select id="getMmeberByAccount" resultMap="MemberResultMap"
+	<select id="getUserByAccount" resultMap="UserResultMap"
 		parameterType="String">
-		<![CDATA[SELECT * FROM Users WHERE MEMBER_CODE=#{account}]]>
+		<![CDATA[SELECT * FROM Users WHERE email=#{email}]]>
 	</select>
     
+    <!-- 查询会员列表 -->
+    <select id="queryUserList" resultMap="UserResultMap"
+		parameterType="com.sxj.util.persistent.QueryCondition">
+		<![CDATA[select * from Users where 1=1]]>
+	</select>
     
-	<!-- 条件查询会员 -->
-	<select id="queryMembers" resultMap="MemberInfoResultMap"
+	<!-- 条件查询会员 
+	<select id="queryMembers" resultMap="UserResultMap"
 		parameterType="com.sxj.util.persistent.QueryCondition">
 		<![CDATA[SELECT M.MEMBER_CODE,M.MEMBER_NAME,M.EMAIL,M.TEL,A.BANK_CODE,A.CODE_NAME,M.REGISTER_TIME
 		 FROM MEMBER M,ACCOUNT  A WHERE M.MEMBER_ID=A.MEMBER_ID]]>
 		 <if test="condition.memberCode != null and condition.memberCode != ''">
 		 <![CDATA[AND M.MEMBER_CODE=#{condition.memberId}]]>
 		 </if>
-	</select>
-	<select id="getMemberModelByMemberId" resultMap="MemberInfoResultMap"
-		parameterType="String">
-		<![CDATA[]]>
-	</select>
+	</select>-->
 	<select id="getMemberNum" resultType="int"
 		parameterType="String">
 		<![CDATA[SELECT COUNT(*) FROM Users]]>

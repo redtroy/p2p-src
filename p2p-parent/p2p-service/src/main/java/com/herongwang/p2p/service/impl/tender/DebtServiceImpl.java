@@ -1,5 +1,6 @@
-package com.herongwang.p2p.service.impl.debt;
+package com.herongwang.p2p.service.impl.tender;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +46,9 @@ public class DebtServiceImpl implements IDebtService
     public List<DebtEntity> queryDebtList(DebtEntity query)
             throws ServiceException
     {
-        try
+   try
         {
+            
             QueryCondition<DebtEntity> condition = new QueryCondition<DebtEntity>();
             List<DebtEntity> debtList = new ArrayList<DebtEntity>();
             if (query == null)
@@ -54,7 +56,6 @@ public class DebtServiceImpl implements IDebtService
                 return debtList;
             }
             condition.addCondition("name", query.getName());
-            condition.addCondition("customerId", query.getCustomerId());//会员ID
             condition.setPage(query);
             debtList = DebtDao.query(condition);
             query.setPage(condition);
@@ -74,6 +75,7 @@ public class DebtServiceImpl implements IDebtService
         
     }
     
+
     @Override
     public List<DebtEntity> queryTop5()
     {
@@ -88,4 +90,5 @@ public class DebtServiceImpl implements IDebtService
         }
     }
     
+
 }
