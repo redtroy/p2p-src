@@ -16,7 +16,8 @@
 		<result property="maxInvest" column="maxInvest" jdbcType="DOUBLE" />
 		<result property="managementFee" column="managementFee"
 			jdbcType="DOUBLE" />
-		<result property="amount" column="amount" jdbcType="DOUBLE" />
+		<result property="amount" column="amount" jdbcType="INTEGER" />
+		<result property="finance" column="finance" jdbcType="INTEGER" />
 		<result property="createTime" column="createTime" jdbcType="TIMESTAMP" />
 		<result property="finishTime" column="finishTime" jdbcType="TIMESTAMP" />
 		<result property="status" column="status" jdbcType="INTEGER" />
@@ -41,5 +42,10 @@ LEFT JOIN PARAMETERS P1 ON P1.TYPE = 'REPAYMENTTYPE' AND P1.`VALUE` = d.repayTyp
 			<![CDATA[AND u.customerId =#{condition.customerId}]]>
 		</if>
 		<![CDATA[ ORDER BY d.createTime DESC]]>
+	</select>
+	<!-- 条件查询投标信息 -->
+	<select id="queryTop5" resultMap="DebtEntity"
+		parameterType="com.sxj.util.persistent.QueryCondition">
+		<![CDATA[SELECT * FROM Debt ORDER BY createTime DESC LIMIT 0,4]]>
 	</select>
 </mapper>

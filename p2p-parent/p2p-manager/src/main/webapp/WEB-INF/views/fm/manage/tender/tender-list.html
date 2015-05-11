@@ -109,8 +109,10 @@ function delTender(id){
               <#if (tender.status==3)>
 	          <a href="#" class=" button btn-link">满标审核</a>
 			</#if>
-              <a href="toEdit.htm?id=${tender.debtId}" class="ml10 lnk-blue lnk-underline">修改</a>
+			<#if (tender.status==0)>
+	         <a href="toEdit.htm?id=${tender.debtId}" class="ml10 lnk-blue lnk-underline">修改</a>
               <a href="javascript:delTender('${tender.debtId}');"  class="ml10 lnk-blue lnk-underline">删除</a>
+			</#if>
               <a href="../investOrder/orderList.htm?id=${tender.debtId}" class="ml10 lnk-blue lnk-underline">投资人记录</a>
               </td>
             </tr>

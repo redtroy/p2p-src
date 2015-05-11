@@ -1,6 +1,7 @@
 package com.herongwang.p2p.website.controller;
 
 import java.util.Calendar;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -15,10 +16,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.herongwang.p2p.entity.member.MemberEntity;
-import com.herongwang.p2p.model.member.MemberModel;
+import com.herongwang.p2p.entity.debt.DebtEntity;
+import com.herongwang.p2p.entity.users.UsersEntity;
+import com.herongwang.p2p.model.users.UserModel;
 import com.herongwang.p2p.service.member.IMemberService;
+import com.herongwang.p2p.service.tender.IDebtService;
 import com.sxj.redis.core.pubsub.RedisTopics;
+import com.sxj.util.exception.WebException;
+import com.sxj.util.logger.SxjLogger;
 
 @Controller
 public class BasicController extends BaseController
@@ -29,6 +34,9 @@ public class BasicController extends BaseController
     
     @Autowired
     private IMemberService memberService;
+    
+    @Autowired
+    private IDebtService debtService;
     
     @RequestMapping("to_login")
     public String ToLogin()
@@ -61,7 +69,7 @@ public class BasicController extends BaseController
     public String login(String account, String password, HttpSession session,
             HttpServletRequest request, ModelMap map)
     {
-        MemberEntity member = memberService.getMmeberByAccount(account);
+        UsersEntity member = memberService.getMmeberByAccount(account);
         if (member == null)
         {
             map.put("message", "用户名不存在");
@@ -88,7 +96,7 @@ public class BasicController extends BaseController
         if (currentUser.isAuthenticated())
         {
             session.setAttribute("memberInfo", member);
-            MemberModel memberInfo = memberService.getMmeberByMemberId(member.getMemberId());
+            UserModel memberInfo = memberService.getMmeberByMemberId(member.getMemberId());
             map.put("member", memberInfo);
             return "site/member/member-center";
             // return "redirect:" + getBasePath(request) + "member/memberInfo.htm";
@@ -118,8 +126,36 @@ public class BasicController extends BaseController
     
     @RequestMapping("index")
     public String ToIndex(HttpServletRequest request, ModelMap map)
+            throws WebException
     {
+        try
+        {
+            List<DebtEntity> list = debtService.queryTop5();
+            map.put("list", list);
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new WebException("主页查询标的TOP5列表出错", e);
+        }
         return INDEX;
+    }
+    
+    @RequestMapping("bdList")
+    public String bdList(ModelMap map) throws WebException
+    {
+        try
+        {
+            DebtEntity debt = new DebtEntity();
+            List<DebtEntity> list = debtService.queryDebtList(debt);
+            map.put("list", list);
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new WebException("查询标的列表错误", e);
+        }
+        return "site/prod-list";
     }
     
     public static String getIpAddr(HttpServletRequest request)

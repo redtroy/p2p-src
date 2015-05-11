@@ -14,7 +14,7 @@ import com.sxj.mybatis.orm.annotations.Table;
 import com.sxj.mybatis.pagination.Pagable;
 
 /**
- * 借款标
+ * 借款标1
  * @author nishaotang
  *
  */
@@ -30,13 +30,13 @@ public class FinancingOrdersEntity extends Pagable implements Serializable
     /** 
     * 订单ID
     */
-   @Column(name = "orderId")
+    @Id(column = "orderId")
    @GeneratedValue(strategy = GenerationType.UUID)
    private String orderId;
     /**
      * 标的ID
      */
-    @Id(column = "debtId")
+    @Column(name = "debtId")
     private String debtId;
     
     /**

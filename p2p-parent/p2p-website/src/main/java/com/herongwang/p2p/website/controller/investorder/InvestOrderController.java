@@ -20,7 +20,7 @@ public class InvestOrderController
     private IInvestOrderService ivestService;
     
     /**
-     * 订单列表
+     * 投资列表
      * @return
      */
     @RequestMapping("list")
@@ -35,7 +35,7 @@ public class InvestOrderController
         catch (Exception e)
         {
             SxjLogger.error(e.getMessage(), e, this.getClass());
-            throw new WebException("查询订单列表信息错误", e);
+            throw new WebException("查询投资列表信息错误", e);
         }
         return "site/invest/invest-list";
     }

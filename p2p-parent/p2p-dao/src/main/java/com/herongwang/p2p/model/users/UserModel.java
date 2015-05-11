@@ -1,9 +1,9 @@
-package com.herongwang.p2p.model.member;
+package com.herongwang.p2p.model.users;
 
 import java.io.Serializable;
 import java.util.Date;
 
-public class MemberModel implements Serializable
+public class UserModel implements Serializable
 {
     /**
      * 
