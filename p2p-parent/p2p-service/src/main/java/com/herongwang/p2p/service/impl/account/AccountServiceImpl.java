@@ -18,16 +18,14 @@ public class AccountServiceImpl implements IAccountService
     private IAccountDao accountDao;
     
     @Autowired
-    private IUsersDao memberDao;
+    private IUsersDao userDao;
     
     @Override
-    public UserModel addAccount(AccountEntity account)
-            throws ServiceException
+    public UserModel addAccount(AccountEntity account) throws ServiceException
     {
         try
         {
-            accountDao.addAccount(account);
-            return memberDao.getUserModelByUserId(account.getMemberId());
+            return null;
         }
         catch (Exception e)
         {
