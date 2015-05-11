@@ -62,7 +62,7 @@ public class InvestOrderServiceImpl implements IInvestOrderService
         catch (Exception e)
         {
             SxjLogger.error(e.getMessage(), e, this.getClass());
-            throw new ServiceException("查询订单列表信息错误", e);
+            throw new ServiceException("查询投资订单列表信息错误", e);
         }
     }
     

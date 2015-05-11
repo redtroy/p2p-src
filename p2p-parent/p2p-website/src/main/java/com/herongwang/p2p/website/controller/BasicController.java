@@ -1,6 +1,7 @@
 package com.herongwang.p2p.website.controller;
 
 import java.util.Calendar;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -15,10 +16,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.member.MemberEntity;
 import com.herongwang.p2p.model.member.MemberModel;
 import com.herongwang.p2p.service.member.IMemberService;
+import com.herongwang.p2p.service.tender.IDebtService;
 import com.sxj.redis.core.pubsub.RedisTopics;
+import com.sxj.util.exception.WebException;
+import com.sxj.util.logger.SxjLogger;
 
 @Controller
 public class BasicController extends BaseController
@@ -29,6 +34,9 @@ public class BasicController extends BaseController
     
     @Autowired
     private IMemberService memberService;
+    
+    @Autowired
+    private IDebtService debtService;
     
     @RequestMapping("to_login")
     public String ToLogin()
@@ -118,7 +126,19 @@ public class BasicController extends BaseController
     
     @RequestMapping("index")
     public String ToIndex(HttpServletRequest request, ModelMap map)
+            throws WebException
     {
+        try
+        {
+            DebtEntity debt = new DebtEntity();
+            List<DebtEntity> list = debtService.queryDebtList(debt);
+            map.put("list", list);
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new WebException("主页查询标的列表出错", e);
+        }
         return INDEX;
     }
     

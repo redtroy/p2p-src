@@ -37,4 +37,9 @@ LEFT JOIN PARAMETERS P1 ON P1.TYPE = 'REPAYMENTTYPE' AND P1.`VALUE` = d.repayTyp
 		</if>
 		<![CDATA[ ORDER BY d.createTime DESC]]>
 	</select>
+	<!-- 条件查询投标信息 -->
+	<select id="queryTop5" resultMap="DebtEntity"
+		parameterType="com.sxj.util.persistent.QueryCondition">
+		<![CDATA[SELECT * FROM Debt ORDER BY createTime DESC LIMIT 0,4]]>
+	</select>
 </mapper>
