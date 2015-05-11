@@ -1,4 +1,4 @@
-package com.herongwang.p2p.TypeHandler;
+package com.herongwang.p2p.typehandler;
 
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
