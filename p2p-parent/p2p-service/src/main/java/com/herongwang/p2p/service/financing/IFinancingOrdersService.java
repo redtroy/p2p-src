@@ -1,8 +1,8 @@
-package com.herongwang.p2p.service.financingOrders;
+package com.herongwang.p2p.service.financing;
 
 import java.util.List;
 
-import com.herongwang.p2p.entity.financingOrders.FinancingOrdersEntity;
+import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
 import com.sxj.util.exception.ServiceException;
 
 public interface IFinancingOrdersService {

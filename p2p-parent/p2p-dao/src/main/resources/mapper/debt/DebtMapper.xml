@@ -3,25 +3,27 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.herongwang.p2p.dao.debt.IDebtDao">
-	<resultMap id="DebtEntity"
-		type="com.herongwang.p2p.entity.debt.DebtEntity">
+	<resultMap id="DebtEntity" type="com.herongwang.p2p.entity.debt.DebtEntity">
 		<id property="debtId" column="debtId" jdbcType="VARCHAR" />
 		<result property="customerId" column="customerId" jdbcType="VARCHAR" />
 		<result property="title" column="title" jdbcType="VARCHAR" />
 		<result property="repayType" column="repayType" jdbcType="INTEGER" />
 		<result property="deadLine" column="deadLine" jdbcType="TIMESTAMP" />
 		<result property="months" column="months" jdbcType="INTEGER" />
-		<result property="annualizedRate" column="annualizedRate" jdbcType="DOUBLE" />
+		<result property="annualizedRate" column="annualizedRate"
+			jdbcType="DOUBLE" />
 		<result property="minInvest" column="minInvest" jdbcType="DOUBLE" />
 		<result property="maxInvest" column="maxInvest" jdbcType="DOUBLE" />
-		<result property="managementFee" column="managementFee" jdbcType="DOUBLE" />
+		<result property="managementFee" column="managementFee"
+			jdbcType="DOUBLE" />
 		<result property="amount" column="amount" jdbcType="DOUBLE" />
 		<result property="createTime" column="createTime" jdbcType="TIMESTAMP" />
 		<result property="finishTime" column="finishTime" jdbcType="TIMESTAMP" />
 		<result property="status" column="status" jdbcType="INTEGER" />
 		<result property="name" column="name" jdbcType="VARCHAR" />
 		<result property="statusText" column="statusText" jdbcType="VARCHAR" />
-		<result property="repaymentText" column="repaymentText" jdbcType="VARCHAR" />
+		<result property="repaymentText" column="repaymentText"
+			jdbcType="VARCHAR" />
 	</resultMap>
 
 	<!-- 条件查询投标信息 -->
@@ -34,6 +36,9 @@ LEFT JOIN PARAMETERS P1 ON P1.TYPE = 'REPAYMENTTYPE' AND P1.`VALUE` = d.repayTyp
 
 		<if test="condition.name != null and condition.name != ''">
 			<![CDATA[AND u.name LIKE CONCAT('%',#{condition.name},'%')]]>
+		</if>
+		<if test="condition.customerId != null and condition.customerId != ''">
+			<![CDATA[AND u.customerId #{condition.customerId}]]>
 		</if>
 		<![CDATA[ ORDER BY d.createTime DESC]]>
 	</select>

@@ -6,7 +6,6 @@
 package com.herongwang.p2p.entity.member;
 
 import com.sxj.mybatis.orm.annotations.Column;
-import com.sxj.mybatis.orm.annotations.Entity;
 import com.sxj.mybatis.orm.annotations.GeneratedValue;
 import com.sxj.mybatis.orm.annotations.GenerationType;
 import com.sxj.mybatis.orm.annotations.Id;
@@ -15,7 +14,6 @@ import com.sxj.mybatis.orm.annotations.Table;
 /** 用户级别
  * 
  * @pdOid 51ae8418-ec05-404f-b828-0e15a20904c9 */
-@Entity
 @Table(name = "UserLevel")
 public class UserLevel
 {

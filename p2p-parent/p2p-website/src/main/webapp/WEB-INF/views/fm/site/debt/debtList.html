@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="${b.staticPath}style/member.css" rel="stylesheet"
+	type="text/css" />
+<link href="${b.staticPath}js/jquery1.8.js" rel="stylesheet"
+	type="text/css" />
+<@b.pageScript/>
+<script>
+	function query(page) {
+		$.post("queryDebt.htm", function(data) {
+			var res = $(data).find("#res_table");
+			var pager = $(data).find("#pager");
+			$("#res_table").empty();
+			$("#res_table").append(res.html());
+			var totalPage = pager.attr("totalPage");
+			var currentPage = pager.attr("currentPage");
+			loadPage(currentPage, totalPage, query);
+		});
+	}
+</script>
+</head>
+
+<body>
+	<div class="fence-wide bgBlack">
+		<div class="yard-1100 topMenu fontYH">
+			<p class="ly-right logOut">
+				杜金鑫，您好！<a href="#">退出当前帐户</a>
+			</p>
+		</div>
+	</div>
+	<div id="header" class="fence-wide">
+		<div class="yard-1100 ly-clearFix">
+			<h1 title="和融网" class="ly-left">和融网</h1>
+			<ul class="navMenu fontYH ly-left">
+				<li><a href="../index.html">首页</a></li>
+				<li><a href="prod-list.html">我要投资</a></li>
+				<li><a href="apply.html">我要融资</a></li>
+				<li><a href="#">我的账户</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="fence-wide memCenter">
+		<div class="yard-1100 memCont ly-clearFix">
+			<div class="yard-200 ly-left leftMenu fontYH">
+				<ul>
+					<li><a href="member-center.html">个人资料</a></li>
+					<li><a href="fina-list.html" class="on">我的融资</a></li>
+					<li><a href="invest-list.html">我的投资</a></li>
+					<li><a href="capital.html">资金明细</a></li>
+				</ul>
+			</div>
+			<div class="yard-900 ly-left">
+				<div class="rightSide">
+					<div class="heading fontYH f20">
+						<span>我的融资</span>
+					</div>
+					<div class="mainBox fontYH">
+						<table border="0" cellpadding="0" cellspacing="0"
+							class="table tabList tableFina mb20" id="res_table">
+							<col width="45%" />
+							<col width="15%" />
+							<col width="20%" />
+							<col width="15%" />
+							<tr>
+								<th>标的内容</th>
+								<th>融资金额</th>
+								<th>满标时间</th>
+								<th>状态</th>
+							</tr>
+							<#if debtList?exists> <#list debtList as debt>
+							<tr>
+								<td class="tl"><a href="prodetails.html">${debt.title}</a></td>
+								<td class="color-purple">${debt.amount}元</td>
+								<td>${debt.finishTime?string("yyyy-MM-dd HH:mm:ss")}</td>
+								<td><#if debt.status==1> <em class="state normal">投资中</em>
+									<#elseif debt.status==2> <em class="state frozen">流标</em>
+									<#elseif debt.status==3> <em class="state sfull">满标</em>
+									<#elseif debt.status==4> <em class="state process">还款中</em>
+									<#elseif debt.status==5> <em class="state verified">完成</em>
+									</#if>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="4" class="line"></td>
+							</tr>
+							</#list> </#if>
+						</table>
+						<@b.pager/>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<@b.footer />
+</body>
+</html>

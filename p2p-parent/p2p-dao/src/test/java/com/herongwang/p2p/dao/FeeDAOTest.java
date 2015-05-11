@@ -10,6 +10,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import com.herongwang.p2p.dao.fee.IFeeDAO;
 import com.herongwang.p2p.entity.fee.Fee;
+import com.herongwang.p2p.entity.fee.FeeStatus;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:spring/applicationContext.xml" })
@@ -23,9 +24,9 @@ public class FeeDAOTest
     public void testCreateFee()
     {
         Fee fee = new Fee();
-        Fee createFee = feeDAO.createFee(fee);
-        Assert.assertNotNull(createFee);
-        Assert.assertNotNull(createFee.getFeeId());
+        fee.setStatus(FeeStatus.UNAVAILABLE);
+        feeDAO.createFee(fee);
+        Assert.assertNotNull(fee.getFeeId());
     }
     
 }
