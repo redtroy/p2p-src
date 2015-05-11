@@ -1,4 +1,4 @@
-package com.herongwang.p2p.service.repayPlan;
+package com.herongwang.p2p.service.repayplan;
 
 import java.sql.SQLException;
 import java.util.List;

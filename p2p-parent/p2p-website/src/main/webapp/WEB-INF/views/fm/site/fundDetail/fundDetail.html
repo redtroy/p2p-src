@@ -85,7 +85,7 @@ function query(page) {
 								<th>待收金额</th>
 								<th scope="col" class="tdHeard" style="width: 80px;">说明</th>
 							</tr>
-							<#if fundList?exists> <#list fundList as fund>
+							<#if fundList?exists && (fundList?size>0)> <#list fundList as fund>
 							<!-- 1：充值；2：投标；3：还款；4：提现。5 手续费 -->
 							<tr>
 								<td>${fund.createTime?string("yyyy-MM-dd HH:mm:ss")}</td>
@@ -99,10 +99,16 @@ function query(page) {
 								<td class="color-purple">${fund.dueAmount}</td>
 								<td class="tl">${fund.remark}</td>
 							</tr>
-							</#list> </#if>
 							<tr>
 								<td colspan="7" class="line"></td>
 							</tr>
+							</#list>
+								<#else>
+								<tr>
+								<td colspan="7" align="center">暂无数据</td>
+							</tr>
+							 </#if>
+							
 						</table>
 						<@b.pager/>
 					</div>

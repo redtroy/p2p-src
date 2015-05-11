@@ -9,7 +9,7 @@
 <@b.pageScript/>
 <script>
 	function query(page) {
-		$.post("queryDebt.htm", function(data) {
+		$.post("queryRepayPlan.htm", function(data) {
 			var res = $(data).find("#res_table");
 			var pager = $(data).find("#pager");
 			$("#res_table").empty();
@@ -54,44 +54,44 @@
 			<div class="yard-900 ly-left">
 				<div class="rightSide">
 					<div class="heading fontYH f20">
-						<span>我的融资</span>
+						<span>还款计划</span>
 					</div>
 					<div class="mainBox fontYH">
 						<table border="0" cellpadding="0" cellspacing="0"
 							class="table tabList tableFina mb20" id="res_table">
-							<col width="45%" />
+							<col width="15%" />
+							<col width="15%" />
+							<col width="15%" />
 							<col width="15%" />
 							<col width="20%" />
-							<col width="15%" />
+							<col width="20%" />
 							<tr>
-								<th>标的内容</th>
-								<th>融资金额</th>
-								<th>满标时间</th>
+								<th>序号</th>
+								<th>月本金</th>
+								<th>月利息</th>
+								<th>月总额</th>
+								<th>剩余本息总额</th>
 								<th>状态</th>
 							</tr>
-							<#if debtList?exists && (debtList?size>0)> <#list debtList as debt>
+							<#if repayPlan?exists && (repayPlan?size>0)> <#list repayPlan as
+							plan>
 							<tr>
-								<td class="tl"><a href="${basePath}repayPlan/queryRepayPlan.htm?orderId=${debt.orderId}">${debt.title}</a></td>
-								<td class="color-purple">${debt.amount}元</td>
-								<td>${debt.finishTime?string("yyyy-MM-dd HH:mm:ss")}</td>
-								<td><#if debt.status==1> <em class="state normal">投资中</em>
-									<#elseif debt.status==2> <em class="state frozen">流标</em>
-									<#elseif debt.status==3> <em class="state sfull">满标</em>
-									<#elseif debt.status==4> <em class="state process">还款中</em>
-									<#elseif debt.status==5> <em class="state verified">完成</em>
-									</#if>
-								</td>
+								<td>${plan.sequence}</td>
+								<td>${plan.monthCapital}元</td>
+								<td>${plan.monthProfit}元</td>
+								<td>${plan.monthAmount}元</td>
+								<td>${plan.leftAmount}</td>
+								<td><#if plan.status==0>未还款 <#else>还款 </#if></td>
 							</tr>
 							<tr>
-								<td colspan="4" class="line"></td>
+								<td colspan="6" class="line"></td>
 							</tr>
-							</#list>
-								<#else>
-								<tr>
-								<td colspan="4" align="center">暂无数据</td>
+							</#list> <#else>
+							<tr>
+								<td colspan="6" align="center">暂无数据</td>
 							</tr>
-								
-							 </#if>
+
+							</#if>
 						</table>
 						<@b.pager/>
 					</div>
