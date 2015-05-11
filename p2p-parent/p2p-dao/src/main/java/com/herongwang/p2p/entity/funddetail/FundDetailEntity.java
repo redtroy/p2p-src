@@ -1,10 +1,10 @@
-package com.herongwang.p2p.entity.fundDetail;
+package com.herongwang.p2p.entity.funddetail;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import com.herongwang.p2p.dao.fundDetail.IFundDetailDao;
+import com.herongwang.p2p.dao.funddetail.IFundDetailDao;
 import com.sxj.mybatis.orm.annotations.Column;
 import com.sxj.mybatis.orm.annotations.Entity;
 import com.sxj.mybatis.orm.annotations.GeneratedValue;
