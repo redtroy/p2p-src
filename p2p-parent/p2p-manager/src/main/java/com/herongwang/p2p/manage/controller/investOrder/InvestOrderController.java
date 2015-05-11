@@ -22,7 +22,7 @@ public class InvestOrderController extends BaseController
     @Autowired
     private IInvestOrderService investOrderService;
 	/**
-	 * 借款标列表
+	 * 投资人列表
 	 * @param entity
 	 * @return
 	 */
@@ -33,7 +33,7 @@ public class InvestOrderController extends BaseController
             {
     			entity.setPagable(true);
             }
-    		entity.setOrderId(id);
+    		entity.setDebtId(id);
 	    	List<InvestOrderEntity> list =investOrderService.queryorderList(entity);
             map.put("list", list);
             map.put("query", entity);

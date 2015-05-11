@@ -129,7 +129,7 @@ public class DebtController extends BaseController
                     financingOrdersService.updateOrder(order);
                     map.put("isOK", "ok");
 				}else{
-	                map.put("isOK", "已有人投标，不能修改。");
+	                map.put("isOK", "修改失败，已有人投标。");
 				}
 			}
 			return map;
