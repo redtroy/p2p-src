@@ -7,7 +7,6 @@
 		type="com.herongwang.p2p.entity.tender.DebtEntity">
 		<id property="debtId" column="debtId" jdbcType="VARCHAR" />
 		<result property="customerId" column="customerId" jdbcType="VARCHAR" />
-		<result property="orderId" column="orderId" jdbcType="VARCHAR" />
 		<result property="title" column="title" jdbcType="VARCHAR" />
 		<result property="repayType" column="repayType" jdbcType="INTEGER" />
 		<result property="deadLine" column="deadLine" jdbcType="TIMESTAMP" />

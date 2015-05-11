@@ -41,11 +41,6 @@ public class DebtEntity extends Pagable implements Serializable
     @Column(name = "customerId")
     private String customerId;
     
-    /**
-     * 订单ID
-     */
-    @Column(name = "orderId")
-    private String orderId;
     
     /**
      * 标题
@@ -156,15 +151,6 @@ public class DebtEntity extends Pagable implements Serializable
         this.customerId = customerId;
     }
     
-    public String getOrderId()
-    {
-        return orderId;
-    }
-    
-    public void setOrderId(String orderId)
-    {
-        this.orderId = orderId;
-    }
     
     public String getTitle()
     {

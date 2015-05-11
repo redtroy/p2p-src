@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.druid.util.StringUtils;
+import com.herongwang.p2p.entity.financingOrders.FinancingOrdersEntity;
 import com.herongwang.p2p.entity.parameters.ParametersEntity;
 import com.herongwang.p2p.entity.tender.DebtEntity;
 import com.herongwang.p2p.manage.controller.BaseController;
+import com.herongwang.p2p.service.financingOrders.IFinancingOrdersService;
 import com.herongwang.p2p.service.member.IMemberService;
 import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.tender.IDebtService;
@@ -34,6 +36,8 @@ public class DebtController extends BaseController
     private IParametersService parametersService;
     @Autowired
     private IMemberService memberService;
+    @Autowired
+    private IFinancingOrdersService financingOrdersService;
 	/**
 	 * 借款标列表
 	 * @param entity
@@ -89,7 +93,9 @@ public class DebtController extends BaseController
 			String title,String customerId,Integer repayType,
 			Integer months,Double annualizedRate,BigDecimal minInvest,
 			BigDecimal maxInvest,BigDecimal amount,Integer status)throws WebException {
+        Map<String, String> map = new HashMap<String, String>();
     	DebtEntity tender = new DebtEntity();
+    	FinancingOrdersEntity order = new FinancingOrdersEntity();
     	tender.setTitle(title);
     	tender.setCustomerId(customerId);
     	tender.setRepayType(repayType);
@@ -98,21 +104,31 @@ public class DebtController extends BaseController
     	tender.setMinInvest(minInvest);
     	tender.setMaxInvest(maxInvest);
     	tender.setAmount(amount);
-    	tender.setOrderId("test001");//等接口。
+    	order.setCustomerId(customerId);
+    	order.setAmount(amount);
+    	order.setCreateTime(new Date());
+    	order.setLoanAmount(amount);
     	try {
 			if(null==id||id.isEmpty()){
 				tender.setCreateTime(new Date());
-				tender.setStatus(1);
+				tender.setStatus(0);
 				debtService.addDebt(tender);
+				order.setStatus(0);
+				order.setDebtId(tender.getDebtId());
+				financingOrdersService.addOrder(order);
+	            map.put("isOK", "ok");
 			}else{
 				DebtEntity info = debtService.getDebtEntity(id);
-				tender.setCreateTime(info.getCreateTime());
-				tender.setDebtId(id);
-				tender.setStatus(status);
-				debtService.updateDebt(tender);
+				if(info.getStatus()==0){
+    				tender.setCreateTime(info.getCreateTime());
+    				tender.setDebtId(id);
+    				tender.setStatus(status);
+    				debtService.updateDebt(tender);
+    				order.setDebtId(id);
+                    order.setStatus(status);
+                    financingOrdersService.updateOrder(order);
+				}
 			}
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("isOK", "ok");
 			return map;
 		} catch (Exception e) {
 			e.printStackTrace();
