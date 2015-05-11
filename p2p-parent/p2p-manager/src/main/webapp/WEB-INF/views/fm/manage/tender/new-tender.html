@@ -49,7 +49,7 @@ function saveApply() {
 						success.content('提交借款标成功！');
 						success.showModal();
 					} else {
-						success.content('提交借款标失败！');
+						success.content(data.isOK);
 						success.showModal();
 					}
 				})
