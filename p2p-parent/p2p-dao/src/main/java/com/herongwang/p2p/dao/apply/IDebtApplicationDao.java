@@ -2,8 +2,7 @@ package com.herongwang.p2p.dao.apply;
 
 import java.util.List;
 
-import com.herongwang.p2p.entity.apply.ApplyForEntity;
-import com.herongwang.p2p.model.apply.ApplyForModel;
+import com.herongwang.p2p.entity.apply.DebtApplicationEntity;
 import com.sxj.mybatis.orm.annotations.Delete;
 import com.sxj.mybatis.orm.annotations.Get;
 import com.sxj.mybatis.orm.annotations.Insert;
@@ -15,19 +14,19 @@ import com.sxj.util.persistent.QueryCondition;
  * @author nishaotang
  *
  */
-public interface IApplyForDao {
+public interface IDebtApplicationDao {
 	/**
 	 * 添加融资申请
 	 * @param apply
 	 */
 	@Insert
-	public void addApply(ApplyForEntity apply);
+	public void addApply(DebtApplicationEntity apply);
 	/**
 	 * 修改融资申请
 	 * @param apply
 	 */
 	@Update
-	public void updateApply(ApplyForEntity apply);
+	public void updateApply(DebtApplicationEntity apply);
 	/**
 	 * 删除融资申请
 	 * @param id
@@ -39,12 +38,12 @@ public interface IApplyForDao {
 	 * @param id
 	 */
 	@Get
-	public ApplyForEntity getApplyFor(String id);
+	public DebtApplicationEntity getApply(String id);
 	/**
 	 * 融资申请高级查询
 	 * @param query
 	 * @return
 	 */
-	public List<ApplyForEntity> query(QueryCondition<ApplyForEntity> query);
+	public List<DebtApplicationEntity> query(QueryCondition<DebtApplicationEntity> query);
 	
 }

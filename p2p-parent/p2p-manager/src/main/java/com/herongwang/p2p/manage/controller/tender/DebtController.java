@@ -1,5 +1,6 @@
 package com.herongwang.p2p.manage.controller.tender;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,22 +14,22 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.druid.util.StringUtils;
 import com.herongwang.p2p.entity.parameters.ParametersEntity;
-import com.herongwang.p2p.entity.tender.TenderEntity;
+import com.herongwang.p2p.entity.tender.DebtEntity;
 import com.herongwang.p2p.manage.controller.BaseController;
 import com.herongwang.p2p.service.member.IMemberService;
 import com.herongwang.p2p.service.parameters.IParametersService;
-import com.herongwang.p2p.service.tender.ITenderService;
+import com.herongwang.p2p.service.tender.IDebtService;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
 
 
 @Controller
 @RequestMapping("/tender")
-public class TenderController extends BaseController
+public class DebtController extends BaseController
 {
     
     @Autowired
-    private ITenderService tenderService;
+    private IDebtService debtService;
     @Autowired
     private IParametersService parametersService;
     @Autowired
@@ -39,13 +40,13 @@ public class TenderController extends BaseController
 	 * @return
 	 */
     @RequestMapping("/tenderList")
-	public String rechargeList(TenderEntity entity, ModelMap map) throws WebException{
+	public String rechargeList(DebtEntity entity, ModelMap map) throws WebException{
     	try{
     		if (entity != null)
             {
     			entity.setPagable(true);
             }
-	    	List<TenderEntity> list = tenderService.queryTenderList(entity);
+	    	List<DebtEntity> list = debtService.queryDebtList(entity);
             map.put("list", list);
             map.put("query", entity);
 			return "manage/tender/tender-list";
@@ -72,11 +73,10 @@ public class TenderController extends BaseController
         	 map.put("name", name);
             return "manage/tender/new-tender";
         } else {
-        	TenderEntity info = tenderService.getTenderEntity(id);
+        	DebtEntity info = debtService.getDebtEntity(id);
             map.put("info", info);
-       	 map.put("applyId", info.getBorrower());
-       	memberService.getMmeberByAccount(info.getBorrower());
-       	 map.put("name", memberService.getMmeberByAccount(info.getBorrower()));
+       	 map.put("applyId", info.getCustomerId());
+       	 map.put("name", memberService.getMmeberByAccount(info.getCustomerId()));
             return "manage/tender/new-tender";
         }
     	}catch(Exception e){
@@ -86,30 +86,29 @@ public class TenderController extends BaseController
     }
     @RequestMapping("edit")
 	public @ResponseBody Map<String, String> addApply(String id,
-			String title,String borrower,Integer repaymentType,
-			Integer borrpwTime,Double interest,Double minAmount,
-			Double maxAmount,Double borrowingAmount,Integer status)throws WebException {
-    	TenderEntity tender = new TenderEntity();
+			String title,String customerId,Integer repayType,
+			Integer borrowTime,Double annualizedRate,BigDecimal minInvest,
+			BigDecimal maxInvest,BigDecimal amount,Integer status)throws WebException {
+    	DebtEntity tender = new DebtEntity();
     	tender.setTitle(title);
-    	tender.setBorrower(borrower);
-    	tender.setRepaymentType(repaymentType);
-    	tender.setBorrpwTime(borrpwTime);
-    	tender.setInterest(interest);
-    	tender.setMinAmount(minAmount);
-    	tender.setMaxAmount(maxAmount);
-    	tender.setBorrowingAmount(borrowingAmount);
-    	tender.setMarkId("M001");
+    	tender.setCustomerId(customerId);
+    	tender.setRepayType(repayType);
+    	tender.setBorrowTime(borrowTime);
+    	tender.setAnnualizedRate(annualizedRate);
+    	tender.setMinInvest(minInvest);
+    	tender.setMaxInvest(maxInvest);
+    	tender.setAmount(amount);
     	try {
 			if(null==id||id.isEmpty()){
 				tender.setCreateTime(new Date());
 				tender.setStatus(1);
-				tenderService.addTender(tender);
+				debtService.addDebt(tender);
 			}else{
-				TenderEntity info = tenderService.getTenderEntity(id);
+				DebtEntity info = debtService.getDebtEntity(id);
 				tender.setCreateTime(info.getCreateTime());
-				tender.setId(id);
+				tender.setDebtId(id);
 				tender.setStatus(status);
-				tenderService.updateTender(tender);
+				debtService.updateDebt(tender);
 			}
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("isOK", "ok");
@@ -123,7 +122,7 @@ public class TenderController extends BaseController
     public @ResponseBody Map<String, String> delApply(String id)
     		throws WebException {
     	try {
-    		tenderService.delTenderFor(id);
+    		debtService.delDebt(id);
     		Map<String, String> map = new HashMap<String, String>();
     		map.put("isOK", "ok");
     		return map;

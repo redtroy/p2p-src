@@ -5,32 +5,35 @@
 <mapper namespace="com.herongwang.p2p.dao.fundDetail.IFundDetailDao">
 	<resultMap id="FundDetailEntity"
 		type="com.herongwang.p2p.entity.fundDetail.FundDetailEntity">
-		<id property="detailId" column="DETAIL_ID" jdbcType="VARCHAR" />
-		<result property="memberId" column="MEMBER_ID" jdbcType="VARCHAR" />
-		<result property="type" column="TYPE" jdbcType="INTEGER" />
-		<result property="amount" column="AMOUNT" jdbcType="DOUBLE" />
-		<result property="balance" column="BALANCE" jdbcType="DOUBLE" />
-		<result property="frozenAmount" column="FROZEN_AMOUNT"
-			jdbcType="DOUBLE" />
-		<result property="dueAmount" column="DUE_AMOUNT" jdbcType="DOUBLE" />
-		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
-		<result property="status" column="STATUS" jdbcType="INTEGER" />
-		<result property="incomeStatus" column="INCOME_STATUS" jdbcType="INTEGER" />
-		<result property="remark" column="REMARK" jdbcType="VARCHAR" />
+		<id property="detailId" column="detailId" jdbcType="VARCHAR" />
+		<id property="orderId" column="orderId" jdbcType="VARCHAR" />
+		<id property="accountId" column="accountId" jdbcType="VARCHAR" />
+		<result property="customerId" column="customerId" jdbcType="VARCHAR" />
+		<result property="type" column="type" jdbcType="INTEGER" />
+		<result property="amount" column="amount" jdbcType="BIGINT" />
+		<result property="balance" column="balance" jdbcType="BIGINT" />
+		<result property="frozenAmount" column="frozenAmount"
+			jdbcType="BIGINT" />
+		<result property="dueAmount" column="dueAmount" jdbcType="BIGINT" />
+		<result property="createTime" column="createTime" jdbcType="TIMESTAMP" />
+		<result property="status" column="status" jdbcType="INTEGER" />
+		<result property="incomeStatus" column="incomeStatus"
+			jdbcType="INTEGER" />
+		<result property="remark" column="remark" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<!-- 条件查询交易明细 -->
 	<select id="queryFundDetail" resultMap="FundDetailEntity"
 		parameterType="com.sxj.util.persistent.QueryCondition">
-		<![CDATA[SELECT D.* FROM FUND_DETAIL D  WHERE 1=1 ]]>
+		<![CDATA[SELECT D.* FROM FundDetail D  WHERE 1=1 ]]>
 		<!-- 会员名称 -->
-		<if test="condition.memberId != null and condition.memberId != ''">
-			<![CDATA[AND D.MEMBER_ID =#{condition.memberId}]]>
+		<if test="condition.customerId != null and condition.customerId != ''">
+			<![CDATA[AND D.customerId =#{condition.customerId}]]>
 		</if>
 		<!-- 查询类型 -->
 		<if test="condition.type != null">
-			<![CDATA[AND D.TYPE = #{condition.type}]]>
+			<![CDATA[AND D.type = #{condition.type}]]>
 		</if>
-		<![CDATA[ ORDER BY D.CREATE_TIME DESC]]>
+		<![CDATA[ ORDER BY D.createTime DESC]]>
 	</select>
 </mapper>

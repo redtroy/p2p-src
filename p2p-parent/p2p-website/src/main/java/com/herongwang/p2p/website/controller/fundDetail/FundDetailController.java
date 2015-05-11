@@ -35,7 +35,7 @@ public class FundDetailController
         //会员信息传到页面
         try
         {
-            query.setMemberId("1");
+            query.setCustomerId("1");
             query.setPagable(true);
             List<FundDetailEntity> fundList = fundDetailService.queryFundDetail(query);
             map.put("fundList", fundList);

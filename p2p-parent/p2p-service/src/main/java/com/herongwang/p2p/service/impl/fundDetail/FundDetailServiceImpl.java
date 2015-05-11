@@ -3,12 +3,12 @@ package com.herongwang.p2p.service.impl.fundDetail;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.ibatis.type.JdbcType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.herongwang.p2p.dao.fundDetail.IFundDetailDao;
-import com.herongwang.p2p.entity.deal.DealDetailEntity;
 import com.herongwang.p2p.entity.fundDetail.FundDetailEntity;
 import com.herongwang.p2p.service.fundDetail.IFundDetailService;
 import com.sxj.util.exception.ServiceException;
@@ -52,9 +52,9 @@ public class FundDetailServiceImpl implements IFundDetailService
             
             List<FundDetailEntity> contractList;
             QueryCondition<FundDetailEntity> condition = new QueryCondition<FundDetailEntity>();
-            condition.addCondition("memberId", query.getMemberId());//会员id
+            condition.addCondition("customerId", query.getCustomerId());//会员id
             condition.setPage(query);
-            contractList = fundDetailDao.queryFundDetail(condition);            
+            contractList = fundDetailDao.queryFundDetail(condition);
             query.setPage(condition);
             return contractList;
         }
