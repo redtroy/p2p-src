@@ -30,69 +30,81 @@ public class FundDetailEntity extends Pagable implements Serializable
     /**
      * 明细id
      */
-    @Id(column = "DETAIL_ID")
+    @Id(column = "detailId")
     @GeneratedValue(strategy = GenerationType.UUID)
     private String detailId;
     
     /**
      * 会员ID
      */
-    @Column(name = "MEMBER_ID")
-    private String memberId;
+    @Column(name = "customerId")
+    private String customerId;
+    
+    /**
+     * 账户ID
+     */
+    @Column(name = "accountId")
+    private String accountId;
+    
+    /**
+     * 订单ID
+     */
+    @Column(name = "orderId")
+    private String orderId;
     
     /**
      * 类型
      */
-    @Column(name = "TYPE")
+    @Column(name = "type")
     private Integer type;
     
     /**
      * 金额
      */
-    @Column(name = "AMOUNT")
-    private Double amount;
+    @Column(name = "amount")
+    private Long amount;
     
     /**
      * 账户余额
      */
-    @Column(name = "BALANCE")
-    private Double balance;
+    @Column(name = "balance")
+    private Long balance;
     
     /**
      * 冻结金额
      */
-    @Column(name = "FROZEN_AMOUNT")
-    private Double frozenAmount;
+    @Column(name = "frozenAmount")
+    private Long frozenAmount;
     
     /**
      * 待收金额
      */
-    @Column(name = "DUE_AMOUNT")
-    private Double dueAmount;
+    @Column(name = "dueAmount")
+    private Long dueAmount;
     
     /**
      * 交易时间
      */
-    @Column(name = "CREATE_TIME")
+    @Column(name = "createTime")
     private Date createTime;
     
     /**
      * 状态
      */
-    @Column(name = "STATUS")
+    @Column(name = "status")
     private Integer status;
     
     /**
      * 出入状态
      * 0 : 支出  1: 收入
      */
-    @Column(name = "INCOME_STATUS")
+    @Column(name = "incomeStatus")
     private Integer incomeStatus;
     
     /**
      * 说明
      */
-    @Column(name = "REMARK")
+    @Column(name = "remark")
     private Integer remark;
     
     public String getDetailId()
@@ -105,14 +117,34 @@ public class FundDetailEntity extends Pagable implements Serializable
         this.detailId = detailId;
     }
     
-    public String getMemberId()
+    public String getCustomerId()
     {
-        return memberId;
+        return customerId;
     }
     
-    public void setMemberId(String memberId)
+    public void setCustomerId(String customerId)
     {
-        this.memberId = memberId;
+        this.customerId = customerId;
+    }
+    
+    public String getAccountId()
+    {
+        return accountId;
+    }
+    
+    public void setAccountId(String accountId)
+    {
+        this.accountId = accountId;
+    }
+    
+    public String getOrderId()
+    {
+        return orderId;
+    }
+    
+    public void setOrderId(String orderId)
+    {
+        this.orderId = orderId;
     }
     
     public Integer getType()
@@ -125,42 +157,42 @@ public class FundDetailEntity extends Pagable implements Serializable
         this.type = type;
     }
     
-    public Double getAmount()
+    public Long getAmount()
     {
         return amount;
     }
     
-    public void setAmount(Double amount)
+    public void setAmount(Long amount)
     {
         this.amount = amount;
     }
     
-    public Double getBalance()
+    public Long getBalance()
     {
         return balance;
     }
     
-    public void setBalance(Double balance)
+    public void setBalance(Long balance)
     {
         this.balance = balance;
     }
     
-    public Double getFrozenAmount()
+    public Long getFrozenAmount()
     {
         return frozenAmount;
     }
     
-    public void setFrozenAmount(Double frozenAmount)
+    public void setFrozenAmount(Long frozenAmount)
     {
         this.frozenAmount = frozenAmount;
     }
     
-    public Double getDueAmount()
+    public Long getDueAmount()
     {
         return dueAmount;
     }
     
-    public void setDueAmount(Double dueAmount)
+    public void setDueAmount(Long dueAmount)
     {
         this.dueAmount = dueAmount;
     }
@@ -184,22 +216,22 @@ public class FundDetailEntity extends Pagable implements Serializable
     {
         this.status = status;
     }
-
+    
     public Integer getIncomeStatus()
     {
         return incomeStatus;
     }
-
+    
     public void setIncomeStatus(Integer incomeStatus)
     {
         this.incomeStatus = incomeStatus;
     }
-
+    
     public Integer getRemark()
     {
         return remark;
     }
-
+    
     public void setRemark(Integer remark)
     {
         this.remark = remark;
