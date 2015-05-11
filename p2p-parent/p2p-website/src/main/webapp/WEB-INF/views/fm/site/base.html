@@ -29,13 +29,10 @@ $(function(){
 <#macro pageScript>
 <!--<script src="${staticPath}js/jquery.paginate.js"></script>  -->
 <script src="${staticPath}js/jquery.pagination_2.js"></script>
-<script src="${staticPath}js/layer.min.js"></script>
-<script src="${staticPath}js/layer.ext.js"></script>
 <link rel="stylesheet" href="${staticPath}style/pagination_2.css" />
 <script>
 function loadPage(currentPage,totalPage) {
 	$(".jump").die("click");
-	layer.closeAll();
 	// 创建分页
 	$(".pagination").attr("currentPage",currentPage);
 	$(".pagination").attr("totalPage",totalPage);
@@ -56,7 +53,6 @@ function loadPage(currentPage,totalPage) {
 	jump(currentPage);
  }
 $(".pagination").ready(function(){
-	
 	loadPage(${query.currentPage},${query.totalPage});
 });
 var jump = function(currentPage){

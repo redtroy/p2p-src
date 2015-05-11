@@ -6,14 +6,27 @@
 <meta name="keywords" content="和融网管理平台">
 <meta name="description" content="和融网管理平台">
 <link href="${b.staticPath}style/style.css" rel="stylesheet" type="text/css" />
-<script src="${b.staticPath}js/jquery.js" type="text/javascript"></script>
+<script src="${b.staticPath}js/jquery.js"></script>
 <script src="${b.staticPath}js/datepicker.js"></script>
 <script src="${b.staticPath}js/jquery.paginate.js"></script>
 <@b.validate/>
 <@b.dialog/>
 <script  type="text/javascript">
 var validform;
+$(document).ready(function() {
+	validform = $("#submit_form").Validform({
+		tiptype : 3
+	});
+
+});
 function saveApply() {
+	var validform;
+	$(document).ready(function() {
+		validform = $("#submit_form").Validform({
+			tiptype : 3
+		});
+
+	});
 	 var success = dialog({
 			title : '消息',
 			cancel : false,
@@ -84,16 +97,16 @@ function saveApply() {
             <tr>
               <th>借款人</th>
               <td>
-              <input type="hidden" name="borrower" value="${applyId}"/>
-              <input type="hidden" name="id" value="${info.id}" />
+              <input type="hidden" name="customerId" value="${applyId}"/>
+              <input type="hidden" name="id" value="${info.debtId}" />
               <input type="hidden" name="status" value="${info.status}" />
-              <input type="text" name="tender.name" id="name" value="${name}" readonly="readonly" class="input input-w270h30"/></td>
+              <input type="text" name="name" id="name" value="${name}" readonly="readonly" class="input input-w270h30"/></td>
             </tr>
             <tr>
               <th>还款类型</th>
-              <td><select name="repaymentType" id="repayment_type" class="c_select">
+              <td><select name="repayType" id="repayType" class="c_select">
               <#list repaymentList as repayment>
-           <#if (repayment.value==info.repaymentType)>
+           <#if (repayment.value==info.repayType)>
             	<option value="${repayment.value}" selected="selected">${repayment.text}</option>
             	<#else>
             	<option value="${repayment.value}">${repayment.text}</option>
@@ -104,9 +117,9 @@ function saveApply() {
             <tr>
               <th>借款期限</th>
               <td>
-              <select name="borrpwTime" id="borrpwTime" title="借款成功后,打算以几个月的时间来还清贷款。" class="c_select x_select">
+              <select name="months" id="months" title="借款成功后,打算以几个月的时间来还清贷款。" class="c_select x_select">
               <#list 0..11 as i>
-　　　　　　　　 <#if (i+1)==info.borrpwTime >
+　　　　　　　　 <#if (i+1)==info.months >
 　　　　　　　　　　　 　<option value="${i+1}" selected="selected">${i+1}个月</option>
 				<#else>
 				<option value="${i+1}">${i+1}个月</option>
@@ -117,23 +130,23 @@ function saveApply() {
             </tr>
             <tr>
               <th>年化利率</th>
-              <td><input type="text" name="interest" id="interest" autocomplete="off"
-								placeholder="" value="${info.interest}" datatype="*1-20"
+              <td><input type="text" name="annualizedRate" id="annualizedRate" autocomplete="off"
+								placeholder="" value="${info.annualizedRate}" datatype="*1-20"
 								errormsg="请输入1~20位之间的字符！" nullmsg="请输入年化利率！" class="input input-w270h30"/> %</td>
             </tr>
             <tr>
               <th>最小投资金额</th>
-              <td><input type="text" name="minAmount" value="${info.minAmount}" id="minAmount" datatype="/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/"
+              <td><input type="text" name="minInvest" value="${info.minInvest}" id="minAmount" datatype="/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/"
 								errormsg="请输入1~20位之间的数字！" nullmsg="请输入最小投资金额！" class="input input-w270h30"/>元</td>
             </tr>
             <tr>
               <th>最大投资金额</th>
-              <td><input type="text" name="maxAmount" value="${info.maxAmount}" id="maxAmount" datatype="/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/"
+              <td><input type="text" name="maxInvest" value="${info.maxInvest}" id="maxAmount" datatype="/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/"
 								errormsg="请输入1~20位之间的数字！" nullmsg="请输入最大投资金额！" class="input input-w270h30"/>元</td>
             </tr>
             <tr>
               <th>借款金额</th>
-              <td><input type="text" name="borrowingAmount" value="${info.borrowingAmount}" datatype="/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/"
+              <td><input type="text" name="amount" value="${info.amount}" datatype="/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/"
 								errormsg="请输入1~20位之间的数字！" nullmsg="请输入借款金额！" id="borrowingAmount" class="input input-w270h30"/>元</td>
             </tr>
           </table>

@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.druid.util.StringUtils;
-import com.herongwang.p2p.entity.apply.ApplyForEntity;
+import com.herongwang.p2p.entity.apply.DebtApplicationEntity;
 import com.herongwang.p2p.manage.controller.BaseController;
-import com.herongwang.p2p.model.apply.ApplyForModel;
-import com.herongwang.p2p.service.apply.IApplyForService;
+import com.herongwang.p2p.service.apply.IDebtApplicationService;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
 
@@ -25,20 +24,20 @@ public class ApplyForController extends BaseController
 {
     
     @Autowired
-    private IApplyForService applyService;
+    private IDebtApplicationService debtApplicationService;
 	/**
 	 * 融资申请页面
 	 * @param entity
 	 * @return
 	 */
     @RequestMapping("/applyList")
-	public String developerList(ApplyForEntity entity, ModelMap map) throws WebException{
+	public String developerList(DebtApplicationEntity entity, ModelMap map) throws WebException{
     	try{
     		if (entity != null)
             {
     			entity.setPagable(true);
             }
-	    	List<ApplyForEntity> list = applyService.queryApplyFors(entity);
+	    	List<DebtApplicationEntity> list = debtApplicationService.queryApply(entity);
             map.put("list", list);
             map.put("query", entity);
 			return "manage/apply/apply-list";
@@ -53,23 +52,23 @@ public class ApplyForController extends BaseController
         if (StringUtils.isEmpty(id)) {
             return "manage/apply/";
         } else {
-        	ApplyForModel info = applyService.getApplyForEntity(id);
+        	DebtApplicationEntity info = debtApplicationService.getApplyForEntity(id);
             map.put("info", info);
             return "manage/apply/apply";
         }
         
     }
     @RequestMapping("edit")
-	public @ResponseBody Map<String, String> addApply(String applyId)
+	public @ResponseBody Map<String, String> addApply(String applicationId)
 			throws WebException {
-    	ApplyForEntity entity = new ApplyForEntity();
-    	entity.setApplyId(applyId);
+    	DebtApplicationEntity entity = new DebtApplicationEntity();
+    	entity.setApplicationId(applicationId);
     	try {
-			if(null==applyId||applyId.isEmpty()){
-				applyService.addApplyFor(entity);
+			if(null==applicationId||applicationId.isEmpty()){
+				debtApplicationService.addApply(entity);
 			}else{
-				entity.setApplyId(applyId);
-				applyService.updateApplyFor(entity);
+				entity.setApplicationId(applicationId);
+				debtApplicationService.updateApply(entity);
 			}
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("isOK", "ok");
@@ -83,7 +82,7 @@ public class ApplyForController extends BaseController
     public @ResponseBody Map<String, String> delApply(String id)
     		throws WebException {
     	try {
-    		applyService.delApplyFor(id);
+    		debtApplicationService.delApply(id);
     		Map<String, String> map = new HashMap<String, String>();
     		map.put("isOK", "ok");
     		return map;

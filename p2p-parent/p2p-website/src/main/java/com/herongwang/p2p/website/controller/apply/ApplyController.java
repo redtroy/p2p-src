@@ -12,8 +12,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.herongwang.p2p.entity.apply.ApplyForEntity;
-import com.herongwang.p2p.service.apply.IApplyForService;
+import com.herongwang.p2p.entity.apply.DebtApplicationEntity;
+import com.herongwang.p2p.service.apply.IDebtApplicationService;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
 
@@ -22,7 +22,7 @@ import com.sxj.util.logger.SxjLogger;
 public class ApplyController
 {
     @Autowired
-    IApplyForService applyForService;
+    IDebtApplicationService applyForService;
     
     /**
      * 跳转申请融资
@@ -45,16 +45,16 @@ public class ApplyController
      */
     @RequestMapping("saveApply")
     public @ResponseBody Map<String, String> saveApply(HttpSession session,
-            ApplyForEntity apply) throws WebException
+            DebtApplicationEntity apply) throws WebException
     {
         try
         {
             //获取登陆会员ID 
             Map<String, String> map = new HashMap<String, String>();
-            apply.setMemberId("M999999");
-            apply.setForTime(new Date());//申请时间
+            apply.setCustomerId("M999999");
+            apply.setApplyTime(new Date());//申请时间
             apply.setStatus(0);
-            applyForService.addApplyFor(apply);
+            applyForService.addApply(apply);
             map.put("isOK", "ok");
             return map;
         }

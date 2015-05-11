@@ -56,11 +56,11 @@
             </tr>
             <#list list as deal>
             <tr>
-	         <td>${deal.name}</td>
-              <td><#if (deal.dealTime??)> ${deal.dealTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
-              <td>${deal.orderNo}</td>
+	        <td>${deal.customerId}</td>
+              <td><#if (deal.createTime??)> ${deal.createTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
+              <td>${deal.orderId}</td>
               <td>${deal.payNo}</td>
-              <td>${deal.dealFee}元</td>
+              <td>${deal.amount}元</td>
               <td>${deal.manageFee}</td>
               <td><#if (deal.actuaTime??)> ${deal.actuaTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
               <td>${deal.actuaFee}元</td>
