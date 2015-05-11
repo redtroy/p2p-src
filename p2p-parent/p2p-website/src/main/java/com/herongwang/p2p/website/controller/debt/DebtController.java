@@ -10,7 +10,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.herongwang.p2p.entity.debt.DebtEntity;
-import com.herongwang.p2p.service.tender.IDebtService;
+import com.herongwang.p2p.service.debt.IDebtService;
 
 @Controller
 @RequestMapping("/debt")

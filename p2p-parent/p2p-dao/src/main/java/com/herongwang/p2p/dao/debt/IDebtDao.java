@@ -1,6 +1,5 @@
 package com.herongwang.p2p.dao.debt;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import com.herongwang.p2p.entity.debt.DebtEntity;
@@ -15,40 +14,6 @@ import com.sxj.util.persistent.QueryCondition;
  * @author nishaotang
  *
  */
-<<<<<<< HEAD
-public interface IDebtDao {
-	/**
-	 * 添加借款标
-	 * @param Debt
-	 */
-	@Insert
-	public void addDebt(DebtEntity Debt);
-	/**
-	 * 修改借款标
-	 * @param Debt
-	 */
-	@Update
-	public void updateDebt(DebtEntity Debt);
-	/**
-	 * 删除借款标
-	 * @param id
-	 */
-	@Delete
-	public void delDebt(String id);
-	/**
-	 * 查询借款标
-	 * @param id
-	 */
-	@Get
-	public DebtEntity getDebtFor(String id);
-	/**
-	 * 借款标高级查询
-	 * @param query
-	 * @return
-	 */
-	public List<DebtEntity> query(QueryCondition<DebtEntity> query) throws SQLException;
-	
-=======
 public interface IDebtDao
 {
     /**
@@ -90,5 +55,4 @@ public interface IDebtDao
      * 查询标的前5条
      */
     public List<DebtEntity> queryTop5();
->>>>>>> a87179d823e22d33958dd0af77d66e7fb69392ca
 }

@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.herongwang.p2p.dao.debt.IDebtDao;
 import com.herongwang.p2p.entity.debt.DebtEntity;
-import com.herongwang.p2p.service.tender.IDebtService;
+import com.herongwang.p2p.service.debt.IDebtService;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.logger.SxjLogger;
 import com.sxj.util.persistent.QueryCondition;
@@ -48,26 +48,6 @@ public class DebtServiceImpl implements IDebtService
     {
         try
         {
-<<<<<<< HEAD:p2p-parent/p2p-service/src/main/java/com/herongwang/p2p/service/impl/debt/DebtServiceImpl.java
-            QueryCondition<DebtEntity> condition = new QueryCondition<DebtEntity>();
-            condition.addCondition("name", query.getName());//会员名称
-            condition.addCondition("customerId", query.getCustomerId());//会员ID
-            condition.setPage(query);
-            List<DebtEntity> debtList = DebtDao.query(condition);
-            query.setPage(condition);
-            return debtList;
-        }
-        catch (ServiceException e)
-        {
-            SxjLogger.error(e.getMessage(), e, this.getClass());
-            throw new ServiceException(e.getMessage());
-        }
-        catch (Exception e)
-        {
-            SxjLogger.error(e.getMessage(), e, this.getClass());
-            throw new ServiceException("查询融资标的错误", e);
-=======
-            
             QueryCondition<DebtEntity> condition = new QueryCondition<DebtEntity>();
             List<DebtEntity> debtList = new ArrayList<DebtEntity>();
             if (query == null)
@@ -75,6 +55,7 @@ public class DebtServiceImpl implements IDebtService
                 return debtList;
             }
             condition.addCondition("name", query.getName());
+            condition.addCondition("customerId", query.getCustomerId());//会员ID
             condition.setPage(query);
             debtList = DebtDao.query(condition);
             query.setPage(condition);
@@ -84,7 +65,6 @@ public class DebtServiceImpl implements IDebtService
         {
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new ServiceException("查询标的列表信息错误", e);
->>>>>>> a87179d823e22d33958dd0af77d66e7fb69392ca:p2p-parent/p2p-service/src/main/java/com/herongwang/p2p/service/impl/tender/DebtServiceImpl.java
         }
     }
     
