@@ -1,10 +1,10 @@
-package com.herongwang.p2p.entity.tender;
+package com.herongwang.p2p.entity.debt;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import com.herongwang.p2p.dao.tender.IDebtDao;
+import com.herongwang.p2p.dao.debt.IDebtDao;
 import com.sxj.mybatis.orm.annotations.Column;
 import com.sxj.mybatis.orm.annotations.Entity;
 import com.sxj.mybatis.orm.annotations.GeneratedValue;

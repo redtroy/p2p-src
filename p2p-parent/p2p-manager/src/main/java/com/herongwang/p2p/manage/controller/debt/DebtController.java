@@ -1,4 +1,4 @@
-package com.herongwang.p2p.manage.controller.tender;
+package com.herongwang.p2p.manage.controller.debt;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.druid.util.StringUtils;
+import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.financingOrders.FinancingOrdersEntity;
 import com.herongwang.p2p.entity.parameters.ParametersEntity;
-import com.herongwang.p2p.entity.tender.DebtEntity;
 import com.herongwang.p2p.manage.controller.BaseController;
 import com.herongwang.p2p.service.financingOrders.IFinancingOrdersService;
 import com.herongwang.p2p.service.member.IMemberService;

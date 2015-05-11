@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.herongwang.p2p.dao.repayPlan.IRepayPlanDao">
+	<resultMap id="RepayPlanEntity"
+		type="com.herongwang.p2p.entity.repayPlan.RepayPlanEntity">
+		<id property="planId" column="planId" jdbcType="VARCHAR" />
+		<result property="orderId" column="orderId" jdbcType="VARCHAR" />
+		<result property="sequence" column="sequence" jdbcType="INTEGER" />
+		<result property="monthCapital" column="monthCapital" jdbcType="VARCHAR" />
+		<result property="monthProfit" column="monthProfit" jdbcType="INTEGER" />
+		<result property="monthAmount" column="monthAmount" jdbcType="BIGINT" />
+		<result property="leftAmount" column="leftAmount" jdbcType="BIGINT" />
+		<result property="status" column="status" jdbcType="INTEGER" />
+		<result property="createTime" column="createTime" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="updateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<!-- 条件查询还款计划 -->
+	<select id="queryRepayPlan" resultMap="RepayPlanEntity"
+		parameterType="com.sxj.util.persistent.QueryCondition">
+		<![CDATA[SELECT * FROM RepayPlan  WHERE 1=1 ]]>
+		<!-- 会员名称 -->
+		<if test="condition.orderId != null and condition.orderId != ''">
+			<![CDATA[AND orderId =#{condition.orderId}]]>
+		</if>
+		<![CDATA[ ORDER BY createTime DESC]]>
+	</select>
+</mapper>
