@@ -18,7 +18,6 @@ import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
 import com.herongwang.p2p.entity.parameters.ParametersEntity;
 import com.herongwang.p2p.manage.controller.BaseController;
 import com.herongwang.p2p.service.financing.IFinancingOrdersService;
-import com.herongwang.p2p.service.member.IMemberService;
 import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.tender.IDebtService;
 import com.sxj.util.exception.WebException;
