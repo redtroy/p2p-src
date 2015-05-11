@@ -1,4 +1,4 @@
-package com.herongwang.p2p.website.controller.fundDetail;
+package com.herongwang.p2p.website.controller.funddetail;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
-import com.herongwang.p2p.service.fundDetail.IFundDetailService;
+import com.herongwang.p2p.service.funddetail.IFundDetailService;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
 
