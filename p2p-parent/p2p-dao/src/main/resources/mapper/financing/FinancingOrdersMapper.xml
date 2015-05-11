@@ -5,9 +5,9 @@
 <mapper namespace="com.herongwang.p2p.dao.financing.IFinancingOrdersDao">
 	<resultMap id="FinancingOrdersEntity"
 		type="com.herongwang.p2p.entity.financing.FinancingOrdersEntity">
-		<id property="debtId" column="debtId" jdbcType="VARCHAR" />
+		<id property="orderId" column="orderId" jdbcType="VARCHAR" />
 		<result property="customerId" column="customerId" jdbcType="VARCHAR" />
-		<result property="orderId" column="orderId" jdbcType="VARCHAR" />
+		<result property="debtId" column="debtId" jdbcType="VARCHAR" />
 		<result property="amount" column="amount" jdbcType="DOUBLE" />
 		<result property="createTime" column="createTime" jdbcType="TIMESTAMP" />
 		<result property="loanAmount" column="loanAmount" jdbcType="DOUBLE" />
