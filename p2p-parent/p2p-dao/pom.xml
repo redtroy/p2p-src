@@ -5,7 +5,6 @@
   <parent>
     <groupId>com.herongwang</groupId>
     <artifactId>p2p-parent</artifactId>
-    <version>${project.version}</version>
   </parent>
   <artifactId>p2p-dao</artifactId>
   <name>p2p-dao</name>

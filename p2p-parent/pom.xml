@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.herongwang</groupId>
 	<artifactId>p2p-parent</artifactId>
-	<version>${project.version}</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<properties>
 		<com.sxj.spring>4.2.3</com.sxj.spring>
@@ -287,9 +287,9 @@
 			<url>http://192.168.1.11:8080/nexus/content/repositories/releases</url>
 		</repository>
 		<snapshotRepository>
-			<id>nexus-snapshots</id>
+			<id>snapshots</id>
 			<name>Local Nexus Repository</name>
-			<url>http://192.168.1.11:8080/nexus/content/groups/public</url>
+			<url>http://192.168.1.11:8080/nexus/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 	<build>
