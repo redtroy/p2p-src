@@ -4,16 +4,19 @@
 
 <mapper namespace="com.herongwang.p2p.dao.member.IMemberDao">
 	<resultMap id="MemberResultMap" type="com.herongwang.p2p.entity.member.MemberEntity">
-		<id property="memberId" column="MEMBER_ID" jdbcType="VARCHAR" />
-		<result property="memberCode" column="MEMBER_CODE" jdbcType="VARCHAR" />
+		<id property="customerId" column="customerId" jdbcType="VARCHAR" />
+		<result property="customerNo" column="customerNo" jdbcType="VARCHAR" />
 		<result property="password" column="PASSWORD" jdbcType="VARCHAR" />
-		<result property="memberName" column="MEMBER_NAME" jdbcType="VARCHAR" />
-		<result property="availableM" column="AVAILABLE_M" jdbcType="DOUBLE" />
-		<result property="registerTime" column="REGISTER_TIME" jdbcType="TIMESTAMP" />
+		<result property="name" column="name" jdbcType="VARCHAR" />
+		<result property="registerTime" column="registerTime" jdbcType="TIMESTAMP" />
 		<result property="email" column="EMAIL" jdbcType="VARCHAR" />
-		<result property="tel" column="TEL" jdbcType="VARCHAR" />
-		<result property="cardNum" column="CARD_NUM" jdbcType="VARCHAR" />
-		<result property="type" column="TYPE" jdbcType="INTEGER" />
+		<result property="cellphone" column="cellphone" jdbcType="VARCHAR" />
+		<result property="cardNum" column="cardNum" jdbcType="VARCHAR" />
+		<result property="cardHolder" column="cardHolder" jdbcType="VARCHAR" />
+		<result property="cardNo" column="cardNo" jdbcType="VARCHAR" />
+		<result property="status" column="status" jdbcType="INTEGER" />
+		<result property="updateTime" column="updateTime" jdbcType="TIMESTAMP" />
+		<result property="levelId" column="levelId" jdbcType="VARCHAR" />
 	</resultMap>
 	<resultMap id="MemberInfoResultMap" type="com.herongwang.p2p.model.member.MemberModel">
 		<id property="memberId" column="MEMBER_ID" jdbcType="VARCHAR" />
@@ -48,5 +51,9 @@
 		parameterType="String">
 		<![CDATA[SELECT M.MEMBER_CODE,M.MEMBER_NAME,M.EMAIL,M.TEL,A.BANK_CODE,A.CODE_NAME,M.REGISTER_TIME
 		 FROM MEMBER M,ACCOUNT  A WHERE M.MEMBER_ID=A.MEMBER_ID AND M.MEMBER_ID=#{memberId}]]>
+	</select>
+	<select id="getMemberNum" resultType="int"
+		parameterType="String">
+		<![CDATA[SELECT COUNT(*) FROM Users]]>
 	</select>
 </mapper>

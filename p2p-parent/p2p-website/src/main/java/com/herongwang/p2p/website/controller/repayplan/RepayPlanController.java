@@ -1,4 +1,4 @@
-package com.herongwang.p2p.website.controller.fundDetail;
+package com.herongwang.p2p.website.controller.repayplan;
 
 import java.util.List;
 
@@ -10,37 +10,38 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
-import com.herongwang.p2p.service.fundDetail.IFundDetailService;
+import com.herongwang.p2p.entity.repayPlan.RepayPlanEntity;
+import com.herongwang.p2p.service.repayplan.IRepayPlanService;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
 
 @Controller
-@RequestMapping("/fundDetail")
-public class FundDetailController
+@RequestMapping("/repayPlan")
+public class RepayPlanController
 {
+    
     @Autowired
-    IFundDetailService fundDetailService;
+    IRepayPlanService repayPlanService;
     
     /**
-     * 资金明细
+     * 还款计划
      * @param session
      * @param map
      * @return
      * @throws WebException 
      */
-    @RequestMapping("queryFundDetail")
-    public String queryFundDetail(HttpSession session, ModelMap map,
-            FundDetailEntity query) throws WebException
+    @RequestMapping("queryRepayPlan")
+    public String queryRepayPlan(HttpSession session, ModelMap map,
+            RepayPlanEntity query) throws WebException
     {
         //会员信息传到页面
         try
         {
-            query.setCustomerId("1");
             query.setPagable(true);
-            List<FundDetailEntity> fundList = fundDetailService.queryFundDetail(query);
-            map.put("fundList", fundList);
+            List<RepayPlanEntity> repayPlanList = repayPlanService.queryRepayPlan(query);
+            map.put("repayPlan", repayPlanList);
             map.put("query", query);
-            return "site/fundDetail/fundDetail";
+            return "site/repayPlan/repayPlan";
         }
         catch (Exception e)
         {

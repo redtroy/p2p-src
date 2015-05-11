@@ -17,8 +17,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.herongwang.p2p.entity.debt.DebtEntity;
-import com.herongwang.p2p.entity.member.MemberEntity;
-import com.herongwang.p2p.model.member.MemberModel;
+import com.herongwang.p2p.entity.users.UsersEntity;
+import com.herongwang.p2p.model.users.UserModel;
 import com.herongwang.p2p.service.member.IMemberService;
 import com.herongwang.p2p.service.tender.IDebtService;
 import com.sxj.redis.core.pubsub.RedisTopics;
@@ -69,7 +69,7 @@ public class BasicController extends BaseController
     public String login(String account, String password, HttpSession session,
             HttpServletRequest request, ModelMap map)
     {
-        MemberEntity member = memberService.getMmeberByAccount(account);
+        UsersEntity member = memberService.getMmeberByAccount(account);
         if (member == null)
         {
             map.put("message", "用户名不存在");
@@ -96,7 +96,7 @@ public class BasicController extends BaseController
         if (currentUser.isAuthenticated())
         {
             session.setAttribute("memberInfo", member);
-            MemberModel memberInfo = memberService.getMmeberByMemberId(member.getMemberId());
+            UserModel memberInfo = memberService.getMmeberByMemberId(member.getMemberId());
             map.put("member", memberInfo);
             return "site/member/member-center";
             // return "redirect:" + getBasePath(request) + "member/memberInfo.htm";
@@ -130,8 +130,7 @@ public class BasicController extends BaseController
     {
         try
         {
-            DebtEntity debt = new DebtEntity();
-            List<DebtEntity> list = debtService.queryDebtList(debt);
+            List<DebtEntity> list = debtService.queryTop5();
             map.put("list", list);
         }
         catch (Exception e)
@@ -143,11 +142,13 @@ public class BasicController extends BaseController
     }
     
     @RequestMapping("bdList")
-    public String bdList() throws WebException
+    public String bdList(ModelMap map) throws WebException
     {
         try
         {
-            
+            DebtEntity debt = new DebtEntity();
+            List<DebtEntity> list = debtService.queryDebtList(debt);
+            map.put("list", list);
         }
         catch (Exception e)
         {

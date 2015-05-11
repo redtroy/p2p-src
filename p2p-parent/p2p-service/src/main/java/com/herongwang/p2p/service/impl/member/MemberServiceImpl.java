@@ -6,9 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.herongwang.p2p.dao.member.IMemberDao;
-import com.herongwang.p2p.entity.member.MemberEntity;
-import com.herongwang.p2p.model.member.MemberModel;
+import com.herongwang.p2p.dao.users.IUsersDao;
+import com.herongwang.p2p.entity.users.UsersEntity;
+import com.herongwang.p2p.model.users.UserModel;
 import com.herongwang.p2p.service.member.IMemberService;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.logger.SxjLogger;
@@ -18,16 +18,16 @@ import com.sxj.util.persistent.QueryCondition;
 public class MemberServiceImpl implements IMemberService
 {
     @Autowired
-    private IMemberDao memberDao;
+    private IUsersDao memberDao;
     
     @Override
-    public List<MemberModel> queryMemberInfo(MemberModel member)
+    public List<UserModel> queryMemberInfo(UserModel member)
             throws ServiceException
     {
         try
         {
-            QueryCondition<MemberModel> condition = new QueryCondition<MemberModel>();
-            List<MemberModel> memberList = new ArrayList<MemberModel>();
+            QueryCondition<UserModel> condition = new QueryCondition<UserModel>();
+            List<UserModel> memberList = new ArrayList<UserModel>();
             if (member == null)
             {
                 return memberList;
@@ -35,7 +35,7 @@ public class MemberServiceImpl implements IMemberService
             condition.addCondition("memberCode", member.getMemberCode());// 姓名
             /* 
             condition.setPage(query);*/
-            memberList = memberDao.queryMembers(condition);
+            memberList = memberDao.queryUserList(condition);
             // query.setPage(condition);
             return memberList;
         }
@@ -47,12 +47,12 @@ public class MemberServiceImpl implements IMemberService
     }
     
     @Override
-    public MemberEntity getMmeberByAccount(String account)
+    public UsersEntity getMmeberByAccount(String account)
             throws ServiceException
     {
         try
         {
-            return memberDao.getMmeberByAccount(account);
+            return memberDao.getUserByAccount(account);
         }
         catch (Exception e)
         {
@@ -62,11 +62,11 @@ public class MemberServiceImpl implements IMemberService
     }
     
     @Override
-    public MemberEntity getMmeberById(String id) throws ServiceException
+    public UsersEntity getMmeberById(String id) throws ServiceException
     {
         try
         {
-            return memberDao.getMemberById(id);
+            return memberDao.getUserById(id);
         }
         catch (Exception e)
         {
@@ -77,11 +77,11 @@ public class MemberServiceImpl implements IMemberService
     }
     
     @Override
-    public MemberEntity addMember(MemberEntity member) throws ServiceException
+    public UsersEntity addMember(UsersEntity member) throws ServiceException
     {
         try
         {
-            memberDao.addMember(member);
+            memberDao.addUser(member);
             return member;
         }
         catch (Exception e)
@@ -93,16 +93,30 @@ public class MemberServiceImpl implements IMemberService
     }
     
     @Override
-    public MemberModel getMmeberByMemberId(String id) throws ServiceException
+    public UserModel getMmeberByMemberId(String id) throws ServiceException
     {
         try
         {
-            return memberDao.getMemberModelByMemberId(id);
+            return memberDao.getUserModelByUserId(id);
         }
         catch (Exception e)
         {
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new ServiceException("查询会员详细信息错误", e);
+        }
+    }
+    
+    @Override
+    public int getMemberNum()
+    {
+        try
+        {
+            return memberDao.getUserNum();
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("查询会员数量错误", e);
         }
     }
     
