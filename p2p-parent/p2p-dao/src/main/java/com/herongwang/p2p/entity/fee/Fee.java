@@ -7,6 +7,7 @@ package com.herongwang.p2p.entity.fee;
 
 import java.util.Date;
 
+import com.herongwang.p2p.dao.fee.IFeeDAO;
 import com.sxj.mybatis.orm.annotations.Column;
 import com.sxj.mybatis.orm.annotations.Entity;
 import com.sxj.mybatis.orm.annotations.GeneratedValue;
@@ -17,7 +18,7 @@ import com.sxj.mybatis.orm.annotations.Table;
 /** 费率
  * 
  * @pdOid 143487cb-be68-4c13-bde7-77e5c09a8b01 */
-@Entity
+@Entity(mapper = IFeeDAO.class)
 @Table(name = "Fee")
 public class Fee
 {
