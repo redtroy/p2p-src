@@ -1,4 +1,4 @@
-package com.herongwang.p2p.service.impl.financingOrders;
+package com.herongwang.p2p.service.impl.financingorders;
 
 import java.util.List;
 

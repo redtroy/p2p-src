@@ -1,4 +1,4 @@
-package com.herongwang.p2p.service.impl.fundDetail;
+package com.herongwang.p2p.service.impl.funddetail;
 
 import java.sql.SQLException;
 import java.util.List;
