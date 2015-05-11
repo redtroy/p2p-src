@@ -12,42 +12,6 @@
 <@b.pageScript/> 
 <@b.validate/>
 <@b.dialog/>
-<script type="text/javascript">
-function delTender(id){
-	var success = dialog({
-		title : '消息',
-		cancel : false,
-		ok : function() {
-			window.location.href = "${basePath}/tender/tenderList.htm";
-		}
-	});
-	var show = dialog();
-	var d = dialog({
-		title : '消息',
-		content : '是否删除借款标记录?',
-		okValue : '确 定',
-		ok : function() {
-			var that = this;
-			show.showModal();
-			$.post("delete.htm",{id:id}, function(
-					data) {
-				if (data.isOK == 'ok') {
-					show.close().remove();
-					success.content('删除借款标成功！');
-					success.showModal();
-				} else {
-					success.content('删除借款标失败！');
-					success.showModal();
-				}
-			})
-		},
-		cancelValue : '取消',
-		cancel : function() {
-		}
-	});
-	d.showModal();
-}
-</script>
 </head>
 <body>
 <div id="header" class="fence">
@@ -62,63 +26,44 @@ function delTender(id){
       <ul>
          <li><a href="member-center.html">会员管理</a></li>
         <li><a href="../apply/applyList.htm">融资申请管理</a></li>
-        <li><a href="tenderList.htm" class="on">投资标书管理</a></li>
+        <li><a href="../tender/tenderList.htm" class="on">投资标书管理</a></li>
         <li><a href="../deal/recharge.htm">充值管理</a></li>
         <li><a href="../deal/deposit.htm">提现管理</a></li>
       </ul>
     </div>
     <div class="yard-1000 ly-left">
       <div class="rightSide">
-        <div class="heading fontYH f20">投资标书管理</div>
+        <div class="heading fontYH f20">投资人列表</div>
         <div class="mainBox">
           <table border="0" cellspacing="0" cellpadding="0" class="tabList">
+            <col width="30%" />
             <col width="10%" />
             <col width="10%" />
             <col width="10%" />
-            <col width="8%" />
-            <col width="10%" />
-            <col width="10%" />
-            <col width="10%" />
-            <col width="10%" />
-            <col width="5%" />
-            <col width="17%" />
+            <col width="15%" />
             <tr>
-              <th>标题</th>
-              <th>借款人</th>
-              <th>还款类型</th>
-              <th>借款期限</th>
-              <th>年化率 </th>
-              <th>最小投资金额</th>
-              <th>最大投资金额</th>
-              <th>创建时间</th>
-              <th>状态</th>
-              <th>操作</th>
+              <th>借款标</th>
+              <th>用户ID</th>
+              <th>投资金额</th>
+              <th>利息 </th>
+              <th>投资时间</th>
             </tr>
-            <#list list as tender>
-            <tr>
-	         <td>${tender.title}</td>
-	         <td>${tender.name}</td>
-              <td>${tender.repaymentText}</td>
-              <td>${tender.months}个月</td>
-              <td>${tender.annualizedRate}%</td>
-              <td>${tender.minInvest}元</td>
-              <td>${tender.maxInvest}元</td>
-              <td><#if (tender.createTime??)> ${tender.createTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
-              <td>${tender.statusText}</td>
-              <td>
-              <#if (tender.status==3)>
-	          <a href="#" class=" button btn-link">满标审核</a>
-			</#if>
-              <a href="toEdit.htm?id=${tender.debtId}" class="ml10 lnk-blue lnk-underline">修改</a>
-              <a href="javascript:delTender('${tender.debtId}');"  class="ml10 lnk-blue lnk-underline">删除</a>
-              <a href="../investOrder/orderList.htm?id=${tender.debtId}" class="ml10 lnk-blue lnk-underline">投资人记录</a>
-              </td>
+            <#list list as order>
+             <tr>
+              <td class="tl">${order.debtId}</td>
+              <td>${order.customerId}</td>
+              <td>${order.amount}</td>
+              <td>${order.dueProfitAmount}</td>
+              <td><#if (order.createTime??)> ${order.createTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
             </tr>
-			</#list>
+            </#list>
           </table>
 		  <div class="ly-clearFix">
-          <@b.pager/>
+         <@b.pager/>
         </div>
+        <div class="mt20 mb20 tc"> <a href="javascript:history.back(-1)" class="button button-gray f12">返回上一页</a>
+
+</div>
         </div>
       </div>
     </div>
