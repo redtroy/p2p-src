@@ -119,7 +119,7 @@ public class BasicController extends BaseController
     @RequestMapping("index")
     public String ToIndex(HttpServletRequest request, ModelMap map)
     {
-        return "site/index";
+        return INDEX;
     }
     
     public static String getIpAddr(HttpServletRequest request)

@@ -2,6 +2,7 @@ package com.herongwang.p2p.service.investorder;
 
 import java.util.List;
 
+import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.sxj.util.exception.ServiceException;
 
 public interface IInvestOrderService
