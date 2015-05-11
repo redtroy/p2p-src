@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.herongwang.p2p.dao.financingOrders.IFinancingOrdersDao">
+	<resultMap id="FinancingOrdersEntity"
+		type="com.herongwang.p2p.entity.financingOrders.FinancingOrdersEntity">
+		<id property="debtId" column="debtId" jdbcType="VARCHAR" />
+		<result property="customerId" column="customerId" jdbcType="VARCHAR" />
+		<result property="orderId" column="orderId" jdbcType="VARCHAR" />
+		<result property="amount" column="amount" jdbcType="DOUBLE" />
+		<result property="createTime" column="createTime" jdbcType="TIMESTAMP" />
+		<result property="loanAmount" column="loanAmount" jdbcType="DOUBLE" />
+		<result property="actualAmount" column="actualAmount" jdbcType="DOUBLE" />
+		<result property="totalFee" column="totalFee" jdbcType="DOUBLE" />
+		<result property="totalAmount" column="totalAmount" jdbcType="DOUBLE" />
+		<result property="profitAmount" column="profitAmount" jdbcType="DOUBLE" />
+		<result property="status" column="status" jdbcType="INTEGER" />
+		<result property="name" column="name" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 条件查询投标信息 -->
+	<select id="query" resultMap="FinancingOrdersEntity"
+		parameterType="com.sxj.util.persistent.QueryCondition">
+		<![CDATA[select f.*,u.`name` from FinancingOrders f
+LEFT JOIN Users u on u.customerId = f.customerId WHERE 1=1 ]]>
+
+		<if test="condition.name != null and condition.name != ''">
+			<![CDATA[AND u.name LIKE CONCAT('%',#{condition.name},'%')]]>
+		</if>
+		<![CDATA[ ORDER BY f.createTime DESC]]>
+	</select>
+</mapper>
