@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.herongwang.p2p.dao.tender.ITenderDao;
-import com.herongwang.p2p.entity.tender.TenderEntity;
+import com.herongwang.p2p.dao.tender.IDebtDao;
+import com.herongwang.p2p.entity.tender.DebtEntity;
 import com.herongwang.p2p.service.tender.ITenderService;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.persistent.QueryCondition;
@@ -17,31 +17,31 @@ import com.sxj.util.persistent.QueryCondition;
 public class TenderServiceImpl implements ITenderService {
 	
 	@Autowired
-	private ITenderDao tenderDao;
+	private IDebtDao tenderDao;
 
 	@Override
-	public void addTender(TenderEntity tender) throws ServiceException {
+	public void addTender(DebtEntity tender) throws ServiceException {
 		tenderDao.addTender(tender);
 		
 	}
 
 	@Override
-	public void updateTender(TenderEntity tender) throws ServiceException {
+	public void updateTender(DebtEntity tender) throws ServiceException {
 		tenderDao.updateTender(tender);
 		
 	}
 
 	@Override
-	public TenderEntity getTenderEntity(String id) throws ServiceException {
+	public DebtEntity getTenderEntity(String id) throws ServiceException {
 		return tenderDao.getTenderFor(id);
 	}
 
 	@Override
-	public List<TenderEntity> queryTenderList(TenderEntity query)throws ServiceException {
-		QueryCondition<TenderEntity> condition = new QueryCondition<TenderEntity>();
+	public List<DebtEntity> queryTenderList(DebtEntity query)throws ServiceException {
+		QueryCondition<DebtEntity> condition = new QueryCondition<DebtEntity>();
         condition.addCondition("name", query.getName());
         condition.setPage(query);
-		 List<TenderEntity> contractList = tenderDao.query(condition);
+		 List<DebtEntity> contractList = tenderDao.query(condition);
 		return contractList;
 	}
 

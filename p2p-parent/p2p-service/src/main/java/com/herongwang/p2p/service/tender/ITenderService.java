@@ -2,7 +2,7 @@ package com.herongwang.p2p.service.tender;
 
 import java.util.List;
 
-import com.herongwang.p2p.entity.tender.TenderEntity;
+import com.herongwang.p2p.entity.tender.DebtEntity;
 import com.sxj.util.exception.ServiceException;
 
 public interface ITenderService {
@@ -11,14 +11,14 @@ public interface ITenderService {
 	 * aa
 	 * @param tender
 	 */
-	public void addTender(TenderEntity tender) throws ServiceException;
+	public void addTender(DebtEntity tender) throws ServiceException;
 
 	/**
 	 * 更新借款标
 	 * 
 	 * @param tender
 	 */
-	public void updateTender(TenderEntity tender) throws ServiceException;
+	public void updateTender(DebtEntity tender) throws ServiceException;
 
 	/**
 	 * 获取借款标信息
@@ -26,7 +26,7 @@ public interface ITenderService {
 	 * @param id
 	 * @return
 	 */
-	public TenderEntity getTenderEntity(String id) throws ServiceException;
+	public DebtEntity getTenderEntity(String id) throws ServiceException;
 
 	/**
 	 * 获取借款标列表
@@ -34,7 +34,7 @@ public interface ITenderService {
 	 * @param query
 	 * @return
 	 */
-	public List<TenderEntity> queryTenderList(TenderEntity query)
+	public List<DebtEntity> queryTenderList(DebtEntity query)
 			throws ServiceException;
 
 	/**

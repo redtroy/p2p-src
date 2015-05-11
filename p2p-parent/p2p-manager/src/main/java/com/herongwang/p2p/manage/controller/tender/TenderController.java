@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.druid.util.StringUtils;
 import com.herongwang.p2p.entity.parameters.ParametersEntity;
-import com.herongwang.p2p.entity.tender.TenderEntity;
+import com.herongwang.p2p.entity.tender.DebtEntity;
 import com.herongwang.p2p.manage.controller.BaseController;
 import com.herongwang.p2p.service.member.IMemberService;
 import com.herongwang.p2p.service.parameters.IParametersService;
@@ -39,13 +39,13 @@ public class TenderController extends BaseController
 	 * @return
 	 */
     @RequestMapping("/tenderList")
-	public String rechargeList(TenderEntity entity, ModelMap map) throws WebException{
+	public String rechargeList(DebtEntity entity, ModelMap map) throws WebException{
     	try{
     		if (entity != null)
             {
     			entity.setPagable(true);
             }
-	    	List<TenderEntity> list = tenderService.queryTenderList(entity);
+	    	List<DebtEntity> list = tenderService.queryTenderList(entity);
             map.put("list", list);
             map.put("query", entity);
 			return "manage/tender/tender-list";
@@ -72,7 +72,7 @@ public class TenderController extends BaseController
         	 map.put("name", name);
             return "manage/tender/new-tender";
         } else {
-        	TenderEntity info = tenderService.getTenderEntity(id);
+        	DebtEntity info = tenderService.getTenderEntity(id);
             map.put("info", info);
        	 map.put("applyId", info.getBorrower());
        	memberService.getMmeberByAccount(info.getBorrower());
@@ -89,7 +89,7 @@ public class TenderController extends BaseController
 			String title,String borrower,Integer repaymentType,
 			Integer borrpwTime,Double interest,Double minAmount,
 			Double maxAmount,Double borrowingAmount,Integer status)throws WebException {
-    	TenderEntity tender = new TenderEntity();
+    	DebtEntity tender = new DebtEntity();
     	tender.setTitle(title);
     	tender.setBorrower(borrower);
     	tender.setRepaymentType(repaymentType);
@@ -105,7 +105,7 @@ public class TenderController extends BaseController
 				tender.setStatus(1);
 				tenderService.addTender(tender);
 			}else{
-				TenderEntity info = tenderService.getTenderEntity(id);
+				DebtEntity info = tenderService.getTenderEntity(id);
 				tender.setCreateTime(info.getCreateTime());
 				tender.setId(id);
 				tender.setStatus(status);

@@ -2,7 +2,7 @@ package com.herongwang.p2p.dao.tender;
 
 import java.util.List;
 
-import com.herongwang.p2p.entity.tender.TenderEntity;
+import com.herongwang.p2p.entity.tender.DebtEntity;
 import com.sxj.mybatis.orm.annotations.Delete;
 import com.sxj.mybatis.orm.annotations.Get;
 import com.sxj.mybatis.orm.annotations.Insert;
@@ -14,19 +14,19 @@ import com.sxj.util.persistent.QueryCondition;
  * @author nishaotang
  *
  */
-public interface ITenderDao {
+public interface IDebtDao {
 	/**
 	 * 添加借款标
 	 * @param tender
 	 */
 	@Insert
-	public void addTender(TenderEntity tender);
+	public void addTender(DebtEntity tender);
 	/**
 	 * 修改借款标
 	 * @param tender
 	 */
 	@Update
-	public void updateTender(TenderEntity tender);
+	public void updateTender(DebtEntity tender);
 	/**
 	 * 删除借款标
 	 * @param id
@@ -38,12 +38,12 @@ public interface ITenderDao {
 	 * @param id
 	 */
 	@Get
-	public TenderEntity getTenderFor(String id);
+	public DebtEntity getTenderFor(String id);
 	/**
 	 * 借款标高级查询
 	 * @param query
 	 * @return
 	 */
-	public List<TenderEntity> query(QueryCondition<TenderEntity> query);
+	public List<DebtEntity> query(QueryCondition<DebtEntity> query);
 	
 }
