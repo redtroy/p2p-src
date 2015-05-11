@@ -11,7 +11,7 @@ import com.sxj.mybatis.orm.annotations.Id;
 import com.sxj.mybatis.orm.annotations.Table;
 
 @Entity(mapper = IAccountDao.class)
-@Table(name = "ACCOUNT")
+@Table(name = "Accounts")
 public class AccountEntity implements Serializable
 {
     /**

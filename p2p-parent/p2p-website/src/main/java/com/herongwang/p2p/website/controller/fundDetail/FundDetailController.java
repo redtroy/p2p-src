@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.herongwang.p2p.entity.fundDetail.FundDetailEntity;
+import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.herongwang.p2p.service.fundDetail.IFundDetailService;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
