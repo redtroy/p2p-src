@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.herongwang.p2p.dao.orders.IOrdersDao;
 import com.herongwang.p2p.entity.orders.OrdersEntity;
-import com.herongwang.p2p.model.member.MemberModel;
 import com.herongwang.p2p.service.orders.IOrdersService;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.persistent.QueryCondition;

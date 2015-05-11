@@ -6,6 +6,7 @@
 	<resultMap id="OrdersEntity" type="com.herongwang.p2p.entity.orders.OrdersEntity">
 		<id property="orderId" column="orderId" jdbcType="VARCHAR" />
 		<result property="customerId" column="customerId" jdbcType="VARCHAR" />
+		<result property="orderNo" column="orderNo" jdbcType="VARCHAR" />
 		<result property="amount" column="amount" jdbcType="DOUBLE" />
 		<result property="createTime" column="createTime" jdbcType="TIMESTAMP" />
 		<result property="status" column="status" jdbcType="INTEGER" />
@@ -14,6 +15,7 @@
 		<result property="withdrawTime" column="withdrawTime" jdbcType="TIMESTAMP" />
 		<result property="arriveTime" column="arriveTime" jdbcType="TIMESTAMP" />
 		<result property="channel" column="channel" jdbcType="VARCHAR" />
+		<result property="strSignMsg" column="strSignMsg" jdbcType="VARCHAR" />
 		<result property="name" column="name" jdbcType="VARCHAR" />
 	</resultMap>
 
