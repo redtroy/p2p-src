@@ -16,11 +16,11 @@ public interface IUsersDao
     public List<UserModel> queryUserList(QueryCondition<UserModel> query);
     
     /**
-     * 根据会员帐号查询会员
+     * 根据会员帐号查询会员(邮箱帐号)
      * @param account
      * @return
      */
-    public UsersEntity getUserByAccount(String account);
+    public UsersEntity getUserByAccount(String email);
     
     /**
      * 新增用户
@@ -33,11 +33,6 @@ public interface IUsersDao
      */
     @Get
     public UsersEntity getUserById(String id);
-    
-    /**
-     * 根据用户Id查询用户信息
-     */
-    public UserModel getUserModelByUserId(String memberId);
     
     /**
      * 查询会员数量

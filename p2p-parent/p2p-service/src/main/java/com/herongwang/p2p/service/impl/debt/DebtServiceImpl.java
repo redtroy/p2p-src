@@ -1,6 +1,5 @@
 package com.herongwang.p2p.service.impl.debt;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +47,6 @@ public class DebtServiceImpl implements IDebtService
     {
         try
         {
-<<<<<<< HEAD:p2p-parent/p2p-service/src/main/java/com/herongwang/p2p/service/impl/debt/DebtServiceImpl.java
             QueryCondition<DebtEntity> condition = new QueryCondition<DebtEntity>();
             condition.addCondition("name", query.getName());//会员名称
             condition.addCondition("customerId", query.getCustomerId());//会员ID
@@ -57,34 +55,10 @@ public class DebtServiceImpl implements IDebtService
             query.setPage(condition);
             return debtList;
         }
-        catch (ServiceException e)
-        {
-            SxjLogger.error(e.getMessage(), e, this.getClass());
-            throw new ServiceException(e.getMessage());
-        }
         catch (Exception e)
         {
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new ServiceException("查询融资标的错误", e);
-=======
-            
-            QueryCondition<DebtEntity> condition = new QueryCondition<DebtEntity>();
-            List<DebtEntity> debtList = new ArrayList<DebtEntity>();
-            if (query == null)
-            {
-                return debtList;
-            }
-            condition.addCondition("name", query.getName());
-            condition.setPage(query);
-            debtList = DebtDao.query(condition);
-            query.setPage(condition);
-            return debtList;
-        }
-        catch (Exception e)
-        {
-            SxjLogger.error(e.getMessage(), e, this.getClass());
-            throw new ServiceException("查询标的列表信息错误", e);
->>>>>>> a87179d823e22d33958dd0af77d66e7fb69392ca:p2p-parent/p2p-service/src/main/java/com/herongwang/p2p/service/impl/tender/DebtServiceImpl.java
         }
     }
     
