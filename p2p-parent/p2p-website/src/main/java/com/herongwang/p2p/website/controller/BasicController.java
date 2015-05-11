@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.model.users.UserModel;
-import com.herongwang.p2p.service.member.IMemberService;
 import com.herongwang.p2p.service.tender.IDebtService;
+import com.herongwang.p2p.service.users.IUserService;
 import com.sxj.redis.core.pubsub.RedisTopics;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
@@ -33,7 +33,7 @@ public class BasicController extends BaseController
     private RedisTopics topics;
     
     @Autowired
-    private IMemberService memberService;
+    private IUserService userService;
     
     @Autowired
     private IDebtService debtService;
@@ -69,8 +69,8 @@ public class BasicController extends BaseController
     public String login(String account, String password, HttpSession session,
             HttpServletRequest request, ModelMap map)
     {
-        UsersEntity member = memberService.getMmeberByAccount(account);
-        if (member == null)
+        UsersEntity user = userService.getUserByAccount(account);
+        if (user == null)
         {
             map.put("message", "用户名不存在");
             return LOGIN;
@@ -83,7 +83,7 @@ public class BasicController extends BaseController
             currentUser.login(token);
             PrincipalCollection principals = SecurityUtils.getSubject()
                     .getPrincipals();
-            String userNo = member.getMemberCode();
+            // String userNo = user.getCustomerNo();
             // SupervisorShiroRedisCache.addToMap(userNo, principals);
         }
         catch (AuthenticationException e)
@@ -95,9 +95,9 @@ public class BasicController extends BaseController
         }
         if (currentUser.isAuthenticated())
         {
-            session.setAttribute("memberInfo", member);
-            UserModel memberInfo = memberService.getMmeberByMemberId(member.getMemberId());
-            map.put("member", memberInfo);
+            session.setAttribute("userInfo", user);
+            UserModel userInfo = userService.getUserByUserId(user.getCustomerId());
+            map.put("user", userInfo);
             return "site/member/member-center";
             // return "redirect:" + getBasePath(request) + "member/memberInfo.htm";
         }
