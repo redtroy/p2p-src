@@ -10,7 +10,7 @@ public interface IInvestOrderService
     /**
      * 新增投标订单
      * aa
-     * @param order
+     * @param order 
      */
     public void addOrder(InvestOrderEntity order) throws ServiceException;
     
