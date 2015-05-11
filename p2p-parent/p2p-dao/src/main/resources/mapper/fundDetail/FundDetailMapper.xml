@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.herongwang.p2p.dao.fundDetail.IFundDetailDao">
+	<resultMap id="FundDetailEntity"
+		type="com.herongwang.p2p.entity.fundDetail.FundDetailEntity">
+		<id property="detailId" column="DETAIL_ID" jdbcType="VARCHAR" />
+		<result property="memberId" column="MEMBER_ID" jdbcType="VARCHAR" />
+		<result property="type" column="TYPE" jdbcType="INTEGER" />
+		<result property="amount" column="AMOUNT" jdbcType="DOUBLE" />
+		<result property="balance" column="BALANCE" jdbcType="DOUBLE" />
+		<result property="frozenAmount" column="FROZEN_AMOUNT"
+			jdbcType="DOUBLE" />
+		<result property="dueAmount" column="DUE_AMOUNT" jdbcType="DOUBLE" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="status" column="STATUS" jdbcType="INTEGER" />
+		<result property="incomeStatus" column="INCOME_STATUS" jdbcType="INTEGER" />
+		<result property="remark" column="REMARK" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 条件查询交易明细 -->
+	<select id="queryFundDetail" resultMap="FundDetailEntity"
+		parameterType="com.sxj.util.persistent.QueryCondition">
+		<![CDATA[SELECT D.* FROM FUND_DETAIL D  WHERE 1=1 ]]>
+		<!-- 会员名称 -->
+		<if test="condition.memberId != null and condition.memberId != ''">
+			<![CDATA[AND D.MEMBER_ID =#{condition.memberId}]]>
+		</if>
+		<!-- 查询类型 -->
+		<if test="condition.type != null">
+			<![CDATA[AND D.TYPE = #{condition.type}]]>
+		</if>
+		<![CDATA[ ORDER BY D.CREATE_TIME DESC]]>
+	</select>
+</mapper>

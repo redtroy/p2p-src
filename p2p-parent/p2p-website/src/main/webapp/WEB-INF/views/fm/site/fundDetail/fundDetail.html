@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="${b.staticPath}style/member.css" rel="stylesheet"
+	type="text/css" />
+<script src="${b.staticPath}js/jquery1.8.js"></script>
+<@b.pageScript/>
+<script>
+function query(page) {
+// 		var params = $("#search_form").serialize();
+// 		if (page != undefined) {
+// 			params = params + "&currentPage=" + page;
+// 		}
+		$.post("queryFundDetail.htm", function(data) {
+			var res = $(data).find("#res_table");
+			var pager = $(data).find("#pager");
+			$("#res_table").empty();
+			$("#res_table").append(res.html());
+			var totalPage = pager.attr("totalPage");
+			var currentPage = pager.attr("currentPage");
+			loadPage(currentPage, totalPage, query);
+		});
+	}
+</script>
+</head>
+
+<body>
+	<div class="fence-wide bgBlack">
+		<div class="yard-1100 topMenu fontYH">
+			<p class="ly-right logOut">
+				杜金鑫，您好！<a href="#">退出当前帐户</a>
+			</p>
+		</div>
+	</div>
+	<div id="header" class="fence-wide">
+		<div class="yard-1100 ly-clearFix">
+			<h1 title="和融网" class="ly-left">和融网</h1>
+			<ul class="navMenu fontYH ly-left">
+				<li><a href="../index.html">首页</a></li>
+				<li><a href="prod-list.html">我要投资</a></li>
+				<li><a href="apply.html">我要融资</a></li>
+				<li><a href="#">我的账户</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="fence-wide memCenter">
+		<div class="yard-1100 memCont ly-clearFix">
+			<div class="yard-200 ly-left leftMenu fontYH">
+				<ul>
+					<li><a href="member-center.html">个人资料</a></li>
+					<li><a href="fina-list.html">我的融资</a></li>
+					<li><a href="invest-list.html">我的投资</a></li>
+					<li><a href="capital.html" class="on">资金明细</a></li>
+				</ul>
+			</div>
+			<div class="yard-900 ly-left">
+				<div class="rightSide">
+					<div class="heading fontYH f20">
+						<span>资金明细</span>
+					</div>
+					<div class="mainBox fontYH">
+						<div class="capInfo mb10 ly-clearFix">
+							<div class="item">
+								<label>账户信息</label> <span class="color-green">可用余额：5268462元</span><span
+									class="color-red">冻结金额：5268462元</span><span class="color-blue">待收金额：5268462元</span>
+							</div>
+						</div>
+						<table border="0" cellpadding="0" cellspacing="0" id="res_table"
+							class="table tabList tableCapital">
+							<col width="15%" />
+							<col width="15%" />
+							<col width="10%" />
+							<col width="10%" />
+							<col width="10%" />
+							<col width="10%" />
+							<col width="20%" />
+							<tr>
+								<th>发生日期</th>
+								<th>类型</th>
+								<th>影响金额</th>
+								<th>可用余额</th>
+								<th>冻结金额</th>
+								<th>待收金额</th>
+								<th scope="col" class="tdHeard" style="width: 80px;">说明</th>
+							</tr>
+							<#if fundList?exists> <#list fundList as fund>
+							<!-- 1：充值；2：投标；3：还款；4：提现。5 手续费 -->
+							<tr>
+								<td>${fund.createTime?string("yyyy-MM-dd HH:mm:ss")}</td>
+								<td><#if fund.type==1>充值<#elseif fund.type==2 >投标<#elseif
+									fund.type==3>还款<#elseif fund.type==4>提现<#else>手续费</#if></td> <#if
+								fund.incomeStatus==0>
+								<td class="color-red">-${fund.amount}</td><#else>
+								<td class="color-green">${fund.amount}</td> </#if>
+								<td>${fund.balance}</td>
+								<td>${fund.frozenAmount}</td>
+								<td class="color-purple">${fund.dueAmount}</td>
+								<td class="tl">${fund.remark}</td>
+							</tr>
+							</#list> </#if>
+							<tr>
+								<td colspan="7" class="line"></td>
+							</tr>
+						</table>
+						<@b.pager/>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<@b.footer />
+</body>
+</html>
