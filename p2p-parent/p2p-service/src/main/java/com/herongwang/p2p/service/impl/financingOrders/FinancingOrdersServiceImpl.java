@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.herongwang.p2p.dao.financingOrders.IFinancingOrdersDao;
-import com.herongwang.p2p.entity.financingOrders.FinancingOrdersEntity;
-import com.herongwang.p2p.service.financingOrders.IFinancingOrdersService;
+import com.herongwang.p2p.dao.financing.IFinancingOrdersDao;
+import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
+import com.herongwang.p2p.service.financing.IFinancingOrdersService;
 import com.sxj.util.exception.ServiceException;
 @Service
 public class FinancingOrdersServiceImpl implements IFinancingOrdersService

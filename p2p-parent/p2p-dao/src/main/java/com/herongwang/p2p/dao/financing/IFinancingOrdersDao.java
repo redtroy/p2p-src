@@ -1,8 +1,8 @@
-package com.herongwang.p2p.dao.financingOrders;
+package com.herongwang.p2p.dao.financing;
 
 import java.util.List;
 
-import com.herongwang.p2p.entity.financingOrders.FinancingOrdersEntity;
+import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
 import com.sxj.mybatis.orm.annotations.Delete;
 import com.sxj.mybatis.orm.annotations.Get;
 import com.sxj.mybatis.orm.annotations.Insert;

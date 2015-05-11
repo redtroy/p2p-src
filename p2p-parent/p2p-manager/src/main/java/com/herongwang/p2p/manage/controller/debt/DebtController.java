@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.druid.util.StringUtils;
 import com.herongwang.p2p.entity.debt.DebtEntity;
-import com.herongwang.p2p.entity.financingOrders.FinancingOrdersEntity;
+import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
 import com.herongwang.p2p.entity.parameters.ParametersEntity;
 import com.herongwang.p2p.manage.controller.BaseController;
-import com.herongwang.p2p.service.financingOrders.IFinancingOrdersService;
+import com.herongwang.p2p.service.financing.IFinancingOrdersService;
 import com.herongwang.p2p.service.member.IMemberService;
 import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.tender.IDebtService;
@@ -127,6 +127,9 @@ public class DebtController extends BaseController
     				order.setDebtId(id);
                     order.setStatus(status);
                     financingOrdersService.updateOrder(order);
+                    map.put("isOK", "ok");
+				}else{
+	                map.put("isOK", "已有人投标，不能修改。");
 				}
 			}
 			return map;
