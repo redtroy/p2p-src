@@ -137,9 +137,24 @@ public class BasicController extends BaseController
         catch (Exception e)
         {
             SxjLogger.error(e.getMessage(), e, this.getClass());
-            throw new WebException("主页查询标的列表出错", e);
+            throw new WebException("主页查询标的TOP5列表出错", e);
         }
         return INDEX;
+    }
+    
+    @RequestMapping("bdList")
+    public String bdList() throws WebException
+    {
+        try
+        {
+            
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new WebException("查询标的列表错误", e);
+        }
+        return "site/prod-list";
     }
     
     public static String getIpAddr(HttpServletRequest request)

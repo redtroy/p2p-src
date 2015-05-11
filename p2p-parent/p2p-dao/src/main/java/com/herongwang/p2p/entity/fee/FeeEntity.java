@@ -20,7 +20,7 @@ import com.sxj.mybatis.orm.annotations.Table;
  * @pdOid 143487cb-be68-4c13-bde7-77e5c09a8b01 */
 @Entity(mapper = IFeeDAO.class)
 @Table(name = "Fee")
-public class Fee
+public class FeeEntity
 {
     /** 费率ID
      * 
