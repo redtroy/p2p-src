@@ -65,7 +65,7 @@ public class DebtController extends BaseController
     	try{
     	List<ParametersEntity> repaymentList = parametersService.queryParameters(query);//还款方式
     	query.setType("tenderType");
-    	List<ParametersEntity> tenderList = parametersService.queryParameters(query);//还款方式
+    	List<ParametersEntity> tenderList = parametersService.queryParameters(query);//标的状态
 	   	 map.put("repaymentList", repaymentList);
 	   	 map.put("tenderList", tenderList);
         if (StringUtils.isEmpty(id)) {
@@ -76,7 +76,7 @@ public class DebtController extends BaseController
         	DebtEntity info = debtService.getDebtEntity(id);
             map.put("info", info);
        	 map.put("applyId", info.getCustomerId());
-       	 map.put("name", memberService.getMmeberByAccount(info.getCustomerId()));
+       	 map.put("name", "测试"/*memberService.getMmeberByAccount(info.getCustomerId())*/);
             return "manage/tender/new-tender";
         }
     	}catch(Exception e){
@@ -87,17 +87,18 @@ public class DebtController extends BaseController
     @RequestMapping("edit")
 	public @ResponseBody Map<String, String> addApply(String id,
 			String title,String customerId,Integer repayType,
-			Integer borrowTime,Double annualizedRate,BigDecimal minInvest,
+			Integer months,Double annualizedRate,BigDecimal minInvest,
 			BigDecimal maxInvest,BigDecimal amount,Integer status)throws WebException {
     	DebtEntity tender = new DebtEntity();
     	tender.setTitle(title);
     	tender.setCustomerId(customerId);
     	tender.setRepayType(repayType);
-    	tender.setBorrowTime(borrowTime);
+    	tender.setMonths(months);
     	tender.setAnnualizedRate(annualizedRate);
     	tender.setMinInvest(minInvest);
     	tender.setMaxInvest(maxInvest);
     	tender.setAmount(amount);
+    	tender.setOrderId("test001");//等接口。
     	try {
 			if(null==id||id.isEmpty()){
 				tender.setCreateTime(new Date());
