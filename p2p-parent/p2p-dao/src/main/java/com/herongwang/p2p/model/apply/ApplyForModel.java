@@ -3,7 +3,7 @@ package com.herongwang.p2p.model.apply;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.herongwang.p2p.entity.apply.ApplyForEntity;
+import com.herongwang.p2p.entity.apply.DebtApplicationEntity;
 import com.sxj.mybatis.pagination.Pagable;
 
 /**

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.herongwang.p2p.dao.apply.IDebtApplicationDao">
+	<resultMap id="DebtApplicationEntity"
+		type="com.herongwang.p2p.entity.apply.DebtApplicationEntity">
+		<id property="applicationId" column="applicationId" jdbcType="VARCHAR" />
+		<result property="customerId" column="customerId" jdbcType="VARCHAR" />
+		<result property="amount" column="amount" jdbcType="DOUBLE" />
+		<result property="applyTime" column="applyTime" jdbcType="TIMESTAMP" />
+		<result property="status" column="status" jdbcType="INTEGER" />
+		<result property="remark" column="remark" jdbcType="VARCHAR" />
+		<result property="name" column="name" jdbcType="VARCHAR" />
+		<result property="tel" column="tel" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 条件查询融资申请 -->
+	<select id="query" resultMap="DebtApplicationEntity"
+		parameterType="com.sxj.util.persistent.QueryCondition">
+		<![CDATA[select d.*,u.name from DebtApplication d
+LEFT JOIN Users u on d.customerId = u.customerId WHERE 1=1 ]]>
+
+		<if test="condition.name != null and condition.name != ''">
+			<![CDATA[AND u.name LIKE CONCAT('%',#{condition.name},'%')]]>
+		</if>
+		<![CDATA[ ORDER BY d.applyTime DESC]]>
+	</select>
+</mapper>
