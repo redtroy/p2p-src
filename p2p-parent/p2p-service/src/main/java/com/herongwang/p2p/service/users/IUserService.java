@@ -34,6 +34,11 @@ public interface IUserService
     public UsersEntity addUser(UsersEntity member);
     
     /**
+     * 更新会员
+     */
+    public UsersEntity updateUser(UsersEntity member);
+    
+    /**
      * 根据会员ID查询会员详细信息
      */
     public UsersEntity getUserByUserId(String id);
