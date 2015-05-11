@@ -33,14 +33,7 @@ public class MemberServiceImpl implements IMemberService
                 return memberList;
             }
             condition.addCondition("memberCode", member.getMemberCode());// 姓名
-            /* condition.addCondition("parentId", query.getMemberNo());// 父会员号
-            condition.addCondition("accountNo", query.getAccountNo());// 子会员
-            condition.addCondition("accountName", query.getAccountName());// 子会员名称
-            condition.addCondition("state", query.getState());// 子账户状态
-            condition.addCondition("delstate", query.getDelstate());// 删除标记
-            condition.addCondition("startDate", query.getStartDate());// 开始时间
-            condition.addCondition("endDate", query.getEndDate());// 结束时间
-            condition.addCondition("functionId", query.getFunctionId());// 权限ＩＤ
+            /* 
             condition.setPage(query);*/
             memberList = memberDao.queryMembers(condition);
             // query.setPage(condition);

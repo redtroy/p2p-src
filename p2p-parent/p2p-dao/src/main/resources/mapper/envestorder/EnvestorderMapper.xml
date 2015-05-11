@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.herongwang.p2p.dao.investorder.IInvestorderDao">
+	<resultMap id="InvestorderResultMap" type="com.herongwang.p2p.entity.investorder.InvestorderEntity">
+		<id property="orderId" column="orderId" jdbcType="VARCHAR" />
+		<result property="debtId" column="debtId" jdbcType="VARCHAR" />
+		<result property="customerId" column="customerId" jdbcType="VARCHAR" />
+		<result property="amount" column="amount" jdbcType="INTEGER" typeHandler="com.herongwang.p2p.TypeHandler.BigDecimalTypeHandler"/>
+		<result property="createTime" column="createTime" jdbcType="TIMESTAMP" />
+		<result property="status" column="status" jdbcType="INTEGER" />
+		<result property="channel" column="channel" jdbcType="INTEGER" />
+		<result property="payTime" column="payTime" jdbcType="TIMESTAMP" />
+		<result property="arriveTime" column="arriveTime" jdbcType="TIMESTAMP" />
+		<result property="specifAttr" column="specifAttr" jdbcType="INTEGER" />
+        <result property="dueTotalAmount" column="dueTotalAmount" jdbcType="INTEGER" typeHandler="com.herongwang.p2p.TypeHandler.BigDecimalTypeHandler"/>
+        <result property="dueProfitAmount" column="dueProfitAmount" jdbcType="INTEGER" typeHandler="com.herongwang.p2p.TypeHandler.BigDecimalTypeHandler"/>
+        <result property="yearRatio" column="yearRatio" jdbcType="FLOAT" />
+        <result property="monthRatio" column="monthRatio" jdbcType="FLOAT" />	
+        <result property="dayRatio" column="dayRatio" jdbcType="FLOAT" />
+        <result property="totalFee" column="totalFee" jdbcType="INTEGER" typeHandler="com.herongwang.p2p.TypeHandler.BigDecimalTypeHandler" />	
+	</resultMap>
+		<!-- 条件查询会员 -->
+	<select id="queryInvestorder" resultMap="InvestorderResultMap"
+		parameterType="com.sxj.util.persistent.QueryCondition">
+		<![CDATA[SELECT * FROM InvestOrder WHERE 1=1]]>
+	</select>
+    
+</mapper>
