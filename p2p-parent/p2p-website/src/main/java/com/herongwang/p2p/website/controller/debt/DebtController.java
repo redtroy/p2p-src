@@ -31,6 +31,7 @@ public class DebtController
         
         //获取会员信息
         query.setCustomerId("1");
+        query.setPagable(true);
         List<DebtEntity> debtList = debtService.queryDebtList(query);
         map.put("debtList", debtList);
         map.put("query", query);
