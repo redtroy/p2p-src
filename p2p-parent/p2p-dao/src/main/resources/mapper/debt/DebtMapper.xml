@@ -38,7 +38,7 @@ LEFT JOIN PARAMETERS P1 ON P1.TYPE = 'REPAYMENTTYPE' AND P1.`VALUE` = d.repayTyp
 			<![CDATA[AND u.name LIKE CONCAT('%',#{condition.name},'%')]]>
 		</if>
 		<if test="condition.customerId != null and condition.customerId != ''">
-			<![CDATA[AND u.customerId #{condition.customerId}]]>
+			<![CDATA[AND u.customerId =#{condition.customerId}]]>
 		</if>
 		<![CDATA[ ORDER BY d.createTime DESC]]>
 	</select>

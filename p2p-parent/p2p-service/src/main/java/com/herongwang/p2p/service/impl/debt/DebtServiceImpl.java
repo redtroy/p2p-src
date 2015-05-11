@@ -1,4 +1,4 @@
-package com.herongwang.p2p.service.impl.tender;
+package com.herongwang.p2p.service.impl.debt;
 
 import java.util.List;
 
@@ -10,6 +10,7 @@ import com.herongwang.p2p.dao.debt.IDebtDao;
 import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.service.tender.IDebtService;
 import com.sxj.util.exception.ServiceException;
+import com.sxj.util.logger.SxjLogger;
 import com.sxj.util.persistent.QueryCondition;
 
 @Service
@@ -44,14 +45,26 @@ public class DebtServiceImpl implements IDebtService
     public List<DebtEntity> queryDebtList(DebtEntity query)
             throws ServiceException
     {
-        
-        QueryCondition<DebtEntity> condition = new QueryCondition<DebtEntity>();
-        condition.addCondition("name", query.getName());//会员名称
-        condition.addCondition("customerId", query.getCustomerId());//会员ID
-        condition.setPage(query);
-        List<DebtEntity> debtList = DebtDao.query(condition);
-        query.setPage(condition);
-        return debtList;
+        try
+        {
+            QueryCondition<DebtEntity> condition = new QueryCondition<DebtEntity>();
+            condition.addCondition("name", query.getName());//会员名称
+            condition.addCondition("customerId", query.getCustomerId());//会员ID
+            condition.setPage(query);
+            List<DebtEntity> debtList = DebtDao.query(condition);
+            query.setPage(condition);
+            return debtList;
+        }
+        catch (ServiceException e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException(e.getMessage());
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("查询融资标的错误", e);
+        }
     }
     
     @Override

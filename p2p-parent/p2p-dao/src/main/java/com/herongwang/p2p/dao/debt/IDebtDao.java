@@ -1,5 +1,6 @@
 package com.herongwang.p2p.dao.debt;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import com.herongwang.p2p.entity.debt.DebtEntity;
@@ -44,6 +45,6 @@ public interface IDebtDao {
 	 * @param query
 	 * @return
 	 */
-	public List<DebtEntity> query(QueryCondition<DebtEntity> query);
+	public List<DebtEntity> query(QueryCondition<DebtEntity> query) throws SQLException;
 	
 }
