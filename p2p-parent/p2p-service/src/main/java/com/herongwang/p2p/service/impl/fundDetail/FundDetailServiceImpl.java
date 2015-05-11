@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.herongwang.p2p.dao.funddetail.IFundDetailDao;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
-import com.herongwang.p2p.service.fundDetail.IFundDetailService;
+import com.herongwang.p2p.service.funddetail.IFundDetailService;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.logger.SxjLogger;
 import com.sxj.util.persistent.QueryCondition;
