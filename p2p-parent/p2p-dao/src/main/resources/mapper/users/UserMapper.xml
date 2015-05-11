@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.herongwang.p2p.dao.member.IMemberDao">
-	<resultMap id="MemberResultMap" type="com.herongwang.p2p.entity.member.MemberEntity">
+<mapper namespace="com.herongwang.p2p.dao.users.IUsersDao">
+	<resultMap id="MemberResultMap" type="com.herongwang.p2p.entity.users.UsersEntity">
 		<id property="customerId" column="customerId" jdbcType="VARCHAR" />
 		<result property="customerNo" column="customerNo" jdbcType="VARCHAR" />
 		<result property="password" column="PASSWORD" jdbcType="VARCHAR" />
