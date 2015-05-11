@@ -1,4 +1,4 @@
-package com.herongwang.p2p.website.controller.fundDetail;
+package com.herongwang.p2p.website.controller.funddetail;
 
 import java.util.List;
 
