@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.herongwang.p2p.dao.tender.IDebtDao">
+<mapper namespace="com.herongwang.p2p.dao.debt.IDebtDao">
 	<resultMap id="DebtEntity"
-		type="com.herongwang.p2p.entity.tender.DebtEntity">
+		type="com.herongwang.p2p.entity.debt.DebtEntity">
 		<id property="debtId" column="debtId" jdbcType="VARCHAR" />
 		<result property="customerId" column="customerId" jdbcType="VARCHAR" />
 		<result property="orderId" column="orderId" jdbcType="VARCHAR" />

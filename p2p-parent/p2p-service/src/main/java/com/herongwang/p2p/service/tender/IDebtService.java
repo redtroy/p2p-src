@@ -2,7 +2,7 @@ package com.herongwang.p2p.service.tender;
 
 import java.util.List;
 
-import com.herongwang.p2p.entity.tender.DebtEntity;
+import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.sxj.util.exception.ServiceException;
 
 public interface IDebtService {
