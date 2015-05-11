@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.herongwang.p2p.dao.repayPlan.IRepayPlanDao;
 import com.herongwang.p2p.entity.repayPlan.RepayPlanEntity;
-import com.herongwang.p2p.service.repayPlan.IRepayPlanService;
+import com.herongwang.p2p.service.repayplan.IRepayPlanService;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.logger.SxjLogger;
 import com.sxj.util.persistent.QueryCondition;
