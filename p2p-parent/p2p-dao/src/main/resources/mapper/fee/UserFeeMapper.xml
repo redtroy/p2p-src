@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.herongwang.p2p.dao.fee.IUserFeeDAO">
+	<resultMap id="UserFeeEntity" type="com.herongwang.p2p.entity.fee.UserFeeEntity">
+		<result property="customerId" column="customerId" jdbcType="VARCHAR" />
+		<result property="feeId" column="feeId" jdbcType="VARCHAR" />
+		<result property="discountId" column="discountId" jdbcType="VARCHAR" />
+	</resultMap>
+	<insert id="createUserFee" parameterType="com.herongwang.p2p.entity.fee.UserFeeEntity">
+		insert into UserFee(customerId,feeId,discountId) values (#{customerId},#{feeId},#{discountId})
+	</insert>
+	<delete id="deleteUserFeeByCustomerId" parameterType="String">
+		delete from UserFee where customerId=#{customerId}
+	</delete>
+	<delete id="deleteuserFeeByDiscountId" parameterType="String">
+		delete from UserFee where discountId=#{discountId}
+	</delete>
+</mapper>

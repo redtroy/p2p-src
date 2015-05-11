@@ -78,6 +78,12 @@ public class DiscountEntity
     @Column(name = "parentId")
     private String parentId;
     
+    @Column(name = "name")
+    private String name;
+    
+    @Column(name = "target")
+    private DiscountTarget target = DiscountTarget.USERLEVEL;
+    
     public java.lang.String getDiscountId()
     {
         return discountId;
@@ -165,6 +171,61 @@ public class DiscountEntity
         if (feeEntity == null)
             return null;
         return feeEntity.getParentId();
+    }
+    
+    public FeeStatus getStatus()
+    {
+        return status;
+    }
+    
+    public void setStatus(FeeStatus status)
+    {
+        this.status = status;
+    }
+    
+    public java.util.Date getCreateTime()
+    {
+        return createTime;
+    }
+    
+    public void setCreateTime(java.util.Date createTime)
+    {
+        this.createTime = createTime;
+    }
+    
+    public java.util.Date getUpdateTime()
+    {
+        return updateTime;
+    }
+    
+    public void setUpdateTime(java.util.Date updateTime)
+    {
+        this.updateTime = updateTime;
+    }
+    
+    public String getName()
+    {
+        return name;
+    }
+    
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+    
+    public DiscountTarget getTarget()
+    {
+        return target;
+    }
+    
+    public void setTarget(DiscountTarget target)
+    {
+        this.target = target;
+    }
+    
+    public void setLevel(Integer level)
+    {
+        this.level = level;
     }
     
 }
