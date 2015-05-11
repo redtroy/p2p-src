@@ -56,7 +56,7 @@ public class BasicController extends BaseController
         {
             session.setAttribute("adminInfo", admin);
             
-            return "redirect:" + getBasePath(request) + "member/manage.htm";
+            return "redirect:" + getBasePath(request) + "user/manage.htm";
         }
         else
         {

@@ -44,8 +44,7 @@ public class UserController
     }
     
     @RequestMapping("saveUser")
-    public String saveMember(UsersEntity user, ModelMap map)
-            throws WebException
+    public String saveUser(UsersEntity user, ModelMap map) throws WebException
     {
         try
         {

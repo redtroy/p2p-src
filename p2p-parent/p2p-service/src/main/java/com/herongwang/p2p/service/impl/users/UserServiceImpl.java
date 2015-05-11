@@ -1,6 +1,7 @@
 package com.herongwang.p2p.service.impl.users;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.herongwang.p2p.dao.users.IUsersDao;
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.service.users.IUserService;
+import com.sxj.util.common.EncryptUtil;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.logger.SxjLogger;
 import com.sxj.util.persistent.QueryCondition;
@@ -79,6 +81,8 @@ public class UserServiceImpl implements IUserService
     {
         try
         {
+            member.setPassword(EncryptUtil.md5Hex(member.getPassword()));
+            member.setRegisterTime(new Date());
             userDao.addUser(member);
             return member;
         }
@@ -124,7 +128,7 @@ public class UserServiceImpl implements IUserService
         try
         {
             userDao.updateUser(member);
-            return member;
+            return userDao.getUserById(member.getCustomerId());
         }
         catch (Exception e)
         {

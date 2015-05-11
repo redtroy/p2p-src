@@ -94,12 +94,12 @@ jQuery(document).ready(function($) {
             </tr>
             <#list list as model>
             <tr>
-              <td>${model.memberCode}</td>
-              <td>${model.memberName}</td>
+              <td>${model.customerNo}</td>
+              <td>${model.name}</td>
               <td>${model.email}</td>
-              <td>${model.tel}</td>
-              <td>${model.bankCode}</td>
-              <td>${model.codeName}</td>
+              <td>${model.cellphone}</td>
+              <td>${model.cardNo}</td>
+              <td>${model.cardHolder}</td>
               <td class="edit"><#if (model.registerTime??)> ${model.registerTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
               <td class="edit"><a href="#" class="del">删除</a> <a href="#" class="allot">修改</a></td>
             </tr>
