@@ -118,4 +118,19 @@ public class UserServiceImpl implements IUserService
         }
     }
     
+    @Override
+    public UsersEntity updateUser(UsersEntity member)
+    {
+        try
+        {
+            userDao.updateUser(member);
+            return member;
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("查询会员数量错误", e);
+        }
+    }
+    
 }
