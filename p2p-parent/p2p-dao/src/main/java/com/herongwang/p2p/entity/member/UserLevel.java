@@ -5,7 +5,11 @@
  ***********************************************************************/
 package com.herongwang.p2p.entity.member;
 
+import java.util.Date;
+
+import com.herongwang.p2p.dao.member.IUserLevelDAO;
 import com.sxj.mybatis.orm.annotations.Column;
+import com.sxj.mybatis.orm.annotations.Entity;
 import com.sxj.mybatis.orm.annotations.GeneratedValue;
 import com.sxj.mybatis.orm.annotations.GenerationType;
 import com.sxj.mybatis.orm.annotations.Id;
@@ -14,6 +18,7 @@ import com.sxj.mybatis.orm.annotations.Table;
 /** 用户级别
  * 
  * @pdOid 51ae8418-ec05-404f-b828-0e15a20904c9 */
+@Entity(mapper = IUserLevelDAO.class)
 @Table(name = "UserLevel")
 public class UserLevel
 {
@@ -40,7 +45,7 @@ public class UserLevel
      * 
      * @pdOid 446b2d02-6554-4f85-9756-9f5d166d1977 */
     @Column(name = "createTime")
-    private java.util.Date createTime;
+    private java.util.Date createTime = new Date();
     
     /** 更新时间
      * 
