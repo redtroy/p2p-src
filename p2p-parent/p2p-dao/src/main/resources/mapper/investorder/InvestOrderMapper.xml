@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.herongwang.p2p.dao.investOrder.IInvestOrderDao">
-	<resultMap id="InvestorderResultMap" type="com.herongwang.p2p.entity.investOrder.InvestOrderEntity">
+<mapper namespace="com.herongwang.p2p.dao.investorder.IInvestOrderDao">
+	<resultMap id="InvestorderResultMap" type="com.herongwang.p2p.entity.investorder.InvestOrderEntity">
 		<id property="orderId" column="orderId" jdbcType="VARCHAR" />
 		<result property="debtId" column="debtId" jdbcType="VARCHAR" />
 		<result property="customerId" column="customerId" jdbcType="VARCHAR" />
@@ -23,7 +23,7 @@
 	</resultMap>
 	
     <!-- 条件查询订单列表 -->
-	<select id="query" resultMap="InvestOrderEntity"
+	<select id="query" resultMap="InvestorderResultMap"
 		parameterType="com.sxj.util.persistent.QueryCondition">
 		<![CDATA[select i.* from InvestOrder i WHERE 1=1 ]]>
 
