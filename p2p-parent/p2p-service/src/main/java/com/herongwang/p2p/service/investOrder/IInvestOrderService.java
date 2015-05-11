@@ -1,4 +1,4 @@
-package com.herongwang.p2p.service.investOrder;
+package com.herongwang.p2p.service.investorder;
 
 import java.util.List;
 

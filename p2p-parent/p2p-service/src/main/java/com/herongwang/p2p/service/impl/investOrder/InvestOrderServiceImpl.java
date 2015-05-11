@@ -1,4 +1,4 @@
-package com.herongwang.p2p.service.impl.investOrder;
+package com.herongwang.p2p.service.impl.investorder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.herongwang.p2p.dao.investOrder.IInvestOrderDao;
 import com.herongwang.p2p.entity.investOrder.InvestOrderEntity;
-import com.herongwang.p2p.service.investOrder.IInvestOrderService;
+import com.herongwang.p2p.service.investorder.IInvestOrderService;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.logger.SxjLogger;
 import com.sxj.util.persistent.QueryCondition;
