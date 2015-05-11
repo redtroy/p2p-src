@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
-import com.herongwang.p2p.model.users.UserModel;
 import com.herongwang.p2p.service.tender.IDebtService;
 import com.herongwang.p2p.service.users.IUserService;
 import com.sxj.redis.core.pubsub.RedisTopics;
@@ -96,7 +95,7 @@ public class BasicController extends BaseController
         if (currentUser.isAuthenticated())
         {
             session.setAttribute("userInfo", user);
-            UserModel userInfo = userService.getUserByUserId(user.getCustomerId());
+            UsersEntity userInfo = userService.getUserByUserId(user.getCustomerId());
             map.put("user", userInfo);
             return "site/member/member-center";
             // return "redirect:" + getBasePath(request) + "member/memberInfo.htm";

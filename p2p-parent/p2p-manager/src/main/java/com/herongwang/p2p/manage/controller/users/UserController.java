@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.manage.controller.BaseController;
-import com.herongwang.p2p.model.users.UserModel;
 import com.herongwang.p2p.service.users.IUserService;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
@@ -26,7 +25,7 @@ public class UserController extends BaseController
     {
         try
         {
-            List<UserModel> memberList = userService.queryUsers(user);
+            List<UsersEntity> memberList = userService.queryUsers(user);
             map.put("list", memberList);
         }
         catch (Exception e)
