@@ -41,7 +41,6 @@ public class DebtEntity extends Pagable implements Serializable
     @Column(name = "customerId")
     private String customerId;
     
-    
     /**
      * 标题
      */
@@ -98,6 +97,12 @@ public class DebtEntity extends Pagable implements Serializable
     private BigDecimal amount;
     
     /**
+     *已融资金额
+     */
+    @Column(name = "finance")
+    private BigDecimal finance;
+    
+    /**
      *创建时间
      */
     @Column(name = "createTime")
@@ -151,7 +156,6 @@ public class DebtEntity extends Pagable implements Serializable
         this.customerId = customerId;
     }
     
-    
     public String getTitle()
     {
         return title;
@@ -177,22 +181,31 @@ public class DebtEntity extends Pagable implements Serializable
         return deadLine;
     }
     
+    public BigDecimal getFinance()
+    {
+        return finance;
+    }
+    
+    public void setFinance(BigDecimal finance)
+    {
+        this.finance = finance;
+    }
+    
     public void setDeadLine(Date deadLine)
     {
         this.deadLine = deadLine;
     }
     
-    
     public Integer getMonths()
     {
         return months;
     }
-
+    
     public void setMonths(Integer months)
     {
         this.months = months;
     }
-
+    
     public Double getAnnualizedRate()
     {
         return annualizedRate;

@@ -16,7 +16,8 @@
 		<result property="maxInvest" column="maxInvest" jdbcType="DOUBLE" />
 		<result property="managementFee" column="managementFee"
 			jdbcType="DOUBLE" />
-		<result property="amount" column="amount" jdbcType="DOUBLE" />
+		<result property="amount" column="amount" jdbcType="INTEGER" />
+		<result property="finance" column="finance" jdbcType="INTEGER" />
 		<result property="createTime" column="createTime" jdbcType="TIMESTAMP" />
 		<result property="finishTime" column="finishTime" jdbcType="TIMESTAMP" />
 		<result property="status" column="status" jdbcType="INTEGER" />
