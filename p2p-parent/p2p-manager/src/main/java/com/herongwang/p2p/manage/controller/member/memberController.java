@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.herongwang.p2p.manage.controller.BaseController;
 import com.herongwang.p2p.model.users.UserModel;
-import com.herongwang.p2p.service.member.IMemberService;
+import com.herongwang.p2p.service.users.IUserService;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
 
@@ -18,14 +18,14 @@ import com.sxj.util.logger.SxjLogger;
 public class memberController extends BaseController
 {
     @Autowired
-    private IMemberService memberService;
+    private IUserService memberService;
     
     @RequestMapping("manage")
     public String manage(ModelMap map, UserModel member) throws WebException
     {
         try
         {
-            List<UserModel> memberList = memberService.queryMemberInfo(member);
+            List<UserModel> memberList = memberService.queryUsers(member);
             map.put("list", memberList);
         }
         catch (Exception e)

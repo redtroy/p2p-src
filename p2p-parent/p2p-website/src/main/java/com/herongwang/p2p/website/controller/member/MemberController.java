@@ -9,7 +9,7 @@ import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.model.users.UserModel;
 import com.herongwang.p2p.service.account.IAccountService;
-import com.herongwang.p2p.service.member.IMemberService;
+import com.herongwang.p2p.service.users.IUserService;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
 
@@ -18,7 +18,7 @@ import com.sxj.util.logger.SxjLogger;
 public class MemberController
 {
     @Autowired
-    private IMemberService memberservice;
+    private IUserService memberservice;
     
     @Autowired
     private IAccountService accountService;
@@ -51,7 +51,7 @@ public class MemberController
     {
         try
         {
-            UsersEntity info = memberservice.addMember(member);
+            UsersEntity info = memberservice.addUser(member);
             map.put("member", info);
         }
         catch (Exception e)

@@ -1,4 +1,4 @@
-package com.herongwang.p2p.service.impl.member;
+package com.herongwang.p2p.service.impl.users;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,19 +9,19 @@ import org.springframework.stereotype.Service;
 import com.herongwang.p2p.dao.users.IUsersDao;
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.model.users.UserModel;
-import com.herongwang.p2p.service.member.IMemberService;
+import com.herongwang.p2p.service.users.IUserService;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.logger.SxjLogger;
 import com.sxj.util.persistent.QueryCondition;
 
 @Service
-public class MemberServiceImpl implements IMemberService
+public class UserServiceImpl implements IUserService
 {
     @Autowired
     private IUsersDao memberDao;
     
     @Override
-    public List<UserModel> queryMemberInfo(UserModel member)
+    public List<UserModel> queryUsers(UserModel member)
             throws ServiceException
     {
         try
@@ -47,7 +47,7 @@ public class MemberServiceImpl implements IMemberService
     }
     
     @Override
-    public UsersEntity getMmeberByAccount(String account)
+    public UsersEntity getUserByAccount(String account)
             throws ServiceException
     {
         try
@@ -62,7 +62,7 @@ public class MemberServiceImpl implements IMemberService
     }
     
     @Override
-    public UsersEntity getMmeberById(String id) throws ServiceException
+    public UsersEntity getUserById(String id) throws ServiceException
     {
         try
         {
@@ -77,7 +77,7 @@ public class MemberServiceImpl implements IMemberService
     }
     
     @Override
-    public UsersEntity addMember(UsersEntity member) throws ServiceException
+    public UsersEntity addUser(UsersEntity member) throws ServiceException
     {
         try
         {
@@ -93,7 +93,7 @@ public class MemberServiceImpl implements IMemberService
     }
     
     @Override
-    public UserModel getMmeberByMemberId(String id) throws ServiceException
+    public UserModel getUserByUserId(String id) throws ServiceException
     {
         try
         {
@@ -107,7 +107,7 @@ public class MemberServiceImpl implements IMemberService
     }
     
     @Override
-    public int getMemberNum()
+    public int getUserNum()
     {
         try
         {
