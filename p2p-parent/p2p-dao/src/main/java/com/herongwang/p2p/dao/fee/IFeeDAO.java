@@ -1,6 +1,6 @@
 package com.herongwang.p2p.dao.fee;
 
-import com.herongwang.p2p.entity.fee.Fee;
+import com.herongwang.p2p.entity.fee.FeeEntity;
 import com.sxj.mybatis.orm.annotations.Delete;
 import com.sxj.mybatis.orm.annotations.Get;
 import com.sxj.mybatis.orm.annotations.Insert;
@@ -9,15 +9,15 @@ import com.sxj.mybatis.orm.annotations.Update;
 public interface IFeeDAO
 {
     @Insert
-    public void createFee(Fee fee);
+    public void createFee(FeeEntity fee);
     
     @Delete
     public void deleteFeeById(String feeId);
     
     @Update
-    public void updateFee(Fee newFee);
+    public void updateFee(FeeEntity newFee);
     
     @Get
-    public Fee getFeeById(String feeId);
+    public FeeEntity getFeeById(String feeId);
     
 }
