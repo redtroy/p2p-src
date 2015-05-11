@@ -1,4 +1,4 @@
-package com.herongwang.p2p.service.impl.repayPlan;
+package com.herongwang.p2p.service.impl.repayplan;
 
 import java.util.List;
 
