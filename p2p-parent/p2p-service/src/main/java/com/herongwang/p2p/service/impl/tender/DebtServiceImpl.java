@@ -8,46 +8,46 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.herongwang.p2p.dao.tender.IDebtDao;
 import com.herongwang.p2p.entity.tender.DebtEntity;
-import com.herongwang.p2p.service.tender.ITenderService;
+import com.herongwang.p2p.service.tender.IDebtService;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.persistent.QueryCondition;
 
 @Service
 @Transactional
-public class TenderServiceImpl implements ITenderService {
+public class DebtServiceImpl implements IDebtService {
 	
 	@Autowired
-	private IDebtDao tenderDao;
+	private IDebtDao DebtDao;
 
 	@Override
-	public void addTender(DebtEntity tender) throws ServiceException {
-		tenderDao.addDebt(tender);
+	public void addDebt(DebtEntity Debt) throws ServiceException {
+		DebtDao.addDebt(Debt);
 		
 	}
 
 	@Override
-	public void updateTender(DebtEntity tender) throws ServiceException {
-		tenderDao.updateTender(tender);
+	public void updateDebt(DebtEntity Debt) throws ServiceException {
+		DebtDao.updateDebt(Debt);
 		
 	}
 
 	@Override
-	public DebtEntity getTenderEntity(String id) throws ServiceException {
-		return tenderDao.getTenderFor(id);
+	public DebtEntity getDebtEntity(String id) throws ServiceException {
+		return DebtDao.getDebtFor(id);
 	}
 
 	@Override
-	public List<DebtEntity> queryTenderList(DebtEntity query)throws ServiceException {
+	public List<DebtEntity> queryDebtList(DebtEntity query)throws ServiceException {
 		QueryCondition<DebtEntity> condition = new QueryCondition<DebtEntity>();
         condition.addCondition("name", query.getName());
         condition.setPage(query);
-		 List<DebtEntity> contractList = tenderDao.query(condition);
+		 List<DebtEntity> contractList = DebtDao.query(condition);
 		return contractList;
 	}
 
 	@Override
-	public void delTenderFor(String id) throws ServiceException {
-		tenderDao.delTender(id);
+	public void delDebt(String id) throws ServiceException {
+		DebtDao.delDebt(id);
 		
 	}
 	
