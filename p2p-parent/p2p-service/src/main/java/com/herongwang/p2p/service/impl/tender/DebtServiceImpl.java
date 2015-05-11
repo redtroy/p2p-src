@@ -1,5 +1,6 @@
 package com.herongwang.p2p.service.impl.tender;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import com.herongwang.p2p.dao.debt.IDebtDao;
 import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.service.tender.IDebtService;
 import com.sxj.util.exception.ServiceException;
+import com.sxj.util.logger.SxjLogger;
 import com.sxj.util.persistent.QueryCondition;
 
 @Service
@@ -44,14 +46,26 @@ public class DebtServiceImpl implements IDebtService
     public List<DebtEntity> queryDebtList(DebtEntity query)
             throws ServiceException
     {
-        
-        QueryCondition<DebtEntity> condition = new QueryCondition<DebtEntity>();
-        condition.addCondition("name", query.getName());//会员名称
-        condition.addCondition("customerId", query.getCustomerId());//会员ID
-        condition.setPage(query);
-        List<DebtEntity> debtList = DebtDao.query(condition);
-        query.setPage(condition);
-        return debtList;
+        try
+        {
+            
+            QueryCondition<DebtEntity> condition = new QueryCondition<DebtEntity>();
+            List<DebtEntity> debtList = new ArrayList<DebtEntity>();
+            if (query == null)
+            {
+                return debtList;
+            }
+            condition.addCondition("name", query.getName());
+            condition.setPage(query);
+            debtList = DebtDao.query(condition);
+            query.setPage(condition);
+            return debtList;
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("查询标的列表信息错误", e);
+        }
     }
     
     @Override
@@ -59,6 +73,20 @@ public class DebtServiceImpl implements IDebtService
     {
         DebtDao.delDebt(id);
         
+    }
+    
+    @Override
+    public List<DebtEntity> queryTop5()
+    {
+        try
+        {
+            return DebtDao.queryTop5();
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("查询标的前5条列表信息错误", e);
+        }
     }
     
 }

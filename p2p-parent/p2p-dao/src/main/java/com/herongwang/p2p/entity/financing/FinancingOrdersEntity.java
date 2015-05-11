@@ -1,10 +1,10 @@
-package com.herongwang.p2p.entity.financingOrders;
+package com.herongwang.p2p.entity.financing;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import com.herongwang.p2p.dao.financingOrders.IFinancingOrdersDao;
+import com.herongwang.p2p.dao.financing.IFinancingOrdersDao;
 import com.sxj.mybatis.orm.annotations.Column;
 import com.sxj.mybatis.orm.annotations.Entity;
 import com.sxj.mybatis.orm.annotations.GeneratedValue;
@@ -30,13 +30,13 @@ public class FinancingOrdersEntity extends Pagable implements Serializable
     /** 
     * 订单ID
     */
-   @Column(name = "orderId")
+    @Id(column = "orderId")
    @GeneratedValue(strategy = GenerationType.UUID)
    private String orderId;
     /**
      * 标的ID
      */
-    @Id(column = "debtId")
+    @Column(name = "debtId")
     private String debtId;
     
     /**
