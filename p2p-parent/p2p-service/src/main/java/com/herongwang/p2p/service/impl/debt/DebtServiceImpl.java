@@ -1,5 +1,6 @@
 package com.herongwang.p2p.service.impl.debt;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.herongwang.p2p.dao.debt.IDebtDao;
 import com.herongwang.p2p.entity.debt.DebtEntity;
-import com.herongwang.p2p.service.tender.IDebtService;
+import com.herongwang.p2p.service.debt.IDebtService;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.logger.SxjLogger;
 import com.sxj.util.persistent.QueryCondition;
