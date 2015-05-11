@@ -3,7 +3,7 @@ package com.herongwang.p2p.entity.apply;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.herongwang.p2p.dao.apply.IApplyForDao;
+import com.herongwang.p2p.dao.apply.IDebtApplicationDao;
 import com.sxj.mybatis.orm.annotations.Column;
 import com.sxj.mybatis.orm.annotations.Entity;
 import com.sxj.mybatis.orm.annotations.GeneratedValue;
@@ -17,9 +17,9 @@ import com.sxj.mybatis.pagination.Pagable;
  * @author nishaotang
  *
  */
-@Entity(mapper = IApplyForDao.class)
-@Table(name = "APPLY_FOR")
-public class ApplyForEntity extends Pagable implements Serializable {
+@Entity(mapper = IDebtApplicationDao.class)
+@Table(name = "DEBTAPPLICATION")
+public class DebtApplicationEntity extends Pagable implements Serializable {
 
 	/**
 	 * 
@@ -28,20 +28,20 @@ public class ApplyForEntity extends Pagable implements Serializable {
 	/**
 	 * 主键1
 	 */
-	@Id(column = "APPLY_ID")
+	@Id(column = "APPLICATIONID")
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String applyId;
+    private String applicationId;
 	
 	 /**
      * 会员id
      */
-    @Column(name = "MEMBER_ID")
-    private String memberId;
+    @Column(name = "CUSTOMERID")
+    private String customerId;
     /**
      * 金额
      */
-    @Column(name = "MONEY")
-    private Double money;
+    @Column(name = "AMOUNT")
+    private Double amount;
     /**
      *联系电话
      */
@@ -50,8 +50,8 @@ public class ApplyForEntity extends Pagable implements Serializable {
     /**
      * 申请时间
      */
-    @Column(name = "FOR_TIME")
-    private Date forTime;
+    @Column(name = "APPLYTIME")
+    private Date applyTime;
     /**
      * 申请融资状态
      * 0：未处理；1：未通过；2：通过。
@@ -77,29 +77,29 @@ public class ApplyForEntity extends Pagable implements Serializable {
 		this.name = name;
 	}
     
-    public String getApplyId() {
-		return applyId;
+	public String getApplicationId() {
+		return applicationId;
 	}
-	public void setApplyId(String applyId) {
-		this.applyId = applyId;
+	public void setApplicationId(String applicationId) {
+		this.applicationId = applicationId;
 	}
-	public String getMemberId() {
-		return memberId;
+	public String getCustomerId() {
+		return customerId;
 	}
-	public void setMemberId(String memberId) {
-		this.memberId = memberId;
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
 	}
-	public Double getMoney() {
-		return money;
+	public Double getAmount() {
+		return amount;
 	}
-	public void setMoney(Double money) {
-		this.money = money;
+	public void setAmount(Double amount) {
+		this.amount = amount;
 	}
-	public Date getForTime() {
-		return forTime;
+	public Date getApplyTime() {
+		return applyTime;
 	}
-	public void setForTime(Date forTime) {
-		this.forTime = forTime;
+	public void setApplyTime(Date applyTime) {
+		this.applyTime = applyTime;
 	}
 	public Integer getStatus() {
 		return status;
