@@ -17,10 +17,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.herongwang.p2p.entity.debt.DebtEntity;
-import com.herongwang.p2p.entity.member.MemberEntity;
-import com.herongwang.p2p.model.member.MemberModel;
-import com.herongwang.p2p.service.member.IMemberService;
-import com.herongwang.p2p.service.tender.IDebtService;
+import com.herongwang.p2p.entity.users.UsersEntity;
+import com.herongwang.p2p.service.debt.IDebtService;
+import com.herongwang.p2p.service.users.IUserService;
 import com.sxj.redis.core.pubsub.RedisTopics;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
@@ -33,7 +32,7 @@ public class BasicController extends BaseController
     private RedisTopics topics;
     
     @Autowired
-    private IMemberService memberService;
+    private IUserService userService;
     
     @Autowired
     private IDebtService debtService;
@@ -69,8 +68,8 @@ public class BasicController extends BaseController
     public String login(String account, String password, HttpSession session,
             HttpServletRequest request, ModelMap map)
     {
-        MemberEntity member = memberService.getMmeberByAccount(account);
-        if (member == null)
+        UsersEntity user = userService.getUserByAccount(account);
+        if (user == null)
         {
             map.put("message", "用户名不存在");
             return LOGIN;
@@ -83,7 +82,7 @@ public class BasicController extends BaseController
             currentUser.login(token);
             PrincipalCollection principals = SecurityUtils.getSubject()
                     .getPrincipals();
-            String userNo = member.getMemberCode();
+            // String userNo = user.getCustomerNo();
             // SupervisorShiroRedisCache.addToMap(userNo, principals);
         }
         catch (AuthenticationException e)
@@ -95,9 +94,9 @@ public class BasicController extends BaseController
         }
         if (currentUser.isAuthenticated())
         {
-            session.setAttribute("memberInfo", member);
-            MemberModel memberInfo = memberService.getMmeberByMemberId(member.getMemberId());
-            map.put("member", memberInfo);
+            session.setAttribute("userInfo", user);
+            UsersEntity userInfo = userService.getUserByUserId(user.getCustomerId());
+            map.put("user", userInfo);
             return "site/member/member-center";
             // return "redirect:" + getBasePath(request) + "member/memberInfo.htm";
         }
@@ -130,6 +129,22 @@ public class BasicController extends BaseController
     {
         try
         {
+            List<DebtEntity> list = debtService.queryTop5();
+            map.put("list", list);
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new WebException("主页查询标的TOP5列表出错", e);
+        }
+        return INDEX;
+    }
+    
+    @RequestMapping("bdList")
+    public String bdList(ModelMap map) throws WebException
+    {
+        try
+        {
             DebtEntity debt = new DebtEntity();
             List<DebtEntity> list = debtService.queryDebtList(debt);
             map.put("list", list);
@@ -137,9 +152,9 @@ public class BasicController extends BaseController
         catch (Exception e)
         {
             SxjLogger.error(e.getMessage(), e, this.getClass());
-            throw new WebException("主页查询标的列表出错", e);
+            throw new WebException("查询标的列表错误", e);
         }
-        return INDEX;
+        return "site/prod-list";
     }
     
     public static String getIpAddr(HttpServletRequest request)

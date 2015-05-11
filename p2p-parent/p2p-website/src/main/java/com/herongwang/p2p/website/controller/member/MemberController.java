@@ -6,10 +6,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.herongwang.p2p.entity.account.AccountEntity;
-import com.herongwang.p2p.entity.member.MemberEntity;
-import com.herongwang.p2p.model.member.MemberModel;
+import com.herongwang.p2p.entity.users.UsersEntity;
+import com.herongwang.p2p.model.users.UserModel;
 import com.herongwang.p2p.service.account.IAccountService;
-import com.herongwang.p2p.service.member.IMemberService;
+import com.herongwang.p2p.service.users.IUserService;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
 
@@ -18,13 +18,13 @@ import com.sxj.util.logger.SxjLogger;
 public class MemberController
 {
     @Autowired
-    private IMemberService memberservice;
+    private IUserService memberservice;
     
     @Autowired
     private IAccountService accountService;
     
     @RequestMapping("register")
-    public String register(ModelMap map, MemberEntity member)
+    public String register(ModelMap map, UsersEntity member)
             throws WebException
     {
         return "site/member/register";
@@ -46,12 +46,12 @@ public class MemberController
     }
     
     @RequestMapping("saveMember")
-    public String saveMember(MemberEntity member, ModelMap map)
+    public String saveMember(UsersEntity member, ModelMap map)
             throws WebException
     {
         try
         {
-            MemberEntity info = memberservice.addMember(member);
+            UsersEntity info = memberservice.addUser(member);
             map.put("member", info);
         }
         catch (Exception e)
@@ -68,7 +68,7 @@ public class MemberController
     {
         try
         {
-            MemberModel memberInfo = accountService.addAccount(account);
+            UserModel memberInfo = accountService.addAccount(account);
             map.put("member", memberInfo);
         }
         catch (Exception e)

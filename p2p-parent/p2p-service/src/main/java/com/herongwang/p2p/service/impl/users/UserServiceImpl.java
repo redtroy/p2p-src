@@ -1,4 +1,4 @@
-package com.herongwang.p2p.service.impl.member;
+package com.herongwang.p2p.service.impl.users;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,38 +6,37 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.herongwang.p2p.dao.member.IMemberDao;
-import com.herongwang.p2p.entity.member.MemberEntity;
-import com.herongwang.p2p.model.member.MemberModel;
-import com.herongwang.p2p.service.member.IMemberService;
+import com.herongwang.p2p.dao.users.IUsersDao;
+import com.herongwang.p2p.entity.users.UsersEntity;
+import com.herongwang.p2p.service.users.IUserService;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.logger.SxjLogger;
 import com.sxj.util.persistent.QueryCondition;
 
 @Service
-public class MemberServiceImpl implements IMemberService
+public class UserServiceImpl implements IUserService
 {
     @Autowired
-    private IMemberDao memberDao;
+    private IUsersDao userDao;
     
     @Override
-    public List<MemberModel> queryMemberInfo(MemberModel member)
+    public List<UsersEntity> queryUsers(UsersEntity user)
             throws ServiceException
     {
         try
         {
-            QueryCondition<MemberModel> condition = new QueryCondition<MemberModel>();
-            List<MemberModel> memberList = new ArrayList<MemberModel>();
-            if (member == null)
+            QueryCondition<UsersEntity> condition = new QueryCondition<UsersEntity>();
+            List<UsersEntity> userList = new ArrayList<UsersEntity>();
+            if (user == null)
             {
-                return memberList;
+                return userList;
             }
-            condition.addCondition("memberCode", member.getMemberCode());// 姓名
             /* 
+             *  
             condition.setPage(query);*/
-            memberList = memberDao.queryMembers(condition);
+            userList = userDao.queryUserList(condition);
             // query.setPage(condition);
-            return memberList;
+            return userList;
         }
         catch (Exception e)
         {
@@ -47,12 +46,11 @@ public class MemberServiceImpl implements IMemberService
     }
     
     @Override
-    public MemberEntity getMmeberByAccount(String account)
-            throws ServiceException
+    public UsersEntity getUserByAccount(String account) throws ServiceException
     {
         try
         {
-            return memberDao.getMmeberByAccount(account);
+            return userDao.getUserByAccount(account);
         }
         catch (Exception e)
         {
@@ -62,11 +60,11 @@ public class MemberServiceImpl implements IMemberService
     }
     
     @Override
-    public MemberEntity getMmeberById(String id) throws ServiceException
+    public UsersEntity getUserById(String id) throws ServiceException
     {
         try
         {
-            return memberDao.getMemberById(id);
+            return userDao.getUserById(id);
         }
         catch (Exception e)
         {
@@ -77,11 +75,11 @@ public class MemberServiceImpl implements IMemberService
     }
     
     @Override
-    public MemberEntity addMember(MemberEntity member) throws ServiceException
+    public UsersEntity addUser(UsersEntity member) throws ServiceException
     {
         try
         {
-            memberDao.addMember(member);
+            userDao.addUser(member);
             return member;
         }
         catch (Exception e)
@@ -93,16 +91,30 @@ public class MemberServiceImpl implements IMemberService
     }
     
     @Override
-    public MemberModel getMmeberByMemberId(String id) throws ServiceException
+    public UsersEntity getUserByUserId(String id) throws ServiceException
     {
         try
         {
-            return memberDao.getMemberModelByMemberId(id);
+            return userDao.getUserById(id);
         }
         catch (Exception e)
         {
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new ServiceException("查询会员详细信息错误", e);
+        }
+    }
+    
+    @Override
+    public int getUserNum()
+    {
+        try
+        {
+            return userDao.getUserNum();
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("查询会员数量错误", e);
         }
     }
     

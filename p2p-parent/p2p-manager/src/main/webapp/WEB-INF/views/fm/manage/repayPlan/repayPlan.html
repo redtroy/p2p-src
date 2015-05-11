@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>和融网管理平台</title>
+<meta name="keywords" content="和融网管理平台" />
+<meta name="description" content="和融网管理平台" />
+<link href="${b.staticPath}style/style.css" rel="stylesheet"
+	type="text/css" />
+<script src="${b.staticPath}js/jquery1.8.js" type="text/javascript"></script>
+<@b.dialog/>
+<script>
+	$(document).ready(
+			function() {
+				$("#chk_all").click(
+						function() {
+							$("input[name='chk_list']").attr("checked",
+									$(this).get(0).checked);
+						});
+			});
+	function saveRepay() {
+		var success = dialog({
+			title : '警告',
+			cancel : false,
+			ok : function() {
+				
+			}
+		});
+		var show = dialog({
+			title : '消息',
+			cancel : false,
+			ok : function() {
+				window.location.href = "queryRepayPlan.htm";
+			}
+		var arrChk = $("input[name='chk_list']:checked");
+		if (arrChk.length == 0) {
+			success.content('请选择还款计划！');
+			success.showModal();
+			return;
+		}
+		var arrId = new Array();
+		$(arrChk).each(function(index) {
+			if (index!=0) {
+				arrId[index] = $(this).val();
+			}
+		});
+		var d = dialog({
+			title : '消息',
+			content : '是否还款?',
+			okValue : '确 定',
+			ok : function() {
+				show.showModal();
+				$.post("saveRepayPlan.htm", {ids:arrId}, function(
+						data) {
+					if (data.isOK == 'ok') {
+						show.content('还款成功！');
+						show.showModal();
+					} else {
+						show.content('还款失败！');
+						show.showModal();
+					}
+				})
+			},
+			cancelValue : '取消',
+			cancel : function() {
+			}
+		});
+		d.showModal();
+	}
+</script>
+
+</head>
+<body>
+	<div id="header" class="fence">
+		<div class="fence-wide">
+			<p class="ly-right logOut">
+				杜金鑫，您好！<a href="#">退出当前帐户</a>
+			</p>
+			<h1 class="fontYH fb ly-left" title="和融网">管理平台</h1>
+		</div>
+	</div>
+	<div class="fence">
+		<div class="fence-wide pt10 pb10 ly-clearFix">
+			<div class="yard-180 ly-left leftMenu fontYH">
+				<ul>
+					<li><a href="member-center.html">会员管理</a></li>
+					<li><a href="fina-list.html">融资申请管理</a></li>
+					<li><a href="tender-list.html" class="on">投资标书管理</a></li>
+					<li><a href="recharge.html">充值管理</a></li>
+					<li><a href="deposit.html">提现管理</a></li>
+				</ul>
+			</div>
+			<div class="yard-1000 ly-left">
+				<div class="rightSide">
+					<div class="heading fontYH f20">
+						<a href="javascript:saveRepay();"
+							class="button button-green f12 ly-right">立即还款</a>还款计划
+					</div>
+					<div class="mainBox">
+						<table border="0" cellspacing="0" cellpadding="0" class="tabList">
+							<col width="10%" />
+							<col width="15%" />
+							<col width="15%" />
+							<col width="15%" />
+							<col width="15%" />
+							<col width="15%" />
+							<tr>
+								<th><input type="checkbox" name="chk_list" id="chk_all"
+									value="" title="全选/全不选" /></th>
+								<th>序号</th>
+								<th>月本金</th>
+								<th>月利息</th>
+								<th>月总额</th>
+								<th>剩余本息总额</th>
+								<th>状态</th>
+							</tr>
+							<#if repayPlan?exists && (repayPlan?size>0)> <#list repayPlan as
+							plan>
+							<tr>
+								<td><input type="checkbox" name="chk_list"
+									value="${plan.planId}" /></td>
+								<td>${plan.sequence}</td>
+								<td>${plan.monthCapital}元</td>
+								<td>${plan.monthProfit}元</td>
+								<td>${plan.monthAmount}元</td>
+								<td>${plan.leftAmount}</td>
+								<td><#if plan.status==0>未还款 <#else>还款 </#if></td>
+							</tr>
+							</#list> <#else>
+							<tr>
+								<td colspan="7" align="center">暂无数据</td>
+							</tr>
+							</#if>
+						</table>
+						<div class="ly-clearFix">
+							<div id="pager" class="jPaginate"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="footer" class="fence">
+		<div class="fence-wide">
+			&copy; 2015 南京紫金财富企业管理有限公司&nbsp;版权所有<span class="ml10"><a
+				href="http://www.miitbeian.gov.cn/" target="_blank">苏ICP备14047993号-1</a></span>
+		</div>
+	</div>
+</body>
+</html>

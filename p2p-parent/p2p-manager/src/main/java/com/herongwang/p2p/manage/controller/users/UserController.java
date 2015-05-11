@@ -1,4 +1,4 @@
-package com.herongwang.p2p.manage.controller.member;
+package com.herongwang.p2p.manage.controller.users;
 
 import java.util.List;
 
@@ -7,25 +7,25 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.manage.controller.BaseController;
-import com.herongwang.p2p.model.member.MemberModel;
-import com.herongwang.p2p.service.member.IMemberService;
+import com.herongwang.p2p.service.users.IUserService;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
 
 @Controller
-@RequestMapping("member")
-public class memberController extends BaseController
+@RequestMapping("user")
+public class UserController extends BaseController
 {
     @Autowired
-    private IMemberService memberService;
+    private IUserService userService;
     
     @RequestMapping("manage")
-    public String manage(ModelMap map, MemberModel member) throws WebException
+    public String manage(ModelMap map, UsersEntity user) throws WebException
     {
         try
         {
-            List<MemberModel> memberList = memberService.queryMemberInfo(member);
+            List<UsersEntity> memberList = userService.queryUsers(user);
             map.put("list", memberList);
         }
         catch (Exception e)

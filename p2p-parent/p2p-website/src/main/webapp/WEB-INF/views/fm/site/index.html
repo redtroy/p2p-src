@@ -8,6 +8,11 @@
 <script src="${b.staticPath}js/jquery.js"></script>
 <script src="${b.staticPath}js/bootstrap.js"></script>
 <script src="${b.staticPath}js/slide.js"></script>
+<script>
+  $(function(){
+	  
+  })
+</script>
 </head>
 <body>
 <div class="fence-wide bgBlack">
@@ -96,13 +101,18 @@
 </div>
 <div class="btnBox ly-left">
   <div class="progress">
-    <div class="progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%"> <span class="sr-only">40%</span> </div>
+    <#if model.finance??>
+    <#assign bfb=model.finance/model.amount*100>
+    <#else>
+    <#assign bfb=0>
+    </#if>
+    <div class="progress-bar" role="progressbar" aria-valuenow='${bfb?string("#.##")}' aria-valuemin="0" aria-valuemax="100" style='width:${bfb?string("#.##")}%'> <span class="sr-only">${bfb?string("#.##")}%</span> </div>
   </div>
   <button class="button button-red fontYH">立即投资</button>
 </div>
 </div>
 </#list>
-<div class="more tc fontYH"><a href="html/prod-list.html">查看更多投资理财项目>></a></div>
+<div class="more tc fontYH"><a href="bdList.htm">查看更多投资理财项目>></a></div>
 </div>
 <div class="yard-1100 linkBox">
   <div class="titMain">

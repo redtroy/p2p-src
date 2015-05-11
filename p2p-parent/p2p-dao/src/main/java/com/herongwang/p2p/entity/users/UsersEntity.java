@@ -1,0 +1,233 @@
+package com.herongwang.p2p.entity.users;
+
+import java.io.Serializable;
+import java.util.Date;
+
+import com.herongwang.p2p.dao.users.IUsersDao;
+import com.sxj.mybatis.orm.annotations.Column;
+import com.sxj.mybatis.orm.annotations.Entity;
+import com.sxj.mybatis.orm.annotations.GeneratedValue;
+import com.sxj.mybatis.orm.annotations.GenerationType;
+import com.sxj.mybatis.orm.annotations.Id;
+import com.sxj.mybatis.orm.annotations.Table;
+import com.sxj.mybatis.pagination.Pagable;
+
+@Entity(mapper = IUsersDao.class)
+@Table(name = "Users")
+public class UsersEntity extends Pagable implements Serializable
+{
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2828188766764116079L;
+    
+    /**
+     * 会员ID
+     */
+    @Id(column = "customerId")
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String customerId;
+    
+    /**
+     * 客户编号
+     */
+    @Column(name = "customerNo")
+    private String customerNo;
+    
+    /**
+     * 密码
+     */
+    @Column(name = "password")
+    private String password;
+    
+    /**
+     * 姓名
+     */
+    @Column(name = "name")
+    private String name;
+    
+    /**
+     * 注册时间
+     */
+    @Column(name = "registerTime")
+    private Date registerTime;
+    
+    /**
+     * 邮箱
+     */
+    @Column(name = "email")
+    private String email;
+    
+    /**
+     * 手机号
+     */
+    @Column(name = "cellphone")
+    private String cellphone;
+    
+    /**
+     * 身份证号
+     */
+    @Column(name = "cardNum")
+    private String cardNum;
+    
+    /**
+     *持卡人姓名
+     */
+    @Column(name = "cardHolder")
+    private String cardHolder;
+    
+    /**
+     * 银行卡号
+     */
+    @Column(name = "cardNo")
+    private String cardNo;
+    
+    /**
+     * 状态
+     */
+    @Column(name = "status")
+    private Integer status;
+    
+    /**
+     * 更新时间
+     */
+    @Column(name = "updateTime")
+    private Date updateTime;
+    
+    /**
+     * 
+     */
+    @Column(name = "levelId")
+    private String levelId;
+    
+    public String getCustomerId()
+    {
+        return customerId;
+    }
+    
+    public void setCustomerId(String customerId)
+    {
+        this.customerId = customerId;
+    }
+    
+    public String getCustomerNo()
+    {
+        return customerNo;
+    }
+    
+    public void setCustomerNo(String customerNo)
+    {
+        this.customerNo = customerNo;
+    }
+    
+    public String getPassword()
+    {
+        return password;
+    }
+    
+    public void setPassword(String password)
+    {
+        this.password = password;
+    }
+    
+    public String getName()
+    {
+        return name;
+    }
+    
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+    
+    public Date getRegisterTime()
+    {
+        return registerTime;
+    }
+    
+    public void setRegisterTime(Date registerTime)
+    {
+        this.registerTime = registerTime;
+    }
+    
+    public String getEmail()
+    {
+        return email;
+    }
+    
+    public void setEmail(String email)
+    {
+        this.email = email;
+    }
+    
+    public String getCellphone()
+    {
+        return cellphone;
+    }
+    
+    public void setCellphone(String cellphone)
+    {
+        this.cellphone = cellphone;
+    }
+    
+    public String getCardNum()
+    {
+        return cardNum;
+    }
+    
+    public void setCardNum(String cardNum)
+    {
+        this.cardNum = cardNum;
+    }
+    
+    public String getCardHolder()
+    {
+        return cardHolder;
+    }
+    
+    public void setCardHolder(String cardHolder)
+    {
+        this.cardHolder = cardHolder;
+    }
+    
+    public String getCardNo()
+    {
+        return cardNo;
+    }
+    
+    public void setCardNo(String cardNo)
+    {
+        this.cardNo = cardNo;
+    }
+    
+    public Integer getStatus()
+    {
+        return status;
+    }
+    
+    public void setStatus(Integer status)
+    {
+        this.status = status;
+    }
+    
+    public Date getUpdateTime()
+    {
+        return updateTime;
+    }
+    
+    public void setUpdateTime(Date updateTime)
+    {
+        this.updateTime = updateTime;
+    }
+    
+    public String getLevelId()
+    {
+        return levelId;
+    }
+    
+    public void setLevelId(String levelId)
+    {
+        this.levelId = levelId;
+    }
+    
+}

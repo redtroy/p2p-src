@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.herongwang.p2p.dao.orders.IOrdersDao">
+	<resultMap id="OrdersEntity" type="com.herongwang.p2p.entity.orders.OrdersEntity">
+		<id property="orderId" column="orderId" jdbcType="VARCHAR" />
+		<result property="customerId" column="customerId" jdbcType="VARCHAR" />
+		<result property="orderNo" column="orderNo" jdbcType="VARCHAR" />
+		<result property="amount" column="amount" jdbcType="DOUBLE" />
+		<result property="createTime" column="createTime" jdbcType="TIMESTAMP" />
+		<result property="status" column="status" jdbcType="INTEGER" />
+		<result property="orderType" column="orderType" jdbcType="INTEGER" />
+		<result property="bankNo" column="bankNo" jdbcType="VARCHAR" />
+		<result property="withdrawTime" column="withdrawTime" jdbcType="TIMESTAMP" />
+		<result property="arriveTime" column="arriveTime" jdbcType="TIMESTAMP" />
+		<result property="channel" column="channel" jdbcType="VARCHAR" />
+		<result property="strSignMsg" column="strSignMsg" jdbcType="VARCHAR" />
+		<result property="name" column="name" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 条件查询员 -->
+	<select id="query" resultMap="OrdersEntity"
+		parameterType="com.sxj.util.persistent.QueryCondition">
+		<![CDATA[select o.*,u.`name` from Orders o LEFT JOIN Users u on u.customerId = o.customerId where 1=1 ]]>
+		 <if test="condition.customerId != null and condition.customerId != ''">
+		 	<![CDATA[AND u.customerId = =#{condition.customerId}]]>
+		 </if>
+		 <if test="condition.orderId != null and condition.orderId != ''">
+		 	<![CDATA[AND o.orderId = =#{condition.orderId}]]>
+		 </if>
+	</select>
+</mapper>

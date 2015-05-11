@@ -14,7 +14,7 @@ import com.sxj.mybatis.orm.annotations.Table;
 import com.sxj.mybatis.pagination.Pagable;
 
 /**
- * 借款标
+ * 借款标1
  * @author nishaotang
  *
  */

@@ -3,7 +3,7 @@
  * Author:  Administrator
  * Purpose: Defines the Class UserLevel
  ***********************************************************************/
-package com.herongwang.p2p.entity.member;
+package com.herongwang.p2p.entity.users;
 
 import java.util.Date;
 
@@ -16,7 +16,7 @@ import com.sxj.mybatis.orm.annotations.Id;
 import com.sxj.mybatis.orm.annotations.Table;
 
 /** 用户级别
- * 
+ *  
  * @pdOid 51ae8418-ec05-404f-b828-0e15a20904c9 */
 @Entity(mapper = IUserLevelDAO.class)
 @Table(name = "UserLevel")

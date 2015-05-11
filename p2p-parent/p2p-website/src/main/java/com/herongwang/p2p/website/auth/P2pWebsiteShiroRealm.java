@@ -13,13 +13,13 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.herongwang.p2p.entity.member.MemberEntity;
-import com.herongwang.p2p.service.member.IMemberService;
+import com.herongwang.p2p.entity.users.UsersEntity;
+import com.herongwang.p2p.service.users.IUserService;
 
 public class P2pWebsiteShiroRealm extends AuthorizingRealm
 {
     @Autowired
-    private IMemberService memberService;
+    private IUserService memberService;
     
     public static final String HASH_ALGORITHM = "MD5";
     
@@ -48,7 +48,7 @@ public class P2pWebsiteShiroRealm extends AuthorizingRealm
         //
         if (username != null && !"".equals(username))
         {
-            MemberEntity member = memberService.getMmeberByAccount(username);
+            UsersEntity member = memberService.getUserByAccount(username);
             
             if (member != null)
             {

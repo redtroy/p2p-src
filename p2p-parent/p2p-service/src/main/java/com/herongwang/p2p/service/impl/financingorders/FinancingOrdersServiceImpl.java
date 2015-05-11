@@ -9,11 +9,13 @@ import com.herongwang.p2p.dao.financing.IFinancingOrdersDao;
 import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
 import com.herongwang.p2p.service.financing.IFinancingOrdersService;
 import com.sxj.util.exception.ServiceException;
+
 @Service
 public class FinancingOrdersServiceImpl implements IFinancingOrdersService
 {
     @Autowired
     private IFinancingOrdersDao financingOrdersDao;
+    
     @Override
     public void addOrder(FinancingOrdersEntity order) throws ServiceException
     {
