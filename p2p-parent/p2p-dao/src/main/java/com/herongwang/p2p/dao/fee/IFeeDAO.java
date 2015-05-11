@@ -9,7 +9,7 @@ import com.sxj.mybatis.orm.annotations.Update;
 public interface IFeeDAO
 {
     @Insert
-    public Fee createFee(Fee fee);
+    public void createFee(Fee fee);
     
     @Delete
     public void deleteFeeById(String feeId);
