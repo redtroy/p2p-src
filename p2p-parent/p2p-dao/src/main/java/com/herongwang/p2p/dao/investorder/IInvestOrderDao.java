@@ -1,8 +1,8 @@
-package com.herongwang.p2p.dao.investOrder;
+package com.herongwang.p2p.dao.investorder;
 
 import java.util.List;
 
-import com.herongwang.p2p.entity.investOrder.InvestOrderEntity;
+import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.sxj.mybatis.orm.annotations.Delete;
 import com.sxj.mybatis.orm.annotations.Get;
 import com.sxj.mybatis.orm.annotations.Insert;

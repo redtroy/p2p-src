@@ -1,9 +1,9 @@
-package com.herongwang.p2p.dao.fundDetail;
+package com.herongwang.p2p.dao.funddetail;
 
 import java.sql.SQLException;
 import java.util.List;
 
-import com.herongwang.p2p.entity.fundDetail.FundDetailEntity;
+import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.sxj.mybatis.orm.annotations.Delete;
 import com.sxj.mybatis.orm.annotations.Get;
 import com.sxj.mybatis.orm.annotations.Insert;

@@ -17,6 +17,7 @@
 		<!-- <typeHandler
 			handler="com.sxj.supervisor.typehandler.AccountStatesEnumTypeHandler"
 			javaType="com.sxj.supervisor.enu.member.AccountStatesEnum" /> -->
+			<typeHandler handler="org.apache.ibatis.type.BigDecimalTypeHandler" javaType="java.math.BigDecimal"/>
 	</typeHandlers>
 	<plugins>
 		<plugin interceptor="com.sxj.mybatis.pagination.interceptor.PaginationInterceptor" />

@@ -7,19 +7,19 @@
 		<id property="orderId" column="orderId" jdbcType="VARCHAR" />
 		<result property="debtId" column="debtId" jdbcType="VARCHAR" />
 		<result property="customerId" column="customerId" jdbcType="VARCHAR" />
-		<result property="amount" column="amount" jdbcType="INTEGER" typeHandler="com.herongwang.p2p.TypeHandler.BigDecimalTypeHandler"/>
+		<result property="amount" column="amount" jdbcType="INTEGER"/>
 		<result property="createTime" column="createTime" jdbcType="TIMESTAMP" />
 		<result property="status" column="status" jdbcType="INTEGER" />
 		<result property="channel" column="channel" jdbcType="INTEGER" />
 		<result property="payTime" column="payTime" jdbcType="TIMESTAMP" />
 		<result property="arriveTime" column="arriveTime" jdbcType="TIMESTAMP" />
 		<result property="specifAttr" column="specifAttr" jdbcType="INTEGER" />
-        <result property="dueTotalAmount" column="dueTotalAmount" jdbcType="INTEGER" typeHandler="com.herongwang.p2p.TypeHandler.BigDecimalTypeHandler"/>
-        <result property="dueProfitAmount" column="dueProfitAmount" jdbcType="INTEGER" typeHandler="com.herongwang.p2p.TypeHandler.BigDecimalTypeHandler"/>
+        <result property="dueTotalAmount" column="dueTotalAmount" jdbcType="INTEGER"/>
+        <result property="dueProfitAmount" column="dueProfitAmount" jdbcType="INTEGER" />
         <result property="yearRatio" column="yearRatio" jdbcType="FLOAT" />
         <result property="monthRatio" column="monthRatio" jdbcType="FLOAT" />	
         <result property="dayRatio" column="dayRatio" jdbcType="FLOAT" />
-        <result property="totalFee" column="totalFee" jdbcType="INTEGER" typeHandler="com.herongwang.p2p.TypeHandler.BigDecimalTypeHandler" />	
+        <result property="totalFee" column="totalFee" jdbcType="INTEGER"/>	
 	</resultMap>
 	
     <!-- 条件查询订单列表 -->

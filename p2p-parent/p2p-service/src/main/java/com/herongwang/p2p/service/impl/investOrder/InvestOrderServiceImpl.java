@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.herongwang.p2p.dao.investOrder.IInvestOrderDao;
-import com.herongwang.p2p.entity.investOrder.InvestOrderEntity;
+import com.herongwang.p2p.dao.investorder.IInvestOrderDao;
+import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.service.investOrder.IInvestOrderService;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.logger.SxjLogger;
