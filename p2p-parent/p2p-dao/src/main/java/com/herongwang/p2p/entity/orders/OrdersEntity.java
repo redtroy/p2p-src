@@ -10,6 +10,7 @@ import com.sxj.mybatis.orm.annotations.Entity;
 import com.sxj.mybatis.orm.annotations.GeneratedValue;
 import com.sxj.mybatis.orm.annotations.GenerationType;
 import com.sxj.mybatis.orm.annotations.Id;
+import com.sxj.mybatis.orm.annotations.Sn;
 import com.sxj.mybatis.orm.annotations.Table;
 
 @Entity(mapper = IOrdersDao.class)
@@ -27,7 +28,21 @@ public class OrdersEntity implements Serializable
     @Id(column = "orderId")
     @GeneratedValue(strategy = GenerationType.UUID)
     private String orderId;
+    /**
+     * 订单号
+     */
+    @Id(column = "orderNo")
+    @Sn(pattern = "000000", step = 1, table = "T_SN", stub = "F_SN_NAME", sn = "F_SN_NUMBER", stubValue="B")
+    private String orderNo;
     
+    public String getOrderNo()
+    {
+        return orderNo;
+    }
+    public void setOrderNo(String orderNo)
+    {
+        this.orderNo = orderNo;
+    }
     /**
      * 客户ID
      */
@@ -73,6 +88,11 @@ public class OrdersEntity implements Serializable
      */
     @Column(name = "channel")
     private String channel;
+    /**
+     * 订单签名
+     */
+    @Column(name = "strSignMsg")
+    private String strSignMsg;
     /**
      * 会员名称
      */
@@ -164,6 +184,14 @@ public class OrdersEntity implements Serializable
     public void setChannel(String channel)
     {
         this.channel = channel;
+    }
+    public String getStrSignMsg()
+    {
+        return strSignMsg;
+    }
+    public void setStrSignMsg(String strSignMsg)
+    {
+        this.strSignMsg = strSignMsg;
     }
     
     

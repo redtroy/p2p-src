@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
-import com.herongwang.p2p.service.tender.IDebtService;
+import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.users.IUserService;
 import com.sxj.redis.core.pubsub.RedisTopics;
 import com.sxj.util.exception.WebException;
