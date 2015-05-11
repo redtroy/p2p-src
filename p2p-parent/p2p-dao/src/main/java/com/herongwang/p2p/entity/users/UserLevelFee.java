@@ -1,4 +1,4 @@
-package com.herongwang.p2p.entity.member;
+package com.herongwang.p2p.entity.users;
 
 import com.sxj.mybatis.orm.annotations.Column;
 import com.sxj.mybatis.orm.annotations.Table;

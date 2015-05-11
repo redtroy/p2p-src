@@ -13,7 +13,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.herongwang.p2p.entity.member.MemberEntity;
+import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.service.member.IMemberService;
 
 public class P2pWebsiteShiroRealm extends AuthorizingRealm
@@ -48,7 +48,7 @@ public class P2pWebsiteShiroRealm extends AuthorizingRealm
         //
         if (username != null && !"".equals(username))
         {
-            MemberEntity member = memberService.getMmeberByAccount(username);
+            UsersEntity member = memberService.getMmeberByAccount(username);
             
             if (member != null)
             {
