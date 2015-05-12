@@ -1,12 +1,17 @@
 package com.herongwang.p2p.entity.fee;
 
+import com.herongwang.p2p.dao.fee.IUserFeeDAO;
 import com.sxj.mybatis.orm.annotations.Column;
+import com.sxj.mybatis.orm.annotations.Entity;
+import com.sxj.mybatis.orm.annotations.Id;
 import com.sxj.mybatis.orm.annotations.Table;
 
+@Entity(mapper = IUserFeeDAO.class)
 @Table(name = "UserFee")
 public class UserFeeEntity
 {
-    @Column(name = "customerId")
+    @Id(column = "customerId")
+    //@Column(name = "customerId")
     private String customerId;
     
     @Column(name = "feeId")

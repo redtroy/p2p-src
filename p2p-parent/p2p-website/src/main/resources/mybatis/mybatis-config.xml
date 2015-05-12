@@ -6,6 +6,7 @@
 
 	<properties>
 		<property name="dialect" value="mysql" />
+		<property name="sharded" value="false"/>
 	</properties>
 	<settings>
 		<!-- changes from the defaults -->
