@@ -1,6 +1,8 @@
 package com.herongwang.p2p.entity.account;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
 
 import com.herongwang.p2p.dao.account.IAccountDao;
 import com.sxj.mybatis.orm.annotations.Column;
@@ -22,50 +24,38 @@ public class AccountEntity implements Serializable
     /**
      * 主键ID
      */
-    @Id(column = "ACCOUNT_ID")
+    @Id(column = "accountId")
     @GeneratedValue(strategy = GenerationType.UUID)
     private String accountId;
     
     /**
      * 会员ID
      */
-    @Column(name = "MEMBER_ID")
-    private String memberId;
-    
-    /**
-     * 用户卡号
-     */
-    @Column(name = "BANK_CODE")
-    private String bankCode;
-    
-    /**
-     * 持卡姓名
-     */
-    @Column(name = "CODE_NAME")
-    private String codeName;
-    
-    /**
-     * 开户行
-     */
-    @Column(name = "OPENING_BANK")
-    private String openingBank;
-    
-    /**
-     * 开户行支行
-     */
-    @Column(name = "BRANCH_BANK")
-    private String branchBank;
+    @Column(name = "customerId")
+    private String customerId;
     
     /**
      * 可用金额
      */
-    @Column(name = "AVAILABLE_M")
-    private Double availableM;
+    @Column(name = "balance")
+    private BigDecimal balance;
+    
+    /**
+     * 创建时间
+     */
+    @Column(name = "createTime")
+    private Date createTime;
+    
+    /**
+     * 更新时间
+     */
+    @Column(name = "updateTime")
+    private Date updateTime;
     
     /**
      * 状态
      */
-    @Column(name = "STSTUS")
+    @Column(name = "ststus")
     private Integer ststus;
     
     public String getAccountId()
@@ -78,64 +68,44 @@ public class AccountEntity implements Serializable
         this.accountId = accountId;
     }
     
-    public String getMemberId()
+    public String getCustomerId()
     {
-        return memberId;
+        return customerId;
     }
     
-    public void setMemberId(String memberId)
+    public void setCustomerId(String customerId)
     {
-        this.memberId = memberId;
+        this.customerId = customerId;
     }
     
-    public String getBankCode()
+    public BigDecimal getBalance()
     {
-        return bankCode;
+        return balance;
     }
     
-    public void setBankCode(String bankCode)
+    public void setBalance(BigDecimal balance)
     {
-        this.bankCode = bankCode;
+        this.balance = balance;
     }
     
-    public String getCodeName()
+    public Date getCreateTime()
     {
-        return codeName;
+        return createTime;
     }
     
-    public void setCodeName(String codeName)
+    public void setCreateTime(Date createTime)
     {
-        this.codeName = codeName;
+        this.createTime = createTime;
     }
     
-    public String getOpeningBank()
+    public Date getUpdateTime()
     {
-        return openingBank;
+        return updateTime;
     }
     
-    public void setOpeningBank(String openingBank)
+    public void setUpdateTime(Date updateTime)
     {
-        this.openingBank = openingBank;
-    }
-    
-    public String getBranchBank()
-    {
-        return branchBank;
-    }
-    
-    public void setBranchBank(String branchBank)
-    {
-        this.branchBank = branchBank;
-    }
-    
-    public Double getAvailableM()
-    {
-        return availableM;
-    }
-    
-    public void setAvailableM(Double availableM)
-    {
-        this.availableM = availableM;
+        this.updateTime = updateTime;
     }
     
     public Integer getStstus()

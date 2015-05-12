@@ -64,13 +64,14 @@ public class RepayPlanController
      * @return
      * @throws WebException
      */
-    @RequestMapping("saveRepayPlan")
+    @RequestMapping("getBalance")
     public @ResponseBody Map<String, String> saveRepayPlan(HttpSession session,
             String[] ids,String orderId) throws WebException
     {
         try
         {
             Map<String, String> map = new HashMap<String, String>();
+           int num= repayPlanService.validateBalance(ids, orderId);
             map.put("isOK", "ok");
             return map;
         }

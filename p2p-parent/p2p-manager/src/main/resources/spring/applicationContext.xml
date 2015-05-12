@@ -109,10 +109,4 @@
 	</bean>
 	<!-- <bean class="com.herongwang.p2p.service.CometServiceImpl" /> -->
 	
-	<bean id="httpClient" class="com.sxj.util.common.SxjHttpClientImpl">
-		<property name="charset" value="${httpclient.charset}" />
-		<property name="keyStoreType" value="${httpclient.keyStoreType}" />
-		<property name="keyStorePath" value="${httpclient.keyStorePath}" />
-		<property name="keyPassword" value="${httpclient.keyPassword}" />
-	</bean>
 </beans>

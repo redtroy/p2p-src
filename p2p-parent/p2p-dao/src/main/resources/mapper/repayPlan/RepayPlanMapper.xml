@@ -8,10 +8,10 @@
 		<id property="planId" column="planId" jdbcType="VARCHAR" />
 		<result property="orderId" column="orderId" jdbcType="VARCHAR" />
 		<result property="sequence" column="sequence" jdbcType="INTEGER" />
-		<result property="monthCapital" column="monthCapital" jdbcType="VARCHAR" />
+		<result property="monthCapital" column="monthCapital" jdbcType="INTEGER" />
 		<result property="monthProfit" column="monthProfit" jdbcType="INTEGER" />
-		<result property="monthAmount" column="monthAmount" jdbcType="BIGINT" />
-		<result property="leftAmount" column="leftAmount" jdbcType="BIGINT" />
+		<result property="monthAmount" column="monthAmount" jdbcType="INTEGER" />
+		<result property="leftAmount" column="leftAmount" jdbcType="INTEGER" />
 		<result property="status" column="status" jdbcType="INTEGER" />
 		<result property="createTime" column="createTime" jdbcType="TIMESTAMP" />
 		<result property="updateTime" column="updateTime" jdbcType="TIMESTAMP" />

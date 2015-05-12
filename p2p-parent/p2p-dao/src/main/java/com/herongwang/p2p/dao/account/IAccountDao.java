@@ -10,4 +10,11 @@ public interface IAccountDao
      */
     @Insert
     public void addAccount(AccountEntity account);
+    
+    /**
+     * 根据订单号获取账户
+     * @param orderId
+     * @return
+     */
+    public AccountEntity getAccountByOrderId(String orderId);
 }

@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.herongwang.p2p.dao.account.IAccountDao;
 import com.herongwang.p2p.dao.repayPlan.IRepayPlanDao;
+import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.repayPlan.RepayPlanEntity;
 import com.herongwang.p2p.service.repayplan.IRepayPlanService;
 import com.sxj.util.exception.ServiceException;
@@ -21,6 +23,9 @@ public class RepayPlanServiceImpl implements IRepayPlanService
     
     @Autowired
     IRepayPlanDao repayPlanDao;
+    
+    @Autowired
+    IAccountDao accountDao;
     
     @Override
     public void addRepayPlan(RepayPlanEntity plan) throws ServiceException
@@ -76,11 +81,11 @@ public class RepayPlanServiceImpl implements IRepayPlanService
     }
     
     /**
-     * 还款
+     * 验证余额是否充足
      */
     @Override
     @Transactional
-    public void repayment(String[] ids) throws ServiceException
+    public int validateBalance(String[] ids,String orderId) throws ServiceException
     {
         try
         {
@@ -92,7 +97,9 @@ public class RepayPlanServiceImpl implements IRepayPlanService
             {
                 monthAmount.add(repayPlanEntity.getMonthAmount());
             }
-            
+            AccountEntity account =accountDao.getAccountByOrderId(orderId);
+            int num =account.getBalance().compareTo(monthAmount);
+            return num;
         }
         catch (ServiceException e)
         {
