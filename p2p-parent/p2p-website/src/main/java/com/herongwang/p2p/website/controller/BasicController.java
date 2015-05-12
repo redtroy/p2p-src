@@ -140,23 +140,6 @@ public class BasicController extends BaseController
         return INDEX;
     }
     
-    @RequestMapping("bdList")
-    public String bdList(ModelMap map) throws WebException
-    {
-        try
-        {
-            DebtEntity debt = new DebtEntity();
-            List<DebtEntity> list = debtService.queryDebtList(debt);
-            map.put("list", list);
-        }
-        catch (Exception e)
-        {
-            SxjLogger.error(e.getMessage(), e, this.getClass());
-            throw new WebException("查询标的列表错误", e);
-        }
-        return "site/prod-list";
-    }
-    
     public static String getIpAddr(HttpServletRequest request)
     {
         String strUserIp = null;

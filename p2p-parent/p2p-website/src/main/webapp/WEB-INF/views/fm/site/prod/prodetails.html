@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>和融网</title>
-<link href="../style/style.css" rel="stylesheet" type="text/css" />
+<link href="${b.staticPath}style/style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <div class="fence-wide bgBlack">
@@ -31,31 +31,31 @@
   <h2 class="fontYH">某公司资金周转</h2></div>
   <div class="prodBox ly-clearFix">
 <div class="prodInfo ly-left">
-<div class="prodTit fontYH ly-clearFix"><span class="icon yellow"></span><span>和融直营</span><span>某公司资金周转（002279）</span></div>
+<div class="prodTit fontYH ly-clearFix"><span class="icon yellow"></span><span>和融直营</span><span>${model.title}</span></div>
 <table border="0" cellspacing="0" cellpadding="0" class="tableProd">
   <tr>
     <td>
-    <p class="fontYH"><span class="f28 mr5">350</span><span class="f14">万</span></p>
+    <p class="fontYH"><span class="f28 mr5">${model.amount}</span><span class="f14">万</span></p>
     <p class="gray">融资金额</p>
     </td>
-    <td> <p class="fontYH"><span class="f28 mr5">6</span><span class="f14">个月</span></p>
+    <td> <p class="fontYH"><span class="f28 mr5">${model.months}</span><span class="f14">个月</span></p>
     <p class="gray">期限</p></td>
-    <td> <p class="fontYH"><span class="f28 mr5">1000</span><span class="f14">元</span></p>
+    <td> <p class="fontYH"><span class="f28 mr5">${model.minInvest}</span><span class="f14">元</span></p>
     <p class="gray">起投金额</p></td>
-    <td> <p class="fontYH red fb"><span class="f28 mr5">21.0</span><span class="f14">%</span></p>
+    <td> <p class="fontYH red fb"><span class="f28 mr5">${model.annualizedRate*100}</span><span class="f14">%</span></p>
     <p class="gray">年化利率</p></td>
   </tr>
   </table>
   <table border="0" cellspacing="0" cellpadding="0" class="tableProd">
     <tr>
     <td>
-    <span class="mr5 f14 fontYH">起投金额：1000元</span>
+    <span class="mr5 f14 fontYH">起投金额：${model.minInvest}元</span>
     </td>
     <td>
     <span class="mr5 f14 fontYH">还款方式：按月分期还款</span>
     </td>
     <td>
-    <span class="mr5 f14 fontYH">发标时间：2015-05-04 14:15:29</span>
+    <span class="mr5 f14 fontYH">发标时间：<#if (model.createTime??)> ${model.createTime?string("yyyy-MM-dd HH:mm:ss")}</#if></span>
     </td>
   </tr>
 </table>
