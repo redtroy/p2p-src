@@ -7,7 +7,7 @@ package com.herongwang.p2p.entity.users;
 
 import java.util.Date;
 
-import com.herongwang.p2p.dao.member.IUserLevelDAO;
+import com.herongwang.p2p.dao.users.IUserLevelDAO;
 import com.sxj.mybatis.orm.annotations.Column;
 import com.sxj.mybatis.orm.annotations.Entity;
 import com.sxj.mybatis.orm.annotations.GeneratedValue;
