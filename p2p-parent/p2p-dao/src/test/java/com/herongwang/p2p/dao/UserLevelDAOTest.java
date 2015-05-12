@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.herongwang.p2p.dao.member.IUserLevelDAO;
+import com.herongwang.p2p.dao.users.IUserLevelDAO;
 import com.herongwang.p2p.entity.users.UserLevel;
 
 public class UserLevelDAOTest extends TestBase

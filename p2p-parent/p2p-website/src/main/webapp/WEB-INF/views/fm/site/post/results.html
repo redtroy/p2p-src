@@ -3,24 +3,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="${b.staticPath}style/member.css" rel="stylesheet" type="text/css" />
-<script src="${b.staticPath}js/jquery.js"></script>
-<@b.validate/> <@b.dialog/>
-<script>
-	var validform;
-	$(document).ready(function() {
-		validform = $("#postForm").Validform({
-			tiptype : 3
-		});
-
-	});
-
-	function postInfo() {
-		if (!validform.check()) {
-			return false;
-		}
-		$("#postForm").submit();
-	}
-</script>
 </head>
 
 <body>
@@ -54,18 +36,34 @@
       <div class="rightSide">
         <div class="heading fontYH f20"><span>账户充值</span></div>
         <div class="mainBox fontYH">
-        <form action="rechargeList.htm" id="postForm">
         <table border="0" cellpadding="0" cellspacing="0" class="table tabList mb20">
-    <col width="20%" />
+        <col width="20%" />
         <col width="80%" />
         <tr>
-      <th>充值金额</th>
-      <td><input type="text" id="amount" name="orderAmount" class="input input-w140h30" value="" datatype="/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/"
-								errormsg="请输入1~20位之间的数字！" nullmsg="请输入充值金额！"  /> 元</td>
+          <th>订单名称</th>
+          <td>${signMsg}</td>
+        </tr>
+        <tr>
+          <th>本次充值金额</th>
+          <td class=" money color-purple">500元</td>
+        </tr>
+      <tr>
+      <th>手续费</th>
+      <td class="color-blue">25元</td>
     </tr>
+      <tr>
+        <th>订单需支付金额</th>
+        <td class=" color-purple">525元</td>
+      </tr>
+      <tr>
+        <th>到账金额</th>
+        <td class="color-green">475元</td>
+      </tr>
+      <tr>
+        <th>账户余额</th>
+        <td class="color-red">34975元</td>
+      </tr>
   </table>
-        <div class="tc"> <a class="button button-orange" href="javascript:void(0)" onclick="postInfo();">确认充值</a>&nbsp;</div>
-        </form>
         </div>
       </div>
     </div>

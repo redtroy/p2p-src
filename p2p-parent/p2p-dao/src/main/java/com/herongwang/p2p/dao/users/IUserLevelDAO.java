@@ -1,4 +1,4 @@
-package com.herongwang.p2p.dao.member;
+package com.herongwang.p2p.dao.users;
 
 import com.herongwang.p2p.entity.users.UserLevel;
 import com.sxj.mybatis.orm.annotations.Delete;

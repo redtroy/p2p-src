@@ -1,6 +1,6 @@
 package com.herongwang.p2p.service.post;
 
-import com.herongwang.p2p.model.order.OrderMember;
+import com.herongwang.p2p.model.order.OrderModel;
 import com.sxj.util.exception.ServiceException;
 
 public interface IPostService
@@ -16,5 +16,5 @@ public interface IPostService
      * @return
      * @throws ServiceException
      */
-    public String getSignMsg(OrderMember orderMember) throws ServiceException;
+    public String getSignMsg(OrderModel orderMember) throws ServiceException;
 }
