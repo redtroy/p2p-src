@@ -7,7 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
+import com.herongwang.p2p.entity.debt.DebtEntity;
+import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
@@ -19,17 +20,19 @@ public class InvestOrderController
     @Autowired
     private IInvestOrderService ivestService;
     
+    @Autowired
+    private IDebtService debtService;
+    
     /**
      * 投资列表
      * @return
      */
     @RequestMapping("list")
-    public String list(ModelMap map, InvestOrderEntity invest)
-            throws WebException
+    public String list(ModelMap map, DebtEntity invest) throws WebException
     {
         try
         {
-            List<InvestOrderEntity> investList = ivestService.queryorderList(invest);
+            List<DebtEntity> investList = debtService.queryDebtList(invest);
             map.put("list", investList);
         }
         catch (Exception e)

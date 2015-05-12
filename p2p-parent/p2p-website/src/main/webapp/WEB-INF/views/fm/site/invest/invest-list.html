@@ -49,9 +49,9 @@
             </tr>
             <#list list as model>
             <tr>
-              <td class="tl"><a href="prodetails.html">和融直营 某公司资金周转</a></td>
-              <td class="color-purple">10000元</td>
-              <td>2015-04-10 9:10:44</td>
+              <td class="tl"><a href="prodetails.html">和融直营 ${model.title}</a></td>
+              <td class="color-purple">${model.title}元</td>
+              <td><#if (model.finishTime??)> ${model.finishTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
               <td><em class="state normal">投资中</em></td>
             </tr>
             </#list>
