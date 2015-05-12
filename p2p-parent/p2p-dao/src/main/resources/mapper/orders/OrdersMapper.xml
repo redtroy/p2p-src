@@ -18,16 +18,18 @@
 		<result property="strSignMsg" column="strSignMsg" jdbcType="VARCHAR" />
 		<result property="name" column="name" jdbcType="VARCHAR" />
 	</resultMap>
-
+	<select id="getOrdersByNo" resultMap="OrdersEntity" parameterType="String">
+		<![CDATA[SELECT * FROM Orders WHERE ordersNo=#{ordersNo}]]>
+	</select>
 	<!-- 条件查询员 -->
 	<select id="query" resultMap="OrdersEntity"
 		parameterType="com.sxj.util.persistent.QueryCondition">
 		<![CDATA[select o.*,u.`name` from Orders o LEFT JOIN Users u on u.customerId = o.customerId where 1=1 ]]>
 		 <if test="condition.customerId != null and condition.customerId != ''">
-		 	<![CDATA[AND u.customerId = =#{condition.customerId}]]>
+		 	<![CDATA[AND u.customerId =#{condition.customerId}]]>
 		 </if>
 		 <if test="condition.orderId != null and condition.orderId != ''">
-		 	<![CDATA[AND o.orderId = =#{condition.orderId}]]>
+		 	<![CDATA[AND o.orderId =#{condition.orderId}]]>
 		 </if>
 	</select>
 </mapper>

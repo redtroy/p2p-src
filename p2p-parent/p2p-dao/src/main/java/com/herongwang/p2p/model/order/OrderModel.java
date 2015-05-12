@@ -14,6 +14,9 @@ public class OrderModel implements Serializable
      */
     private static final long serialVersionUID = -6070019104070277683L;
     
+    //通联id
+    private String serverip;
+    
     //字符集
     private String inputCharset;
     
@@ -103,6 +106,31 @@ public class OrderModel implements Serializable
     
     //key
     private String key;
+    
+    //签名
+    private String signMsg;
+    
+    private String queryTime;
+    
+    public String getQueryTime()
+    {
+        return queryTime;
+    }
+    
+    public void setQueryTime(String queryTime)
+    {
+        this.queryTime = queryTime;
+    }
+    
+    public String getSignMsg()
+    {
+        return signMsg;
+    }
+    
+    public void setSignMsg(String signMsg)
+    {
+        this.signMsg = signMsg;
+    }
     
     public String getKey()
     {
@@ -402,6 +430,16 @@ public class OrderModel implements Serializable
     public void setTradeNature(String tradeNature)
     {
         this.tradeNature = tradeNature;
+    }
+    
+    public String getServerip()
+    {
+        return serverip;
+    }
+    
+    public void setServerip(String serverip)
+    {
+        this.serverip = serverip;
     }
     
 }

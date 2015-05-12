@@ -51,4 +51,10 @@ public interface IOrdersDao
      */
     public List<OrdersEntity> query(QueryCondition<OrdersEntity> query);
     
+    /**
+     * 根据订单号获取订单信息
+     * @param ordersNo
+     * @return
+     */
+    public OrdersEntity getOrdersByNo(String ordersNo);
 }

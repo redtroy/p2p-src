@@ -54,4 +54,11 @@ public class OrdersServiceImpl implements IOrdersService
         
     }
     
+    @Override
+    public OrdersEntity getOrdersEntityByNo(String ordersNo)
+            throws ServiceException
+    {
+        return ordersDao.getOrdersByNo(ordersNo);
+    }
+    
 }

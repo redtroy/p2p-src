@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.herongwang.p2p.entity.orders.OrdersEntity;
 import com.herongwang.p2p.entity.parameters.ParametersEntity;
+import com.herongwang.p2p.entity.tl.TLBillEntity;
 import com.herongwang.p2p.model.order.OrderModel;
 import com.herongwang.p2p.model.order.ResultsModel;
 import com.herongwang.p2p.service.orders.IOrdersService;
 import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.post.IPostService;
+import com.herongwang.p2p.service.tl.ITLBillService;
 import com.sxj.util.exception.WebException;
 
 @Controller
@@ -33,6 +35,9 @@ public class PostController
     
     @Autowired
     IPostService postService;
+    
+    @Autowired
+    ITLBillService tlBillService;
     
     @RequestMapping("/recharge")
     public String recharge(ModelMap map) throws WebException
@@ -95,6 +100,10 @@ public class PostController
                 {
                     map.put("payType", p.getText());
                 }
+                if (p.getValue().equals("key"))
+                {
+                    map.put("key", p.getText());
+                }
             }
             
             //生成签名
@@ -113,13 +122,15 @@ public class PostController
             orderMember.setOrderExpireDatetime(String.valueOf(map.get("orderExpireDatetime")));
             orderMember.setProductName(String.valueOf(map.get("productName")));
             orderMember.setPayType(String.valueOf(map.get("payType")));
-            
+            orderMember.setKey(String.valueOf(map.get("key")));
             String strSignMsg = postService.getSignMsg(orderMember);
             orders.setStrSignMsg(strSignMsg);
             //添加签名到订单表
             ordersService.updateOrders(orders);
             map.put("amount", amount);
+            map.put("orderAmount", b);
             map.put("orderName", "充值");
+            map.put("signMsg", strSignMsg);
             map.put("balance", "100");
             map.put("orderNo", orders.getOrdersNo());
             map.put("createTime", orders.getCreateTime());
@@ -133,16 +144,65 @@ public class PostController
     }
     
     @RequestMapping("/pickup")
-    public String pickup(ModelMap map, ResultsModel result) throws WebException
+    public String pickup(ModelMap map, ResultsModel result) throws Exception
     {
-        map.put("signMsg", result.getSignMsg());
+        double amount = Double.valueOf(result.getOrderAmount()) / 100;
+        double payAmount = Double.valueOf(result.getPayAmount()) / 100;
+        map.put("orderNo", result.getOrderNo());
+        map.put("orderAmount", amount);
+        map.put("payAmount", payAmount);
         return "site/post/results";
     }
     
     @RequestMapping("/receive")
-    public void receive(ModelMap map, ResultsModel result) throws WebException
+    public void receive(ModelMap map, ResultsModel result) throws Exception
     {
-        System.out.println(result.getMerchantId() + "===="
-                + result.getOrderNo());
+        SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss");
+        String newDate = sf.format(new Date());
+        //获取配置信息
+        ParametersEntity entity = new ParametersEntity();
+        entity.setType("postType");
+        List<ParametersEntity> postList = parametersService.queryParameters(entity);
+        for (int i = 0; i < postList.size(); i++)
+        {
+            ParametersEntity p = postList.get(i);
+            if (p.getValue().equals("serverip"))
+            {
+                map.put("serverip", p.getText());
+            }
+            if (p.getValue().equals("key"))
+            {
+                map.put("key", p.getText());
+            }
+        }
+        
+        //生成查询签名
+        OrderModel orderModel = new OrderModel();
+        orderModel.setMerchantId(result.getMerchantId());
+        orderModel.setOrderNo(result.getOrderNo());
+        orderModel.setOrderDatetime(result.getOrderDatetime());
+        orderModel.setKey(map.get("key").toString());
+        orderModel.setServerip(map.get("serverip").toString());
+        orderModel.setSignType(result.getSignType());
+        orderModel.setQueryTime(newDate);
+        orderModel.setOrderDatetime(result.getOrderDatetime());
+        String queryMsg = postService.getQuerySignMsg(orderModel);
+        
+        //查询账单
+        orderModel.setSignMsg(queryMsg);
+        TLBillEntity tl = postService.getBIll(orderModel);
+        
+        //添加账单
+        tlBillService.addBill(tl);
+        
+        //支付成功更新支付订单状态
+        if (result.getPayResult().equals("1") && tl.getStarus() == 1)
+        {
+            OrdersEntity orders = ordersService.getOrdersEntityByNo(result.getOrderNo());
+            orders.setStatus(1);
+            orders.setArriveTime(tl.getFinishTime());
+            ordersService.updateOrders(orders);
+        }
+        
     }
 }

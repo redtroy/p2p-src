@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.herongwang.p2p.dao.tl.ITLBillDao">
+	<resultMap id="TLBillEntity" type="com.herongwang.p2p.entity.tl.TLBillEntity">
+		<id property="billId" column="BILL_ID" jdbcType="VARCHAR" />
+		<result property="merchantBillNo" column="MERCHANT_BILL_NO" jdbcType="VARCHAR" />
+		<result property="merchantNo" column="MERCHANT_NO" jdbcType="VARCHAR" />
+		<result property="tlBillNo" column="TL_BILL_NO" jdbcType="VARCHAR" />
+		<result property="submitTime" column="SUBMIT_TIME" jdbcType="TIMESTAMP" />
+		<result property="billMoney" column="BILL_MONEY" jdbcType="DOUBLE" />
+		<result property="finishTime" column="FINISH_TIME" jdbcType="TIMESTAMP" />
+		<result property="actualMoney" column="ACTUAL_MONEY" jdbcType="DOUBLE" />
+		<result property="remark1" column="REMARK1" jdbcType="VARCHAR" />
+		<result property="remark2" column="REMARK2" jdbcType="VARCHAR" />
+		<result property="starus" column="STARUS" jdbcType="INTEGER" />
+	</resultMap>
+	<select id="getTLBIllByNo" resultMap="TLBillEntity" parameterType="String">
+		<![CDATA[SELECT * FROM TL_BILL WHERE MERCHANT_BILL_NO=#{ordersNo}]]>
+	</select>
+	<!-- 条件查询 -->
+	<select id="query" resultMap="TLBillEntity"
+		parameterType="com.sxj.util.persistent.QueryCondition">
+		<![CDATA[select * from TL_BILL where 1=1 ]]>
+		 <if test="condition.submitTime != null and condition.submitTime != ''">
+		 	<![CDATA[AND SUBMIT_TIME >= #{condition.submitTime}]]>
+		 </if>
+	</select>
+</mapper>
