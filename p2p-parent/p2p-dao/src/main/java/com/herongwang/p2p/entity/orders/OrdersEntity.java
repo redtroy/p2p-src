@@ -28,171 +28,207 @@ public class OrdersEntity implements Serializable
     @Id(column = "orderId")
     @GeneratedValue(strategy = GenerationType.UUID)
     private String orderId;
+    
     /**
      * 订单号
      */
-    @Id(column = "orderNo")
-    @Sn(pattern = "000000", step = 1, table = "T_SN", stub = "F_SN_NAME", sn = "F_SN_NUMBER", stubValue="B")
-    private String orderNo;
+    @Column(name = "ordersNo")
+    @Sn(pattern = "000000", step = 1, table = "T_SN", stub = "F_SN_NAME", sn = "F_SN_NUMBER", stubValue = "B")
+    private String ordersNo;
     
-    public String getOrderNo()
+    public String getOrdersNo()
     {
-        return orderNo;
+        return ordersNo;
     }
-    public void setOrderNo(String orderNo)
+    
+    public void setOrdersNo(String ordersNo)
     {
-        this.orderNo = orderNo;
+        this.ordersNo = ordersNo;
     }
+    
     /**
      * 客户ID
      */
     @Column(name = "customerId")
     private String customerId;
+    
     /**
      * 订单金额
      */
     @Column(name = "amount")
     private BigDecimal amount;
+    
     /**
      * 创建时间
      */
     @Column(name = "createTime")
     private Date createTime;
+    
     /**
      * 状态
      */
     @Column(name = "status")
     private Integer status;
+    
     /**
      * 订单类型
      */
     @Column(name = "orderType")
     private Integer orderType;
+    
     /**
      * 银行卡号
      */
     @Column(name = "bankNo")
     private String bankNo;
+    
     /**
      * 提现时间
      */
     @Column(name = "withdrawTime")
     private Date withdrawTime;
+    
     /**
      * 到帐时间
      */
     @Column(name = "arriveTime")
     private Date arriveTime;
+    
     /**
      * 提现渠道
      */
     @Column(name = "channel")
     private String channel;
+    
     /**
      * 订单签名
      */
     @Column(name = "strSignMsg")
     private String strSignMsg;
+    
     /**
      * 会员名称
      */
     private String name;
+    
     public String getName()
     {
         return name;
     }
+    
     public void setName(String name)
     {
         this.name = name;
     }
+    
     public String getOrderId()
     {
         return orderId;
     }
+    
     public void setOrderId(String orderId)
     {
         this.orderId = orderId;
     }
+    
     public String getCustomerId()
     {
         return customerId;
     }
+    
     public void setCustomerId(String customerId)
     {
         this.customerId = customerId;
     }
+    
     public BigDecimal getAmount()
     {
         return amount;
     }
+    
     public void setAmount(BigDecimal amount)
     {
         this.amount = amount;
     }
+    
     public Date getCreateTime()
     {
         return createTime;
     }
+    
     public void setCreateTime(Date createTime)
     {
         this.createTime = createTime;
     }
+    
     public Integer getStatus()
     {
         return status;
     }
+    
     public void setStatus(Integer status)
     {
         this.status = status;
     }
+    
     public Integer getOrderType()
     {
         return orderType;
     }
+    
     public void setOrderType(Integer orderType)
     {
         this.orderType = orderType;
     }
+    
     public String getBankNo()
     {
         return bankNo;
     }
+    
     public void setBankNo(String bankNo)
     {
         this.bankNo = bankNo;
     }
+    
     public Date getWithdrawTime()
     {
         return withdrawTime;
     }
+    
     public void setWithdrawTime(Date withdrawTime)
     {
         this.withdrawTime = withdrawTime;
     }
+    
     public Date getArriveTime()
     {
         return arriveTime;
     }
+    
     public void setArriveTime(Date arriveTime)
     {
         this.arriveTime = arriveTime;
     }
+    
     public String getChannel()
     {
         return channel;
     }
+    
     public void setChannel(String channel)
     {
         this.channel = channel;
     }
+    
     public String getStrSignMsg()
     {
         return strSignMsg;
     }
+    
     public void setStrSignMsg(String strSignMsg)
     {
         this.strSignMsg = strSignMsg;
     }
-    
     
 }
