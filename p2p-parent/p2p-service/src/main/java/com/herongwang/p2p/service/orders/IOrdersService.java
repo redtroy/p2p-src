@@ -30,12 +30,22 @@ public interface IOrdersService
     public OrdersEntity getOrdersEntity(String id) throws ServiceException;
     
     /**
+     * 根据订单号获取订单信息
+     * 
+     * @param id
+     * @return
+     */
+    public OrdersEntity getOrdersEntityByNo(String ordersNo)
+            throws ServiceException;
+    
+    /**
      * 获取订单列表
      * 
      * @param query
      * @return
      */
-    public List<OrdersEntity> queryOrdersList(OrdersEntity query) throws ServiceException;
+    public List<OrdersEntity> queryOrdersList(OrdersEntity query)
+            throws ServiceException;
     
     /**
      * 删除订单

@@ -29,5 +29,15 @@
 	  <artifactId>allinpay-security</artifactId>
 	  <version>1.0</version>
 	</dependency>
+	<dependency>
+	  <groupId>org.bouncycastle</groupId>
+	  <artifactId>bcprov-jdk14-119</artifactId>
+	  <version>1.0</version>
+	</dependency>
+	<dependency>
+		  <groupId>org.apache</groupId>
+		  <artifactId>commons-httpclient</artifactId>
+		  <version>1.0</version>
+		</dependency>
   </dependencies>
 </project>
