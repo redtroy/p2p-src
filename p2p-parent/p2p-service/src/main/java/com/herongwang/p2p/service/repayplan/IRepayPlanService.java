@@ -45,4 +45,11 @@ public interface IRepayPlanService
      * @param id
      */
     public void delRepayPlan(String id) throws ServiceException;
+
+    /**
+     * 还款
+     * @param ids
+     * @throws ServiceException
+     */
+    void repayment(String[] ids) throws ServiceException;
 }
