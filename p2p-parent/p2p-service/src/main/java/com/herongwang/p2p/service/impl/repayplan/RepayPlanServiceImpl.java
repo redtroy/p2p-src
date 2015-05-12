@@ -90,7 +90,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
             //统计所有还款总价格
             for (RepayPlanEntity repayPlanEntity : planlist)
             {
-                monthAmount.add(repayPlanEntity.getMonthAmount()).doubleValue();
+                monthAmount.add(repayPlanEntity.getMonthAmount());
             }
         }
         catch (ServiceException e)
