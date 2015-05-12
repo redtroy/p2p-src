@@ -30,19 +30,12 @@ function sub(){
 </div>
 <div class="fence-wide memCenter">
   <div class="yard-1100 memCont ly-clearFix">
-    <div class="yard-200 ly-left leftMenu fontYH">
-      <ul>
-        <li><a href="member-center.html" class="on">个人资料</a></li>
-        <li><a href="fina-list.html">我的融资</a></li>
-        <li><a href="invest-list.html">我的投资</a></li>
-        <li><a href="capital.html">资金明细</a></li>
-      </ul>
-    </div>
+    <@b.leftMenu />
     <div class="yard-900 ly-left">
       <div class="rightSide">
         <div class="heading fontYH f20"><span>个人资料</span></div>
         <div class="mainBox fontYH">
-        <form action="user/updateUser.htm" method="post" id="user_form">
+        <form action="${basePath}user/updateUser.htm" method="post" id="user_form">
         <table border="0" cellpadding="0" cellspacing="0" class="table tabList tableMember mb20">
     <tbody><tr>
       <th>会员ID</th>

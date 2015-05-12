@@ -8,12 +8,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.service.account.IAccountService;
 import com.herongwang.p2p.service.users.IUserService;
+import com.herongwang.p2p.website.controller.BaseController;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
 
 @Controller
-@RequestMapping("user")
-public class UserController
+@RequestMapping("/user")
+public class UserController extends BaseController
 {
     @Autowired
     private IUserService userService;
@@ -33,7 +34,8 @@ public class UserController
     {
         try
         {
-            
+            UsersEntity user = getUsersEntity();
+            map.put("user", user);
         }
         catch (Exception e)
         {

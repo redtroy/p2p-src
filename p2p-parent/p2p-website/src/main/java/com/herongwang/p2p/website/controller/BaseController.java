@@ -6,12 +6,15 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
+import com.herongwang.p2p.entity.users.UsersEntity;
 import com.sxj.util.exception.SystemException;
 import com.sxj.util.logger.SxjLogger;
 
@@ -74,4 +77,9 @@ public class BaseController
         }
     }
     
+    public UsersEntity getUsersEntity()
+    {
+        Subject user = SecurityUtils.getSubject();
+        return (UsersEntity) user.getPrincipal();
+    }
 }

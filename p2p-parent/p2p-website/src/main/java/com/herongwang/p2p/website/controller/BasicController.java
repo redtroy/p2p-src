@@ -20,6 +20,7 @@ import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.users.IUserService;
+import com.herongwang.p2p.website.login.SupervisorShiroRedisCache;
 import com.sxj.redis.core.pubsub.RedisTopics;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
@@ -82,8 +83,8 @@ public class BasicController extends BaseController
             currentUser.login(token);
             PrincipalCollection principals = SecurityUtils.getSubject()
                     .getPrincipals();
-            // String userNo = user.getCustomerNo();
-            // SupervisorShiroRedisCache.addToMap(userNo, principals);
+            String userNo = user.getCustomerNo();
+            SupervisorShiroRedisCache.addToMap(userNo, principals);
         }
         catch (AuthenticationException e)
         {
@@ -121,6 +122,12 @@ public class BasicController extends BaseController
                 + "" + second;
         
         return date;
+    }
+    
+    @RequestMapping("leftMenu")
+    public String leftMenu()
+    {
+        return "site/leftMenu";
     }
     
     @RequestMapping("index")

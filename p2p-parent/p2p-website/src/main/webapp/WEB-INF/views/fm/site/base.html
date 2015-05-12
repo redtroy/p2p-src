@@ -349,16 +349,19 @@ $(document).ready(function(){
 </#macro> <#macro leftMenu isLoad>
 <div id="leftList"></div>
 <script>
-	var isLoad="${isLoad}";
-	var account="${Session.userinfo.account.accountNo}";
+	//var isLoad="${isLoad}";
+	/* 	var account="${Session.userinfo.account.accountNo}";
 	if(account==""){
 		account="${Session.userinfo.member.memberNo}"
-	}
-	if(isLoad=="true"){
-		$("#leftList").load("${basePath}menu.htm?account="+account+"&"+ Math.random());
+	} */
+	$(function(){
+		$("#leftList").load("${basePath}leftMenu.htm");
+	})
+	/* if(isLoad=="true"){
+		$("#leftList").load("${basePath}leftMenu.htm"+ Math.random());
 	}else{
-		$("#leftList").load("${basePath}menu.htm?account="+account);
-	}
+		$("#leftList").load("${basePath}leftMenu.htm");
+	} */
 </script>
 
 </#macro>

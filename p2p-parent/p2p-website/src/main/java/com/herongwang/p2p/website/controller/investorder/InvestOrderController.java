@@ -42,4 +42,5 @@ public class InvestOrderController
         }
         return "site/invest/invest-list";
     }
+    
 }
