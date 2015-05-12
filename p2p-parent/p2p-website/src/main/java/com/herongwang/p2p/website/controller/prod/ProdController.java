@@ -1,6 +1,8 @@
 package com.herongwang.p2p.website.controller.prod;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,11 +39,15 @@ public class ProdController
     }
     
     @RequestMapping("prodInfo")
-    public String prodInfo() throws WebException
+    public String prodInfo(ModelMap map, String debtId) throws WebException
     {
         try
         {
-            
+            DebtEntity debt = debtService.getDebtEntity(debtId);
+            Map<String, Object> modelMap = new HashMap<String, Object>();
+            modelMap.put("createTime", debt.getCreateTime());
+            map.put("model", debt);
+            map.put("modelMap", modelMap);
         }
         catch (Exception e)
         {
