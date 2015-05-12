@@ -55,8 +55,14 @@ public class AccountEntity implements Serializable
     /**
      * 状态
      */
-    @Column(name = "ststus")
-    private Integer ststus;
+    @Column(name = "status")
+    private Integer status;
+    
+    /**
+     * 负债金额
+     */
+    @Column(name = "debtAmount")
+    private BigDecimal debtAmount;
     
     public String getAccountId()
     {
@@ -107,15 +113,26 @@ public class AccountEntity implements Serializable
     {
         this.updateTime = updateTime;
     }
-    
-    public Integer getStstus()
+
+    public Integer getStatus()
     {
-        return ststus;
+        return status;
+    }
+
+    public void setStatus(Integer status)
+    {
+        this.status = status;
+    }
+
+    public BigDecimal getDebtAmount()
+    {
+        return debtAmount;
+    }
+
+    public void setDebtAmount(BigDecimal debtAmount)
+    {
+        this.debtAmount = debtAmount;
     }
     
-    public void setStstus(Integer ststus)
-    {
-        this.ststus = ststus;
-    }
     
 }

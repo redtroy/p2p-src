@@ -54,4 +54,6 @@ public interface IRepayPlanDao
             QueryCondition<RepayPlanEntity> query) throws SQLException;
     
     public List<RepayPlanEntity> getRepayPlanList(String... id);
+    
+    public void updateRepayPlanStatus(String... id);
 }

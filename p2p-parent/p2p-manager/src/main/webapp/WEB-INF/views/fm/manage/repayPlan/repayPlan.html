@@ -20,45 +20,76 @@
 			});
 	function saveRepay() {
 		var success = dialog({
-			title : '警告',
-			cancel : false,
-			ok : function() {
-				
-			}
-		});
-		var show = dialog({
 			title : '消息',
 			cancel : false,
 			ok : function() {
 				window.location.href = "queryRepayPlan.htm";
 			}
-		var arrChk = $("input[name='chk_list']:checked");
-		if (arrChk.length == 0) {
-			success.content('请选择还款计划！');
-			success.showModal();
-			return;
-		}
-		var arrId = new Array();
-		$(arrChk).each(function(index) {
-			if (index!=0) {
-				arrId[index] = $(this).val();
+		});
+		var show = dialog({
+			title : '警告',
+			cancel : false,
+			ok : function() {
 			}
 		});
-		var orderId= $("#orderId").val();
+		var arrChk = $("input.chk_list:checked");
+		if (arrChk.length == 0) {
+			show.content('请选择还款计划！');
+			show.showModal();
+			return;
+		}
+		var orderId = $("#orderId").val();
 		var d = dialog({
 			title : '消息',
 			content : '是否还款?',
 			okValue : '确 定',
 			ok : function() {
-				show.showModal();
-				$.post("saveRepayPlan.htm", {ids:arrId,orderId:orderId}, function(
-						data) {
-					if (data.isOK == 'ok') {
-						show.content('还款成功！');
-						show.showModal();
-					} else {
-						show.content('还款失败！');
-						show.showModal();
+				var arrId = new Array();
+				$(arrChk).each(function(index) {
+					arrId[index] = $(this).val();
+				});
+				$.post("getBalance.htm", {
+					ids : arrId,
+					orderId : orderId
+				}, function(data) {
+					if (data.flag == 'ok') {
+						//还款
+						success.content('还款成功！');
+						success.showModal();
+					} else if (data.flag == 'no') {
+						dialog({
+							title : '提示',
+							content : '用户余额不足已支付当前选择的还款计划!',
+							button : [ {
+								value : '取消',
+								callback : function() {
+								}
+							}, {
+								value : '继续还款',
+								callback : function() {
+									$.post("saveRepayPlan.htm", {
+										ids : arrId,
+										orderId : orderId
+									}, function(data) {
+										//支付
+										if (data.flag == 'ok') {
+											success.content('还款成功！');
+											success.showModal();
+										}else{
+											success.content('还款失败！');
+											success.showModal();
+										}
+									});
+								}
+							}, {
+								value : '去充值',
+								callback : function() {
+									show.content('跳转充值页面！');
+									show.showModal();
+								},
+								autofocus : true
+							} ]
+						}).showModal();
 					}
 				})
 			},
@@ -94,18 +125,19 @@
 			<div class="yard-1000 ly-left">
 				<div class="rightSide">
 					<div class="heading fontYH f20">
-						<a href="javascript:saveRepay();"
+						<a href="javascript:saveRepay(0);"
 							class="button button-green f12 ly-right">立即还款</a>还款计划
 					</div>
 					<div class="mainBox">
-					<input type="hidden" value="${orderId}"  id="orderId"/>
+						<input type="hidden" value="${orderId}" id="orderId" />
 						<table border="0" cellspacing="0" cellpadding="0" class="tabList">
 							<col width="10%" />
 							<col width="15%" />
 							<col width="15%" />
 							<col width="15%" />
-							<col width="15%" />
-							<col width="15%" />
+							<col width="10%" />
+							<col width="10%" />
+							<col width="10%" />
 							<tr>
 								<th><input type="checkbox" name="chk_list" id="chk_all"
 									value="" title="全选/全不选" /></th>
@@ -115,18 +147,21 @@
 								<th>月总额</th>
 								<th>剩余本息总额</th>
 								<th>状态</th>
+								<th>垫付状态</th>
 							</tr>
 							<#if repayPlan?exists && (repayPlan?size>0)> <#list repayPlan as
 							plan>
 							<tr>
-								<td><input type="checkbox" name="chk_list"
-									value="${plan.planId}" /></td>
+								<td><#if plan.status==0><input type="checkbox"
+									name="chk_list" class="chk_list" value="${plan.planId}" /></#if>
+								</td>
 								<td>${plan.sequence}</td>
 								<td>${plan.monthCapital}元</td>
 								<td>${plan.monthProfit}元</td>
 								<td>${plan.monthAmount}元</td>
 								<td>${plan.leftAmount}</td>
-								<td><#if plan.status==0>未还款 <#else>还款 </#if></td>
+								<td><#if plan.status==0>未还款 <#else>已还款 </#if></td>
+								<td><#if plan.prepaidStatus==1>垫付 </#if></td>
 							</tr>
 							</#list> <#else>
 							<tr>
