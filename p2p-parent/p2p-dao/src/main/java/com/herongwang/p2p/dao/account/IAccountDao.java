@@ -2,6 +2,7 @@ package com.herongwang.p2p.dao.account;
 
 import com.herongwang.p2p.entity.account.AccountEntity;
 import com.sxj.mybatis.orm.annotations.Insert;
+import com.sxj.mybatis.orm.annotations.Update;
 
 public interface IAccountDao
 {
@@ -17,4 +18,10 @@ public interface IAccountDao
      * @return
      */
     public AccountEntity getAccountByOrderId(String orderId);
+    
+    /**
+     * 更新账户信息
+     */
+    @Update
+    public void updateAccount(AccountEntity account);
 }

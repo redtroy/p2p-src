@@ -11,10 +11,11 @@
 		<result property="createTime" column="createTime" jdbcType="TIMESTAMP" />
 		<result property="updateTime" column="updateTime" jdbcType="TIMESTAMP" />
 		<result property="status" column="status" jdbcType="INTEGER" />
+		<result property="debtAmount" column="debtAmount" jdbcType="INTEGER" />
 	</resultMap>
 
 	<select id="getAccountByOrderId" resultMap="AccountResultMap"
 		parameterType="String">
-		<![CDATA[SELECT a.* FROM Accounts a LEFT JOIN   FinancingOrders f ON a.customerId=f.customerId where f.orderId==#{orderId}]]>
+		<![CDATA[SELECT a.* FROM Accounts a LEFT JOIN   FinancingOrders f ON a.customerId=f.customerId where f.orderId=#{orderId}]]>
 	</select>
 </mapper>

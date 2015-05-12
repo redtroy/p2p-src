@@ -89,6 +89,12 @@ public class RepayPlanEntity extends Pagable implements Serializable
     @Column(name = "updateTime")
     private Date updateTime;
     
+    /**
+     * 垫付状态
+     */
+    @Column(name = "prepaidStatus")
+    private Integer prepaidStatus;
+    
     public String getOrderId()
     {
         return orderId;
@@ -187,6 +193,16 @@ public class RepayPlanEntity extends Pagable implements Serializable
     public void setUpdateTime(Date updateTime)
     {
         this.updateTime = updateTime;
+    }
+    
+    public Integer getPrepaidStatus()
+    {
+        return prepaidStatus;
+    }
+    
+    public void setPrepaidStatus(Integer prepaidStatus)
+    {
+        this.prepaidStatus = prepaidStatus;
     }
     
 }

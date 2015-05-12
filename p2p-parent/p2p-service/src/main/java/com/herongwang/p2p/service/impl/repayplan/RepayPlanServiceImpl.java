@@ -85,21 +85,33 @@ public class RepayPlanServiceImpl implements IRepayPlanService
      */
     @Override
     @Transactional
-    public int validateBalance(String[] ids,String orderId) throws ServiceException
+    public String getBalance(String[] ids, String orderId)
+            throws ServiceException
     {
         try
         {
             //获取到还款计划
-            List<RepayPlanEntity> planlist=repayPlanDao.getRepayPlanList(ids);
-            BigDecimal monthAmount=null;
+            List<RepayPlanEntity> planlist = repayPlanDao.getRepayPlanList(ids);
+            BigDecimal monthAmount = new BigDecimal(0);
             //统计所有还款总价格
             for (RepayPlanEntity repayPlanEntity : planlist)
             {
-                monthAmount.add(repayPlanEntity.getMonthAmount());
+                monthAmount = monthAmount.add(repayPlanEntity.getMonthAmount());
             }
-            AccountEntity account =accountDao.getAccountByOrderId(orderId);
-            int num =account.getBalance().compareTo(monthAmount);
-            return num;
+            AccountEntity account = accountDao.getAccountByOrderId(orderId);
+            int flag = account.getBalance().compareTo(monthAmount);
+            if (flag == -1)
+            {
+                return "no";
+            }
+            else
+            {
+                //余额足够直接还款
+                account.setBalance(account.getBalance().subtract(monthAmount));//减去余额
+                accountDao.updateAccount(account);
+                repayPlanDao.updateRepayPlanStatus(ids);//还款状态
+                return "ok";
+            }
         }
         catch (ServiceException e)
         {
@@ -109,7 +121,56 @@ public class RepayPlanServiceImpl implements IRepayPlanService
         catch (Exception e)
         {
             SxjLogger.error(e.getMessage(), e, this.getClass());
-            throw new ServiceException("查询还款计划错误", e);
+            throw new ServiceException("验证余额错误", e);
+        }
+    }
+    
+    @Override
+    public String saveRepayPlan(String[] ids, String orderId)
+            throws ServiceException
+    {
+        try
+        {
+            //获取到还款计划
+            List<RepayPlanEntity> planlist = repayPlanDao.getRepayPlanList(ids);
+            for (RepayPlanEntity repayPlanEntity : planlist)
+            {
+                AccountEntity account = accountDao.getAccountByOrderId(orderId);//账户余额
+                int flag = account.getBalance()
+                        .compareTo(repayPlanEntity.getMonthAmount());//0 相等 1大于  -1 小于
+                if (flag >= 0)
+                {
+                    //扣除款项
+                    BigDecimal b = account.getBalance().subtract(repayPlanEntity.getMonthAmount());
+                    account.setBalance(b);//减去余额
+                    accountDao.updateAccount(account);//更新账户余额
+                    repayPlanEntity.setStatus(1);//
+                    repayPlanDao.updateRepayPlan(repayPlanEntity);//更新状态
+                }
+                else
+                {
+                    //账户余额不足以还款计划
+                    account.setDebtAmount(account.getDebtAmount()
+                            .add(repayPlanEntity.getMonthAmount()));//负债总额
+                    accountDao.updateAccount(account);//更新账户余额
+                    repayPlanEntity.setStatus(1);//
+                    repayPlanEntity.setPrepaidStatus(1);//0:为垫付1:垫付
+                    repayPlanDao.updateRepayPlan(repayPlanEntity);//更新状态
+                    //生成还款资金明细
+                    //更新对应账单
+                }
+            }
+            return "ok";
+        }
+        catch (ServiceException e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException(e.getMessage());
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("验证余额错误", e);
         }
     }
     

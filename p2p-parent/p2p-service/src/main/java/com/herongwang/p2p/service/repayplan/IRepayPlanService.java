@@ -47,9 +47,17 @@ public interface IRepayPlanService
     public void delRepayPlan(String id) throws ServiceException;
 
     /**
-     * 验证余额
+     * 还款
      * @param ids
      * @throws ServiceException
      */
-    int validateBalance(String[] ids, String orderId) throws ServiceException;
+    String saveRepayPlan(String[] ids, String orderId) throws ServiceException;
+    /**
+     * 验证余额
+     * @param ids
+     * @param orderId
+     * @return
+     * @throws ServiceException
+     */
+    String getBalance(String[] ids, String orderId) throws ServiceException;
 }
