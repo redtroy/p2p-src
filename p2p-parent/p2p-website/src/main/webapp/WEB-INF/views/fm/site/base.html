@@ -268,60 +268,14 @@ function loadUploadMember(id,url,isMulti,text,fn){
 </script>
 </#macro>
 <#macro header>
-<meta name="renderer" content="webkit">
-<@csrf.ajaxenabled>
-<script>
-function createXmlHttpRequest(){  
-    if(window.ActiveXObject){ //如果是IE浏览器  
-        return new ActiveXObject("Microsoft.XMLHTTP");  
-    }else if(window.XMLHttpRequest){ //非IE浏览器  
-        return new XMLHttpRequest();  
-    }  
-}
-(function() {
-	XMLHttpRequest.prototype._send = XMLHttpRequest.prototype.send;
-	XMLHttpRequest.prototype.send = function(data) {
-		this.setRequestHeader("X-Requested-With", "COM_SXJ_CSRFGUARD")
-		this.setRequestHeader("<@csrf.tokenname/>", "<@csrf.tokenvalue/>");
-		this._send.apply(this, arguments);
-	};
-	
-})();
-</script>
-</@csrf.ajaxenabled>
-<div id="header">
-	<div class="fence-wide">
-		<#if Session.userinfo?exists>
-		<div class="logOut ly-right">
-			<#if Session.userinfo.account?exists> <span class="mr10">${Session.userinfo.account.name}，您好！</span>
-			<#else> <span class="mr10">${Session.userinfo.member.name}，您好！</span>
-			</#if> <a href="${basePath}logout.htm">退出当前帐户</a>
-		</div>
-		</#if>
-	</div>
-	<h1 class="fence-wide">
-		<a href="javascript:void(0);" class="logo" title="私享家绿色门窗平台">私享家绿色门窗平台</a>
-	</h1>
-	<h1 class="fence-wide">
-		<a href="${staticPath}html/register.html" class="logo"
-			title="私享家绿色门窗平台">私享家绿色门窗平台</a>
-	</h1>
-</div>
-<#if Session.userinfo?exists>
-<script>
-$(document).ready(function(){
-	var currentUrl=window.location.href;
-	var functionId=getUrlParam("function");
-	$.get("${basePath}enter.htm?functionId="+functionId+"&url="+currentUrl);
-});
-
-function getUrlParam(name){
-	var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
-	var r = window.location.search.substr(1).match(reg);  //匹配目标参数
-	if (r!=null) return unescape(r[2]); return null; //返回参数值
-}
-</script>
-</#if>
+  <Script>
+  $.post("${basePath}userName.htm",function(data){
+	  $("#headName").html(data+"，您好！");
+  })
+  </Script>
+  <div class="yard-1100 topMenu fontYH">
+    <p class="ly-right logOut"><span id="headName">杜金鑫，您好！</span><a href="${basePath}logout.htm">退出当前帐户</a></p>
+  </div>
 </#macro>
 <#macro footer>
 <script type="text/javascript">
@@ -354,9 +308,12 @@ $(document).ready(function(){
 	if(account==""){
 		account="${Session.userinfo.member.memberNo}"
 	} */
-	$(function(){
-		$("#leftList").load("${basePath}leftMenu.htm");
-	})
+		$("#leftList").load("${basePath}leftMenu.htm");	
+	    $.post("${basePath}checkLogin.htm",function(data){
+	    	if (data=="erro"){
+	    		location.href="${basePath}login.htm";
+	    	}
+	    })
 	/* if(isLoad=="true"){
 		$("#leftList").load("${basePath}leftMenu.htm"+ Math.random());
 	}else{

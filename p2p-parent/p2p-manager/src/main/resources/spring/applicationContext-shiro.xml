@@ -62,6 +62,7 @@
 	<bean id="shiroCacheManager"
 		class="com.herongwang.p2p.manage.login.SupervisorShiroRedisCacheManager">
 		<property name="level" value="REDIS"></property>
+		<property name="collections" ref="redisCollections"></property>
 	</bean>
 
 	<!-- sessionIdCookie的实现,用于重写覆盖容器默认的JSESSIONID -->
@@ -70,7 +71,7 @@
 		<constructor-arg name="name" value="SHAREJSESSIONID_WEBSITE" />
 		<!-- jsessionId的path为 / 用于多个系统共享jsessionId -->
 		<property name="path" value="/" />
-		<property name="domain" value="menchuang.org.cn"></property>
+		<property name="domain" value=""></property>
 	</bean>
 	<!-- session存储的实现 -->
 	<bean id="shiroSessionDao"

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
@@ -49,8 +50,18 @@ public class BasicController extends BaseController
     {
         Subject currentUser = SecurityUtils.getSubject();
         currentUser.logout();
-        return "redirect:" + getBasePath(request) + "to_login.htm";
+        return "redirect:" + getBasePath(request) + "index.htm";
         
+    }
+    
+    @RequestMapping("checkLogin")
+    public @ResponseBody String checkLogin()
+    {
+        if (getUsersEntity() == null)
+        {
+            return "erro";
+        }
+        return "ok";
     }
     
     @RequestMapping("error")
@@ -125,9 +136,16 @@ public class BasicController extends BaseController
     }
     
     @RequestMapping("leftMenu")
-    public String leftMenu()
+    public String leftMenu(HttpServletRequest request)
     {
         return "site/leftMenu";
+    }
+    
+    @RequestMapping("userName")
+    public @ResponseBody String userName(HttpServletRequest request)
+    {
+        
+        return getUsersEntity().getName();
     }
     
     @RequestMapping("index")

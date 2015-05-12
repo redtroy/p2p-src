@@ -12,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.herongwang.p2p.entity.admin.AdminEntity;
+import com.herongwang.p2p.manage.login.SupervisorShiroRedisCache;
 import com.herongwang.p2p.service.admin.IAdminService;
 
 @Controller
@@ -43,7 +45,7 @@ public class BasicController extends BaseController
             PrincipalCollection principals = SecurityUtils.getSubject()
                     .getPrincipals();
             String userNo = admin.getUserNo();
-            // SupervisorShiroRedisCache.addToMap(userNo, principals);
+            SupervisorShiroRedisCache.addToMap(userNo, principals);
         }
         catch (AuthenticationException e)
         {
@@ -55,7 +57,6 @@ public class BasicController extends BaseController
         if (currentUser.isAuthenticated())
         {
             session.setAttribute("adminInfo", admin);
-            
             return "redirect:" + getBasePath(request) + "user/manage.htm";
         }
         else
@@ -64,6 +65,38 @@ public class BasicController extends BaseController
             map.put("message", "登陆失败");
             return LOGIN;
         }
+    }
+    
+    @RequestMapping("logout")
+    public String logout(HttpServletRequest request)
+    {
+        Subject currentUser = SecurityUtils.getSubject();
+        currentUser.logout();
+        return "redirect:" + getBasePath(request) + "index.htm";
+        
+    }
+    
+    @RequestMapping("checkLogin")
+    public @ResponseBody String checkLogin()
+    {
+        if (getUsersEntity() == null)
+        {
+            return "erro";
+        }
+        return "ok";
+    }
+    
+    @RequestMapping("leftMenu")
+    public String leftMenu(HttpServletRequest request)
+    {
+        return "manage/leftMenu";
+    }
+    
+    @RequestMapping("userName")
+    public @ResponseBody String userName(HttpServletRequest request)
+    {
+        
+        return getUsersEntity().getUserName();
     }
     
 }

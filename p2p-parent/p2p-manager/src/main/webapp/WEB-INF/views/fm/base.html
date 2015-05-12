@@ -228,13 +228,12 @@ $(document).ready(function(){
 <#macro leftMenu isLoad>
 <div id="leftList"></div>
 <script>
-var account="${Session.userinfo.accountNo}";
-var isLoad="${isLoad}";
-if(isLoad=="true"){
-	$("#leftList").load("${basePath}menu.htm?account="+account+"&"+ Math.random());
-}else{
-	$("#leftList").load("${basePath}menu.htm?account="+account);
-}
+$("#leftList").load("${basePath}leftMenu.htm");	
+$.post("${basePath}checkLogin.htm",function(data){
+	if (data=="erro"){
+		location.href="${basePath}login.htm";
+	}
+})
 </script>
 </#macro>
 <#macro pager>

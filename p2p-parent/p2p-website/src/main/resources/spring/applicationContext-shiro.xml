@@ -95,14 +95,15 @@
 		<!-- 安全管理器 -->
 		<property name="securityManager" ref="securityManager" />
 		<!-- 默认的登陆访问url -->
-		<property name="loginUrl" value="/login.htm" />
+		<property name="loginUrl" value="/index.htm" />
 		<!-- 登陆成功后跳转的url -->
 		<!-- <property name="successUrl" value="/index.htm" /> -->
 		<!-- 没有权限跳转的url -->
-		<!-- <property name="unauthorizedUrl" value="/index.htm" /> -->
+		 <property name="unauthorizedUrl" value="/login.htm" />
 		<!-- 访问地址的过滤规则,从上至下的优先级,如果有匹配的规则,就会返回,不会再进行匹配 -->
 		<property name="filterChainDefinitions">
 			<value>
+			   
 			</value>
 		</property>
 		<!-- 声明自定义的过滤器 -->
