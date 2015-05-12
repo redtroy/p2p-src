@@ -46,6 +46,7 @@ public class RepayPlanController
             List<RepayPlanEntity> list = repayPlanService.queryRepayPlan(entity);
             map.put("repayPlan", list);
             map.put("query", entity);
+            map.put("orderId", entity.getOrderId());
             return "manage/repayPlan/repayPlan";
         }
         catch (Exception e)
@@ -65,7 +66,7 @@ public class RepayPlanController
      */
     @RequestMapping("saveRepayPlan")
     public @ResponseBody Map<String, String> saveRepayPlan(HttpSession session,
-            String[] ids) throws WebException
+            String[] ids,String orderId) throws WebException
     {
         try
         {

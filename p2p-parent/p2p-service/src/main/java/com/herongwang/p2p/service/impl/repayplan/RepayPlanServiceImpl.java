@@ -92,6 +92,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
             {
                 monthAmount.add(repayPlanEntity.getMonthAmount());
             }
+            
         }
         catch (ServiceException e)
         {

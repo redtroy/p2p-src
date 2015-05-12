@@ -44,13 +44,14 @@
 				arrId[index] = $(this).val();
 			}
 		});
+		var orderId= $("#orderId").val();
 		var d = dialog({
 			title : '消息',
 			content : '是否还款?',
 			okValue : '确 定',
 			ok : function() {
 				show.showModal();
-				$.post("saveRepayPlan.htm", {ids:arrId}, function(
+				$.post("saveRepayPlan.htm", {ids:arrId,orderId:orderId}, function(
 						data) {
 					if (data.isOK == 'ok') {
 						show.content('还款成功！');
@@ -97,6 +98,7 @@
 							class="button button-green f12 ly-right">立即还款</a>还款计划
 					</div>
 					<div class="mainBox">
+					<input type="hidden" value="${orderId}"  id="orderId"/>
 						<table border="0" cellspacing="0" cellpadding="0" class="tabList">
 							<col width="10%" />
 							<col width="15%" />
