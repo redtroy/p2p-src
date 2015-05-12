@@ -27,4 +27,12 @@
 		</if>
 		<![CDATA[ ORDER BY createTime DESC]]>
 	</select>
+	<select id="getRepayPlanList" resultMap="RepayPlanEntity"
+		parameterType="String">
+		SELECT * FROM RepayPlan WHERE planId IN
+		<foreach collection="array" open="(" close=")" separator=","
+			item="id">
+			#{id}
+		</foreach>
+	</select>
 </mapper>

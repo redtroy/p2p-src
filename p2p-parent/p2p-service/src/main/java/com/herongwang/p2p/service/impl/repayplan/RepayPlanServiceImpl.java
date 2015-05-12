@@ -1,5 +1,6 @@
 package com.herongwang.p2p.service.impl.repayplan;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +73,36 @@ public class RepayPlanServiceImpl implements IRepayPlanService
     {
         // TODO Auto-generated method stub
         
+    }
+    
+    /**
+     * 还款
+     */
+    @Override
+    @Transactional
+    public void repayment(String[] ids) throws ServiceException
+    {
+        try
+        {
+            //获取到还款计划
+            List<RepayPlanEntity> planlist=repayPlanDao.getRepayPlanList(ids);
+            BigDecimal monthAmount=null;
+            //统计所有还款总价格
+            for (RepayPlanEntity repayPlanEntity : planlist)
+            {
+                monthAmount.add(repayPlanEntity.getMonthAmount()).doubleValue();
+            }
+        }
+        catch (ServiceException e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException(e.getMessage());
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("查询还款计划错误", e);
+        }
     }
     
 }
