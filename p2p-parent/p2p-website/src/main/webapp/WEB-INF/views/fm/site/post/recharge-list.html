@@ -8,8 +8,11 @@
 <@b.validate/> <@b.dialog/>
 <script>
 	function postInfo() {
-		postForm.submit();
+		$("#postForm")[0].action="http://ceshi.allinpay.com/gateway/index.do";
+		//alert($("#postForm")[0].action);
+		$("#postForm").submit();
 	}
+	
 </script>
 </head>
 
@@ -44,7 +47,7 @@
       <div class="rightSide">
         <div class="heading fontYH f20"><span>账户充值</span></div>
         <div class="mainBox fontYH">
-        <form name="postForm" action="${serverip}" method="post">
+        <form name="postForm"  id="postForm" action="${serverip}" method="post">
 		<input type="hidden" name="inputCharset" value="1"/>
 		<input type="hidden" name="pickupUrl" value="${pickupUrl}"/>
 		<input type="hidden" name="receiveUrl" value="${receiveUrl}" />
@@ -60,7 +63,7 @@
 		<input type="hidden" name="orderNo" value="${orderNo}" />
 		<input type="hidden" name="orderAmount" value="${amount}"/>
 		<input type="hidden" name="orderCurrency" value="0" />
-		<input type="hidden" name="orderDatetime" value="${createTime}" />
+		<input type="hidden" name="orderDatetime" value="${createTime?string('yyyy-MM-dd')}" />
 		<input type="hidden" name="orderExpireDatetime" value="${orderExpireDatetime}"/>
 		<input type="hidden" name="productName" value="${productName}" />
 		<input type="hidden" name="productPrice" value="" />
@@ -80,7 +83,7 @@
         <col width="80%" />
 	      <tr>
 	        <th>订单名称</th>
-	        <td>${orderName}</td>
+	        <td>${orderNo}${orderName}</td>
 	      </tr>
 	      <tr>
 	        <th>订单金额</th>

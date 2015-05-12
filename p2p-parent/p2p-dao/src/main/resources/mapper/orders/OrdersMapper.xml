@@ -6,7 +6,7 @@
 	<resultMap id="OrdersEntity" type="com.herongwang.p2p.entity.orders.OrdersEntity">
 		<id property="orderId" column="orderId" jdbcType="VARCHAR" />
 		<result property="customerId" column="customerId" jdbcType="VARCHAR" />
-		<result property="orderNo" column="orderNo" jdbcType="VARCHAR" />
+		<result property="ordersNo" column="ordersNo" jdbcType="VARCHAR" />
 		<result property="amount" column="amount" jdbcType="DOUBLE" />
 		<result property="createTime" column="createTime" jdbcType="TIMESTAMP" />
 		<result property="status" column="status" jdbcType="INTEGER" />
