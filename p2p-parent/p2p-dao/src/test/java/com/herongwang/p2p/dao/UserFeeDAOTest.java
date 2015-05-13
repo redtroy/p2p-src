@@ -1,12 +1,18 @@
 package com.herongwang.p2p.dao;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import com.herongwang.p2p.dao.fee.IUserFeeDAO;
-import com.herongwang.p2p.entity.fee.UserFeeEntity;
 
-public class UserFeeDAOTest extends TestBase
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath:spring/applicationContext.xml" })
+@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = false)
+public class UserFeeDAOTest
 {
     @Autowired
     IUserFeeDAO userFeeDAO;
@@ -14,11 +20,8 @@ public class UserFeeDAOTest extends TestBase
     @Test
     public void test()
     {
-        UserFeeEntity userFee = new UserFeeEntity();
-        userFee.setCustomerId("cid");
-        userFee.setDiscountId("did");
-        userFee.setFeeId("fid");
-        userFeeDAO.createUserFee(userFee);
+        String[] customerIds = { "A", "B" };
+        userFeeDAO.queryUserFee(customerIds, "C");
     }
     
 }
