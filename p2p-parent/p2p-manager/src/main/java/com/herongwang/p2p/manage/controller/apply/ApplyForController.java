@@ -17,7 +17,6 @@ import com.herongwang.p2p.service.apply.IDebtApplicationService;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
 
-
 @Controller
 @RequestMapping("/apply")
 public class ApplyForController extends BaseController
@@ -25,70 +24,106 @@ public class ApplyForController extends BaseController
     
     @Autowired
     private IDebtApplicationService debtApplicationService;
-	/**
-	 * 融资申请页面
-	 * @param entity
-	 * @return
-	 */
+    
+    /**
+     * 融资申请页面
+     * @param entity
+     * @return
+     */
     @RequestMapping("/applyList")
-	public String developerList(DebtApplicationEntity entity, ModelMap map) throws WebException{
-    	try{
-    		if (entity != null)
+    public String developerList(DebtApplicationEntity entity, ModelMap map)
+            throws WebException
+    {
+        try
+        {
+            if (entity != null)
             {
-    			entity.setPagable(true);
+                entity.setPagable(true);
             }
-	    	List<DebtApplicationEntity> list = debtApplicationService.queryApply(entity);
+            List<DebtApplicationEntity> list = debtApplicationService.queryApply(entity);
             map.put("list", list);
             map.put("query", entity);
-			return "manage/apply/apply-list";
-    	}catch(Exception e){
-    		e.printStackTrace();
+            return "manage/apply/apply-list";
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
             SxjLogger.error("查询融资申请错误", e, this.getClass());
             throw new WebException("查询融资申请错误");
-    	}
-	}
+        }
+    }
+    
     @RequestMapping("/toEdit")
-    public String toEdit(String id, ModelMap map) throws WebException{
-        if (StringUtils.isEmpty(id)) {
-            return "manage/apply/";
-        } else {
-        	DebtApplicationEntity info = debtApplicationService.getApplyForEntity(id);
+    public String toEdit(String id, ModelMap map) throws WebException
+    {
+        if (StringUtils.isEmpty(id))
+        {
+            return "manage/apply/new-tender";
+        }
+        else
+        {
+            DebtApplicationEntity info = debtApplicationService.getApplyForEntity(id);
             map.put("info", info);
-            return "manage/apply/apply";
+            return "manage/apply/new-tender";
         }
         
     }
+    
     @RequestMapping("edit")
-	public @ResponseBody Map<String, String> addApply(String applicationId)
-			throws WebException {
-    	DebtApplicationEntity entity = new DebtApplicationEntity();
-    	entity.setApplicationId(applicationId);
-    	try {
-			if(null==applicationId||applicationId.isEmpty()){
-				debtApplicationService.addApply(entity);
-			}else{
-				entity.setApplicationId(applicationId);
-				debtApplicationService.updateApply(entity);
-			}
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("isOK", "ok");
-			return map;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new WebException(e);
-		}
-	}
+    public @ResponseBody Map<String, String> addApply(String applicationId)
+            throws WebException
+    {
+        DebtApplicationEntity entity = new DebtApplicationEntity();
+        entity.setApplicationId(applicationId);
+        try
+        {
+            if (null == applicationId || applicationId.isEmpty())
+            {
+                debtApplicationService.addApply(entity);
+            }
+            else
+            {
+                entity.setApplicationId(applicationId);
+                debtApplicationService.updateApply(entity);
+            }
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("isOK", "ok");
+            return map;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            throw new WebException(e);
+        }
+    }
+    
+    @RequestMapping("update")
+    public @ResponseBody Map<String, String> update(String id)
+            throws WebException
+    {
+        DebtApplicationEntity info = debtApplicationService.getApplyForEntity(id);
+        info.setStatus(2);
+        debtApplicationService.updateApply(info);
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("isOK", "ok");
+        return map;
+    }
+    
     @RequestMapping("delete")
     public @ResponseBody Map<String, String> delApply(String id)
-    		throws WebException {
-    	try {
-    		debtApplicationService.delApply(id);
-    		Map<String, String> map = new HashMap<String, String>();
-    		map.put("isOK", "ok");
-    		return map;
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    		throw new WebException(e);
-    	}
+            throws WebException
+    {
+        try
+        {
+            debtApplicationService.delApply(id);
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("isOK", "ok");
+            return map;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            throw new WebException(e);
+        }
     }
 }

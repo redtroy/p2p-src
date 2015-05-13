@@ -77,6 +77,21 @@ public class DebtApplicationEntity extends Pagable implements Serializable
     @Column(name = "name")
     private String name;
     
+    /**
+     * 会员姓名
+     */
+    private String userName;
+    
+    public String getUserName()
+    {
+        return userName;
+    }
+    
+    public void setUserName(String userName)
+    {
+        this.userName = userName;
+    }
+    
     public String getName()
     {
         return name;

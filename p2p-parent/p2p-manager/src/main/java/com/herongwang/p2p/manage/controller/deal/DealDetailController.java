@@ -143,4 +143,22 @@ public class DealDetailController extends BaseController
             throw new WebException(e);
         }
     }
+    
+    @RequestMapping("withdraw")
+    public @ResponseBody Map<String, String> Withdraw(String id)
+            throws WebException
+    {
+        try
+        {
+            fundDetailService.delFundDetail(id);
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("isOK", "ok");
+            return map;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            throw new WebException(e);
+        }
+    }
 }

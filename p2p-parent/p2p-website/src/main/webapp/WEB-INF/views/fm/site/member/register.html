@@ -4,33 +4,26 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>和融网</title>
 <link href="${b.staticPath}style/member.css" rel="stylesheet" type="text/css" />
-<script src="${b.staticPath}js/jquery.js" type="text/javascript"></script>
+<script src="${b.staticPath}js/jquery1.8.js"></script>
+<@b.validate/>
 <script>
+  var validform;
+  $(function(){
+	   validform = $("#member_register").Validform({
+			tiptype : 3
+		});
+  })
   function sub(){
+	  if (!validform.check()){
+		  return false;
+	  }
 	  $("#member_register").submit();
   }
+  
 </script>
 </head>
 <body>
-<div class="fence-wide bgBlack">
-  <div class="yard-1100 topMenu fontYH ly-clearFix">
-    <ul class="ly-clearFix ly-right">
-      <li><a href="login.html">登录</a>|</li>
-      <li><a href="register.html">注册</a></li>
-    </ul>
-  </div>
-</div>
-<div id="header" class="fence-wide">
-  <div class="yard-1100 ly-clearFix">
-    <h1 title="和融网" class="ly-left">和融网</h1>
-    <ul class="navMenu fontYH ly-left">
-      <li class="current"><a href="../index.html">首页</a></li>
-      <li><a href="prod-list.html">我要投资</a></li>
-      <li><a href="apply.html">我要融资</a></li>
-      <li><a href="#">我的账户</a></li>
-    </ul>
-  </div>
-</div>
+<@b.headerIndex />
 <div id="regin" class="fence-wide">
   <div class="yard-1100 fontYH">
       <h1 class="header">欢迎注册成为和融网用户</h1>
@@ -39,19 +32,19 @@
      <form action="saveUser.htm" method="post" id="member_register">
 	<div class="item">
           <label><span class="color-red mr5 fb">*</span>常用邮箱</label>
-          <input class="input input-w270h36" type="text" autocomplete="off" placeholder="" id="input" name="email" value="" />
+          <input class="input input-w270h36" type="text" autocomplete="off" datatype="e" errormsg="请正确输入您的邮箱！" nullmsg="请输入您的邮箱！"  placeholder="" id="input" name="email" value="" />
       </div>
       <div class="item">
           <label><span class="color-red mr5 fb">*</span>密码</label>
-          <input class="input" type="text" autocomplete="off" placeholder="" id="input" name="password" value="" />
+          <input class="input" type="text" autocomplete="off" placeholder="" id="input" name="password" value="" datatype="*6-15" errormsg="密码范围在6~15位之间！" nullmsg="请输入您的密码！"/>
       </div>
 	        <div class="item">
           <label><span class="color-red mr5 fb">*</span>确认密码</label>
-          <input class="input" type="text" autocomplete="off" placeholder="" id="input" name="rePassword" value="" />
+          <input class="input" type="text" autocomplete="off" placeholder="" id="input" name="rePassword" value="" datatype="*" recheck="userpassword" errormsg="两次输入的密码不一致！" nullmsg="请再次输入您的密码！"/>
       </div>
       <div class="item">
           <label><span class="color-red mr5 fb">*</span>联系人手机</label>
-          <input class="input" type="text" autocomplete="off" placeholder="" id="input" name="cellphone" value="" />
+          <input class="input" type="text" autocomplete="off" placeholder="" datatype="m" errormsg="请正确输入您的手机号！" nullmsg="请正确输入您的手机号！" id="input" name="cellphone" value="" />
         </div>
       <div class="item">
           <label><span class="color-red mr5 fb">*</span>手机验证码</label>
@@ -60,24 +53,12 @@
 	  </form>
       <div class="item">
         <label>&nbsp;</label>
-      <a href="javascript:sub();" class="button button-orange btn-regin btn-disable">确认注册</a> </div>
+      <span onclick="sub();return false;" class="button button-orange btn-regin btn-disable">确认注册</span> </div>
       </div>
       </div>
     
     </div>
   </div>
-<div class="fence-wide bgBlack">
-  <div id="footer" class="yard-1100 f12 fontYH ly-clearFix">
-    <div class="menuCont tc">
-      <ul class="ly-clearFix f18">
-        <li><a href="about-us.html">关于我们</a></li>
-        <li><a href="products.html">产品优势</a></li>
-        <li><a href="contact-us.html" class="borderNone">联系我们</a></li>
-      </ul>
-      <p class="f12"><span>&copy;&nbsp;2015&nbsp;和融网&nbsp;版权所有</span><span>www.herongwangnt.com</span>苏ICP备14047993号-2</p>
-      <p class="f12">地址：江苏省南京市栖霞区马群街道仙林大道18号</p>
-    </div>
-  </div>
-</div>
+<@b.footer />
 </body>
 </html>

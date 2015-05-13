@@ -1,5 +1,6 @@
 package com.herongwang.p2p.website.controller;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -81,5 +82,19 @@ public class BaseController
     {
         Subject user = SecurityUtils.getSubject();
         return (UsersEntity) user.getPrincipal();
+    }
+    
+    /**
+     * 如果BigDecimal为null转成0
+     * @param big
+     * @return
+     */
+    public BigDecimal bigDecimalIsNull(BigDecimal big)
+    {
+        if (big == null)
+        {
+            return new BigDecimal(0);
+        }
+        return big;
     }
 }

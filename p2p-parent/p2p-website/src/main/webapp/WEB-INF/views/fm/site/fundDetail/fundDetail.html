@@ -12,7 +12,11 @@ function query(page) {
 // 		if (page != undefined) {
 // 			params = params + "&currentPage=" + page;
 // 		}
-		$.post("queryFundDetail.htm", function(data) {
+	var params="";
+	if(page!=undefined){
+		params=params+"&currentPage="+page;
+	}
+		$.post("queryFundDetail.htm",params, function(data) {
 			var res = $(data).find("#res_table");
 			var pager = $(data).find("#pager");
 			$("#res_table").empty();
@@ -40,7 +44,7 @@ function query(page) {
 							<div class="item">
 								<label>账户信息</label> <span class="color-green">可用余额：5268462元</span><span
 									class="color-red">冻结金额：5268462元</span><span class="color-blue">待收金额：5268462元</span>
-									<span><a href="recharge.html" class="button button-orange">充值</a></span><span><a href="withdraw.html" class="button button-green">提现</a></span></div>
+									<span><a href="${basePath}post/recharge.htm" class="button button-orange">充值</a></span><span><a href="withdraw.html" class="button button-green">提现</a></span></div>
 							</div>
 						</div>
 						<table border="0" cellpadding="0" cellspacing="0" id="res_table"

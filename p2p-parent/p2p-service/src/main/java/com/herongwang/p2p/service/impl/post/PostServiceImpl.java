@@ -87,9 +87,8 @@ public class PostServiceImpl implements IPostService
             requestOrder.setTradeNature(orderModel.getTradeNature());
             requestOrder.setKey(orderModel.getKey()); //key为MD5密钥，密钥是在通联支付网关会员服务网站上设置。
             
-            //            String strSrcMsg = requestOrder.getSrc(); // 此方法用于debug，测试通过后可注释。
+            String strSrcMsg = requestOrder.getSrc(); // 此方法用于debug，测试通过后可注释。
             strSignMsg = requestOrder.doSign(); // 签名，设为signMsg字段值。
-            //            System.out.println(strSrcMsg + "======" + strSignMsg);
         }
         catch (Exception e)
         {
@@ -241,4 +240,11 @@ public class PostServiceImpl implements IPostService
         }
         return tl;
     }
+    
+    @Override
+    public String PostWithdraw(String url, boolean isFront) throws Exception
+    {
+        return null;
+    }
+    
 }

@@ -11,18 +11,18 @@
 		<result property="applyTime" column="applyTime" jdbcType="TIMESTAMP" />
 		<result property="status" column="status" jdbcType="INTEGER" />
 		<result property="remark" column="remark" jdbcType="VARCHAR" />
-		<result property="name" column="name" jdbcType="VARCHAR" />
+		<result property="userName" column="userName" jdbcType="VARCHAR" />
 		<result property="tel" column="tel" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<!-- 条件查询融资申请 -->
 	<select id="query" resultMap="DebtApplicationEntity"
 		parameterType="com.sxj.util.persistent.QueryCondition">
-		<![CDATA[select d.*,u.name from DebtApplication d
+		<![CDATA[select d.*,u.name as userName from DebtApplication d
 LEFT JOIN Users u on d.customerId = u.customerId WHERE 1=1 ]]>
 
 		<if test="condition.name != null and condition.name != ''">
-			<![CDATA[AND u.name LIKE CONCAT('%',#{condition.name},'%')]]>
+			<![CDATA[AND u.userName LIKE CONCAT('%',#{condition.name},'%')]]>
 		</if>
 		<![CDATA[ ORDER BY d.applyTime DESC]]>
 	</select>

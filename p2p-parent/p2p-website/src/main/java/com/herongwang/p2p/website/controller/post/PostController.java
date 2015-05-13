@@ -12,20 +12,26 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.herongwang.p2p.entity.account.AccountEntity;
+import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.herongwang.p2p.entity.orders.OrdersEntity;
 import com.herongwang.p2p.entity.parameters.ParametersEntity;
 import com.herongwang.p2p.entity.tl.TLBillEntity;
+import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.model.order.OrderModel;
 import com.herongwang.p2p.model.order.ResultsModel;
+import com.herongwang.p2p.service.account.IAccountService;
+import com.herongwang.p2p.service.funddetail.IFundDetailService;
 import com.herongwang.p2p.service.orders.IOrdersService;
 import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.post.IPostService;
 import com.herongwang.p2p.service.tl.ITLBillService;
+import com.herongwang.p2p.website.controller.BaseController;
 import com.sxj.util.exception.WebException;
 
 @Controller
 @RequestMapping("/post")
-public class PostController
+public class PostController extends BaseController
 {
     @Autowired
     IParametersService parametersService;
@@ -39,6 +45,12 @@ public class PostController
     @Autowired
     ITLBillService tlBillService;
     
+    @Autowired
+    IFundDetailService fundDetailService;
+    
+    @Autowired
+    IAccountService accountService;
+    
     @RequestMapping("/recharge")
     public String recharge(ModelMap map) throws WebException
     {
@@ -49,22 +61,23 @@ public class PostController
     public String rechargeList(HttpSession session, ModelMap map,
             OrderModel order) throws WebException
     {
+        UsersEntity user = this.getUsersEntity();
         try
         {
             BigDecimal amount = new BigDecimal(order.getOrderAmount());
             BigDecimal b2 = new BigDecimal(100);
             BigDecimal b = amount.multiply(b2);
             SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String customerId = "1";
             
             //生成充值订单
             OrdersEntity orders = new OrdersEntity();
-            orders.setCustomerId(customerId);
+            orders.setCustomerId(user.getCustomerId());
             orders.setAmount(b);
             orders.setCreateTime(new Date());
             orders.setStatus(0);
             orders.setOrderType(1);
             ordersService.addOrders(orders);
+            
             //返回到页面的参数
             ParametersEntity entity = new ParametersEntity();
             entity.setType("postType");
@@ -125,6 +138,7 @@ public class PostController
             orderMember.setKey(String.valueOf(map.get("key")));
             String strSignMsg = postService.getSignMsg(orderMember);
             orders.setStrSignMsg(strSignMsg);
+            
             //添加签名到订单表
             ordersService.updateOrders(orders);
             map.put("amount", amount);
@@ -198,10 +212,27 @@ public class PostController
         //支付成功更新支付订单状态
         if (result.getPayResult().equals("1") && tl.getStarus() == 1)
         {
+            
             OrdersEntity orders = ordersService.getOrdersEntityByNo(result.getOrderNo());
             orders.setStatus(1);
             orders.setArriveTime(tl.getFinishTime());
             ordersService.updateOrders(orders);
+            
+            //获取账户信息
+            AccountEntity account = accountService.getAccountByCustomerId(orders.getCustomerId());
+            //插入资金明细表
+            FundDetailEntity deal = new FundDetailEntity();
+            deal.setCustomerId(orders.getCustomerId());
+            deal.setAccountId(account.getAccountId());
+            deal.setOrderId(orders.getOrderId());
+            deal.setType(1);
+            deal.setAmount(orders.getAmount());
+            deal.setBalance(account.getBalance());
+            deal.setDueAmount(new BigDecimal(0));
+            deal.setFrozenAmount(new BigDecimal(0));
+            deal.setCreateTime(new Date());
+            deal.setStatus(1);
+            fundDetailService.addFundDetail(deal);
         }
         
     }

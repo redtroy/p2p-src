@@ -18,7 +18,7 @@ function delTender(id){
 		title : '消息',
 		cancel : false,
 		ok : function() {
-			window.location.href = "${basePath}/tender/tenderList.htm";
+			window.location.href = "${basePath}tender/tenderList.htm";
 		}
 	});
 	var show = dialog();
@@ -29,7 +29,7 @@ function delTender(id){
 		ok : function() {
 			var that = this;
 			show.showModal();
-			$.post("delete.htm",{id:id}, function(
+			$.post("${basePath}tender/delete.htm",{id:id}, function(
 					data) {
 				if (data.isOK == 'ok') {
 					show.close().remove();
@@ -51,43 +51,33 @@ function delTender(id){
 </head>
 <body>
 <div id="header" class="fence">
-  <div class="fence-wide">
-    <p class="ly-right logOut">杜金鑫，您好！<a href="#">退出当前帐户</a></p>
-    <h1 class="fontYH fb ly-left" title="和融网">管理平台</h1>
-  </div>
+  <@b.header />
 </div>
 <div class="fence">
   <div class="fence-wide pt10 pb10 ly-clearFix">
-    <div class="yard-180 ly-left leftMenu fontYH">
-      <ul>
-         <li><a href="member-center.html">会员管理</a></li>
-        <li><a href="../apply/applyList.htm">融资申请管理</a></li>
-        <li><a href="tenderList.htm" class="on">投资标书管理</a></li>
-        <li><a href="../deal/recharge.htm">充值管理</a></li>
-        <li><a href="../deal/deposit.htm">提现管理</a></li>
-      </ul>
-    </div>
+    <@b.leftMenu />
     <div class="yard-1000 ly-left">
       <div class="rightSide">
         <div class="heading fontYH f20">投资标书管理</div>
         <div class="mainBox">
           <table border="0" cellspacing="0" cellpadding="0" class="tabList">
-            <col width="10%" />
-            <col width="10%" />
-            <col width="10%" />
+            <col width="8%" />
+            <col width="8%" />
+            <col width="8%" />
+            <col width="8%" />
             <col width="8%" />
             <col width="10%" />
             <col width="10%" />
             <col width="10%" />
-            <col width="10%" />
-            <col width="5%" />
-            <col width="17%" />
+            <col width="8%" />
+            <col width="12%" />
             <tr>
               <th>标题</th>
               <th>借款人</th>
               <th>还款类型</th>
               <th>借款期限</th>
               <th>年化率 </th>
+              <th>借款金额 </th>
               <th>最小投资金额</th>
               <th>最大投资金额</th>
               <th>创建时间</th>
@@ -101,6 +91,7 @@ function delTender(id){
               <td>${tender.repaymentText}</td>
               <td>${tender.months}个月</td>
               <td>${tender.annualizedRate}%</td>
+              <td>${tender.amount}元</td>
               <td>${tender.minInvest}元</td>
               <td>${tender.maxInvest}元</td>
               <td><#if (tender.createTime??)> ${tender.createTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
@@ -110,10 +101,10 @@ function delTender(id){
 	          <a href="#" class=" button btn-link">满标审核</a>
 			</#if>
 			<#if (tender.status==0)>
-	         <a href="toEdit.htm?id=${tender.debtId}" class="ml10 lnk-blue lnk-underline">修改</a>
+	         <a href="${basePath}tender/toEdit.htm?id=${tender.debtId}" class="ml10 lnk-blue lnk-underline">修改</a>
               <a href="javascript:delTender('${tender.debtId}');"  class="ml10 lnk-blue lnk-underline">删除</a>
 			</#if>
-              <a href="../investOrder/orderList.htm?id=${tender.debtId}" class="ml10 lnk-blue lnk-underline">投资人记录</a>
+              <a href="${basePath}investOrder/orderList.htm?id=${tender.debtId}" class="ml10 lnk-blue lnk-underline">投资人记录</a>
               </td>
             </tr>
 			</#list>

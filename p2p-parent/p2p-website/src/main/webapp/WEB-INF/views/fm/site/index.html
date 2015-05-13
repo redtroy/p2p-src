@@ -12,29 +12,13 @@
   $(function(){
 	  
   })
+  function invest(id){
+	location.href="${basePath}prod/prodInfo.htm?debtId="+id;
+} 
 </script>
 </head>
 <body>
-<div class="fence-wide bgBlack">
-<div class="yard-1100 topMenu fontYH ly-clearFix">
-<ul class="ly-clearFix ly-right">
-<li><a href="${basePath}login.htm">登录</a>|</li>
-<li><a href="${basePath}user/register.htm">注册</a></li>
-</ul>
-</div>
-</div>
-<div id="header" class="fence-wide">
-<div class="yard-1100 ly-clearFix">
-<h1 class="ly-left" title="和融网">和融网</h1>
-<ul class="navMenu fontYH ly-left">
-<li class="current"><a href="${basePath}index.htm">首页</a></li>
-<li><a href="${basePath}prod/bdList.htm">我要投资</a></li>
-<li><a href="${basePath}apply/toApply.htm">我要融资</a></li>
-<li><a href="#">我的账户</a></li>
-</ul>
-</div>
-</div>
-
+<@b.headerIndex />
 <div class="slider">
     <div class="ck-slide">
 			<ul class="ck-slide-wrapper">
@@ -87,12 +71,12 @@
 <table border="0" cellspacing="0" cellpadding="0" class="tableProd">
   <tr>
     <td>
-    <p class="fontYH"><span class="f28 mr5">${model.amount}</span><span class="f14">万</span></p>
+    <p class="fontYH"><span class="f28 mr5"><#if (model.amount>0)>${model.amount/1000000}<#else>0</#if></span><span class="f14">万</span></p>
     <p class="gray">融资金额</p>
     </td>
     <td> <p class="fontYH"><span class="f28 mr5">${model.months}</span><span class="f14">个月</span></p>
     <p class="gray">期限</p></td>
-    <td> <p class="fontYH"><span class="f28 mr5">${model.minInvest}</span><span class="f14">元</span></p>
+    <td> <p class="fontYH"><span class="f28 mr5"><#if (model.minInvest>0)>${model.minInvest/100}<#else>0</#if></span><span class="f14">元</span></p>
     <p class="gray">起投金额</p></td>
     <td> <p class="fontYH red fb"><span class="f28 mr5">${model.annualizedRate*100}</span><span class="f14">%</span></p>
     <p class="gray">年化利率</p></td>
@@ -101,14 +85,14 @@
 </div>
 <div class="btnBox ly-left">
   <div class="progress">
-    <#if model.finance??>
+    <#if (model.finance?? && (model.finance>0))>
     <#assign bfb=model.finance/model.amount*100>
     <#else>
     <#assign bfb=0>
     </#if>
     <div class="progress-bar" role="progressbar" aria-valuenow='${bfb?string("#.##")}' aria-valuemin="0" aria-valuemax="100" style='width:${bfb?string("#.##")}%'> <span class="sr-only">${bfb?string("#.##")}%</span> </div>
   </div>
-  <button class="button button-red fontYH">立即投资</button>
+  <button class="button button-red fontYH" onclick="invest('${model.debtId}')">立即投资</button>
 </div>
 </div>
 </#list>
@@ -129,18 +113,6 @@
   </div>
 </div>
 </div>
-<div class="fence-wide bgBlack">
-<div id="footer" class="yard-1100 f12 fontYH ly-clearFix">
-<div class="menuCont tc">
-<ul class="ly-clearFix f18">
-  <li><a href="html/about-us.html">关于我们</a></li>
-  <li><a href="html/products.html">产品优势</a></li>
-<li><a href="html/contact-us.html" class="borderNone">联系我们</a></li>
-</ul>
-<p class="f12"><span>&copy;&nbsp;2015&nbsp;和融网&nbsp;版权所有</span><span>www.herongwangnt.com</span>苏ICP备14047993号-2</p>
-<p class="f12">地址：江苏省南京市栖霞区马群街道仙林大道18号</p>
-</div>
-</div>
-</div>
+<@b.footer />
 </body>
 </html>

@@ -8,7 +8,10 @@
 <@b.validate/> <@b.dialog/>
 <script>
 	function postInfo() {
-		$("#postForm")[0].action="http://ceshi.allinpay.com/gateway/index.do";
+		alert("inputCharset=1&pickupUrl=${pickupUrl}&receiveUrl=${receiveUrl}&version=v1.0&"
+				+"language=1&signType=1&merchantId=${merchantId}&orderNo=${orderNo}&"
+				+"orderAmount=${orderAmount}&orderCurrency=0&orderDatetime=${createTime?string('yyyyMMddHHmmss')}&"
+				+"orderExpireDatetime=${orderExpireDatetime}&productName=充值&payType=${payType}==${signMsg}");
 		//alert($("#postForm")[0].action);
 		$("#postForm").submit();
 	}
@@ -17,37 +20,15 @@
 </head>
 
 <body>
-<div class="fence-wide bgBlack">
-  <div class="yard-1100 topMenu fontYH">
-    <p class="ly-right logOut">杜金鑫，您好！<a href="#">退出当前帐户</a></p>
-  </div>
-</div>
-<div id="header" class="fence-wide">
-  <div class="yard-1100 ly-clearFix">
-    <h1 title="和融网" class="ly-left">和融网</h1>
-    <ul class="navMenu fontYH ly-left">
-      <li><a href="../index.html">首页</a></li>
-      <li><a href="prod-list.html">我要投资</a></li>
-      <li><a href="apply.html">我要融资</a></li>
-      <li><a href="#">我的账户</a></li>
-    </ul>
-  </div>
-</div>
+  <@b.header />
 <div class="fence-wide memCenter">
   <div class="yard-1100 memCont ly-clearFix">
-    <div class="yard-200 ly-left leftMenu fontYH">
-      <ul>
-        <li><a href="member-center.html">个人资料</a></li>
-        <li><a href="fina-list.html">我的融资</a></li>
-        <li><a href="invest-list.html">我的投资</a></li>
-        <li><a href="capital.html" class="on">资金明细</a></li>
-      </ul>
-    </div>
+    <@b.leftMenu />
     <div class="yard-900 ly-left">
       <div class="rightSide">
         <div class="heading fontYH f20"><span>账户充值</span></div>
         <div class="mainBox fontYH">
-        <form name="postForm"  id="postForm" action="${serverip}" method="post">
+        <form name="form2" id="postForm" action="${serverip}" method="post">
 		<input type="hidden" name="inputCharset" value="1"/>
 		<input type="hidden" name="pickupUrl" value="${pickupUrl}"/>
 		<input type="hidden" name="receiveUrl" value="${receiveUrl}" />

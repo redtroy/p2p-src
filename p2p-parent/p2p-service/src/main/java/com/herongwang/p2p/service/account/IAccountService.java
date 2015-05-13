@@ -9,4 +9,9 @@ public interface IAccountService
      * 增加用户信息
      */
     public UserModel addAccount(AccountEntity account);
+    
+    /**
+     * 根据用户ID 查询用户账户
+     */
+    public AccountEntity getAccountByCustomerId(String customerId);
 }
