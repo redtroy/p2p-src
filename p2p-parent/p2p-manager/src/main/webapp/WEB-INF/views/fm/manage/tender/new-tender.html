@@ -1,17 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>和融网管理平台</title>
 <meta name="keywords" content="和融网管理平台">
-<meta name="description" content="和融网管理平台">
 <link href="${b.staticPath}style/style.css" rel="stylesheet" type="text/css" />
-<link href="${b.staticPath}js/jquery.js" />
+<script src="${b.staticPath}js/jquery1.8.js"></script>
 <script src="${b.staticPath}js/datepicker.js"></script>
 <script src="${b.staticPath}js/jquery.paginate.js"></script>
 <@b.validate/>
 <@b.dialog/>
-<script  type="text/javascript">
+<script>
 var validform;
 $(document).ready(function() {
 	validform = $("#submit_form").Validform({
@@ -20,13 +19,22 @@ $(document).ready(function() {
 
 });
 function saveApply() {
-	var validform;
-	$(document).ready(function() {
-		validform = $("#submit_form").Validform({
-			tiptype : 3
+	if (!validform.check()) {
+		return false;
+	}
+	var minNum = $("#minAmount").val();
+	var maxNum = $("#maxAmount").val();
+	if(minNum>maxNum){
+		var success = dialog({
+			title : '消息',
+			cancel : false,
+			ok : function() {
+			}
 		});
-
-	});
+		success.content("最大投资金额太小。");
+		success.showModal();
+		return false;
+	}
 	 var success = dialog({
 			title : '消息',
 			cancel : false,
@@ -120,8 +128,8 @@ function saveApply() {
             <tr>
               <th>年化利率</th>
               <td><input type="text" name="annualizedRate" id="annualizedRate" autocomplete="off"
-								placeholder="" value="${info.annualizedRate}" datatype="*1-20"
-								errormsg="请输入1~20位之间的字符！" nullmsg="请输入年化利率！" class="input input-w270h30"/> %</td>
+								placeholder="" value="${info.annualizedRate}" datatype="/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/"
+								errormsg="请输入1~20位之间的数字！" nullmsg="请输入年化利率！" class="input input-w270h30"/> %</td>
             </tr>
             <tr>
               <th>最小投资金额</th>
@@ -139,7 +147,7 @@ function saveApply() {
 								errormsg="请输入1~20位之间的数字！" nullmsg="请输入借款金额！" id="borrowingAmount" class="input input-w270h30"/>元</td>
             </tr>
           </table>
-          <div class="tc mt20 mb20"><a href="javascript:saveApply();" class="button button-orange">确认生成</a></div>
+          <div class="tc mt20 mb20"><a href="javascript:void(0)" onclick="saveApply();" class="button button-orange">确认生成</a></div>
           </form>
         </div>
       </div>
