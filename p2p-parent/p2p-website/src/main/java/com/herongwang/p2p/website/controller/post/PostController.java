@@ -15,17 +15,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.herongwang.p2p.entity.orders.OrdersEntity;
 import com.herongwang.p2p.entity.parameters.ParametersEntity;
 import com.herongwang.p2p.entity.tl.TLBillEntity;
+import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.model.order.OrderModel;
 import com.herongwang.p2p.model.order.ResultsModel;
 import com.herongwang.p2p.service.orders.IOrdersService;
 import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.post.IPostService;
 import com.herongwang.p2p.service.tl.ITLBillService;
+import com.herongwang.p2p.website.controller.BaseController;
 import com.sxj.util.exception.WebException;
 
 @Controller
 @RequestMapping("/post")
-public class PostController
+public class PostController extends BaseController
 {
     @Autowired
     IParametersService parametersService;
@@ -49,22 +51,23 @@ public class PostController
     public String rechargeList(HttpSession session, ModelMap map,
             OrderModel order) throws WebException
     {
+        UsersEntity user = this.getUsersEntity();
         try
         {
             BigDecimal amount = new BigDecimal(order.getOrderAmount());
             BigDecimal b2 = new BigDecimal(100);
             BigDecimal b = amount.multiply(b2);
             SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String customerId = "1";
             
             //生成充值订单
             OrdersEntity orders = new OrdersEntity();
-            orders.setCustomerId(customerId);
+            orders.setCustomerId(user.getCustomerId());
             orders.setAmount(b);
             orders.setCreateTime(new Date());
             orders.setStatus(0);
             orders.setOrderType(1);
             ordersService.addOrders(orders);
+            
             //返回到页面的参数
             ParametersEntity entity = new ParametersEntity();
             entity.setType("postType");
@@ -125,6 +128,7 @@ public class PostController
             orderMember.setKey(String.valueOf(map.get("key")));
             String strSignMsg = postService.getSignMsg(orderMember);
             orders.setStrSignMsg(strSignMsg);
+            
             //添加签名到订单表
             ordersService.updateOrders(orders);
             map.put("amount", amount);
