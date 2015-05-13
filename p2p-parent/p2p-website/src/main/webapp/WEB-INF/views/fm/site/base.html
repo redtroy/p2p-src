@@ -290,21 +290,35 @@ function loadUploadMember(id,url,isMulti,text,fn){
   </div>
 </div>
 </#macro>
+<#macro headerIndex>
+  <div class="fence-wide bgBlack">
+<div class="yard-1100 topMenu fontYH ly-clearFix">
+<ul class="ly-clearFix ly-right">
+<li><a href="${basePath}login.htm">登录</a>|</li>
+<li><a href="${basePath}user/register.htm">注册</a></li>
+</ul>
+</div>
+</div>
+<div id="header" class="fence-wide">
+<div class="yard-1100 ly-clearFix">
+<h1 class="ly-left" title="和融网">和融网</h1>
+<ul class="navMenu fontYH ly-left">
+<li class="current"><a href="${basePath}index.htm">首页</a></li>
+<li><a href="${basePath}prod/bdList.htm">我要投资</a></li>
+<li><a href="${basePath}apply/toApply.htm">我要融资</a></li>
+<li><a href="#">我的账户</a></li>
+</ul>
+</div>
+</div>
+</#macro>
 <#macro footer>
-<script type="text/javascript">
-$(document).ready(function(){
-	var newDate = new Date();
-	var year = newDate.getFullYear();
-	$("#yearSapn").text(year);
-});
-</script>
 <div class="fence-wide bgBlack">
 		<div id="footer" class="yard-1100 f14 fontYH ly-clearFix">
 			<div class="menuCont tc">
 				<ul class="ly-clearFix f18">
-					<li><a href="about-us.html">关于我们</a></li>
-					<li><a href="products.html">产品优势</a></li>
-					<li><a href="contact-us.html" class="borderNone">联系我们</a></li>
+					<li><a href="${basePath}gywm.htm">关于我们</a></li>
+					<li><a href="${basePath}cpys.htm">产品优势</a></li>
+					<li><a href="${basePath}lxwm.htm" class="borderNone">联系我们</a></li>
 				</ul>
 				<p class="f12">
 					<span>&copy;&nbsp;<span id="yearSapn"></span>&nbsp;和融网&nbsp;版权所有</span><span>www.herongwangnt.com</span>苏ICP备14047993号-2
@@ -313,7 +327,8 @@ $(document).ready(function(){
 			</div>
 		</div>
 	</div>
-</#macro> <#macro leftMenu isLoad>
+</#macro> 
+<#macro leftMenu isLoad>
 <div id="leftList"></div>
 <script>
 	//var isLoad="${isLoad}";

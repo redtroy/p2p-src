@@ -207,4 +207,21 @@ public class BasicController extends BaseController
         // return strUserIp;
     }
     
+    @RequestMapping("gywm")
+    public String gywm()
+    {
+        return "site/about-us";
+    }
+    
+    @RequestMapping("cpys")
+    public String cpys()
+    {
+        return "site/products";
+    }
+    
+    @RequestMapping("lxwm")
+    public String lxwm()
+    {
+        return "site/contact-us";
+    }
 }
