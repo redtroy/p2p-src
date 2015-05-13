@@ -12,6 +12,9 @@
   $(function(){
 	  
   })
+  function invest(id){
+	location.href="${basePath}prod/prodInfo.htm?debtId="+id;
+} 
 </script>
 </head>
 <body>
@@ -108,7 +111,7 @@
     </#if>
     <div class="progress-bar" role="progressbar" aria-valuenow='${bfb?string("#.##")}' aria-valuemin="0" aria-valuemax="100" style='width:${bfb?string("#.##")}%'> <span class="sr-only">${bfb?string("#.##")}%</span> </div>
   </div>
-  <button class="button button-red fontYH">立即投资</button>
+  <button class="button button-red fontYH" onclick="invest('${model.debtId}')">立即投资</button>
 </div>
 </div>
 </#list>
