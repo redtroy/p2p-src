@@ -241,4 +241,11 @@ public class PostServiceImpl implements IPostService
         }
         return tl;
     }
+    
+    @Override
+    public String PostWithdraw(String url, boolean isFront) throws Exception
+    {
+        return null;
+    }
+    
 }

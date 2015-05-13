@@ -94,7 +94,9 @@ public class DebtController extends BaseController
                 DebtEntity info = debtService.getDebtEntity(id);
                 map.put("info", info);
                 map.put("applyId", info.getCustomerId());
-                map.put("name", "测试"/*memberService.getMmeberByAccount(info.getCustomerId())*/);
+                map.put("name",
+                        userService.getUserByUserId(info.getCustomerId())
+                                .getName());
                 return "manage/tender/new-tender";
             }
         }
@@ -126,6 +128,7 @@ public class DebtController extends BaseController
         order.setAmount(amount);
         order.setCreateTime(new Date());
         order.setLoanAmount(amount);
+        
         try
         {
             if (null == id || id.isEmpty())
