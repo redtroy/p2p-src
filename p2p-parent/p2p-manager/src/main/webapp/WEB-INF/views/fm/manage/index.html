@@ -9,6 +9,13 @@
 <link href="${b.staticPath}style/msg.css" rel="stylesheet" type="text/css" />
 <script src="${b.staticPath}js/jquery.js" type="text/javascript"></script>
 <script>
+$(function(){
+	  $("#login_form").keypress(function(e) {
+		  if (e.which == 13) {
+		    sub();
+		  }
+		  }); 
+})
  function sub(){
 	 $("#login_form").submit();
  }
@@ -31,6 +38,9 @@
         <div class="item">
           <label class="f16">登录帐号	</label>
           <input class="input" type="text" autocomplete="off" placeholder="" title="" id="" name="account" value="" />
+          <#if message??>
+	       <div class="msg-error"><span class="icon16 icon-error"></span>${message}</div>
+    	</#if>
         </div>
         <div class="item">
           <label class="f16">登录密码</label>
