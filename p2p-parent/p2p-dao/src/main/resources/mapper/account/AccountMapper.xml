@@ -12,6 +12,7 @@
 		<result property="updateTime" column="updateTime" jdbcType="TIMESTAMP" />
 		<result property="status" column="status" jdbcType="INTEGER" />
 		<result property="debtAmount" column="debtAmount" jdbcType="INTEGER" />
+		<result property="fozenAmount" column="fozenAmount" jdbcType="INTEGER" />
 	</resultMap>
 
 	<select id="getAccountByOrderId" resultMap="AccountResultMap"

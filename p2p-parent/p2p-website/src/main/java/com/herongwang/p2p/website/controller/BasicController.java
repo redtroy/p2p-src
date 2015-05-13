@@ -80,6 +80,10 @@ public class BasicController extends BaseController
     public String login(String account, String password, HttpSession session,
             HttpServletRequest request, ModelMap map)
     {
+        if (account == null || account == "")
+        {
+            return LOGIN;
+        }
         UsersEntity user = userService.getUserByAccount(account);
         if (user == null)
         {
@@ -207,4 +211,21 @@ public class BasicController extends BaseController
         // return strUserIp;
     }
     
+    @RequestMapping("gywm")
+    public String gywm()
+    {
+        return "site/about-us";
+    }
+    
+    @RequestMapping("cpys")
+    public String cpys()
+    {
+        return "site/products";
+    }
+    
+    @RequestMapping("lxwm")
+    public String lxwm()
+    {
+        return "site/contact-us";
+    }
 }

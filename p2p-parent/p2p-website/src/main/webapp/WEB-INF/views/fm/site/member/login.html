@@ -6,6 +6,14 @@
 <link href="${b.staticPath}style/member.css" rel="stylesheet" type="text/css" />
 <script src="${b.staticPath}js/jquery.js" type="text/javascript"></script>
 <script>
+  $(function(){
+	  $("#login_form").keypress(function(e) {
+
+		  if (e.which == 13) {
+		    sub();
+		  }
+		  }); 
+  })
  function sub(){
 	 $("#login_form").submit();
  }
@@ -13,25 +21,7 @@
 </head>
 
 <body>
-<div class="fence-wide bgBlack">
-  <div class="yard-1100 topMenu fontYH ly-clearFix">
-    <ul class="ly-clearFix ly-right">
-      <li><a href="${basePath}login.htm">登录</a>|</li>
-      <li><a href="${basePath}user/register.htm">注册</a></li>
-    </ul>
-  </div>
-</div>
-<div id="header" class="fence-wide">
-  <div class="yard-1100 ly-clearFix">
-    <h1 title="和融网" class="ly-left">和融网</h1>
-    <ul class="navMenu fontYH ly-left">
-      <li><a href="${basePath}index.htm">首页</a></li>
-      <li><a href="${basePath}prod/bdList.htm">我要投资</a></li>
-      <li><a href="${basePath}apply/toApply.htm">我要融资</a></li>
-      <li><a href="#">我的账户</a></li>
-    </ul>
-  </div>
-</div>
+<@b.headerIndex />
 <div id="login" class="fence">
   <div class="fence-wide">
   <div class="loginBox fontYH">
@@ -40,7 +30,10 @@
          <form id="login_form" action="${basePath}login.htm" method="post">
         <div class="item">
           <label class="f16">用户帐号	</label>
-          <input class="input" type="text" autocomplete="off" name="account" placeholder="" title="" value="请填写您的注册邮箱" style="color:#999;font-size:12px;" />
+          <input class="input" type="text" autocomplete="off" name="account" placeholder="请填写您的注册邮箱" title="" value="" style="color:#999;font-size:12px;" />
+          <#if message??>
+	       <div class="msg-error"><span class="icon16 icon-error"></span>${message}</div>
+    	  </#if>
         </div>
         <div class="item">
           <label class="f16">登录密码</label>
@@ -52,18 +45,6 @@
 </div>
   </div>
 </div>
-<div class="fence-wide bgBlack">
-  <div id="footer" class="yard-1100 f12 fontYH ly-clearFix">
-    <div class="menuCont tc">
-      <ul class="ly-clearFix f18">
-        <li><a href="about-us.html">关于我们</a></li>
-        <li><a href="products.html">产品优势</a></li>
-        <li><a href="contact-us.html" class="borderNone">联系我们</a></li>
-      </ul>
-      <p class="f12"><span>&copy;&nbsp;2015&nbsp;和融网&nbsp;版权所有</span><span>www.herongwangnt.com</span>苏ICP备14047993号-2</p>
-      <p class="f12">地址：江苏省南京市栖霞区马群街道仙林大道18号</p>
-    </div>
-  </div>
-</div>
+<@b.footer />
 </body>
 </html>
