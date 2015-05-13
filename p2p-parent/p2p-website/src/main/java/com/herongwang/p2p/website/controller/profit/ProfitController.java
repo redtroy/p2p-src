@@ -19,12 +19,12 @@ public class ProfitController
 {
     @Autowired
     private IProfitService profitService;
-    @RequestMapping("bdList")
+    @RequestMapping("profit")
     public String bdList(ModelMap map,String debtId,String amount) throws WebException
     {
         try
         {
-            ProfitModel pm =profitService.calculatingProfit(debtId, new BigDecimal(amount));
+            ProfitModel pm =profitService.calculatingProfit("a44apymRNEWYenNmTc5MBNdhLGxdwQo3", new BigDecimal("1000"));
             map.put("pm", pm);
         }
         catch (Exception e)

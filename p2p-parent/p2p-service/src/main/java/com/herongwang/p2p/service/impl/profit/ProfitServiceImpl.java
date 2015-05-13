@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.herongwang.p2p.dao.debt.IDebtDao;
 import com.herongwang.p2p.entity.debt.DebtEntity;
@@ -14,6 +16,8 @@ import com.herongwang.p2p.model.profit.ProfitModel;
 import com.herongwang.p2p.service.profit.IProfitService;
 import com.sxj.util.exception.ServiceException;
 
+@Service
+@Transactional
 public class ProfitServiceImpl implements IProfitService
 {
     @Autowired
@@ -26,13 +30,14 @@ public class ProfitServiceImpl implements IProfitService
     public ProfitModel calculatingProfit(String debtId, BigDecimal money)
             throws ServiceException
     {
-        
+        BigDecimal money1 = money;
         //获取到标的详情
         DebtEntity debt = debtDao.getDebtFor(debtId);
-        BigDecimal yearRatio = new BigDecimal(debt.getAnnualizedRate()).divide(new BigDecimal(
-                100));//年利率/100
+        BigDecimal yearRatio = new BigDecimal(debt.getAnnualizedRate());//年利率/100
         BigDecimal monthRatio = yearRatio.divide(new BigDecimal(
-                debt.getMonths()));//月利率=年利率/12
+                debt.getMonths()),
+                6,
+                BigDecimal.ROUND_HALF_UP);//月利率=年利率/12
         DecimalFormat df = new DecimalFormat(".00");
         List<MonthProfit> monthProfits = new ArrayList<MonthProfit>();
         ProfitModel profits = new ProfitModel();
@@ -76,11 +81,12 @@ public class ProfitServiceImpl implements IProfitService
             {
                 totalMoney = totalMoney.add(monthProfit.getProfit());
             }
-            profits.setTotalInterest(totalMoney);
-            profits.setAmount(money.add(totalMoney));
-            profits.setInvestment(money);
+            profits.setTotalInterest(new BigDecimal(df.format(totalMoney)));
+            profits.setAmount(money1.add(totalMoney));
+            profits.setInvestment(money1);
             //            System.out.println("总利息" + df.format(money));
             //            System.out.println("总额" + df.format(new BigDecimal(10000).add(money)));
+            profits.setMonthProfit(monthProfits);
             
         }
         else
@@ -118,8 +124,9 @@ public class ProfitServiceImpl implements IProfitService
                 totalMoney = totalMoney.add(monthProfit.getProfit());
             }
             profits.setTotalInterest(totalMoney);
-            profits.setAmount(money.add(totalMoney));
-            profits.setInvestment(money);
+            profits.setAmount(money1.add(totalMoney));
+            profits.setInvestment(money1);
+            profits.setMonthProfit(monthProfits);
             
         }
         return profits;
