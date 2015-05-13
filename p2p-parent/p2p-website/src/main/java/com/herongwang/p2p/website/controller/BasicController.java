@@ -80,6 +80,10 @@ public class BasicController extends BaseController
     public String login(String account, String password, HttpSession session,
             HttpServletRequest request, ModelMap map)
     {
+        if (account == null || account == "")
+        {
+            return LOGIN;
+        }
         UsersEntity user = userService.getUserByAccount(account);
         if (user == null)
         {

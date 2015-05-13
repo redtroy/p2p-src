@@ -34,6 +34,10 @@ public class UserController extends BaseController
     {
         try
         {
+            if (getUsersEntity() == null)
+            {
+                return LOGIN;
+            }
             UsersEntity user = getUsersEntity();
             map.put("user", user);
         }
