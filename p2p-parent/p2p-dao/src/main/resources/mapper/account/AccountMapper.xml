@@ -18,4 +18,9 @@
 		parameterType="String">
 		<![CDATA[SELECT a.* FROM Accounts a LEFT JOIN   FinancingOrders f ON a.customerId=f.customerId where f.orderId=#{orderId}]]>
 	</select>
+	
+	<select id="getAcoountByCustomerId" resultMap="AccountResultMap"
+		parameterType="String">
+		<![CDATA[select * from Accounts where customerId=#{customerId}]]>
+	</select>
 </mapper>

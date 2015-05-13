@@ -24,4 +24,9 @@ public interface IAccountDao
      */
     @Update
     public void updateAccount(AccountEntity account);
+    
+    /**
+     * 根据用户ID查询Account
+     */
+    public AccountEntity getAcoountByCustomerId(String customerId);
 }

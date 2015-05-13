@@ -12,6 +12,9 @@
   $(function(){
 	  
   })
+  function invest(id){
+	location.href="${basePath}prod/prodInfo.htm?debtId="+id;
+} 
 </script>
 </head>
 <body>
@@ -87,12 +90,12 @@
 <table border="0" cellspacing="0" cellpadding="0" class="tableProd">
   <tr>
     <td>
-    <p class="fontYH"><span class="f28 mr5">${model.amount}</span><span class="f14">万</span></p>
+    <p class="fontYH"><span class="f28 mr5"><#if (model.amount>0)>${model.amount/1000000}<#else>0</#if></span><span class="f14">万</span></p>
     <p class="gray">融资金额</p>
     </td>
     <td> <p class="fontYH"><span class="f28 mr5">${model.months}</span><span class="f14">个月</span></p>
     <p class="gray">期限</p></td>
-    <td> <p class="fontYH"><span class="f28 mr5">${model.minInvest}</span><span class="f14">元</span></p>
+    <td> <p class="fontYH"><span class="f28 mr5"><#if (model.minInvest>0)>${model.minInvest/100}<#else>0</#if></span><span class="f14">元</span></p>
     <p class="gray">起投金额</p></td>
     <td> <p class="fontYH red fb"><span class="f28 mr5">${model.annualizedRate*100}</span><span class="f14">%</span></p>
     <p class="gray">年化利率</p></td>
@@ -101,14 +104,14 @@
 </div>
 <div class="btnBox ly-left">
   <div class="progress">
-    <#if model.finance??>
+    <#if (model.finance?? && (model.finance>0))>
     <#assign bfb=model.finance/model.amount*100>
     <#else>
     <#assign bfb=0>
     </#if>
     <div class="progress-bar" role="progressbar" aria-valuenow='${bfb?string("#.##")}' aria-valuemin="0" aria-valuemax="100" style='width:${bfb?string("#.##")}%'> <span class="sr-only">${bfb?string("#.##")}%</span> </div>
   </div>
-  <button class="button button-red fontYH">立即投资</button>
+  <button class="button button-red fontYH" onclick="invest('${model.debtId}')">立即投资</button>
 </div>
 </div>
 </#list>
