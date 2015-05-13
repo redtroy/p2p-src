@@ -35,4 +35,20 @@ public class AccountServiceImpl implements IAccountService
         
     }
     
+    @Override
+    public AccountEntity getAccountByCustomerId(String customerId)
+            throws ServiceException
+    {
+        try
+        {
+            return accountDao.getAcoountByCustomerId(customerId);
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("查询账户信息错误", e);
+        }
+        
+    }
+    
 }
