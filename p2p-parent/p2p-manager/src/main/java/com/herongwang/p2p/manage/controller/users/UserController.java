@@ -25,8 +25,10 @@ public class UserController extends BaseController
     {
         try
         {
+            user.setPagable(true);
             List<UsersEntity> memberList = userService.queryUsers(user);
             map.put("list", memberList);
+            map.put("query", user);
         }
         catch (Exception e)
         {
