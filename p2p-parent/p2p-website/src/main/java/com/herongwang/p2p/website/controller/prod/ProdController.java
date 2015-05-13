@@ -27,13 +27,14 @@ public class ProdController extends BaseController
     private IAccountService acountService;
     
     @RequestMapping("bdList")
-    public String bdList(ModelMap map) throws WebException
+    public String bdList(ModelMap map, DebtEntity debt) throws WebException
     {
         try
         {
-            DebtEntity debt = new DebtEntity();
+            debt.setPagable(true);
             List<DebtEntity> list = debtService.queryDebtList(debt);
             map.put("list", list);
+            map.put("query", debt);
         }
         catch (Exception e)
         {
@@ -48,21 +49,25 @@ public class ProdController extends BaseController
     {
         try
         {
+            AccountEntity account = null;
+            BigDecimal amountMax;
+            DebtEntity debt = debtService.getDebtEntity(debtId);
             if (getUsersEntity() == null)
             {
-                return LOGIN;
-            }
-            DebtEntity debt = debtService.getDebtEntity(debtId);
-            AccountEntity account = acountService.getAccountByCustomerId(getUsersEntity().getCustomerId());
-            BigDecimal balance = bigDecimalIsNull(debt.getAmount()).subtract(bigDecimalIsNull(debt.getFinance()));//剩余融资金额
-            BigDecimal amountMax;
-            if (balance.intValue() <= bigDecimalIsNull(account.getBalance()).intValue())
-            {
-                amountMax = balance;
+                amountMax = new BigDecimal(0);
             }
             else
             {
-                amountMax = account.getBalance();
+                account = acountService.getAccountByCustomerId(getUsersEntity().getCustomerId());
+                BigDecimal balance = bigDecimalIsNull(debt.getAmount()).subtract(bigDecimalIsNull(debt.getFinance()));//剩余融资金额
+                if (balance.intValue() <= bigDecimalIsNull(account.getBalance()).intValue())
+                {
+                    amountMax = balance;
+                }
+                else
+                {
+                    amountMax = account.getBalance();
+                }
             }
             map.put("model", debt);
             map.put("account", account);
