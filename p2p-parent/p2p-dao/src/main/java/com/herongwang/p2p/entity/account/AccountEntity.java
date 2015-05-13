@@ -64,6 +64,22 @@ public class AccountEntity implements Serializable
     @Column(name = "debtAmount")
     private BigDecimal debtAmount;
     
+    /**
+     * 冻结金额
+     */
+    @Column(name = "fozenAmount")
+    private BigDecimal fozenAmount;
+    
+    public BigDecimal getFozenAmount()
+    {
+        return fozenAmount;
+    }
+    
+    public void setFozenAmount(BigDecimal fozenAmount)
+    {
+        this.fozenAmount = fozenAmount;
+    }
+    
     public String getAccountId()
     {
         return accountId;
@@ -113,26 +129,25 @@ public class AccountEntity implements Serializable
     {
         this.updateTime = updateTime;
     }
-
+    
     public Integer getStatus()
     {
         return status;
     }
-
+    
     public void setStatus(Integer status)
     {
         this.status = status;
     }
-
+    
     public BigDecimal getDebtAmount()
     {
         return debtAmount;
     }
-
+    
     public void setDebtAmount(BigDecimal debtAmount)
     {
         this.debtAmount = debtAmount;
     }
-    
     
 }
