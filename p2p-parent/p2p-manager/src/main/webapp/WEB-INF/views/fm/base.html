@@ -209,31 +209,25 @@ function classLoadUpload(text){
 </script>
 </#macro>
 <#macro header>
-<meta name="renderer" content="webkit">
- <div id="header" class="fence-wide">
-    <h1 class="yard-1200"><a href="#" class="logo"></a><span class="fontYH">私享家绿色门窗平台管理系统</span>
-    <span class="logOut ly-right"><a href="${basePath}logout.htm">注销帐户并退出</a></span>
-    </h1>
-    <div class="border-header"></div>
-</div>
-<#if Session.userinfo?exists>
-<script>
-$(document).ready(function(){
-	var currentUrl=window.location.href;
-	$.get("${basePath}enter.htm?url="+currentUrl);
-});
-</script>
-</#if>
+  <Script>
+  $.post("${basePath}userName.htm",function(data){
+	  $("#headName").html(data+"，您好！");
+  })
+  </Script>
+  <div class="fence-wide">
+    <p class="ly-right logOut"><span id="headName">杜金鑫，您好！</span><a href="${basePath}logout.htm">退出当前帐户</a></p>
+    <h1 class="fontYH fb ly-left" title="和融网">管理平台</h1>
+  </div>
 </#macro>
 <#macro leftMenu isLoad>
 <div id="leftList"></div>
 <script>
 $("#leftList").load("${basePath}leftMenu.htm");	
-$.post("${basePath}checkLogin.htm",function(data){
+/* $.post("${basePath}checkLogin.htm",function(data){
 	if (data=="erro"){
 		location.href="${basePath}login.htm";
 	}
-})
+}) */
 </script>
 </#macro>
 <#macro pager>
