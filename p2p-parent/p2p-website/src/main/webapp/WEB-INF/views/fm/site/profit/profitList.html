@@ -35,10 +35,10 @@
 							<#list list as profit>
 							<tr>
 								<td>${profit.sequence}</td>
-								<td>${profit.monthCapital}</td>
-								<td class="color-red">${profit.monthProfit}</td>
-								<td class="color-purple">${profit.monthAmount}</td>
-								<td class="color-green">${profit.fee}</td>
+								<td>${profit.monthCapital/100}</td>
+								<td class="color-red">${profit.monthProfit/100}</td>
+								<td class="color-purple">${profit.monthAmount/100}</td>
+								<td class="color-green"></td>
 							</tr>
 							</#list>
 						</table>

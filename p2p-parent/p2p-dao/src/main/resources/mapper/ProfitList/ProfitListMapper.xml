@@ -23,5 +23,6 @@
 		<if test="condition.orderId != null and condition.orderId != ''">
 			<![CDATA[AND orderId=#{condition.orderId}]]>
 		</if>
+		<![CDATA[ ORDER BY sequence ASC]]>
 	</select>
 </mapper>

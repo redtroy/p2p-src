@@ -72,11 +72,10 @@ function query(page) {
 								<td><#if fund.type==1>充值<#elseif fund.type==2 >投标<#elseif
 									fund.type==3>还款<#elseif fund.type==4>提现<#else>手续费</#if></td> <#if
 								fund.incomeStatus==0>
-								<td class="color-red">-${fund.amount}</td><#else>
-								<td class="color-green">${fund.amount}</td> </#if>
-								<td>${fund.balance}</td>
-								<td>${fund.frozenAmount}</td>
-								<td class="color-purple">${fund.dueAmount}</td>
+								<td class="color-red">-${fund.amount/100}</td><#else>
+								<td class="color-green">${fund.balance/100}</td> </#if>
+								<td>${fund.frozenAmount/100}</td>
+								<td class="color-purple">${fund.dueAmount/100}</td>
 								<td class="tl">${fund.remark}</td>
 							</tr>
 							<tr>

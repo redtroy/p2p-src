@@ -30,13 +30,13 @@ public class ProfitController
      * @throws WebException
      */
     @RequestMapping("profit")
-    public String profit(ModelMap map, String debtId, String amount)
+    public String profit(ModelMap map, String debtId, int amount)
             throws WebException
     {
         try
         {
             ProfitModel pm = profitService.calculatingProfit(debtId,
-                    new BigDecimal(amount));
+                    new BigDecimal(amount).multiply(new BigDecimal(100)));
             map.put("pm", pm);
             map.put("debtId", debtId);
         }

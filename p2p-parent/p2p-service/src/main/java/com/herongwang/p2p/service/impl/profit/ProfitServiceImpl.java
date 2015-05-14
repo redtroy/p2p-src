@@ -82,15 +82,18 @@ public class ProfitServiceImpl implements IProfitService
                         .subtract(fee)
                         .setScale(2, BigDecimal.ROUND_HALF_UP));//本金
                 pm.setSequence(month);
-                pm.setFee(fee);
+                pm.setFee(fee.setScale(2,
+                        BigDecimal.ROUND_HALF_UP));
                 monthProfits.add(pm);
             }
             BigDecimal totalMoney = new BigDecimal(0);
             BigDecimal totalFee = new BigDecimal(0);
             for (ProfitListEntity monthProfit : monthProfits)
             {
-                totalMoney = totalMoney.add(monthProfit.getMonthProfit());
-                totalFee = totalFee.add(monthProfit.getFee());
+                totalMoney = totalMoney.add(monthProfit.getMonthProfit().setScale(2,
+                        BigDecimal.ROUND_HALF_UP));
+                totalFee = totalFee.add(monthProfit.getFee().setScale(2,
+                        BigDecimal.ROUND_HALF_UP));
             }
             profits.setTotalInterest(new BigDecimal(df.format(totalMoney)));
             profits.setAmount(money1.add(totalMoney));
@@ -116,18 +119,24 @@ public class ProfitServiceImpl implements IProfitService
                 ProfitListEntity mp = new ProfitListEntity();
                 if (i != 12)
                 {
-                    mp.setMonthAmount(subtract);
-                    mp.setMonthProfit(subtract);
+                    mp.setMonthAmount(subtract.setScale(2,
+                            BigDecimal.ROUND_HALF_UP));
+                    mp.setMonthProfit(subtract.setScale(2,
+                            BigDecimal.ROUND_HALF_UP));
                     mp.setMonthCapital(new BigDecimal(0));
                 }
                 else
                 {
-                    mp.setMonthAmount(subtract.add(money));
-                    mp.setMonthProfit(subtract);
-                    mp.setMonthCapital(money);
+                    mp.setMonthAmount(subtract.add(money).setScale(2,
+                            BigDecimal.ROUND_HALF_UP));
+                    mp.setMonthProfit(subtract.setScale(2,
+                            BigDecimal.ROUND_HALF_UP));
+                    mp.setMonthCapital(money.setScale(2,
+                            BigDecimal.ROUND_HALF_UP));
                 }
                 mp.setSequence(month);
-                mp.setFee(fee);
+                mp.setFee(fee.setScale(2,
+                        BigDecimal.ROUND_HALF_UP));
                 monthProfits.add(mp);
             }
             BigDecimal totalMoney = new BigDecimal(0);
@@ -137,11 +146,15 @@ public class ProfitServiceImpl implements IProfitService
                 totalMoney = totalMoney.add(monthProfit.getMonthProfit());
                 totalFee = totalFee.add(monthProfit.getFee());
             }
-            profits.setTotalInterest(totalMoney);
-            profits.setAmount(money1.add(totalMoney));
-            profits.setInvestment(money1);
+            profits.setTotalInterest(totalMoney.setScale(2,
+                    BigDecimal.ROUND_HALF_UP));
+            profits.setAmount(money1.add(totalMoney).setScale(2,
+                    BigDecimal.ROUND_HALF_UP));
+            profits.setInvestment(money1.setScale(2,
+                    BigDecimal.ROUND_HALF_UP));
             profits.setMonthProfit(monthProfits);
-            profits.setTotalFee(totalFee);
+            profits.setTotalFee(totalFee.setScale(2,
+                    BigDecimal.ROUND_HALF_UP));
             
         }
         return profits;

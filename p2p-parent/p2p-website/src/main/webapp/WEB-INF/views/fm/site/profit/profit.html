@@ -16,7 +16,7 @@
 	<div class="fence-wide product">
 		<div class="yard-1100 prodCont">
 			<div class="titMain">
-				<h2 class="fontYH">还款计划</h2>
+				<h2 class="fontYH">收益预算</h2>
 			</div>
 			<div class="prodBox">
 				<table border="0" cellspacing="0" cellpadding="0"
@@ -28,15 +28,15 @@
 					<col width="39%" />
 					<tr>
 						<th>共投资金额</th>
-						<td class="color-orange">${pm.investment}元</td>
+						<td class="color-orange">${pm.investment/100}元</td>
 						<th>共返还本息</th>
-						<td><span class="f20 color-green mr5">${pm.amount}</span>元</td>
+						<td><span class="f20 color-green mr5">${pm.amount/100}</span>元</td>
 					</tr>
 					<tr>
 						<th>共获得利益</th>
-						<td><span class="f20 color-red mr5">${pm.totalInterest}</span>元</td>
+						<td><span class="f20 color-red mr5">${pm.totalInterest/100}</span>元</td>
 						<th>利息</th>
-						<td><span class="f20 color-green mr5">${pm.totalInterest}</span>元</td>
+						<td><span class="f20 color-green mr5">${pm.totalInterest/100}</span>元</td>
 					</tr>
 				</table>
 				<#if pm.monthProfit?exists && (pm.monthProfit?size>0)>
@@ -58,10 +58,10 @@
 					<#list pm.monthProfit as profit>
 					<tr>
 						<td>${profit.sequence}</td>
-						<td>${profit.monthCapital}</td>
-						<td class="color-red">${profit.monthProfit}</td>
-						<td class="color-purple">${profit.monthAmount}</td>
-						<td class="color-green">${profit.fee}</td>
+						<td>${profit.monthCapital/100}</td>
+						<td class="color-red">${profit.monthProfit/100}</td>
+						<td class="color-purple">${profit.monthAmount/100}</td>
+						<td class="color-green">${profit.fee/100}</td>
 					</tr>
 					</#list>
 				</table>
