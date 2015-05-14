@@ -10,10 +10,17 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.aipg.payreq.Trans_Detail;
 import com.alibaba.druid.util.StringUtils;
+import com.allinpay.xmltrans.service.TranxServiceImpl;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
+import com.herongwang.p2p.entity.orders.OrdersEntity;
+import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.manage.controller.BaseController;
+import com.herongwang.p2p.service.account.IAccountService;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
+import com.herongwang.p2p.service.orders.IOrdersService;
+import com.herongwang.p2p.service.users.IUserService;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
 
@@ -24,6 +31,15 @@ public class DealDetailController extends BaseController
     
     @Autowired
     IFundDetailService fundDetailService;
+    
+    @Autowired
+    IOrdersService ordersService;
+    
+    @Autowired
+    IAccountService accountService;
+    
+    @Autowired
+    IUserService userService;
     
     /**
      * 充值列表
@@ -145,12 +161,35 @@ public class DealDetailController extends BaseController
     }
     
     @RequestMapping("withdraw")
-    public @ResponseBody Map<String, String> Withdraw(String id)
+    public @ResponseBody Map<String, String> Withdraw(String orderId)
             throws WebException
     {
+        OrdersEntity order = ordersService.getOrdersEntity(orderId);
+        UsersEntity user = userService.getUserById(order.getCustomerId());
+        String testTranURL = "https://113.108.182.3/aipg/ProcessServlet";
+        String trx_code, busicode;//100001批量代收 100002批量代付 100011单笔实时代收 100014单笔实时代付
+        trx_code = "100002";
+        if ("100011".equals(trx_code))//收款的时候，填写收款的业务代码
+            busicode = "10600";
+        else
+            busicode = "00600";
+        
+        Trans_Detail trans_detail = new Trans_Detail();
+        trans_detail.setSN("0001");
+        trans_detail.setACCOUNT_NAME(user.getCardHolder());
+        trans_detail.setACCOUNT_PROP("0");
+        trans_detail.setACCOUNT_NO(user.getCardNo());
+        trans_detail.setBANK_CODE("103");
+        trans_detail.setAMOUNT(order.getAmount().toString());
+        trans_detail.setCURRENCY("CNY");
         try
         {
-            fundDetailService.delFundDetail(id);
+            TranxServiceImpl tranxService = new TranxServiceImpl();
+            tranxService.nistTest(testTranURL,
+                    trx_code,
+                    busicode,
+                    trans_detail,
+                    true);
             Map<String, String> map = new HashMap<String, String>();
             map.put("isOK", "ok");
             return map;
