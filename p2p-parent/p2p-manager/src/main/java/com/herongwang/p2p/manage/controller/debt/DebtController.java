@@ -196,14 +196,12 @@ public class DebtController extends BaseController
     {
         try
         {
-            
+            return debtService.audit(debtId);
         }
         catch (Exception e)
         {
             SxjLogger.error("审核失败", e.getClass());
             throw new WebException(e);
         }
-        return null;
     }
-    
 }
