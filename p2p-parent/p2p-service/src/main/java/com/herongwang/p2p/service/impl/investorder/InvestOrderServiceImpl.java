@@ -14,6 +14,7 @@ import com.herongwang.p2p.dao.debt.IDebtDao;
 import com.herongwang.p2p.dao.investorder.IInvestOrderDao;
 import com.herongwang.p2p.dao.profitlist.IProfitListDao;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
+import com.herongwang.p2p.entity.profitlist.ProfitListEntity;
 import com.herongwang.p2p.model.invest.InvestModel;
 import com.herongwang.p2p.model.profit.ProfitModel;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
@@ -44,7 +45,7 @@ public class InvestOrderServiceImpl implements IInvestOrderService
      */
     @Override
     @Transactional
-    public InvestOrderEntity addOrder(String debtId, String amount)
+    public InvestOrderEntity addOrder(String debtId, String amount,String customerId)
             throws ServiceException
     {
         try
@@ -53,6 +54,7 @@ public class InvestOrderServiceImpl implements IInvestOrderService
             ProfitModel pm = profitService.calculatingProfit(debtId,
                     new BigDecimal(amount));
             io.setDebtId(debtId);
+            io.setCustomerId(customerId);
             io.setAmount(new BigDecimal(amount));
             io.setCreateTime(new Date());
             io.setStatus(0);//状态
@@ -86,6 +88,7 @@ public class InvestOrderServiceImpl implements IInvestOrderService
             {
                 pro.setProfitId(StringUtils.getUUID());
                 pro.setOrderId(io.getOrderId());
+                pro.setStatus(0);
                 profits.add(pro);
             }
             List<ProfitListEntity> list;
@@ -98,11 +101,6 @@ public class InvestOrderServiceImpl implements IInvestOrderService
                 //调用支付接口
                 if (io.getStatus() == 1)
                 {
-                    
-                    io.setChannel(0); //渠道
-                    io.setPayTime(new Date());//支付时间
-                    io.setArriveTime(new Date());//到账时间
-                    io.setStatus(1);//支付状态 0未支付 1支付成功 2支付失败
                     investOrderDao.updateInvestOrder(io);
                 }
             }

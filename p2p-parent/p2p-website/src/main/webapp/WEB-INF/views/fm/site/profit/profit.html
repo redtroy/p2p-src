@@ -5,6 +5,11 @@
 <title>和融网</title>
 <link href="${b.staticPath}style/style.css" rel="stylesheet"
 	type="text/css" />
+	<script>
+		function order(){
+			window.location.href="${basePath}invest/orders.htm?debtId=${debtId}&amount=${pm.investment}";
+		}
+	</script>
 </head>
 <body>
 	<@b.headerIndex />
@@ -62,7 +67,7 @@
 				</table>
 				</#if>
 				<div class="tc">
-					<button class="button button-brown fontYH">生成订单</button>
+					<span class="button button-brown fontYH" onclick="order();">生成订单</span>
 				</div>
 			</div>
 		</div>

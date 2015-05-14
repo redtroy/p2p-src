@@ -84,7 +84,7 @@
 <input type="hidden" id="" name="debtId" value="${model.debtId}"/>
 <div class="mt10"><span class="f14 fontYH">可用余额：</span><span class="mr5 fontYH f12">￥<#if (account.balance?? && account.balance>0)>${account.balance/100}<#else>0</#if></>元</span></div>
 <div class="mt10"><span class="f14 fontYH">投资份数：</span><input class="input input-w50h30" type="text" autocomplete="off" placeholder="" id="fs" name="input2" value=""/>	<span class="mr5 fontYH f14">份</span></div>
-<div class="mt10" title="如果是非登录状态点立即投资，则可用余额不显示并且转到登录页面；如果是登录状态并且余额够的情况下，则弹出提示层提示：是否用资产可用余额确定投资XXXX金额；如果登录状态并余额不够的情况下，则直接转到支付页面"><button class="button button-red fontYH">立即投资</button></div>
+<div class="mt10" title=""><span class="button button-red fontYH" onclick="sub();">立即投资</span></div>
 </form>
 </div>
 </div>

@@ -35,9 +35,10 @@ public class ProfitController
     {
         try
         {
-            ProfitModel pm = profitService.calculatingProfit("a44apymRNEWYenNmTc5MBNdhLGxdwQo3",
-                    new BigDecimal("1000"));
+            ProfitModel pm = profitService.calculatingProfit(debtId,
+                    new BigDecimal(amount));
             map.put("pm", pm);
+            map.put("debtId", debtId);
         }
         catch (Exception e)
         {

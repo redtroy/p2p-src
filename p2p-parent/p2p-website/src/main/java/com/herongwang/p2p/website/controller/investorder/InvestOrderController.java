@@ -10,6 +10,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
+import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.model.invest.InvestModel;
 import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
@@ -57,10 +58,11 @@ public class InvestOrderController extends BaseController
     {
         try
         {
-            InvestOrderEntity io = ivestService.addOrder(debtId, amount);
+            UsersEntity user = getUsersEntity();
+            InvestOrderEntity io = ivestService.addOrder(debtId, amount,user.getCustomerId());
             //加MD5
             ra.addAttribute("orderId", io.getOrderId());
-            ra.addAttribute("amount", io.getAmount());
+            ra.addAttribute("amount", io.getAmount().doubleValue());
         }
         catch (Exception e)
         {

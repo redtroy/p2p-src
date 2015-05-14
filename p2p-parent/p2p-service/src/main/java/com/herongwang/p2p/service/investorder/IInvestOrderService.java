@@ -13,7 +13,7 @@ public interface IInvestOrderService
      * aa
      * @param order 
      */
-    public InvestOrderEntity addOrder(String debtId, String amount)
+    public InvestOrderEntity addOrder(String debtId, String amount,String customerId)
             throws ServiceException;
     
     /**
