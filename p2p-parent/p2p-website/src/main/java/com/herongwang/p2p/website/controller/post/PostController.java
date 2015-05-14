@@ -1,6 +1,8 @@
 package com.herongwang.p2p.website.controller.post;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -146,6 +148,7 @@ public class PostController extends BaseController
         
     }
     
+    @SuppressWarnings("finally")
     @RequestMapping("/investPost")
     public String investPost(ModelMap map, InvestOrderEntity order)
             throws WebException
@@ -155,7 +158,35 @@ public class PostController extends BaseController
                 order.getAmount());
         if (flag == 1)
         {
+            
+            AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
             //支付成功
+            try
+            {
+                InvestOrderEntity io = new InvestOrderEntity();
+                io.setOrderId(order.getOrderId());
+                io.setAmount(order.getAmount());
+                io.setStatus(flag);
+                io.setChannel(1);
+                io.setCreateTime(new Date());
+                io.setArriveTime(new Date());
+                investOrderService.finishOrder(io);
+                map.put("title", "投资成功");
+                map.put("orderName", "投资");
+                map.put("cz", 0);
+                map.put("sxj", 0);
+                map.put("zj", order.getAmount());
+                map.put("yve", account.getBalance());
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                map.put("title", "投资失败");
+            }
+            finally
+            {
+                return "site/post/resultsIn";
+            }
         }
         else
         {
@@ -205,52 +236,71 @@ public class PostController extends BaseController
         return "site/post/recharge-list";
     }
     
+    @SuppressWarnings("finally")
     @RequestMapping("/pickupin")
     public String pickupin(ModelMap map, ResultsModel result) throws Exception
     {
-        BigDecimal b2 = new BigDecimal(100);
-        UsersEntity user = this.getUsersEntity();
-        AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
-        double orderAmount = Double.valueOf(result.getOrderAmount()) / 100;
-        double payAmount = Double.valueOf(result.getPayAmount()) / 100;
-        TLBillEntity tl = postService.QueryTLBill(result);
-        //获取账户信息
-        OrdersEntity orders = ordersService.getOrdersEntityByNo(result.getOrderNo());
-        
-        String investOrderId = result.getExt1();
-        //支付成功更新支付订单状态
-        if (result.getPayResult().equals("1") && tl.getStarus() == 1
-                && orders.getStatus() != 1)
+        try
         {
+            UsersEntity user = this.getUsersEntity();
+            AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
+            TLBillEntity tl = postService.QueryTLBill(result);
+            //获取账户信息
+            OrdersEntity orders = ordersService.getOrdersEntityByNo(result.getOrderNo());
             
-            orders.setStatus(1);
-            orders.setArriveTime(tl.getFinishTime());
-            ordersService.updateOrders(orders);
+            String investOrderId = result.getExt1();
+            //支付成功更新支付订单状态
+            if (result.getPayResult().equals("1") && tl.getStarus() == 1
+                    && orders.getStatus() != 1)
+            {
+                
+                orders.setStatus(1);
+                orders.setArriveTime(tl.getFinishTime());
+                ordersService.updateOrders(orders);
+                
+                //插入充值资金明细表
+                postService.updateAccount(tl.getActualMoney(),
+                        account,
+                        orders.getOrderId(),
+                        1);
+                
+                //投资资金明细
+                //插入资金明细表
+                
+                postService.updateAccount(new BigDecimal(result.getExt2()),
+                        account,
+                        investOrderId,
+                        2);
+                
+            }
             
-            //插入充值资金明细表
-            postService.updateAccount(tl.getActualMoney(),
-                    account,
-                    orders.getOrderId(),
-                    1);
+            //支付成功
+            InvestOrderEntity io = new InvestOrderEntity();
+            io.setOrderId(investOrderId);
+            io.setAmount(new BigDecimal(result.getExt2()));
+            io.setStatus(tl.getStarus());
+            io.setChannel(2);
+            io.setCreateTime(new SimpleDateFormat("yyyyMMddHHmmss").parse(result.getOrderDatetime()));
+            io.setArriveTime(new Date());
+            investOrderService.finishOrder(io);
             
-            //投资资金明细
-            //插入资金明细表
-            
-            postService.updateAccount(new BigDecimal(result.getExt2()),
-                    account,
-                    investOrderId,
-                    2);
-            
+            account = accountService.getAccountByCustomerId(user.getCustomerId());
+            map.put("title", "充值并投资成功");
+            map.put("orderName", "投资");
+            map.put("cz", tl.getActualMoney());
+            map.put("sxj", tl.getBillMoney().subtract(tl.getActualMoney()));
+            map.put("zj", tl.getBillMoney());
+            map.put("yve", account.getBalance());
         }
-        
-        //支付成功
-        
-        map.put("orderNo", result.getOrderNo());
-        map.put("orderAmount", orderAmount);
-        map.put("payAmount", payAmount);
-        map.put("balance",
-                account.getBalance().divide(b2, 2, BigDecimal.ROUND_HALF_UP));
-        return "site/post/results";
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            map.put("title", "充值并投资失败");
+        }
+        finally
+        {
+            return "site/post/resultsIn";
+        }
     }
     
     @ResponseBody
@@ -284,6 +334,14 @@ public class PostController extends BaseController
                     investOrderId,
                     2);
         }
-        
+        //支付成功
+        InvestOrderEntity io = new InvestOrderEntity();
+        io.setOrderId(investOrderId);
+        io.setAmount(new BigDecimal(result.getExt2()));
+        io.setStatus(tl.getStarus());
+        io.setChannel(2);
+        io.setCreateTime(new SimpleDateFormat("yyyyMMddHHmmss").parse(result.getOrderDatetime()));
+        io.setArriveTime(new Date());
+        investOrderService.finishOrder(io);
     }
 }
