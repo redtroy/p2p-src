@@ -4,31 +4,44 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
 
 import com.allinpay.ets.client.PaymentResult;
 import com.allinpay.ets.client.RequestOrder;
 import com.allinpay.ets.client.SecurityUtil;
 import com.allinpay.ets.client.StringUtil;
+import com.herongwang.p2p.entity.orders.OrdersEntity;
+import com.herongwang.p2p.entity.parameters.ParametersEntity;
 import com.herongwang.p2p.entity.tl.TLBillEntity;
+import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.model.order.OrderModel;
+import com.herongwang.p2p.model.order.ResultsModel;
+import com.herongwang.p2p.service.orders.IOrdersService;
+import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.post.IPostService;
+import com.herongwang.p2p.service.tl.ITLBillService;
 
 @Service
 public class PostServiceImpl implements IPostService
 {
+    @Autowired
+    IOrdersService ordersService;
     
-    @Override
-    public void Post(String deal) throws Exception
-    {
-        
-    }
+    @Autowired
+    IParametersService parametersService;
+    
+    @Autowired
+    ITLBillService tlBillService;
     
     @Override
     public String getSignMsg(OrderModel orderModel) throws Exception
@@ -245,6 +258,143 @@ public class PostServiceImpl implements IPostService
     public String PostWithdraw(String url, boolean isFront) throws Exception
     {
         return null;
+    }
+    
+    @Override
+    public ModelMap Post(OrderModel order, UsersEntity user) throws Exception
+    {
+        ModelMap map = new ModelMap();
+        BigDecimal amount = new BigDecimal(order.getOrderAmount());
+        BigDecimal b2 = new BigDecimal(100);
+        BigDecimal b = amount.multiply(b2);
+        SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss");
+        
+        //生成充值订单
+        OrdersEntity orders = new OrdersEntity();
+        orders.setCustomerId(user.getCustomerId());
+        orders.setAmount(b);
+        orders.setCreateTime(new Date());
+        orders.setStatus(0);
+        orders.setOrderType(1);
+        ordersService.addOrders(orders);
+        
+        //返回到页面的参数
+        ParametersEntity entity = new ParametersEntity();
+        entity.setType("postType");
+        List<ParametersEntity> postList = parametersService.queryParameters(entity);
+        for (int i = 0; i < postList.size(); i++)
+        {
+            ParametersEntity p = postList.get(i);
+            if (p.getValue().equals("serverip"))
+            {
+                map.put("serverip", p.getText());
+            }
+            if (p.getValue().equals("pickupUrl"))
+            {
+                map.put("pickupUrl", p.getText());
+            }
+            if (p.getValue().equals("receiveUrl"))
+            {
+                map.put("receiveUrl", p.getText());
+            }
+            if (p.getValue().equals("merchantId"))
+            {
+                map.put("merchantId", p.getText());
+            }
+            if (p.getValue().equals("orderExpireDatetime"))
+            {
+                map.put("orderExpireDatetime", p.getText());
+            }
+            if (p.getValue().equals("productName"))
+            {
+                map.put("productName", p.getText());
+            }
+            if (p.getValue().equals("payType"))
+            {
+                map.put("payType", p.getText());
+            }
+            if (p.getValue().equals("key"))
+            {
+                map.put("key", p.getText());
+            }
+        }
+        
+        //生成签名
+        OrderModel orderMember = new OrderModel();
+        orderMember.setInputCharset("1");
+        orderMember.setPickupUrl(String.valueOf(map.get("pickupUrl")));
+        orderMember.setReceiveUrl(String.valueOf(map.get("receiveUrl")));
+        orderMember.setVersion("v1.0");
+        orderMember.setLanguage("1");
+        orderMember.setSignType("1");
+        orderMember.setMerchantId(String.valueOf(map.get("merchantId")));
+        orderMember.setOrderNo(orders.getOrdersNo());
+        orderMember.setOrderAmount(b.toString());
+        orderMember.setOrderCurrency("0");
+        orderMember.setOrderDatetime(sf.format(orders.getCreateTime()));
+        orderMember.setOrderExpireDatetime(String.valueOf(map.get("orderExpireDatetime")));
+        orderMember.setProductName(String.valueOf(map.get("productName")));
+        orderMember.setPayType(String.valueOf(map.get("payType")));
+        orderMember.setKey(String.valueOf(map.get("key")));
+        String strSignMsg = this.getSignMsg(orderMember);
+        orders.setStrSignMsg(strSignMsg);
+        
+        map.put("strSignMsg", strSignMsg);
+        map.put("orderNo", orders.getOrdersNo());
+        map.put("orderAmount", orders.getAmount());
+        map.put("orderDatetime", orderMember.getOrderDatetime());
+        
+        //添加签名到订单表
+        ordersService.updateOrders(orders);
+        return map;
+    }
+    
+    @Override
+    public TLBillEntity QueryTLBill(ResultsModel result) throws Exception
+    {
+        SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss");
+        String newDate = sf.format(new Date());
+        //获取配置信息
+        ModelMap map = new ModelMap();
+        ParametersEntity entity = new ParametersEntity();
+        entity.setType("postType");
+        List<ParametersEntity> postList = parametersService.queryParameters(entity);
+        for (int i = 0; i < postList.size(); i++)
+        {
+            ParametersEntity p = postList.get(i);
+            if (p.getValue().equals("serverip"))
+            {
+                map.put("serverip", p.getText());
+            }
+            if (p.getValue().equals("key"))
+            {
+                map.put("key", p.getText());
+            }
+        }
+        
+        //生成查询签名
+        OrderModel orderModel = new OrderModel();
+        orderModel.setMerchantId(result.getMerchantId());
+        orderModel.setOrderNo(result.getOrderNo());
+        orderModel.setOrderDatetime(result.getOrderDatetime());
+        orderModel.setKey(map.get("key").toString());
+        orderModel.setServerip(map.get("serverip").toString());
+        orderModel.setSignType(result.getSignType());
+        orderModel.setQueryTime(newDate);
+        orderModel.setOrderDatetime(result.getOrderDatetime());
+        String queryMsg = this.getQuerySignMsg(orderModel);
+        
+        orderModel.setSignMsg(queryMsg);
+        //查询远程通联账单
+        TLBillEntity tl = this.getBIll(orderModel);
+        //查询本地通联账单
+        TLBillEntity tl2 = tlBillService.getTLBillEntityByNo(tl.getMerchantBillNo());
+        if (null != tl2)
+        {
+            //添加账单
+            tlBillService.addBill(tl);
+        }
+        return tl;
     }
     
 }

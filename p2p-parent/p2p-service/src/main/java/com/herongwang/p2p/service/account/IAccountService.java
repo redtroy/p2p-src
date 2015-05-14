@@ -14,4 +14,10 @@ public interface IAccountService
      * 根据用户ID 查询用户账户
      */
     public AccountEntity getAccountByCustomerId(String customerId);
+    
+    /**
+     * 更新账户信息
+     * @param account
+     */
+    public void updateAccount(AccountEntity account);
 }

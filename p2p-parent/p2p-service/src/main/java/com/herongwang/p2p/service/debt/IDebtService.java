@@ -49,4 +49,9 @@ public interface IDebtService
      * 查询前五条标的
      */
     public List<DebtEntity> queryTop5();
+    
+    /**
+     * 满标审核
+     */
+    public String audit(String debtId);
 }

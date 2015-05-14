@@ -1,7 +1,11 @@
 package com.herongwang.p2p.service.post;
 
+import org.springframework.ui.ModelMap;
+
 import com.herongwang.p2p.entity.tl.TLBillEntity;
+import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.model.order.OrderModel;
+import com.herongwang.p2p.model.order.ResultsModel;
 import com.sxj.util.exception.ServiceException;
 
 public interface IPostService
@@ -10,7 +14,7 @@ public interface IPostService
      * 充值
      * @param apply
      */
-    public void Post(String deal) throws Exception;
+    public ModelMap Post(OrderModel order, UsersEntity user) throws Exception;
     
     /**
      * 生成支付签名
@@ -43,4 +47,13 @@ public interface IPostService
      * @throws Exception
      */
     public String PostWithdraw(String url, boolean isFront) throws Exception;
+    
+    /**
+     * 查询支付是否成功。
+     * @param result
+     * @return
+     * @throws Exception
+     */
+    public TLBillEntity QueryTLBill(ResultsModel result) throws Exception;
+    
 }

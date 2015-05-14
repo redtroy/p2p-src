@@ -186,4 +186,24 @@ public class DebtController extends BaseController
             throw new WebException(e);
         }
     }
+    
+    /**
+     * 满标审核
+     * @return
+     */
+    @RequestMapping("audit")
+    public @ResponseBody String audit(String debtId) throws WebException
+    {
+        try
+        {
+            
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error("审核失败", e.getClass());
+            throw new WebException(e);
+        }
+        return null;
+    }
+    
 }
