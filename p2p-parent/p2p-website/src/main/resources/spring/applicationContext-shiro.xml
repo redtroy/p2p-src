@@ -13,14 +13,24 @@
 		http://www.springframework.org/schema/aop
 		http://www.springframework.org/schema/aop/spring-aop.xsd"
 	default-lazy-init="false">
-	
+
 	<bean id="p2pWebsiteRealm"
-		class="com.herongwang.p2p.website.auth.P2pWebsiteShiroRealm">
+		class="com.herongwang.p2p.website.auth.P2pWebsiteAuthorizingRealm">
 		<property name="authorizationCacheName" value="${website.authorization.cache.name}"></property>
 		<property name="authenticationCacheName" value="${website.authentication.cache.name}"></property>
 	</bean>
-	<bean id="authenticationFilter"
-		class="com.herongwang.p2p.website.auth.P2pWebsiteAuthenticationFilter" />
+	<!-- <bean id="p2pWebsiteRealm" class="com.herongwang.p2p.website.auth.P2pWebsiteX509Realm"> 
+		<property name="authenticationCacheName" value="${website.authentication.cache.name}"></property> 
+		<property name="authenticationTokenClass" value="com.sxj.spring.modules.shiro.x509.authc.x509.X509AuthenticationToken"></property> 
+		<property name="credentialsMatcher" ref="subjectDNMatcher"></property> </bean> -->
+	<bean id="subjectDNMatcher"
+		class="com.sxj.spring.modules.shiro.x509.authc.x509.X509CredentialsSujbectDNMatcher"></bean>
+
+
+	<bean id="authorizationFilter"
+		class="com.herongwang.p2p.website.auth.P2pWebsiteAuthorizationFilter" />
+	<!-- <bean id="x509AuthenticationFilter"
+		class="com.herongwang.p2p.website.auth.P2pWebsiteX509AuthenticationFilter" /> -->
 
 	<!-- 权限管理器 -->
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
@@ -34,7 +44,7 @@
 		<property name="rememberMeManager.cookie.path" value="/" />
 		<property name="rememberMeManager.cookie.maxAge" value="1209600" />
 	</bean>
-	
+
 	<!-- session管理器 -->
 	<bean id="sessionManager"
 		class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
@@ -53,9 +63,8 @@
 			</list>
 		</property>
 	</bean>
-	
-	<bean id="sessionListener"
-		class="com.herongwang.p2p.website.shiro.ShiroSessionListener">
+
+	<bean id="sessionListener" class="com.herongwang.p2p.website.shiro.ShiroSessionListener">
 		<property name="securityManager" ref="securityManager"></property>
 	</bean>
 
@@ -99,19 +108,18 @@
 		<!-- 登陆成功后跳转的url -->
 		<!-- <property name="successUrl" value="/index.htm" /> -->
 		<!-- 没有权限跳转的url -->
-		 <property name="unauthorizedUrl" value="/login.htm" />
+		<property name="unauthorizedUrl" value="/login.htm" />
 		<!-- 访问地址的过滤规则,从上至下的优先级,如果有匹配的规则,就会返回,不会再进行匹配 -->
 		<property name="filterChainDefinitions">
 			<value>
-			   
 			</value>
 		</property>
 		<!-- 声明自定义的过滤器 -->
-		<property name="filters">
+		<!-- <property name="filters">
 			<map>
-				<entry key="frameperms" value-ref="authenticationFilter"></entry>
+				<entry key="authenticationFilter" value-ref="x509AuthenticationFilter"></entry>
 			</map>
-		</property>
+		</property> -->
 	</bean>
 	<!-- 起效权限注解,这个很少在web项目中用到,一般是控制url的访问,不是在controller中声明权限注解 -->
 	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
