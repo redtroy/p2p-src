@@ -42,4 +42,7 @@
 	<select id="queryDebt" resultMap="InvestListResultMap" parameterType="String">
 	     <![CDATA[select d.title,d.amount,d.finishTime,d.status,i.orderId from InvestOrder i,Debt d where d.debtId=i.debtId and d.customerId=#{customerId}]]>
 	</select>
+	<select id="queryInvestorderList" resultMap="InvestorderResultMap" parameterType="String">
+	     <![CDATA[select * from InvestOrder where debtId=#{debtId}]]>
+	</select>
 </mapper>

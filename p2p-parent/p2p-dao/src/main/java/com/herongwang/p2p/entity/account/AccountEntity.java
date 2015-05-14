@@ -70,6 +70,23 @@ public class AccountEntity implements Serializable
     @Column(name = "fozenAmount")
     private BigDecimal fozenAmount;
     
+    /**
+     * 待收金额
+     * @return
+     */
+    @Column(name = "dueAmount")
+    private BigDecimal dueAmount;
+    
+    public BigDecimal getDueAmount()
+    {
+        return dueAmount;
+    }
+    
+    public void setDueAmount(BigDecimal dueAmount)
+    {
+        this.dueAmount = dueAmount;
+    }
+    
     public BigDecimal getFozenAmount()
     {
         return fozenAmount;
