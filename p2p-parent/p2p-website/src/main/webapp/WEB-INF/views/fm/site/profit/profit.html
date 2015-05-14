@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>和融网</title>
+<link href="${b.staticPath}style/style.css" rel="stylesheet"
+	type="text/css" />
+</head>
+<body>
+	<@b.headerIndex />
+	<div class="fence-wide product">
+		<div class="yard-1100 prodCont">
+			<div class="titMain">
+				<h2 class="fontYH">还款计划</h2>
+			</div>
+			<div class="prodBox">
+				<table border="0" cellspacing="0" cellpadding="0"
+					class="tableRefund tabRef fontYH">
+					<caption class="color-blue">收益概述</caption>
+					<col width="11%" />
+					<col width="39%" />
+					<col width="11%" />
+					<col width="39%" />
+					<tr>
+						<th>共投资金额</th>
+						<td class="color-orange">${pm.investment}元</td>
+						<th>共返还本息</th>
+						<td><span class="f20 color-green mr5">${pm.amount}</span>元</td>
+					</tr>
+					<tr>
+						<th>共获得利益</th>
+						<td><span class="f20 color-red mr5">${pm.totalInterest}</span>元</td>
+						<th>利息</th>
+						<td><span class="f20 color-green mr5">${pm.totalInterest}</span>元</td>
+					</tr>
+				</table>
+				<#if pm.monthProfit?exists && (pm.monthProfit?size>0)>
+				<table border="0" cellpadding="0" cellspacing="0"
+					class="tableRefund fontYH">
+					<col width="12%" />
+					<col width="22%" />
+					<col width="22%" />
+					<col width="22%" />
+					<col width="22%" />
+					<caption class="refTit color-blue">收益详细</caption>
+					<tr>
+						<th>月份</th>
+						<th>月返还本金</th>
+						<th>月返还利息</th>
+						<th>月返还总额</th>
+						<th>管理费</th>
+					</tr>
+					<#list pm.monthProfit as profit>
+					<tr>
+						<td>${profit.month}</td>
+						<td>${profit.capital}</td>
+						<td class="color-red">${profit.profit}</td>
+						<td class="color-purple">${profit.total}</td>
+						<td class="color-green">${profit.fee}</td>
+					</tr>
+					</#list>
+				</table>
+				</#if>
+				<div class="tc">
+					<button class="button button-brown fontYH">生成订单</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<@b.footer />
+</body>
+</html>

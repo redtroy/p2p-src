@@ -26,10 +26,20 @@ public class BasicController extends BaseController
     
     private static final HttpServletRequest DefaultMultipartHttpServletRequest = null;
     
+    @RequestMapping("to_login")
+    public String to_login()
+    {
+        return LOGIN;
+    }
+    
     @RequestMapping("login")
     public String login(String account, String password, HttpSession session,
             HttpServletRequest request, ModelMap map)
     {
+        if (account == null || account == "")
+        {
+            return LOGIN;
+        }
         AdminEntity admin = adminService.getAdminEntityByName(account);
         if (admin == null)
         {
