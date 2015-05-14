@@ -77,13 +77,16 @@ public class ProfitServiceImpl implements IProfitService
                 monthProfits.add(pm);
             }
             BigDecimal totalMoney = new BigDecimal(0);
+            BigDecimal totalFee = new BigDecimal(0);
             for (MonthProfit monthProfit : monthProfits)
             {
                 totalMoney = totalMoney.add(monthProfit.getProfit());
+                totalFee = totalFee.add(monthProfit.getFee());
             }
             profits.setTotalInterest(new BigDecimal(df.format(totalMoney)));
             profits.setAmount(money1.add(totalMoney));
             profits.setInvestment(money1);
+            profits.setTotalFee(totalFee);
             //            System.out.println("总利息" + df.format(money));
             //            System.out.println("总额" + df.format(new BigDecimal(10000).add(money)));
             profits.setMonthProfit(monthProfits);
@@ -119,14 +122,17 @@ public class ProfitServiceImpl implements IProfitService
                 monthProfits.add(mp);
             }
             BigDecimal totalMoney = new BigDecimal(0);
+            BigDecimal totalFee = new BigDecimal(0);
             for (MonthProfit monthProfit : monthProfits)
             {
                 totalMoney = totalMoney.add(monthProfit.getProfit());
+                totalFee = totalFee.add(monthProfit.getFee());
             }
             profits.setTotalInterest(totalMoney);
             profits.setAmount(money1.add(totalMoney));
             profits.setInvestment(money1);
             profits.setMonthProfit(monthProfits);
+            profits.setTotalFee(totalFee);
             
         }
         return profits;
