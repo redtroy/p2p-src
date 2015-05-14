@@ -34,4 +34,5 @@ public class ProfitController
         }
         return "site/profit/profit";
     }
+    
 }
