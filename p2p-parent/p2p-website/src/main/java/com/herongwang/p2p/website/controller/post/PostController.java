@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
@@ -168,6 +169,7 @@ public class PostController extends BaseController
         return "site/post/results";
     }
     
+    @ResponseBody
     @RequestMapping("/receive")
     public void receive(ModelMap map, ResultsModel result) throws Exception
     {

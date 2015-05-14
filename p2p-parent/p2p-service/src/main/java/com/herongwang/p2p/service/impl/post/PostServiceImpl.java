@@ -208,9 +208,9 @@ public class PostServiceImpl implements IPostService
                     tl.setMerchantBillNo(results.get("orderNo"));
                     tl.setMerchantNo(results.get("merchantId"));
                     tl.setTlBillNo(results.get("paymentOrderId"));
-                    tl.setSubmitTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(results.get("orderDatetime")));
+                    tl.setSubmitTime(new SimpleDateFormat("yyyyMMddHHmmss").parse(results.get("orderDatetime")));
                     tl.setBillMoney(new BigDecimal(results.get("orderAmount")));
-                    tl.setFinishTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(results.get("payDatetime")));
+                    tl.setFinishTime(new SimpleDateFormat("yyyyMMddHHmmss").parse(results.get("payDatetime")));
                     tl.setActualMoney(new BigDecimal(results.get("payAmount")));
                     tl.setRemark1(results.get("ext1"));
                     tl.setRemark2(results.get("ext2"));
