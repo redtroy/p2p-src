@@ -2,16 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link href="${b.staticPath}style/style.css" rel="stylesheet"
-	type="text/css" />
+<link href="${b.staticPath}style/member.css" rel="stylesheet" type="text/css" />
 <script src="${b.staticPath}js/jquery.js"></script>
 <@b.validate/> <@b.dialog/>
 <script>
 	function postInfo() {
-		alert("inputCharset=1&pickupUrl=${pickupUrl}&receiveUrl=${receiveUrl}&version=v1.0&"
+		/* alert("inputCharset=1&pickupUrl=${pickupUrl}&receiveUrl=${receiveUrl}&version=v1.0&"
 				+"language=1&signType=1&merchantId=${merchantId}&orderNo=${orderNo}&"
 				+"orderAmount=${orderAmount}&orderCurrency=0&orderDatetime=${createTime?string('yyyyMMddHHmmss')}&"
-				+"orderExpireDatetime=${orderExpireDatetime}&productName=充值&payType=${payType}==${signMsg}");
+				+"orderExpireDatetime=${orderExpireDatetime}&productName=充值&payType=${payType}==${signMsg}"); */
 		//alert($("#postForm")[0].action);
 		$("#postForm").submit();
 	}
