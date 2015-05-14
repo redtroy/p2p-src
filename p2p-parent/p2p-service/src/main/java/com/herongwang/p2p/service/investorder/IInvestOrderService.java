@@ -3,7 +3,7 @@ package com.herongwang.p2p.service.investorder;
 import java.util.List;
 
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
-import com.herongwang.p2p.model.profit.ProfitModel;
+import com.herongwang.p2p.model.invest.InvestModel;
 import com.sxj.util.exception.ServiceException;
 
 public interface IInvestOrderService
@@ -49,4 +49,8 @@ public interface IInvestOrderService
     public void delOrder(String id) throws ServiceException;
     
     void finishOrder(InvestOrderEntity io) throws ServiceException;
+     /**
+     * 查询订单，标的详情
+     */
+    public List<InvestModel> queryInvestModel(String custId);
 }

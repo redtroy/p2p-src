@@ -14,7 +14,7 @@ import com.sxj.mybatis.orm.annotations.Table;
 import com.sxj.mybatis.pagination.Pagable;
 
 /**
- * 借款标1
+ * 融资订单
  * @author nishaotang
  *
  */
@@ -27,12 +27,14 @@ public class FinancingOrdersEntity extends Pagable implements Serializable
      * 
      */
     private static final long serialVersionUID = -5284030789397025667L;
+    
     /** 
     * 订单ID
     */
     @Id(column = "orderId")
-   @GeneratedValue(strategy = GenerationType.UUID)
-   private String orderId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String orderId;
+    
     /**
      * 标的ID
      */
@@ -45,7 +47,6 @@ public class FinancingOrdersEntity extends Pagable implements Serializable
     @Column(name = "customerId")
     private String customerId;
     
-    
     /**
      *借款金额
      */
@@ -57,26 +58,31 @@ public class FinancingOrdersEntity extends Pagable implements Serializable
      */
     @Column(name = "createTime")
     private Date createTime;
+    
     /**
      *借款总额
      */
     @Column(name = "loanAmount")
     private BigDecimal loanAmount;
+    
     /**
      *实收总额
      */
     @Column(name = "actualAmount")
     private BigDecimal actualAmount;
+    
     /**
      *总费用
      */
     @Column(name = "totalFee")
     private BigDecimal totalFee;
+    
     /**
      *本息总额
      */
     @Column(name = "totalAmount")
     private BigDecimal totalAmount;
+    
     /**
      *利息总额
      */
@@ -94,122 +100,122 @@ public class FinancingOrdersEntity extends Pagable implements Serializable
      * 会员姓名
      */
     private String name;
-
+    
     public String getOrderId()
     {
         return orderId;
     }
-
+    
     public void setOrderId(String orderId)
     {
         this.orderId = orderId;
     }
-
+    
     public String getDebtId()
     {
         return debtId;
     }
-
+    
     public void setDebtId(String debtId)
     {
         this.debtId = debtId;
     }
-
+    
     public String getCustomerId()
     {
         return customerId;
     }
-
+    
     public void setCustomerId(String customerId)
     {
         this.customerId = customerId;
     }
-
+    
     public BigDecimal getAmount()
     {
         return amount;
     }
-
+    
     public void setAmount(BigDecimal amount)
     {
         this.amount = amount;
     }
-
+    
     public Date getCreateTime()
     {
         return createTime;
     }
-
+    
     public void setCreateTime(Date createTime)
     {
         this.createTime = createTime;
     }
-
+    
     public BigDecimal getLoanAmount()
     {
         return loanAmount;
     }
-
+    
     public void setLoanAmount(BigDecimal loanAmount)
     {
         this.loanAmount = loanAmount;
     }
-
+    
     public BigDecimal getActualAmount()
     {
         return actualAmount;
     }
-
+    
     public void setActualAmount(BigDecimal actualAmount)
     {
         this.actualAmount = actualAmount;
     }
-
+    
     public BigDecimal getTotalFee()
     {
         return totalFee;
     }
-
+    
     public void setTotalFee(BigDecimal totalFee)
     {
         this.totalFee = totalFee;
     }
-
+    
     public BigDecimal getTotalAmount()
     {
         return totalAmount;
     }
-
+    
     public void setTotalAmount(BigDecimal totalAmount)
     {
         this.totalAmount = totalAmount;
     }
-
+    
     public BigDecimal getProfitAmount()
     {
         return profitAmount;
     }
-
+    
     public void setProfitAmount(BigDecimal profitAmount)
     {
         this.profitAmount = profitAmount;
     }
-
+    
     public Integer getStatus()
     {
         return status;
     }
-
+    
     public void setStatus(Integer status)
     {
         this.status = status;
     }
-
+    
     public String getName()
     {
         return name;
     }
-
+    
     public void setName(String name)
     {
         this.name = name;

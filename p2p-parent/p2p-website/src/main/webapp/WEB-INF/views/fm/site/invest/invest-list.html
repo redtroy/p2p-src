@@ -28,8 +28,8 @@
             </tr>
             <#list list as model>
             <tr>
-              <td class="tl"><a href="">和融直营 ${model.title}</a></td>
-              <td class="color-purple">${model.title}元</td>
+              <td class="tl"><a href="prodetails.html">和融直营 ${model.title}</a></td>
+              <td class="color-purple">${model.amount}元</td>
               <td><#if (model.finishTime??)> ${model.finishTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
               <td><em class="state normal">投资中</em></td>
             </tr>

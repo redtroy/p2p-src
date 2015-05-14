@@ -30,4 +30,7 @@ LEFT JOIN Users u on u.customerId = f.customerId WHERE 1=1 ]]>
 		</if>
 		<![CDATA[ ORDER BY f.createTime DESC]]>
 	</select>
+	<select id="getOrderByDebtId"  resultMap="FinancingOrdersEntity" parameterType="String">
+	    <![CDATA[select * from FinancingOrders where debtId=#{debtId}]]>
+	</select>
 </mapper>

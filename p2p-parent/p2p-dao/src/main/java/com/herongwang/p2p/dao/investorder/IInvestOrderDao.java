@@ -3,6 +3,7 @@ package com.herongwang.p2p.dao.investorder;
 import java.util.List;
 
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
+import com.herongwang.p2p.model.invest.InvestModel;
 import com.sxj.mybatis.orm.annotations.Delete;
 import com.sxj.mybatis.orm.annotations.Get;
 import com.sxj.mybatis.orm.annotations.Insert;
@@ -50,5 +51,10 @@ public interface IInvestOrderDao
      * @return
      */
     public List<InvestOrderEntity> query(QueryCondition<InvestOrderEntity> query);
+    
+    /**
+     * 查询订单，标的详情
+     */
+    public List<InvestModel> queryDebt(String customerId);
     
 }

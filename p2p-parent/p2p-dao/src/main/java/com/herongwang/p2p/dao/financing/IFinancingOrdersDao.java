@@ -10,40 +10,51 @@ import com.sxj.mybatis.orm.annotations.Update;
 import com.sxj.util.persistent.QueryCondition;
 
 /**
- * 借款标Dao
+ * 生成融资订单
  * @author nishaotang
  *
  */
-public interface IFinancingOrdersDao {
-	/**
-	 * 添加借款标
-	 * @param Order
-	 */
-	@Insert
-	public void addOrder(FinancingOrdersEntity order);
-	/**
-	 * 修改借款标
-	 * @param Order
-	 */
-	@Update
-	public void updateOrder(FinancingOrdersEntity order);
-	/**
-	 * 删除借款标
-	 * @param id
-	 */
-	@Delete
-	public void delOrder(String id);
-	/**
-	 * 查询借款标
-	 * @param id
-	 */
-	@Get
-	public FinancingOrdersEntity getOrder(String id);
-	/**
-	 * 借款标高级查询
-	 * @param query
-	 * @return
-	 */
-	public List<FinancingOrdersEntity> query(QueryCondition<FinancingOrdersEntity> query);
-	
+public interface IFinancingOrdersDao
+{
+    /**
+     * 添加融资订单
+     * @param Order
+     */
+    @Insert
+    public void addOrder(FinancingOrdersEntity order);
+    
+    /**
+     * 修改融资订单
+     * @param Order
+     */
+    @Update
+    public void updateOrder(FinancingOrdersEntity order);
+    
+    /**
+     * 删除融资订单
+     * @param id
+     */
+    @Delete
+    public void delOrder(String id);
+    
+    /**
+     * 查询融资订单
+     * @param id
+     */
+    @Get
+    public FinancingOrdersEntity getOrder(String id);
+    
+    /**
+     * 融资订单高级查询
+     * @param query
+     * @return
+     */
+    public List<FinancingOrdersEntity> query(
+            QueryCondition<FinancingOrdersEntity> query);
+    
+    /**
+     * 根据标的ID 查询融资订单
+     * @return
+     */
+    public FinancingOrdersEntity getOrderByDebtId(String debtId);
 }

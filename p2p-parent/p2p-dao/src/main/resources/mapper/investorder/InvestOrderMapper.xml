@@ -21,7 +21,13 @@
         <result property="dayRatio" column="dayRatio" jdbcType="FLOAT" />
         <result property="totalFee" column="totalFee" jdbcType="INTEGER"/>	
 	</resultMap>
-	
+	<resultMap type="com.herongwang.p2p.model.invest.InvestModel" id="InvestListResultMap">
+	    <result property="title" column="title" jdbcType="VARCHAR" />
+	    <result property="amount" column="amount" jdbcType="INTEGER" />
+	    <result property="finishTime" column="finishTime" jdbcType="TIMESTAMP" />
+	    <result property="status" column="status" jdbcType="INTEGER" />
+	    <result property="orderId" column="orderId" jdbcType="VARCHAR" />
+	</resultMap>
     <!-- 条件查询订单列表 -->
 	<select id="query" resultMap="InvestorderResultMap"
 		parameterType="com.sxj.util.persistent.QueryCondition">
@@ -31,5 +37,9 @@
 			<![CDATA[AND i.debtId =#{condition.debtId}]]>
 		</if>
 		<![CDATA[ ORDER BY i.createTime DESC]]>
+	</select>
+	
+	<select id="queryDebt" resultMap="InvestListResultMap" parameterType="String">
+	     <![CDATA[select d.title,d.amount,d.finishTime,d.status,i.orderId from InvestOrder i,Debt d where d.debtId=i.debtId and d.customerId=#{customerId}]]>
 	</select>
 </mapper>
