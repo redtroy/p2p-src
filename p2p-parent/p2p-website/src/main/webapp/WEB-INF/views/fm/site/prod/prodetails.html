@@ -4,7 +4,31 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>和融网</title>
 <link href="${b.staticPath}style/style.css" rel="stylesheet" type="text/css" />
-
+<script src="${b.staticPath}js/jquery1.8.js"></script>
+<script>
+  function sub(){
+	  $.post("${basePath}checkLogin.htm",function(data){
+		  if (data=='ok'){
+			  var max=${amountMax};
+			  var min=${model.minInvest};
+			  if (min==null || min==""){
+				  alert('最小投资金额不存在！请联系管理员！');
+				  return false;
+			  }
+			   var fs=$("#fs").val();//获取份数
+			   var je=fs*min/100;               //获取金额
+			   if (je>max){
+				   alert("投资金额不能超过最大可投金额");
+				   return false;
+			   }
+			      $("#invest_amount").val(je);
+			      $("#invest_form").submit();				    			
+		  }else{
+			  location.href="${basePath}login.htm";
+		  }
+	  })
+  }
+</script>
 </head>
 <body>
 <@b.headerIndex />
@@ -32,7 +56,7 @@
   <table border="0" cellspacing="0" cellpadding="0" class="tableProd">
     <tr>
     <td>
-    <span class="mr5 f14 fontYH">起投金额：<#if (model.amount>0)>${model.minInvest/100}<#else>0</#if>元</span>
+    <span class="mr5 f14 fontYH">起投金额：<#if (model.minInvest>0)>${model.minInvest/100}<#else>0</#if>元</span>
     </td>
     <td>
     <span class="mr5 f14 fontYH">还款方式：按月分期还款</span>
@@ -43,7 +67,7 @@
   </tr>
 </table>
 </div>
-<div class="mr10"><span class="f14 fontYH">可投金额：</span><span class="mr5 fontYH f12">￥<#if (model.amount>0)>${amountMax}<#else>0</#if>元</span></div>
+<div class="mr10"><span class="f14 fontYH">可投金额：</span><span class="mr5 fontYH f12">￥<#if (amountMax>0)>${amountMax}<#else>0</#if>元</span></div>
 <div class="btnBox ly-left">
 <div class="progress">
  <#if (model.finance?? && (model.finance>0))>
@@ -55,9 +79,13 @@
     <span class="sr-only">${bfb?string("#.##")}%</span>
   </div>
 </div>
+<form action="${basePath}profit/profit.htm" method="post" id="invest_form">
+<input type="hidden" id="invest_amount" name="amount" value=""/>
+<input type="hidden" id="" name="debtId" value="${model.debtId}"/>
 <div class="mt10"><span class="f14 fontYH">可用余额：</span><span class="mr5 fontYH f12">￥<#if (account.balance?? && account.balance>0)>${account.balance/100}<#else>0</#if></>元</span></div>
-<div class="mt10"><span class="f14 fontYH">投资份数：</span><input class="input input-w50h30" type="text" autocomplete="off" placeholder="" id="input" name="input2" value=""/>	<span class="mr5 fontYH f14">份</span></div>
+<div class="mt10"><span class="f14 fontYH">投资份数：</span><input class="input input-w50h30" type="text" autocomplete="off" placeholder="" id="fs" name="input2" value=""/>	<span class="mr5 fontYH f14">份</span></div>
 <div class="mt10" title="如果是非登录状态点立即投资，则可用余额不显示并且转到登录页面；如果是登录状态并且余额够的情况下，则弹出提示层提示：是否用资产可用余额确定投资XXXX金额；如果登录状态并余额不够的情况下，则直接转到支付页面"><button class="button button-red fontYH">立即投资</button></div>
+</form>
 </div>
 </div>
 <div class="aboutBox fontYH f16">

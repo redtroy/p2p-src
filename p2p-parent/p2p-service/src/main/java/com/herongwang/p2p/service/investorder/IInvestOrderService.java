@@ -13,7 +13,8 @@ public interface IInvestOrderService
      * aa
      * @param order 
      */
-    public InvestOrderEntity addOrder(String debtId,String amount) throws ServiceException;
+    public InvestOrderEntity addOrder(String debtId, String amount)
+            throws ServiceException;
     
     /**
      * 更新投标订单
@@ -46,4 +47,6 @@ public interface IInvestOrderService
      * @param id
      */
     public void delOrder(String id) throws ServiceException;
+    
+    void finishOrder(InvestOrderEntity io) throws ServiceException;
 }
