@@ -1,6 +1,8 @@
 package com.herongwang.p2p.service.impl.investorder;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,9 @@ import com.herongwang.p2p.dao.debt.IDebtDao;
 import com.herongwang.p2p.dao.investorder.IInvestOrderDao;
 import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
+import com.herongwang.p2p.model.profit.ProfitModel;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
+import com.herongwang.p2p.service.profit.IProfitService;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.logger.SxjLogger;
 import com.sxj.util.persistent.QueryCondition;
@@ -26,23 +30,44 @@ public class InvestOrderServiceImpl implements IInvestOrderService
     @Autowired
     IDebtDao debtDao;
     
+    @Autowired
+    IProfitService profitService;
+    
     /**
      * 生成投资订单
      */
     @Override
-    public void addOrder(String debtId, String amount) throws ServiceException
+    public InvestOrderEntity addOrder(String debtId, String amount)
+            throws ServiceException
     {
         try
         {
-            DebtEntity debt = debtDao.getDebtFor(debtId);//标的
             InvestOrderEntity io = new InvestOrderEntity();//投资订单
+            ProfitModel pm = profitService.calculatingProfit(debtId,
+                    new BigDecimal(amount));
             io.setDebtId(debtId);
+            io.setAmount(new BigDecimal(amount));
+            io.setCreateTime(new Date());
+            io.setStatus(0);//状态
+            io.setDueProfitAmount(pm.getAmount());//本息总额
+            io.setDueTotalAmount(pm.getTotalInterest());//收益总额
+            io.setTotalFee(pm.getTotalFee());//平台管理费
+            investOrderDao.addInvestOrder(io);
             
+            //调用支付接口
+            if(true){
+                io.setChannel(0); //渠道
+                io.setPayTime(new Date());//支付时间
+                io.setArriveTime(new Date());//到账时间
+                io.setStatus(1);//支付状态
+                investOrderDao.updateInvestOrder(io);
+            }
+            return io;
         }
         catch (Exception e)
         {
             SxjLogger.error(e.getMessage(), e, this.getClass());
-            throw new ServiceException("查询投资订单列表信息错误", e);
+            throw new ServiceException("生成投资订单错误", e);
         }
         
     }

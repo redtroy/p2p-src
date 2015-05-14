@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.herongwang.p2p.dao.profitlist.IProfitListDao">
+	<resultMap id="ProfitListEntity"
+		type="com.herongwang.p2p.entity.profitlist.ProfitListEntity">
+		<id property="parId" column="PAR_ID" jdbcType="VARCHAR" />
+		<result property="name" column="NAME" jdbcType="VARCHAR" />
+		<result property="type" column="TYPE" jdbcType="VARCHAR" />
+		<result property="value" column="VALUE" jdbcType="VARCHAR" />
+		<result property="text" column="TEXT" jdbcType="VARCHAR" />
+		<result property="dealType" column="DEAL_TYPE" jdbcType="INTEGER" />
+	</resultMap>
+
+	<!-- 条件查询参数列表 -->
+	<select id="query" resultMap="ProfitListEntity"
+		parameterType="com.sxj.util.persistent.QueryCondition">
+		<![CDATA[SELECT * FROM PARAMETERS WHERE 1=1 ]]>
+		<!-- 参数类型 -->
+		<if test="condition.type != null and condition.type != ''">
+			<![CDATA[AND TYPE LIKE CONCAT('%',#{condition.type},'%')]]>
+		</if>
+	</select>
+</mapper>
