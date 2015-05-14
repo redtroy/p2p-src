@@ -14,34 +14,30 @@
     <@b.leftMenu />
     <div class="yard-900 ly-left">
       <div class="rightSide">
-        <div class="heading fontYH f20"><span>账户充值</span></div>
+        <div class="heading fontYH f20"><span>${title}</span></div>
         <div class="mainBox fontYH">
         <table border="0" cellpadding="0" cellspacing="0" class="table tabList mb20">
         <col width="20%" />
         <col width="80%" />
         <tr>
           <th>订单名称</th>
-          <td>${orderNo}</td>
+          <td>${orderName}</td>
         </tr>
         <tr>
           <th>本次充值金额</th>
-          <td class=" money color-purple">${orderAmount}元</td>
+          <td class=" money color-purple">${cz}元</td>
         </tr>
       <tr>
       <th>手续费</th>
-      <td class="color-blue">0元</td>
+      <td class="color-blue">${sxj}元</td>
     </tr>
       <tr>
         <th>订单需支付金额</th>
-        <td class=" color-purple">${orderAmount}元</td>
-      </tr>
-      <tr>
-        <th>到账金额</th>
-        <td class="color-green">${payAmount}元</td>
+        <td class=" color-purple">${zj}元</td>
       </tr>
       <tr>
         <th>账户余额</th>
-        <td class="color-red">0元</td>
+        <td class="color-red">${yve}元</td>
       </tr>
   </table>
         </div>
