@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
@@ -34,6 +35,16 @@
 	</properties>
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>com.thoughtworks.xstream</groupId>
+				<artifactId>xstream</artifactId>
+				<version>1.4.7</version>
+			</dependency>
+			<dependency>
+				<groupId>bouncycastle</groupId>
+				<artifactId>bcprov-jdk16</artifactId>
+				<version>140</version>
+			</dependency>
 			<dependency>
 				<groupId>com.sxj</groupId>
 				<artifactId>spring-core</artifactId>
@@ -358,5 +369,8 @@
 		<module>p2p-manager</module>
 		<module>p2p-dao</module>
 		<module>p2p-service</module>
+		<module>allinpay-entity</module>
+		<module>allinpay-interf</module>
+		<module>allinpay-signtool</module>
 	</modules>
 </project>

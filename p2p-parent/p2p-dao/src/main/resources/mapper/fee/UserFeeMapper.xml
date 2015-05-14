@@ -17,11 +17,4 @@
 	<delete id="deleteuserFeeByDiscountId" parameterType="String">
 		delete from UserFee where discountId=#{discountId}
 	</delete>
-	<select id="queryUserFee">
-		select * from UserFee where customerId in
-		<foreach item="item" collection="customerIds" open="(" close=")" separator=",">
-			#{item}
-		</foreach>
-		and discountId=#{1}
-	</select>
 </mapper>

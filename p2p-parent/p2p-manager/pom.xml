@@ -209,6 +209,16 @@
 			<artifactId>p2p-service</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.allinpay</groupId>
+			<artifactId>allinpay-interf</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.allinpay</groupId>
+			<artifactId>allinpay-entity</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
   </dependencies>
   <build>
     <finalName>p2p-manager</finalName>

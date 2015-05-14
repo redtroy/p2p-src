@@ -21,7 +21,6 @@ public class UserFeeDAOTest
     public void test()
     {
         String[] customerIds = { "A", "B" };
-        userFeeDAO.queryUserFee(customerIds, "C");
     }
     
 }
