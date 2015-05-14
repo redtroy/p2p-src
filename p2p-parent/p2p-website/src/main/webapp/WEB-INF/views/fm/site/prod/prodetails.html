@@ -20,14 +20,14 @@
 				  var je=fs*min/100;               //获取金额
 				  if (blance<je){
 					  alert('金额不足！请充值')
-					  return false;
+					  location.href="${basePath}post/recharge.htm";//连接充值页面
 				  }else{
 					  $("#invest_amount").val(je);
 					  $("#invest_form").submit();
 				  }	  
 			  }else{
 				   alert('金额不足！请充值');   
-				   return false;//连接充值页面
+				   location.href="${basePath}post/recharge.htm";//连接充值页面
 			  }
 		  }else{
 			  location.href="${basePath}login.htm";
