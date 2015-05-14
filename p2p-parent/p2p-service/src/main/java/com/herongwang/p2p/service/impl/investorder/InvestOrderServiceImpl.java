@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.herongwang.p2p.dao.debt.IDebtDao;
 import com.herongwang.p2p.dao.investorder.IInvestOrderDao;
-import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
+import com.herongwang.p2p.model.invest.InvestModel;
 import com.herongwang.p2p.model.profit.ProfitModel;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
 import com.herongwang.p2p.service.profit.IProfitService;
@@ -55,7 +55,8 @@ public class InvestOrderServiceImpl implements IInvestOrderService
             investOrderDao.addInvestOrder(io);
             
             //调用支付接口
-            if(true){
+            if (true)
+            {
                 io.setChannel(0); //渠道
                 io.setPayTime(new Date());//支付时间
                 io.setArriveTime(new Date());//到账时间
@@ -115,6 +116,20 @@ public class InvestOrderServiceImpl implements IInvestOrderService
     {
         // TODO Auto-generated method stub
         
+    }
+    
+    @Override
+    public List<InvestModel> queryInvestModel(String custId)
+    {
+        try
+        {
+            return investOrderDao.queryDebt(custId);
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("查询投资订单列表,标的信息错误", e);
+        }
     }
     
 }

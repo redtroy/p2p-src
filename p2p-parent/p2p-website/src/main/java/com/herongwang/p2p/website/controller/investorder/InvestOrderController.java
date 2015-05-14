@@ -8,15 +8,16 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.herongwang.p2p.entity.debt.DebtEntity;
-import com.herongwang.p2p.model.profit.ProfitModel;
+import com.herongwang.p2p.model.invest.InvestModel;
 import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
+import com.herongwang.p2p.website.controller.BaseController;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
 
 @Controller
 @RequestMapping("invest")
-public class InvestOrderController
+public class InvestOrderController extends BaseController
 {
     @Autowired
     private IInvestOrderService ivestService;
@@ -33,7 +34,11 @@ public class InvestOrderController
     {
         try
         {
-            List<DebtEntity> investList = debtService.queryDebtList(invest);
+            if (getUsersEntity() == null)
+            {
+                return "site/invest/invest-list";
+            }
+            List<InvestModel> investList = ivestService.queryInvestModel(getUsersEntity().getCustomerId());
             map.put("list", investList);
         }
         catch (Exception e)
@@ -44,16 +49,14 @@ public class InvestOrderController
         return "site/invest/invest-list";
     }
     
-    
     @RequestMapping("orders")
-    public String orders(ModelMap map, String debtId,String amount ) throws WebException
+    public String orders(ModelMap map, String debtId, String amount)
+            throws WebException
     {
         try
         {
             
-            
-            
-           // map.put("list", investList);
+            // map.put("list", investList);
         }
         catch (Exception e)
         {
