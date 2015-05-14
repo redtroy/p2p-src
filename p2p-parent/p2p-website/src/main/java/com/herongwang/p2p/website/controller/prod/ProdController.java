@@ -52,22 +52,19 @@ public class ProdController extends BaseController
             AccountEntity account = null;
             BigDecimal amountMax;
             DebtEntity debt = debtService.getDebtEntity(debtId);
-            if (getUsersEntity() == null)
+            if ((bigDecimalIsNull(debt.getAmount()).subtract(bigDecimalIsNull(debt.getFinance()))).intValue() >= debt.getMaxInvest()
+                    .intValue())
             {
-                amountMax = new BigDecimal(0);
+                amountMax = debt.getMaxInvest();
             }
             else
             {
+                amountMax = bigDecimalIsNull(debt.getAmount()).subtract(bigDecimalIsNull(debt.getFinance()));
+            }
+            amountMax = debt.getMinInvest();
+            if (getUsersEntity() != null)
+            {
                 account = acountService.getAccountByCustomerId(getUsersEntity().getCustomerId());
-                BigDecimal balance = bigDecimalIsNull(debt.getAmount()).subtract(bigDecimalIsNull(debt.getFinance()));//剩余融资金额
-                if (balance.intValue() <= bigDecimalIsNull(account.getBalance()).intValue())
-                {
-                    amountMax = balance;
-                }
-                else
-                {
-                    amountMax = account.getBalance();
-                }
             }
             map.put("model", debt);
             map.put("account", account);
@@ -80,4 +77,19 @@ public class ProdController extends BaseController
         }
         return "site/prod/prodetails";
     }
+    
+    /* @RequestMapping("prod")
+     public String prod(String amount) throws WebException
+     {
+         try
+         {
+             
+         }
+         catch (Exception e)
+         {
+             SxjLogger.error(e.getMessage(), e, this.getClass());
+             throw new WebException("投资失败", e); // TODO: handle exception
+         }
+         return "";
+     }*/
 }
