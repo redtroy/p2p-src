@@ -24,4 +24,9 @@
 		parameterType="String">
 		<![CDATA[select * from Accounts where customerId=#{customerId}]]>
 	</select>
+	
+	<update id="updateAccountBalance" parameterType="com.sxj.util.persistent.QueryCondition">
+		<![CDATA[update Accounts set balance=balance-#{condition.balance} where customerId = #{condition.customerId} ]]>
+		<![CDATA[ AND balance >= #{condition.balance}]]>
+	</update>
 </mapper>
