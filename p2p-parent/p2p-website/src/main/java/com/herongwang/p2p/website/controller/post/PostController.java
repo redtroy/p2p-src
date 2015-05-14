@@ -98,6 +98,7 @@ public class PostController extends BaseController
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
         double amount = Double.valueOf(result.getOrderAmount()) / 100;
         double payAmount = Double.valueOf(result.getPayAmount()) / 100;
+        TLBillEntity tl = postService.QueryTLBill(result);
         map.put("orderNo", result.getOrderNo());
         map.put("orderAmount", amount);
         map.put("payAmount", payAmount);
