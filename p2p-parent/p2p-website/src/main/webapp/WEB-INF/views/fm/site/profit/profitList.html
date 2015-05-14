@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="${b.staticPath}style/member.css" rel="stylesheet"
+	type="text/css" />
+<script src="${b.staticPath}js/jquery.js"></script>
+</head>
+
+<body>
+	<@b.header />
+	<div class="fence-wide memCenter">
+		<div class="yard-1100 memCont ly-clearFix">
+			<@b.leftMenu />
+			<div class="yard-900 ly-left">
+				<div class="rightSide">
+					<div class="heading fontYH f20">
+						<span>收益信息</span>
+					</div>
+					<div class="mainBox fontYH">
+						<table border="0" cellpadding="0" cellspacing="0"
+							class="tabList tableInvest mb20">
+							<col width="12%" />
+							<col width="22%" />
+							<col width="22%" />
+							<col width="22%" />
+							<col width="22%" />
+							<tr>
+								<th>月份</th>
+								<th>月返还本金</th>
+								<th>月返还利息</th>
+								<th>月返还总额</th>
+								<th>管理费</th>
+							</tr>
+							<#list list as profit>
+							<tr>
+								<td>${profit.sequence}</td>
+								<td>${profit.monthCapital}</td>
+								<td class="color-red">${profit.monthProfit}</td>
+								<td class="color-purple">${profit.monthAmount}</td>
+								<td class="color-green">${profit.fee}</td>
+							</tr>
+							</#list>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<@b.footer />
+</body>
+</html>

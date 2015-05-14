@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +14,7 @@ import com.herongwang.p2p.dao.debt.IDebtDao;
 import com.herongwang.p2p.dao.investorder.IInvestOrderDao;
 import com.herongwang.p2p.dao.profitlist.IProfitListDao;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
-import com.herongwang.p2p.entity.profitlist.ProfitListEntity;
+import com.herongwang.p2p.model.invest.InvestModel;
 import com.herongwang.p2p.model.profit.ProfitModel;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
 import com.herongwang.p2p.service.profit.IProfitService;
@@ -77,8 +78,9 @@ public class InvestOrderServiceImpl implements IInvestOrderService
     {
         try
         {
-            ProfitModel pm = profitService.calculatingProfit(io.getDebtId(),
-                    io.getAmount());
+            InvestOrderEntity newIo = investOrderDao.getInvestOrder(io.getOrderId());
+            ProfitModel pm = profitService.calculatingProfit(newIo.getDebtId(),
+                    newIo.getAmount());
             List<ProfitListEntity> profits = new ArrayList<ProfitListEntity>();
             for (ProfitListEntity pro : pm.getMonthProfit())
             {
@@ -86,16 +88,25 @@ public class InvestOrderServiceImpl implements IInvestOrderService
                 pro.setOrderId(io.getOrderId());
                 profits.add(pro);
             }
-            profitListDao.addProfitList(profits);
-            //调用支付接口
-            if (true)
+            List<ProfitListEntity> list;
+            QueryCondition<ProfitListEntity> condition = new QueryCondition<ProfitListEntity>();
+            condition.addCondition("orderId", io.getOrderId());//会员id
+            list = profitListDao.query(condition);
+            if (CollectionUtils.isEmpty(list))
             {
-                io.setChannel(0); //渠道
-                io.setPayTime(new Date());//支付时间
-                io.setArriveTime(new Date());//到账时间
-                io.setStatus(1);//支付状态
-                investOrderDao.updateInvestOrder(io);
+                profitListDao.addProfitList(profits);
+                //调用支付接口
+                if (io.getStatus() == 1)
+                {
+                    
+                    io.setChannel(0); //渠道
+                    io.setPayTime(new Date());//支付时间
+                    io.setArriveTime(new Date());//到账时间
+                    io.setStatus(1);//支付状态 0未支付 1支付成功 2支付失败
+                    investOrderDao.updateInvestOrder(io);
+                }
             }
+            
         }
         catch (Exception e)
         {
@@ -128,10 +139,6 @@ public class InvestOrderServiceImpl implements IInvestOrderService
         {
             QueryCondition<InvestOrderEntity> condition = new QueryCondition<InvestOrderEntity>();
             List<InvestOrderEntity> investList = new ArrayList<InvestOrderEntity>();
-            if (query == null)
-            {
-                return investList;
-            }
             condition.addCondition("debtId", query.getDebtId());
             investList = investOrderDao.query(condition);
             return investList;
@@ -148,6 +155,20 @@ public class InvestOrderServiceImpl implements IInvestOrderService
     {
         // TODO Auto-generated method stub
         
+    }
+    
+    @Override
+    public List<InvestModel> queryInvestModel(String custId)
+    {
+        try
+        {
+            return investOrderDao.queryDebt(custId);
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("查询投资订单列表,标的信息错误", e);
+        }
     }
     
 }

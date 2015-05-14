@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="${b.staticPath}style/member.css" rel="stylesheet" type="text/css" />
+<script src="${b.staticPath}js/jquery.js"></script>
+<@b.validate/> <@b.dialog/>
+<script>
+	function postInfo() {
+		/* alert("inputCharset=1&pickupUrl=${pickupUrl}&receiveUrl=${receiveUrl}&version=v1.0&"
+				+"language=1&signType=1&merchantId=${merchantId}&orderNo=${orderNo}&"
+				+"orderAmount=${orderAmount}&orderCurrency=0&orderDatetime=${orderDatetime}&"
+				+"orderExpireDatetime=${orderExpireDatetime}&productName=充值&payType=${payType}==${signMsg}"); */
+		//alert($("#postForm")[0].action);
+		$("#postForm").submit();
+	}
+	
+</script>
+</head>
+
+<body>
+  <@b.header />
+<div class="fence-wide memCenter">
+  <div class="yard-1100 memCont ly-clearFix">
+    <@b.leftMenu />
+    <div class="yard-900 ly-left">
+      <div class="rightSide">
+        <div class="heading fontYH f20"><span>账户充值</span></div>
+        <div class="mainBox fontYH">
+        <form name="form2" id="postForm" action="${serverip}" method="post">
+		<input type="hidden" name="inputCharset" value="1"/>
+		<input type="hidden" name="pickupUrl" value="${pickupUrl}"/>
+		<input type="hidden" name="receiveUrl" value="${receiveUrl}" />
+		<input type="hidden" name="version" value="v1.0"/>
+		<input type="hidden" name="language" value="1" />
+		<input type="hidden" name="signType" value="1"/>
+		<input type="hidden" name="merchantId" value="${merchantId}" />
+		<input type="hidden" name="payerName" value=""/><!-- 付款人姓名  跨境支付商户若采用直连模式，必须填写该值 -->
+		<input type="hidden" name="payerEmail" value="" /><!-- 付款人邮件联系方式 -->
+		<input type="hidden" name="payerTelephone" value="" /><!-- 付款人电话联系方式 -->
+		<input type="hidden" name="payerIDCard" value="" /><!-- 付款人类型及证件号 -->
+		<input type="hidden" name="pid" value=""/><!-- 合作伙伴的商户号 -->
+		<input type="hidden" name="orderNo" value="${orderNo}" />
+		<input type="hidden" name="orderAmount" value="${orderAmount}"/>
+		<input type="hidden" name="orderCurrency" value="0" />
+		<input type="hidden" name="orderDatetime" value="${orderDatetime}" />
+		<input type="hidden" name="orderExpireDatetime" value="${orderExpireDatetime}"/>
+		<input type="hidden" name="productName" value="${productName}" />
+		<input type="hidden" name="productPrice" value="" />
+		<input type="hidden" name="productNum" value=""/>
+		<input type="hidden" name="productId" value="" />
+		<input type="hidden" name="productDesc" value="" />
+		<input type="hidden" name="ext1" value="${ext1}" />
+		<input type="hidden" name="ext2" value="${ext2}" />
+		<input type="hidden" name="payType" value="${payType}" />
+		<input type="hidden" name="issuerId" value="" />
+		<input type="hidden" name="pan" value="" />
+		<input type="hidden" name="tradeNature" value="" />
+		<input type="hidden" name="signMsg" value="${signMsg}" />
+	 </form>
+        <table border="0" cellpadding="0" cellspacing="0" class="table tabList mb20">
+        <col width="20%" />
+        <col width="80%" />
+	      <tr>
+	        <th>订单名称</th>
+	        <td>${orderNo}</td>
+	      </tr>
+	      <tr>
+	        <th>订单金额</th>
+	        <td class=" money color-purple">${amount}元</td>
+	      </tr>
+	      <tr>
+	      <th>订单手续费</th>
+	      <td class="color-blue">0元</td>
+	    </tr>
+	      <tr>
+	        <th>账户余额</th>
+	        <td class="color-red">${balance}元</td>
+	      </tr>
+	  </table>
+        <div class="tc"> <a href="javascript:postInfo();" class="button button-orange">确认充值</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="fence-wide bgBlack">
+  <div id="footer" class="yard-1100 f14 fontYH ly-clearFix">
+    <div class="menuCont tc">
+      <ul class="ly-clearFix f18">
+        <li><a href="about-us.html">关于我们</a></li>
+        <li><a href="products.html">产品优势</a></li>
+        <li><a href="contact-us.html" class="borderNone">联系我们</a></li>
+      </ul>
+      <p class="f12"><span>&copy;&nbsp;2015&nbsp;和融网&nbsp;版权所有</span><span>www.herongwangnt.com</span>苏ICP备14047993号-2</p>
+      <p class="f12">地址：江苏省南京市栖霞区马群街道仙林大道18号</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>
