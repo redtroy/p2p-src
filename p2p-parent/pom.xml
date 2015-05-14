@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.herongwang</groupId>
 	<artifactId>p2p-parent</artifactId>
@@ -90,7 +90,7 @@
 				<artifactId>mybatis-pagination</artifactId>
 				<version>${mybatis.orm.version}</version>
 			</dependency>
-			<!-- 数据库连�? -->
+			<!-- 数据库连�? -->
 			<dependency>
 				<groupId>com.alibaba</groupId>
 				<artifactId>druid</artifactId>
@@ -358,5 +358,8 @@
 		<module>p2p-manager</module>
 		<module>p2p-dao</module>
 		<module>p2p-service</module>
-	</modules>
+    <module>allinpay-entity</module>
+    <module>allinpay-interf</module>
+    <module>allinpay-signtool</module>
+  </modules>
 </project>
