@@ -9,7 +9,7 @@
 	function postInfo() {
 		/* alert("inputCharset=1&pickupUrl=${pickupUrl}&receiveUrl=${receiveUrl}&version=v1.0&"
 				+"language=1&signType=1&merchantId=${merchantId}&orderNo=${orderNo}&"
-				+"orderAmount=${orderAmount}&orderCurrency=0&orderDatetime=${createTime?string('yyyyMMddHHmmss')}&"
+				+"orderAmount=${orderAmount}&orderCurrency=0&orderDatetime=${orderDatetime}&"
 				+"orderExpireDatetime=${orderExpireDatetime}&productName=充值&payType=${payType}==${signMsg}"); */
 		//alert($("#postForm")[0].action);
 		$("#postForm").submit();
@@ -43,7 +43,7 @@
 		<input type="hidden" name="orderNo" value="${orderNo}" />
 		<input type="hidden" name="orderAmount" value="${orderAmount}"/>
 		<input type="hidden" name="orderCurrency" value="0" />
-		<input type="hidden" name="orderDatetime" value="${createTime?string('yyyyMMddHHmmss')}" />
+		<input type="hidden" name="orderDatetime" value="${orderDatetime}" />
 		<input type="hidden" name="orderExpireDatetime" value="${orderExpireDatetime}"/>
 		<input type="hidden" name="productName" value="${productName}" />
 		<input type="hidden" name="productPrice" value="" />
@@ -63,7 +63,7 @@
         <col width="80%" />
 	      <tr>
 	        <th>订单名称</th>
-	        <td>${orderNo}${orderName}</td>
+	        <td>${orderNo}</td>
 	      </tr>
 	      <tr>
 	        <th>订单金额</th>

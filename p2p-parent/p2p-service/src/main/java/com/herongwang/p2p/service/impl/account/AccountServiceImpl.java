@@ -51,4 +51,11 @@ public class AccountServiceImpl implements IAccountService
         
     }
     
+    @Override
+    public void updateAccount(AccountEntity account)
+    {
+        accountDao.updateAccount(account);
+        
+    }
+    
 }
