@@ -33,5 +33,9 @@
   		<groupId>commons-io</groupId>
   		<artifactId>commons-io</artifactId>
   	</dependency>
+  	<dependency>
+  		<groupId>com.thoughtworks.xstream</groupId>
+  		<artifactId>xstream</artifactId>
+  	</dependency>
   </dependencies>
 </project>
