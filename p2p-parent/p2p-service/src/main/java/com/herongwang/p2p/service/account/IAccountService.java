@@ -1,5 +1,7 @@
 package com.herongwang.p2p.service.account;
 
+import java.math.BigDecimal;
+
 import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.model.users.UserModel;
 
@@ -20,4 +22,11 @@ public interface IAccountService
      * @param account
      */
     public void updateAccount(AccountEntity account);
+    
+    /**
+     * 投标更新账户余额
+     * @param account
+     */
+    public int updateAccountBalance(String customerId, BigDecimal balance);
+    
 }

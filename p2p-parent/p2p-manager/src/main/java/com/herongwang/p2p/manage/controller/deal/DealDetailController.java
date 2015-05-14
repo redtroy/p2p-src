@@ -160,10 +160,13 @@ public class DealDetailController extends BaseController
         }
     }
     
+    @SuppressWarnings("finally")
     @RequestMapping("withdraw")
     public @ResponseBody Map<String, String> Withdraw(String orderId)
             throws WebException
     {
+        
+        Map<String, String> map = new HashMap<String, String>();
         OrdersEntity order = ordersService.getOrdersEntity(orderId);
         UsersEntity user = userService.getUserById(order.getCustomerId());
         String testTranURL = "https://113.108.182.3/aipg/ProcessServlet";
@@ -190,14 +193,17 @@ public class DealDetailController extends BaseController
                     busicode,
                     trans_detail,
                     true);
-            Map<String, String> map = new HashMap<String, String>();
             map.put("isOK", "ok");
-            return map;
         }
         catch (Exception e)
         {
+            map.put("isOK", "提现失败，请联系管理员。");
             e.printStackTrace();
             throw new WebException(e);
+        }
+        finally
+        {
+            return map;
         }
     }
 }
