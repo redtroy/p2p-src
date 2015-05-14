@@ -89,4 +89,19 @@ public class DebtServiceImpl implements IDebtService
         }
     }
     
+    @Override
+    public String audit(String debtId) throws ServiceException
+    {
+        try
+        {
+            
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("满标审核错误", e);
+        }
+        return null;
+    }
+    
 }

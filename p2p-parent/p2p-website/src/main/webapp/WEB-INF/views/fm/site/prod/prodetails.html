@@ -9,26 +9,20 @@
   function sub(){
 	  $.post("${basePath}checkLogin.htm",function(data){
 		  if (data=='ok'){
-			  var blance=${account.balance};
+			  var max=${amountMax};
 			  var min=${model.minInvest};
 			  if (min==null || min==""){
 				  alert('最小投资金额不存在！请联系管理员！');
 				  return false;
 			  }
-			  if (blance !=null && blance !=""){
-				  var fs=$("#fs").val();//获取份数
-				  var je=fs*min/100;               //获取金额
-				  if (blance<je){
-					  alert('金额不足！请充值')
-					  location.href="${basePath}post/recharge.htm";//连接充值页面
-				  }else{
-					  $("#invest_amount").val(je);
-					  $("#invest_form").submit();
-				  }	  
-			  }else{
-				   alert('金额不足！请充值');   
-				   location.href="${basePath}post/recharge.htm";//连接充值页面
-			  }
+			   var fs=$("#fs").val();//获取份数
+			   var je=fs*min/100;               //获取金额
+			   if (je>max){
+				   alert("投资金额不能超过最大可投金额");
+				   return false;
+			   }
+			      $("#invest_amount").val(je);
+			      $("#invest_form").submit();				    			
 		  }else{
 			  location.href="${basePath}login.htm";
 		  }
@@ -85,7 +79,7 @@
     <span class="sr-only">${bfb?string("#.##")}%</span>
   </div>
 </div>
-<form action="" method="post" id="invest_form">
+<form action="${basePath}profit/profit.htm" method="post" id="invest_form">
 <input type="hidden" id="invest_amount" name="amount" value=""/>
 <input type="hidden" id="" name="debtId" value="${model.debtId}"/>
 <div class="mt10"><span class="f14 fontYH">可用余额：</span><span class="mr5 fontYH f12">￥<#if (account.balance?? && account.balance>0)>${account.balance/100}<#else>0</#if></>元</span></div>
