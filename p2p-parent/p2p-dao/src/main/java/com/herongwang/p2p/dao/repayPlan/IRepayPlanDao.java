@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.herongwang.p2p.entity.repayPlan.RepayPlanEntity;
+import com.sxj.mybatis.orm.annotations.BatchInsert;
 import com.sxj.mybatis.orm.annotations.Delete;
 import com.sxj.mybatis.orm.annotations.Get;
 import com.sxj.mybatis.orm.annotations.Insert;
@@ -30,6 +31,12 @@ public interface IRepayPlanDao
      */
     @Update
     public void updateRepayPlan(RepayPlanEntity plan);
+    
+    /**
+     * 批量增加
+     */
+    @BatchInsert
+    public void addRepayPlanList(List<RepayPlanEntity> list);
     
     /**
      * 删除还款计划

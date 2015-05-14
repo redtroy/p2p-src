@@ -73,6 +73,7 @@ public class RepayPlanEntity extends Pagable implements Serializable
     
     /**
      * 状态
+     * 0代表未完成，1代表完成
      */
     @Column(name = "status")
     private Integer status;
@@ -91,6 +92,7 @@ public class RepayPlanEntity extends Pagable implements Serializable
     
     /**
      * 垫付状态
+     * 0代表未垫付，1代表垫付
      */
     @Column(name = "prepaidStatus")
     private Integer prepaidStatus;

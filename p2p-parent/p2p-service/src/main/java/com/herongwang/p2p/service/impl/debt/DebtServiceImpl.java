@@ -3,16 +3,24 @@ package com.herongwang.p2p.service.impl.debt;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.herongwang.p2p.dao.account.IAccountDao;
 import com.herongwang.p2p.dao.debt.IDebtDao;
 import com.herongwang.p2p.dao.financing.IFinancingOrdersDao;
+import com.herongwang.p2p.dao.funddetail.IFundDetailDao;
+import com.herongwang.p2p.dao.investorder.IInvestOrderDao;
+import com.herongwang.p2p.dao.repayPlan.IRepayPlanDao;
+import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
+import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
+import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.entity.repayPlan.RepayPlanEntity;
 import com.herongwang.p2p.model.profit.ProfitModel;
 import com.herongwang.p2p.service.debt.IDebtService;
@@ -34,6 +42,18 @@ public class DebtServiceImpl implements IDebtService
     
     @Autowired
     private IFinancingOrdersDao financingOrder;
+    
+    @Autowired
+    private IRepayPlanDao repayDao;
+    
+    @Autowired
+    private IAccountDao accountDao;
+    
+    @Autowired
+    private IFundDetailDao fundDetailDao;
+    
+    @Autowired
+    private IInvestOrderDao investDao;
     
     @Override
     public void addDebt(DebtEntity Debt) throws ServiceException
@@ -124,24 +144,75 @@ public class DebtServiceImpl implements IDebtService
             financeOrder.setProfitAmount(prift.getTotalInterest());
             financingOrder.updateOrder(financeOrder);
             //生成还款计划表
-            RepayPlanEntity repayPlan = new RepayPlanEntity(); //
-            repayPlan.setOrderId(financeOrder.getOrderId());
-            // repayPlan.setSequence(sequence);  
-            repayPlan.setMonthCapital(new BigDecimal(df.format(debt.getAmount()
-                    .divide(new BigDecimal(debt.getMonths()))))); //月本金
-            repayPlan.setMonthProfit(new BigDecimal(
-                    df.format(prift.getTotalInterest().divide(new BigDecimal(
-                            debt.getMonths()))))); //月利息
-            repayPlan.setMonthAmount(repayPlan.getMonthCapital()
-                    .add(repayPlan.getMonthProfit())); //月总额
-            repayPlan.setLeftAmount(repayPlan.getLeftAmount()); //剩余本息总额
+            List<RepayPlanEntity> reList = new ArrayList<RepayPlanEntity>();
+            for (int i = 0; i < debt.getMonths(); i++)
+            {
+                RepayPlanEntity repayPlan = new RepayPlanEntity(); //
+                repayPlan.setOrderId(financeOrder.getOrderId());
+                repayPlan.setSequence(i + 1);
+                repayPlan.setMonthCapital(new BigDecimal(
+                        df.format(debt.getAmount().divide(new BigDecimal(
+                                debt.getMonths()))))); //月本金
+                repayPlan.setMonthProfit(new BigDecimal(
+                        df.format(prift.getTotalInterest()
+                                .divide(new BigDecimal(debt.getMonths()))))); //月利息
+                repayPlan.setMonthAmount(repayPlan.getMonthCapital()
+                        .add(repayPlan.getMonthProfit())); //月总额
+                repayPlan.setLeftAmount(prift.getAmount()
+                        .subtract(repayPlan.getMonthAmount()
+                                .multiply(new BigDecimal(i)))); //剩余本息总额
+                repayPlan.setStatus(0);
+                repayPlan.setCreateTime(new Date());
+                repayPlan.setUpdateTime(new Date());
+                repayPlan.setPrepaidStatus(0);
+                reList.add(repayPlan);
+            }
+            repayDao.addRepayPlanList(reList);
+            //根据会员ID 查询账户
+            AccountEntity account = accountDao.getAcoountByCustomerId(debt.getCustomerId());
+            //生成融资方资金明细
+            FundDetailEntity fundDetail = new FundDetailEntity();
+            fundDetail.setCustomerId(debt.getCustomerId());
+            fundDetail.setAccountId(account.getAccountId());
+            fundDetail.setOrderId(financeOrder.getOrderId());
+            //fundDetail.setType(0);
+            fundDetail.setAmount(debt.getAmount());
+            fundDetail.setBalance(debt.getAmount().add(account.getBalance()));
+            fundDetail.setFrozenAmount(new BigDecimal(0));
+            fundDetail.setDueAmount(account.getDueAmount());
+            fundDetail.setCreateTime(new Date());
+            //fundDetail.setStatus(0);
+            fundDetail.setIncomeStatus(1);
+            fundDetailDao.addFundDetail(fundDetail);
+            
+            //生成投资方 资金明细
+            List<InvestOrderEntity> investList = investDao.queryInvestorderList(debtId);
+            for (int i = 0; i < investList.size(); i++)
+            {
+                //查询用户账户
+                AccountEntity account1 = accountDao.getAcoountByCustomerId(investList.get(i)
+                        .getCustomerId());
+                fundDetail.setCustomerId(investList.get(i).getCustomerId());
+                fundDetail.setAccountId(account1.getAccountId());
+                fundDetail.setOrderId(investList.get(i).getOrderId());
+                //fundDetail.setType(0);
+                fundDetail.setAmount(investList.get(i).getAmount());
+                fundDetail.setBalance(account.getBalance()
+                        .subtract(investList.get(i).getAmount()));
+                fundDetail.setFrozenAmount(new BigDecimal(0));
+                fundDetail.setDueAmount(account1.getDueAmount());
+                fundDetail.setCreateTime(new Date());
+                //fundDetail.setStatus(0);
+                fundDetail.setIncomeStatus(1);
+                fundDetailDao.addFundDetail(fundDetail);
+            }
+            return "ok";
         }
         catch (Exception e)
         {
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new ServiceException("满标审核错误", e);
         }
-        return null;
     }
     
 }
