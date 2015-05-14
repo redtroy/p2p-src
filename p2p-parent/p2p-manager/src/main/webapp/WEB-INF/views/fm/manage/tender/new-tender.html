@@ -22,8 +22,64 @@ function saveApply() {
 	if (!validform.check()) {
 		return false;
 	}
-	var minNum = $("#minAmount").val();
+	var amount = $("#amount").val();
+	var minNum = $("#minNum").val();
 	var maxNum = $("#maxAmount").val();
+	if(amount.length>15){
+		var success = dialog({
+			title : '消息',
+			cancel : false,
+			ok : function() {
+			}
+		});
+		success.content("借款金额太大，请重新输入。");
+		success.showModal();
+		return false;
+	}
+	if(minNum.length>15){
+		var success = dialog({
+			title : '消息',
+			cancel : false,
+			ok : function() {
+			}
+		});
+		success.content("最小投资金额太大，请重新输入。");
+		success.showModal();
+		return false;
+	}
+	if(maxNum.length>15){
+		var success = dialog({
+			title : '消息',
+			cancel : false,
+			ok : function() {
+			}
+		});
+		success.content("最大投资金额太大，请重新输入。");
+		success.showModal();
+		return false;
+	}
+	if(minNum>amount){
+		var success = dialog({
+			title : '消息',
+			cancel : false,
+			ok : function() {
+			}
+		});
+		success.content("最小投资金额不能高于借款金额。");
+		success.showModal();
+		return false;
+	}
+	if(maxNum>amount){
+		var success = dialog({
+			title : '消息',
+			cancel : false,
+			ok : function() {
+			}
+		});
+		success.content("最大投资金额不能高于借款金额。");
+		success.showModal();
+		return false;
+	}
 	if(minNum>maxNum){
 		var success = dialog({
 			title : '消息',
@@ -128,23 +184,23 @@ function saveApply() {
             <tr>
               <th>年化利率</th>
               <td><input type="text" name="annualizedRate" id="annualizedRate" autocomplete="off"
-								placeholder="" value="${info.annualizedRate}" datatype="/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/"
-								errormsg="请输入1~20位之间的数字！" nullmsg="请输入年化利率！" class="input input-w270h30"/> %</td>
+								placeholder="" value="${info.annualizedRate}" datatype="n1-3"
+								errormsg="请输入最多三位整数！" nullmsg="请输入年化利率！" class="input input-w270h30"/> %</td>
             </tr>
             <tr>
               <th>最小投资金额</th>
               <td><input type="text" name="minInvest" value="${info.minInvest}" id="minAmount" datatype="/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/"
-								errormsg="请输入1~20位之间的数字！" nullmsg="请输入最小投资金额！" class="input input-w270h30"/>元</td>
+								errormsg="请输入不超过两位小数的数字！" nullmsg="请输入最小投资金额！" class="input input-w270h30"/>元</td>
             </tr>
             <tr>
               <th>最大投资金额</th>
               <td><input type="text" name="maxInvest" value="${info.maxInvest}" id="maxAmount" datatype="/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/"
-								errormsg="请输入1~20位之间的数字！" nullmsg="请输入最大投资金额！" class="input input-w270h30"/>元</td>
+								errormsg="请输入不超过两位小数的数字！" nullmsg="请输入最大投资金额！" class="input input-w270h30"/>元</td>
             </tr>
             <tr>
               <th>借款金额</th>
-              <td><input type="text" name="amount" value="${info.amount}" datatype="/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/"
-								errormsg="请输入1~20位之间的数字！" nullmsg="请输入借款金额！" id="borrowingAmount" class="input input-w270h30"/>元</td>
+              <td><input type="text" name="amount" id="amount" value="${info.amount}" datatype="/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/"
+								errormsg="请输入不超过两位小数的数字！" nullmsg="请输入借款金额！" id="borrowingAmount" class="input input-w270h30"/>元</td>
             </tr>
           </table>
           <div class="tc mt20 mb20"><a href="javascript:void(0)" onclick="saveApply();" class="button button-orange">确认生成</a></div>

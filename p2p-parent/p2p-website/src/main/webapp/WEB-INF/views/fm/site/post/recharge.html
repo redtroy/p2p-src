@@ -18,6 +18,18 @@
 		if (!validform.check()) {
 			return false;
 		}
+		var amount = $("#amount").val();
+		if(amount.length>15){
+			var success = dialog({
+				title : '消息',
+				cancel : false,
+				ok : function() {
+				}
+			});
+			success.content('您输入的金额太多，请重新输入！');
+			success.showModal();
+			return;
+		}
 		$("#postForm").submit();
 	}
 </script>
