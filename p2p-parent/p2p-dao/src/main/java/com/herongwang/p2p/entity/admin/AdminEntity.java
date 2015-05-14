@@ -52,6 +52,7 @@ public class AdminEntity implements Serializable
     
     /**
      * 状态
+     * 0 代表启用，1代表禁用
      */
     @Column(name = "STATUS")
     private Integer status;
