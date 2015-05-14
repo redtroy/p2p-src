@@ -22,6 +22,21 @@ public class ProfitModel
      */
     private BigDecimal investment;
     
+    /**
+     * 管理费
+     */
+    private BigDecimal totalFee;
+    
+    public BigDecimal getTotalFee()
+    {
+        return totalFee;
+    }
+    
+    public void setTotalFee(BigDecimal totalFee)
+    {
+        this.totalFee = totalFee;
+    }
+    
     public List<MonthProfit> getMonthProfit()
     {
         return monthProfit;

@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.herongwang.p2p.dao.debt.IDebtDao;
 import com.herongwang.p2p.dao.investorder.IInvestOrderDao;
+import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
 import com.sxj.util.exception.ServiceException;
@@ -21,10 +23,27 @@ public class InvestOrderServiceImpl implements IInvestOrderService
     @Autowired
     IInvestOrderDao investOrderDao;
     
+    @Autowired
+    IDebtDao debtDao;
+    
+    /**
+     * 生成投资订单
+     */
     @Override
-    public void addOrder(InvestOrderEntity order) throws ServiceException
+    public void addOrder(String debtId, String amount) throws ServiceException
     {
-        // TODO Auto-generated method stub
+        try
+        {
+            DebtEntity debt = debtDao.getDebtFor(debtId);//标的
+            InvestOrderEntity io = new InvestOrderEntity();//投资订单
+            io.setDebtId(debtId);
+            
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("查询投资订单列表信息错误", e);
+        }
         
     }
     

@@ -8,6 +8,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.herongwang.p2p.entity.debt.DebtEntity;
+import com.herongwang.p2p.model.profit.ProfitModel;
 import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
 import com.sxj.util.exception.WebException;
@@ -43,4 +44,22 @@ public class InvestOrderController
         return "site/invest/invest-list";
     }
     
+    
+    @RequestMapping("orders")
+    public String orders(ModelMap map, String debtId,String amount ) throws WebException
+    {
+        try
+        {
+            
+            
+            
+           // map.put("list", investList);
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new WebException("生成订单错误", e);
+        }
+        return "site/invest/invest-list";
+    }
 }
