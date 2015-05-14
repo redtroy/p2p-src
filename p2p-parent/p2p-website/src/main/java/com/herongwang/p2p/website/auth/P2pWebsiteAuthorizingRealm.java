@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.service.users.IUserService;
 
-public class P2pWebsiteShiroRealm extends AuthorizingRealm
+public class P2pWebsiteAuthorizingRealm extends AuthorizingRealm
 {
     @Autowired
     private IUserService memberService;
@@ -25,7 +25,7 @@ public class P2pWebsiteShiroRealm extends AuthorizingRealm
     
     public static final int HASH_INTERATIONS = 1;
     
-    public P2pWebsiteShiroRealm()
+    public P2pWebsiteAuthorizingRealm()
     {
         super.setAuthenticationCachingEnabled(false);
     }

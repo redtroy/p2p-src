@@ -11,7 +11,7 @@ import org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter;
 
 import com.sxj.util.common.StringUtils;
 
-public class P2pWebsiteAuthenticationFilter extends
+public class P2pWebsiteAuthorizationFilter extends
         PermissionsAuthorizationFilter
 {
     

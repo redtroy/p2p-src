@@ -93,6 +93,10 @@ public class BasicController extends BaseController
         Subject currentUser = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(account,
                 password);
+        //        X509AuthenticationToken token = new X509AuthenticationToken(
+        //                (X509Certificate[]) request.getAttribute("javax.servlet.request.X509Certificate"),
+        //                request.getRemoteHost());
+        
         try
         {
             currentUser.login(token);
@@ -103,6 +107,7 @@ public class BasicController extends BaseController
         }
         catch (AuthenticationException e)
         {
+            SxjLogger.debug("", e, getClass());
             map.put("account", account);
             map.put("message", "用户名或密码错误");
             return LOGIN;
@@ -113,6 +118,7 @@ public class BasicController extends BaseController
             session.setAttribute("userInfo", user);
             UsersEntity userInfo = userService.getUserByUserId(user.getCustomerId());
             map.put("user", userInfo);
+            
             return "site/member/member-center";
             // return "redirect:" + getBasePath(request) + "member/memberInfo.htm";
         }
