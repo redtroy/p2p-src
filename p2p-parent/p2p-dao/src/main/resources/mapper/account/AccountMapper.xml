@@ -13,6 +13,7 @@
 		<result property="status" column="status" jdbcType="INTEGER" />
 		<result property="debtAmount" column="debtAmount" jdbcType="INTEGER" />
 		<result property="fozenAmount" column="fozenAmount" jdbcType="INTEGER" />
+		<result property="dueAmount" column="dueAmount" jdbcType="INTEGER" />
 	</resultMap>
 
 	<select id="getAccountByOrderId" resultMap="AccountResultMap"

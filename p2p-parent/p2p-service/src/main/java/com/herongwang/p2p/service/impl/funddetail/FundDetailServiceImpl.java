@@ -23,14 +23,14 @@ public class FundDetailServiceImpl implements IFundDetailService
     @Override
     public void addFundDetail(FundDetailEntity deal) throws ServiceException
     {
-        // TODO Auto-generated method stub
+        fundDetailDao.addFundDetail(deal);
         
     }
     
     @Override
     public void updateFundDetail(FundDetailEntity deal) throws ServiceException
     {
-        // TODO Auto-generated method stub
+        fundDetailDao.updateFundDetail(deal);
         
     }
     

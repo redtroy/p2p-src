@@ -274,14 +274,12 @@ public class PostServiceImpl implements IPostService
     public ModelMap Post(BigDecimal amount, UsersEntity user) throws Exception
     {
         ModelMap map = new ModelMap();
-        BigDecimal b2 = new BigDecimal(100);
-        BigDecimal b = amount.multiply(b2);
         SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss");
         
         //生成充值订单
         OrdersEntity orders = new OrdersEntity();
         orders.setCustomerId(user.getCustomerId());
-        orders.setAmount(b);
+        orders.setAmount(amount);
         orders.setCreateTime(new Date());
         orders.setStatus(0);
         orders.setOrderType(1);
@@ -338,7 +336,7 @@ public class PostServiceImpl implements IPostService
         orderMember.setSignType("1");
         orderMember.setMerchantId(String.valueOf(map.get("merchantId")));
         orderMember.setOrderNo(orders.getOrdersNo());
-        orderMember.setOrderAmount(b.toString());
+        orderMember.setOrderAmount(amount.toString());
         orderMember.setOrderCurrency("0");
         orderMember.setOrderDatetime(sf.format(orders.getCreateTime()));
         orderMember.setOrderExpireDatetime(String.valueOf(map.get("orderExpireDatetime")));
@@ -390,7 +388,6 @@ public class PostServiceImpl implements IPostService
         orderModel.setServerip(map.get("serverip").toString());
         orderModel.setSignType(result.getSignType());
         orderModel.setQueryTime(newDate);
-        orderModel.setOrderDatetime(result.getOrderDatetime());
         String queryMsg = this.getQuerySignMsg(orderModel);
         
         orderModel.setSignMsg(queryMsg);

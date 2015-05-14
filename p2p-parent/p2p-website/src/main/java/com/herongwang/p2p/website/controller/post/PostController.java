@@ -51,14 +51,12 @@ public class PostController extends BaseController
     public String rechargeList(ModelMap map, OrderModel order)
             throws WebException
     {
+        BigDecimal m = this.multiply(new BigDecimal(order.getOrderAmount()));
         UsersEntity user = this.getUsersEntity();
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
-        BigDecimal b2 = new BigDecimal(100);
         try
         {
-            ModelMap map1 = postService.Post(new BigDecimal(
-                    order.getOrderAmount()),
-                    user);
+            ModelMap map1 = postService.Post(m, user);
             
             map.put("serverip", map1.get("serverip"));
             map.put("pickupUrl", map1.get("pickupUrl"));
@@ -74,9 +72,7 @@ public class PostController extends BaseController
             
             map.put("amount", order.getOrderAmount());
             map.put("orderName", "充值");
-            map.put("balance",
-                    account.getBalance()
-                            .divide(b2, 2, BigDecimal.ROUND_HALF_UP));
+            map.put("balance", this.divide(account.getBalance()));
         }
         catch (Exception e)
         {
@@ -89,7 +85,7 @@ public class PostController extends BaseController
     @RequestMapping("/pickup")
     public String pickup(ModelMap map, ResultsModel result) throws Exception
     {
-        BigDecimal b2 = new BigDecimal(100);
+        
         UsersEntity user = this.getUsersEntity();
         //获取账户信息
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
@@ -117,8 +113,7 @@ public class PostController extends BaseController
         map.put("orderNo", result.getOrderNo());
         map.put("orderAmount", orderAmount);
         map.put("payAmount", payAmount);
-        map.put("balance",
-                account.getBalance().divide(b2, 2, BigDecimal.ROUND_HALF_UP));
+        map.put("balance", this.divide(account.getBalance()));
         return "site/post/results";
     }
     
@@ -153,9 +148,10 @@ public class PostController extends BaseController
     public String investPost(ModelMap map, InvestOrderEntity order)
             throws WebException
     {
+        BigDecimal m = order.getAmount().multiply(new BigDecimal(100));
         UsersEntity user = this.getUsersEntity();
-        int flag = accountService.updateAccountBalance(user.getCustomerId(),
-                order.getAmount());
+        user.setCustomerId("1");
+        int flag = accountService.updateAccountBalance(user.getCustomerId(), m);
         if (flag == 1)
         {
             
@@ -165,7 +161,7 @@ public class PostController extends BaseController
             {
                 InvestOrderEntity io = new InvestOrderEntity();
                 io.setOrderId(order.getOrderId());
-                io.setAmount(order.getAmount());
+                io.setAmount(m);
                 io.setStatus(flag);
                 io.setChannel(1);
                 io.setCreateTime(new Date());
@@ -176,7 +172,7 @@ public class PostController extends BaseController
                 map.put("cz", 0);
                 map.put("sxj", 0);
                 map.put("zj", order.getAmount());
-                map.put("yve", account.getBalance());
+                map.put("yve", this.divide(account.getBalance()));
             }
             catch (Exception e)
             {
@@ -200,16 +196,21 @@ public class PostController extends BaseController
     public String rechargeInList(ModelMap map, InvestOrderEntity order)
             throws WebException
     {
+        BigDecimal m = order.getAmount().multiply(new BigDecimal(100));
         UsersEntity user = this.getUsersEntity();
+        user.setCustomerId("1");
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
-        BigDecimal b2 = new BigDecimal(100);
         try
         {
-            ModelMap map1 = postService.Post(order.getAmount(), user);
+            ModelMap map1 = postService.Post(m, user);
             
+            String pickupUrl = map1.get("pickupUrl").toString();
+            String receiveUrl = map1.get("receiveUrl").toString();
             map.put("serverip", map1.get("serverip"));
-            map.put("pickupUrl", map1.get("pickupUrl"));
-            map.put("receiveUrl", map1.get("receiveUrl"));
+            map.put("pickupUrl", pickupUrl.substring(0, pickupUrl.length() - 4)
+                    + "in.htm");
+            map.put("receiveUrl",
+                    receiveUrl.substring(0, receiveUrl.length() - 4) + "in.htm");
             map.put("merchantId", map1.get("merchantId"));
             map.put("orderNo", map1.get("orderNo"));
             map.put("orderAmount", map1.get("orderAmount"));
@@ -219,21 +220,18 @@ public class PostController extends BaseController
             map.put("payType", map1.get("payType"));
             map.put("signMsg", map1.get("strSignMsg"));
             map.put("ext1", order.getOrderId());
-            map.put("ext2", order.getAmount());
+            map.put("ext2", m);
             
-            map.put("amount",
-                    order.getAmount().divide(b2, 2, BigDecimal.ROUND_HALF_UP));
+            map.put("amount", order.getAmount());
             map.put("orderName", "充值");
-            map.put("balance",
-                    account.getBalance()
-                            .divide(b2, 2, BigDecimal.ROUND_HALF_UP));
+            map.put("balance", this.divide(account.getBalance()));
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
         
-        return "site/post/recharge-list";
+        return "site/post/rechargeIn-list";
     }
     
     @SuppressWarnings("finally")
@@ -243,8 +241,14 @@ public class PostController extends BaseController
         try
         {
             UsersEntity user = this.getUsersEntity();
+            user.setCustomerId("1");
             AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
-            TLBillEntity tl = postService.QueryTLBill(result);
+            TLBillEntity tl = new TLBillEntity();
+            tl.setStarus(1);
+            tl.setFinishTime(new Date());
+            tl.setActualMoney(new BigDecimal(result.getOrderAmount()));
+            tl.setBillMoney(new BigDecimal(result.getOrderAmount()));
+            //            TLBillEntity tl = postService.QueryTLBill(result); //测试借款
             //获取账户信息
             OrdersEntity orders = ordersService.getOrdersEntityByNo(result.getOrderNo());
             
@@ -290,7 +294,7 @@ public class PostController extends BaseController
             map.put("cz", tl.getActualMoney());
             map.put("sxj", tl.getBillMoney().subtract(tl.getActualMoney()));
             map.put("zj", tl.getBillMoney());
-            map.put("yve", account.getBalance());
+            map.put("yve", this.divide(account.getBalance()));
         }
         catch (Exception e)
         {
@@ -343,5 +347,29 @@ public class PostController extends BaseController
         io.setCreateTime(new SimpleDateFormat("yyyyMMddHHmmss").parse(result.getOrderDatetime()));
         io.setArriveTime(new Date());
         investOrderService.finishOrder(io);
+    }
+    
+    /**
+     * 除100
+     * @param m
+     * @return
+     */
+    @SuppressWarnings("unused")
+    private BigDecimal divide(BigDecimal m)
+    {
+        BigDecimal b2 = new BigDecimal(100);
+        return m.divide(b2, 2, BigDecimal.ROUND_HALF_UP);
+    }
+    
+    /**
+     * 乘100
+     * @param m
+     * @return
+     */
+    @SuppressWarnings("unused")
+    private BigDecimal multiply(BigDecimal m)
+    {
+        BigDecimal b2 = new BigDecimal(100);
+        return m.multiply(b2);
     }
 }

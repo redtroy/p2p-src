@@ -18,7 +18,7 @@
 		if (!validform.check()) {
 			return false;
 		}
-		var amount = $("#amount").val();
+		var amount = $("#totalFee").val();
 		if(amount >=${amount}){
 			$("#postForm").submit();
 		}else{
@@ -43,22 +43,23 @@
     <@b.leftMenu />
     <div class="yard-900 ly-left">
       <div class="rightSide">
-        <div class="heading fontYH f20"><span>账户余额不足请充值</span></div>
+        <div class="heading fontYH f20" style="width: 200px"><span>账户余额不足请充值</span></div>
         <div class="mainBox fontYH">
         <form action="rechargeInList.htm" id="postForm">
 	        <input name="orderId" type="hidden" value="${orderId}"/>
-	        <input name="amount" type="hidden" value="${orderAmount}"/>
-        </form>
+	        <input name="amount" type="hidden" value="${amount}"/>
         <table border="0" cellpadding="0" cellspacing="0" class="table tabList mb20">
     <col width="20%" />
         <col width="80%" />
         <tr>
       <th>充值金额</th>
-      <td><input type="text" id="amount" class="input input-w140h30" value="${amount}" datatype="/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/"
+      <td><input type="text" id="totalFee" name ="totalFee" class="input input-w140h30" value="${amount}" datatype="/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/"
 								errormsg="请输入不超过两位小数数字！" nullmsg="请输入充值金额！"  /> 元</td>
     </tr>
   </table>
         <div class="tc"> <a class="button button-orange" href="javascript:void(0)" onclick="postInfo();">确认充值</a>&nbsp;</div>
+        
+        </form>
         </div>
       </div>
     </div>

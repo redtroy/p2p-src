@@ -57,4 +57,9 @@ public interface IInvestOrderDao
      */
     public List<InvestModel> queryDebt(String customerId);
     
+    /**
+     * 根据DebtId查询投资订单
+     */
+    public List<InvestOrderEntity> queryInvestorderList(String debtId);
+    
 }

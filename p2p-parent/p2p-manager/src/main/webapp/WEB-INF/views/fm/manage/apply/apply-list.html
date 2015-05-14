@@ -4,14 +4,65 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>和融网管理平台</title>
 <meta name="keywords" content="和融网管理平台">
+<meta name="description" content="和融网管理平台">
 <link href="${b.staticPath}style/style.css" rel="stylesheet" type="text/css" />
 <script src="${b.staticPath}js/jquery1.8.js" type="text/javascript"></script>
-<script src="${b.staticPath}js/datepicker.js"></script>
-<script src="${b.staticPath}js/jquery.paginate.js"></script>
-<@b.pageScript/>
 <@b.validate/>
 <@b.dialog/>
 <script>
+jQuery(document).ready(function($) {	
+	$('.levinput').click(function(){
+		$('.maskdivgen').fadeIn(100);
+		$('.memLevel').slideDown(200);
+	})
+	$('.modal-header .close').click(function(){
+		$('.maskdivgen').fadeOut(100);
+		$('.memLevel').slideUp(200);
+	})
+	$('.popBtn').click(function(){
+		$('.maskdivgen').fadeOut(100);
+		$('.memLevel').slideUp(200);
+	})
+	$('.reminput').click(function(){
+		$('.maskdivgen').fadeIn(100);
+		$('.remList').slideDown(200);
+	})
+	$('.modal-header .close').click(function(){
+		$('.maskdivgen').fadeOut(100);
+		$('.remList').slideUp(200);
+	})
+	$('.popBtn').click(function(){
+		$('.maskdivgen').fadeOut(100);
+		$('.remList').slideUp(200);
+	})
+	$('.meminput').click(function(){
+		$('.maskdivgen').fadeIn(100);
+		$('.memberList').slideDown(200);
+	})
+	$('.modal-header .close').click(function(){
+		$('.maskdivgen').fadeOut(100);
+		$('.memberList').slideUp(200);
+	})
+	$('.popBtn').click(function(){
+		$('.maskdivgen').fadeOut(100);
+		$('.memberList').slideUp(200);
+	})
+})
+function query(page) {
+var params="";
+if(page!=undefined){
+	params=params+"&currentPage="+page;
+}
+$.post("${basePath}apply/applyList.htm",params, function(data) {
+	var res = $(data).find(".tabList");
+	var pager = $(data).find("#pager");
+	$(".tabList").empty();
+	$(".tabList").append(res.html());
+	var totalPage = pager.attr("totalPage");
+	var currentPage = pager.attr("currentPage");
+	loadPage(currentPage, totalPage, query);
+});
+}
 function updateApp(id){
 	var success = dialog({
 		title : '消息',
