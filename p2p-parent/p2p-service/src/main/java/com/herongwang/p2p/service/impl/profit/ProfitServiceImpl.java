@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.herongwang.p2p.dao.debt.IDebtDao;
 import com.herongwang.p2p.entity.debt.DebtEntity;
+import com.herongwang.p2p.entity.profitlist.ProfitListEntity;
 import com.herongwang.p2p.model.profit.MonthProfit;
 import com.herongwang.p2p.model.profit.ProfitModel;
 import com.herongwang.p2p.service.profit.IProfitService;
@@ -39,7 +40,7 @@ public class ProfitServiceImpl implements IProfitService
                 6,
                 BigDecimal.ROUND_HALF_UP);//月利率=年利率/12
         DecimalFormat df = new DecimalFormat(".00");
-        List<MonthProfit> monthProfits = new ArrayList<MonthProfit>();
+        List<ProfitListEntity> monthProfits = new ArrayList<ProfitListEntity>();
         ProfitModel profits = new ProfitModel();
         int month = 0;
         if (debt.getRepayType() == 1)//按月分期还款
@@ -65,22 +66,22 @@ public class ProfitServiceImpl implements IProfitService
                 BigDecimal fee = profit.multiply(new BigDecimal("0.09"));//手续费
                 BigDecimal subtract = profit.subtract(fee);
                 money = money.subtract(monthMoney.subtract(profit));
-                MonthProfit pm = new MonthProfit();
-                pm.setTotal(monthMoney.subtract(fee).setScale(2,
+                ProfitListEntity pm = new ProfitListEntity();
+                pm.setMonthAmount(monthMoney.subtract(fee).setScale(2,
                         BigDecimal.ROUND_HALF_UP));//月总额
-                pm.setProfit(subtract.setScale(2, BigDecimal.ROUND_HALF_UP));//月利息
-                pm.setCapital(monthMoney.subtract(subtract)
+                pm.setMonthProfit(subtract.setScale(2, BigDecimal.ROUND_HALF_UP));//月利息
+                pm.setMonthCapital(monthMoney.subtract(subtract)
                         .subtract(fee)
                         .setScale(2, BigDecimal.ROUND_HALF_UP));//本金
-                pm.setMonth(month);
+                pm.setSequence(month);
                 pm.setFee(fee);
                 monthProfits.add(pm);
             }
             BigDecimal totalMoney = new BigDecimal(0);
             BigDecimal totalFee = new BigDecimal(0);
-            for (MonthProfit monthProfit : monthProfits)
+            for (ProfitListEntity monthProfit : monthProfits)
             {
-                totalMoney = totalMoney.add(monthProfit.getProfit());
+                totalMoney = totalMoney.add(monthProfit.getMonthProfit());
                 totalFee = totalFee.add(monthProfit.getFee());
             }
             profits.setTotalInterest(new BigDecimal(df.format(totalMoney)));
@@ -104,28 +105,28 @@ public class ProfitServiceImpl implements IProfitService
                 BigDecimal profit = money.multiply(monthRatio);
                 BigDecimal fee = profit.multiply(new BigDecimal("0.09"));//手续费
                 BigDecimal subtract = profit.subtract(fee);
-                MonthProfit mp = new MonthProfit();
+                ProfitListEntity mp = new ProfitListEntity();
                 if (i != 12)
                 {
-                    mp.setTotal(subtract);
-                    mp.setProfit(subtract);
-                    mp.setCapital(new BigDecimal(0));
+                    mp.setMonthAmount(subtract);
+                    mp.setMonthProfit(subtract);
+                    mp.setMonthCapital(new BigDecimal(0));
                 }
                 else
                 {
-                    mp.setTotal(subtract.add(money));
-                    mp.setProfit(subtract);
-                    mp.setCapital(money);
+                    mp.setMonthAmount(subtract.add(money));
+                    mp.setMonthProfit(subtract);
+                    mp.setMonthCapital(money);
                 }
-                mp.setMonth(month);
+                mp.setSequence(month);
                 mp.setFee(fee);
                 monthProfits.add(mp);
             }
             BigDecimal totalMoney = new BigDecimal(0);
             BigDecimal totalFee = new BigDecimal(0);
-            for (MonthProfit monthProfit : monthProfits)
+            for (ProfitListEntity monthProfit : monthProfits)
             {
-                totalMoney = totalMoney.add(monthProfit.getProfit());
+                totalMoney = totalMoney.add(monthProfit.getMonthProfit());
                 totalFee = totalFee.add(monthProfit.getFee());
             }
             profits.setTotalInterest(totalMoney);
