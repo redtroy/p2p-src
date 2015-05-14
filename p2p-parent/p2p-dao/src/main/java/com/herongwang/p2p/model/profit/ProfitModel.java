@@ -3,9 +3,11 @@ package com.herongwang.p2p.model.profit;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.herongwang.p2p.entity.profitlist.ProfitListEntity;
+
 public class ProfitModel
 {
-    private List<MonthProfit> monthProfit;
+    private List<ProfitListEntity> monthProfit;
     
     /**
      * 总利息
@@ -37,12 +39,12 @@ public class ProfitModel
         this.totalFee = totalFee;
     }
     
-    public List<MonthProfit> getMonthProfit()
+    public List<ProfitListEntity> getMonthProfit()
     {
         return monthProfit;
     }
     
-    public void setMonthProfit(List<MonthProfit> monthProfit)
+    public void setMonthProfit(List<ProfitListEntity> monthProfit)
     {
         this.monthProfit = monthProfit;
     }

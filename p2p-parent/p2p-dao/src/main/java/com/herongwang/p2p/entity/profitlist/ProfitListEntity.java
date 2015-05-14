@@ -12,6 +12,7 @@ import com.sxj.mybatis.orm.annotations.GenerationType;
 import com.sxj.mybatis.orm.annotations.Id;
 import com.sxj.mybatis.orm.annotations.Table;
 import com.sxj.mybatis.pagination.Pagable;
+
 /**
  * 收益明细
  * @author anshaoshuai
@@ -87,6 +88,18 @@ public class ProfitListEntity extends Pagable implements Serializable
      */
     @Column(name = "updateTime")
     private Date updateTime;
+    
+    private BigDecimal fee;
+    
+    public BigDecimal getFee()
+    {
+        return fee;
+    }
+    
+    public void setFee(BigDecimal fee)
+    {
+        this.fee = fee;
+    }
     
     public String getProfitId()
     {

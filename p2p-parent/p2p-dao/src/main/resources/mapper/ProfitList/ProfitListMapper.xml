@@ -5,21 +5,23 @@
 <mapper namespace="com.herongwang.p2p.dao.profitlist.IProfitListDao">
 	<resultMap id="ProfitListEntity"
 		type="com.herongwang.p2p.entity.profitlist.ProfitListEntity">
-		<id property="parId" column="PAR_ID" jdbcType="VARCHAR" />
-		<result property="name" column="NAME" jdbcType="VARCHAR" />
-		<result property="type" column="TYPE" jdbcType="VARCHAR" />
-		<result property="value" column="VALUE" jdbcType="VARCHAR" />
-		<result property="text" column="TEXT" jdbcType="VARCHAR" />
-		<result property="dealType" column="DEAL_TYPE" jdbcType="INTEGER" />
+		<id property="profitId" column="profitId" jdbcType="VARCHAR" />
+		<result property="orderId" column="orderId" jdbcType="VARCHAR" />
+		<result property="sequence" column="sequence" jdbcType="INTEGER" />
+		<result property="monthCapital" column="monthCapital" jdbcType="INTEGER" />
+		<result property="monthProfit" column="monthProfit" jdbcType="INTEGER" />
+		<result property="monthAmount" column="monthAmount" jdbcType="INTEGER" />
+		<result property="leftAmount" column="leftAmount" jdbcType="INTEGER" />
+		<result property="status" column="status" jdbcType="INTEGER" />
+		<result property="createTime" column="createTime" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="updateTime" jdbcType="TIMESTAMP" />
 	</resultMap>
 
-	<!-- 条件查询参数列表 -->
 	<select id="query" resultMap="ProfitListEntity"
 		parameterType="com.sxj.util.persistent.QueryCondition">
-		<![CDATA[SELECT * FROM PARAMETERS WHERE 1=1 ]]>
-		<!-- 参数类型 -->
-		<if test="condition.type != null and condition.type != ''">
-			<![CDATA[AND TYPE LIKE CONCAT('%',#{condition.type},'%')]]>
+		<![CDATA[SELECT * FROM ProfitList WHERE 1=1 ]]>
+		<if test="condition.orderId != null and condition.orderId != ''">
+			<![CDATA[AND orderId=#{condition.orderId}]]>
 		</if>
 	</select>
 </mapper>
