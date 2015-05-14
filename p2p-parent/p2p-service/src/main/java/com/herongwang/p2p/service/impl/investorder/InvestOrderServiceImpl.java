@@ -11,11 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.herongwang.p2p.dao.debt.IDebtDao;
 import com.herongwang.p2p.dao.investorder.IInvestOrderDao;
+import com.herongwang.p2p.dao.profitlist.IProfitListDao;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.model.invest.InvestModel;
 import com.herongwang.p2p.model.profit.ProfitModel;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
 import com.herongwang.p2p.service.profit.IProfitService;
+import com.sxj.util.common.StringUtils;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.logger.SxjLogger;
 import com.sxj.util.persistent.QueryCondition;
@@ -33,10 +35,14 @@ public class InvestOrderServiceImpl implements IInvestOrderService
     @Autowired
     IProfitService profitService;
     
+    @Autowired
+    IProfitListDao profitListDao;
+    
     /**
      * 生成投资订单
      */
     @Override
+    @Transactional
     public InvestOrderEntity addOrder(String debtId, String amount)
             throws ServiceException
     {
@@ -53,7 +59,34 @@ public class InvestOrderServiceImpl implements IInvestOrderService
             io.setDueTotalAmount(pm.getTotalInterest());//收益总额
             io.setTotalFee(pm.getTotalFee());//平台管理费
             investOrderDao.addInvestOrder(io);
-            
+            return io;
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("生成投资订单错误", e);
+        }
+        
+    }
+    
+    /**
+     * 订单支付完成
+     */
+    @Override
+    public void finishOrder(InvestOrderEntity io) throws ServiceException
+    {
+        try
+        {
+            ProfitModel pm = profitService.calculatingProfit(io.getDebtId(),
+                    io.getAmount());
+            List<ProfitListEntity> profits = new ArrayList<ProfitListEntity>();
+            for (ProfitListEntity pro : pm.getMonthProfit())
+            {
+                pro.setProfitId(StringUtils.getUUID());
+                pro.setOrderId(io.getOrderId());
+                profits.add(pro);
+            }
+            profitListDao.addProfitList(profits);
             //调用支付接口
             if (true)
             {
@@ -63,12 +96,11 @@ public class InvestOrderServiceImpl implements IInvestOrderService
                 io.setStatus(1);//支付状态
                 investOrderDao.updateInvestOrder(io);
             }
-            return io;
         }
         catch (Exception e)
         {
             SxjLogger.error(e.getMessage(), e, this.getClass());
-            throw new ServiceException("生成投资订单错误", e);
+            throw new ServiceException("生成收益明细错误", e);
         }
         
     }

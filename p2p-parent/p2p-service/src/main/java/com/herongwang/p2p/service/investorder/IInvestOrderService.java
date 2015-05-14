@@ -48,7 +48,8 @@ public interface IInvestOrderService
      */
     public void delOrder(String id) throws ServiceException;
     
-    /**
+    void finishOrder(InvestOrderEntity io) throws ServiceException;
+     /**
      * 查询订单，标的详情
      */
     public List<InvestModel> queryInvestModel(String custId);

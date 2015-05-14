@@ -1,5 +1,7 @@
 package com.herongwang.p2p.service.impl.account;
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +12,7 @@ import com.herongwang.p2p.model.users.UserModel;
 import com.herongwang.p2p.service.account.IAccountService;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.logger.SxjLogger;
+import com.sxj.util.persistent.QueryCondition;
 
 @Service
 public class AccountServiceImpl implements IAccountService
@@ -55,6 +58,16 @@ public class AccountServiceImpl implements IAccountService
     public void updateAccount(AccountEntity account)
     {
         accountDao.updateAccount(account);
+        
+    }
+    
+    @Override
+    public int updateAccountBalance(String customerId, BigDecimal balance)
+    {
+        QueryCondition<AccountEntity> condition = new QueryCondition<AccountEntity>();
+        condition.addCondition("customerId", customerId);
+        condition.addCondition("balance", balance);
+        return accountDao.updateAccountBalance(condition);
         
     }
     

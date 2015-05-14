@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.herongwang.p2p.entity.debt.DebtEntity;
+import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.model.invest.InvestModel;
 import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
@@ -50,19 +52,21 @@ public class InvestOrderController extends BaseController
     }
     
     @RequestMapping("orders")
-    public String orders(ModelMap map, String debtId, String amount)
-            throws WebException
+    public String orders(ModelMap map, String debtId, String amount,
+            RedirectAttributes ra) throws WebException
     {
         try
         {
-            
-            // map.put("list", investList);
+            InvestOrderEntity io = ivestService.addOrder(debtId, amount);
+            //加MD5
+            ra.addAttribute("orderId", io.getOrderId());
+            ra.addAttribute("amount", io.getAmount());
         }
         catch (Exception e)
         {
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new WebException("生成订单错误", e);
         }
-        return "site/invest/invest-list";
+        return "redirect:/post/investPost.htm";
     }
 }

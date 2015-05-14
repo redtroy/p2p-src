@@ -1,6 +1,7 @@
 package com.herongwang.p2p.service.impl.profit;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,12 +11,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.herongwang.p2p.dao.debt.IDebtDao;
+import com.herongwang.p2p.dao.profitlist.IProfitListDao;
 import com.herongwang.p2p.entity.debt.DebtEntity;
+import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.herongwang.p2p.entity.profitlist.ProfitListEntity;
-import com.herongwang.p2p.model.profit.MonthProfit;
 import com.herongwang.p2p.model.profit.ProfitModel;
 import com.herongwang.p2p.service.profit.IProfitService;
 import com.sxj.util.exception.ServiceException;
+import com.sxj.util.logger.SxjLogger;
+import com.sxj.util.persistent.QueryCondition;
 
 @Service
 @Transactional
@@ -24,10 +28,14 @@ public class ProfitServiceImpl implements IProfitService
     @Autowired
     IDebtDao debtDao;
     
+    @Autowired
+    IProfitListDao profitListDao;
+    
     /**
      * 计算收益
      */
     @Override
+    @Transactional
     public ProfitModel calculatingProfit(String debtId, BigDecimal money)
             throws ServiceException
     {
@@ -139,4 +147,30 @@ public class ProfitServiceImpl implements IProfitService
         return profits;
     }
     
+    /**
+     * 收益
+     */
+    @Override
+    public List<ProfitListEntity> queryProfit(String orderId)
+    {
+        
+        try
+        {
+            List<ProfitListEntity> list;
+            QueryCondition<ProfitListEntity> condition = new QueryCondition<ProfitListEntity>();
+            condition.addCondition("orderId", orderId);//会员id
+            list = profitListDao.query(condition);
+            return list;
+        }
+        catch (ServiceException e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException(e.getMessage());
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("查询收益明细错误", e);
+        }
+    }
 }

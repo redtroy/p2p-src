@@ -20,12 +20,16 @@ import com.allinpay.ets.client.PaymentResult;
 import com.allinpay.ets.client.RequestOrder;
 import com.allinpay.ets.client.SecurityUtil;
 import com.allinpay.ets.client.StringUtil;
+import com.herongwang.p2p.entity.account.AccountEntity;
+import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.herongwang.p2p.entity.orders.OrdersEntity;
 import com.herongwang.p2p.entity.parameters.ParametersEntity;
 import com.herongwang.p2p.entity.tl.TLBillEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.model.order.OrderModel;
 import com.herongwang.p2p.model.order.ResultsModel;
+import com.herongwang.p2p.service.account.IAccountService;
+import com.herongwang.p2p.service.funddetail.IFundDetailService;
 import com.herongwang.p2p.service.orders.IOrdersService;
 import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.post.IPostService;
@@ -42,6 +46,12 @@ public class PostServiceImpl implements IPostService
     
     @Autowired
     ITLBillService tlBillService;
+    
+    @Autowired
+    IFundDetailService fundDetailService;
+    
+    @Autowired
+    IAccountService accountService;
     
     @Override
     public String getSignMsg(OrderModel orderModel) throws Exception
@@ -261,10 +271,9 @@ public class PostServiceImpl implements IPostService
     }
     
     @Override
-    public ModelMap Post(OrderModel order, UsersEntity user) throws Exception
+    public ModelMap Post(BigDecimal amount, UsersEntity user) throws Exception
     {
         ModelMap map = new ModelMap();
-        BigDecimal amount = new BigDecimal(order.getOrderAmount());
         BigDecimal b2 = new BigDecimal(100);
         BigDecimal b = amount.multiply(b2);
         SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -397,4 +406,42 @@ public class PostServiceImpl implements IPostService
         return tl;
     }
     
+    @Override
+    public void updateAccount(BigDecimal account, AccountEntity entity,
+            String orderId, int incomeStatus) throws Exception
+    {
+        BigDecimal zc = entity.getBalance().subtract(account);
+        BigDecimal sr = entity.getBalance().add(account);
+        FundDetailEntity deal = new FundDetailEntity();
+        deal.setCustomerId(entity.getCustomerId());
+        deal.setAccountId(entity.getAccountId());
+        deal.setOrderId(orderId);
+        deal.setType(incomeStatus);
+        deal.setCreateTime(new Date());
+        deal.setStatus(1);
+        if (incomeStatus == 1 || incomeStatus == 3)
+        {
+            entity.setBalance(sr);
+            deal.setAmount(account);
+            deal.setBalance(entity.getBalance());
+            deal.setDueAmount(new BigDecimal(0));
+            deal.setFrozenAmount(new BigDecimal(0));
+        }
+        else if (incomeStatus == 2 || incomeStatus == 4)
+        {
+            entity.setBalance(zc);
+            deal.setAmount(account);
+            deal.setBalance(entity.getBalance());
+            deal.setDueAmount(new BigDecimal(0));
+            deal.setFrozenAmount(account);
+        }
+        else
+        {
+            return;
+        }
+        fundDetailService.addFundDetail(deal);
+        
+        accountService.updateAccount(entity);
+        
+    }
 }

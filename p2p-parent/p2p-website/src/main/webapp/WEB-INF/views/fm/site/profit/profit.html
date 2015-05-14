@@ -52,10 +52,10 @@
 					</tr>
 					<#list pm.monthProfit as profit>
 					<tr>
-						<td>${profit.month}</td>
-						<td>${profit.capital}</td>
-						<td class="color-red">${profit.profit}</td>
-						<td class="color-purple">${profit.total}</td>
+						<td>${profit.sequence}</td>
+						<td>${profit.monthCapital}</td>
+						<td class="color-red">${profit.monthProfit}</td>
+						<td class="color-purple">${profit.monthAmount}</td>
 						<td class="color-green">${profit.fee}</td>
 					</tr>
 					</#list>

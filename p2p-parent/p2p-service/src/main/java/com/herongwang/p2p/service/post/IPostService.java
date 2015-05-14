@@ -1,7 +1,10 @@
 package com.herongwang.p2p.service.post;
 
+import java.math.BigDecimal;
+
 import org.springframework.ui.ModelMap;
 
+import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.tl.TLBillEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.model.order.OrderModel;
@@ -14,7 +17,7 @@ public interface IPostService
      * 充值
      * @param apply
      */
-    public ModelMap Post(OrderModel order, UsersEntity user) throws Exception;
+    public ModelMap Post(BigDecimal amount, UsersEntity user) throws Exception;
     
     /**
      * 生成支付签名
@@ -55,5 +58,15 @@ public interface IPostService
      * @throws Exception
      */
     public TLBillEntity QueryTLBill(ResultsModel result) throws Exception;
+    
+    /**
+     * 更新账户资金信息，并插入资金明细
+     * @param account 变动金额
+     * @param entity 账户信息
+     * @param incomeStatus 进出状态1 : 充值  2: 投标 3：还款 4：提现 
+     * @throws Exception
+     */
+    public void updateAccount(BigDecimal account, AccountEntity entity,
+            String orderId, int incomeStatus) throws Exception;
     
 }
