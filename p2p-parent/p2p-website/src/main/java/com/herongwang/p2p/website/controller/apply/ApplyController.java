@@ -1,5 +1,6 @@
 package com.herongwang.p2p.website.controller.apply;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +39,7 @@ public class ApplyController extends BaseController
         //会员信息传到页面
         return "site/apply/apply";
     }
+    
     /**
      * 新增融资申请
      * @param session
@@ -53,6 +55,7 @@ public class ApplyController extends BaseController
         {
             UsersEntity user = getUsersEntity();
             //获取登陆会员ID 
+            apply.setAmount(apply.getAmount().multiply(new BigDecimal(100)));
             Map<String, String> map = new HashMap<String, String>();
             apply.setApplyTime(new Date());//申请时间
             apply.setStatus(0);
