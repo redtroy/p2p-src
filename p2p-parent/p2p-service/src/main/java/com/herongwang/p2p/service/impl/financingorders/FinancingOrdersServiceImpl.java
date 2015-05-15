@@ -38,6 +38,13 @@ public class FinancingOrdersServiceImpl implements IFinancingOrdersService
     }
     
     @Override
+    public FinancingOrdersEntity getOrderByDebtId(String debtId)
+            throws ServiceException
+    {
+        return financingOrdersDao.getOrderByDebtId(debtId);
+    }
+    
+    @Override
     public List<FinancingOrdersEntity> queryOrderList(
             FinancingOrdersEntity query) throws ServiceException
     {

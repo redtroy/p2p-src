@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.herongwang.p2p.dao.account.IAccountDao;
+import com.herongwang.p2p.dao.financing.IFinancingOrdersDao;
 import com.herongwang.p2p.dao.repayPlan.IRepayPlanDao;
 import com.herongwang.p2p.entity.account.AccountEntity;
+import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
 import com.herongwang.p2p.entity.repayPlan.RepayPlanEntity;
 import com.herongwang.p2p.service.repayplan.IRepayPlanService;
 import com.sxj.util.exception.ServiceException;
@@ -26,6 +28,9 @@ public class RepayPlanServiceImpl implements IRepayPlanService
     
     @Autowired
     IAccountDao accountDao;
+    
+    @Autowired
+    IFinancingOrdersDao financingOrdersDao;
     
     @Override
     public void addRepayPlan(RepayPlanEntity plan) throws ServiceException
@@ -49,16 +54,15 @@ public class RepayPlanServiceImpl implements IRepayPlanService
     }
     
     @Override
-    public List<RepayPlanEntity> queryRepayPlan(RepayPlanEntity query)
+    public List<RepayPlanEntity> queryRepayPlan(FinancingOrdersEntity order)
             throws ServiceException
     {
         try
         {
-            
             List<RepayPlanEntity> planList;
             QueryCondition<RepayPlanEntity> condition = new QueryCondition<RepayPlanEntity>();
-            condition.addCondition("orderId", query.getOrderId());//订单id
-            condition.addCondition("debtId", query.getDebtId());//订单id
+            condition.addCondition("orderId", order.getOrderId());//订单id
+            condition.addCondition("debtId", order.getDebtId());//订单id
             planList = repayPlanDao.queryRepayPlan(condition);
             return planList;
         }
