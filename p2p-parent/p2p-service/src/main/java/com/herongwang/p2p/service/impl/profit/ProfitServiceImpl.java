@@ -42,7 +42,7 @@ public class ProfitServiceImpl implements IProfitService
         BigDecimal money1 = money;
         //获取到标的详情
         DebtEntity debt = debtDao.getDebtFor(debtId);
-        BigDecimal yearRatio = new BigDecimal(debt.getAnnualizedRate());//年利率/100
+        BigDecimal yearRatio = new BigDecimal(debt.getAnnualizedRate()).divide(new BigDecimal(100));//年利率/100
         BigDecimal monthRatio = yearRatio.divide(new BigDecimal(
                 debt.getMonths()),
                 6,
