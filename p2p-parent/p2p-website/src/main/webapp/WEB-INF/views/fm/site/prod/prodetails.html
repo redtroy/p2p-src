@@ -67,7 +67,7 @@
   </tr>
 </table>
 </div>
-<div class="mr10"><span class="f14 fontYH">可投金额：</span><span class="mr5 fontYH f12">￥<#if (amountMax>0)>${amountMax}<#else>0</#if>元</span></div>
+<div class="mr10"><span class="f14 fontYH">可投金额：</span><span class="mr5 fontYH f12">￥<#if (amountMax>0)>${amountMax/100}<#else>0</#if>元</span></div>
 <div class="btnBox ly-left">
 <div class="progress">
  <#if (model.finance?? && (model.finance>0))>
