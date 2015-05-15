@@ -102,7 +102,7 @@ public class BasicController extends BaseController
             currentUser.login(token);
             PrincipalCollection principals = SecurityUtils.getSubject()
                     .getPrincipals();
-            String userNo = user.getCustomerNo();
+            String userNo = user.getCustomerId();
             SupervisorShiroRedisCache.addToMap(userNo, principals);
         }
         catch (AuthenticationException e)
