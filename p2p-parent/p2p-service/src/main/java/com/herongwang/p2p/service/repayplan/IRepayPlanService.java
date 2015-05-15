@@ -52,7 +52,7 @@ public interface IRepayPlanService
      * @param ids
      * @throws ServiceException
      */
-    String saveRepayPlan(String[] ids, String orderId) throws ServiceException;
+    String saveRepayPlan(String[] ids, String orderId,String debtId) throws ServiceException;
     /**
      * 验证余额
      * @param ids
@@ -60,5 +60,5 @@ public interface IRepayPlanService
      * @return
      * @throws ServiceException
      */
-    String getBalance(String[] ids, String orderId) throws ServiceException;
+    String getBalance(String[] ids, String orderId,String debtId) throws ServiceException;
 }

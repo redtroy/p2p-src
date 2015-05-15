@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.herongwang.p2p.dao.account.IAccountDao;
+import com.herongwang.p2p.dao.debt.IDebtDao;
 import com.herongwang.p2p.dao.financing.IFinancingOrdersDao;
 import com.herongwang.p2p.dao.repayPlan.IRepayPlanDao;
 import com.herongwang.p2p.entity.account.AccountEntity;
+import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
 import com.herongwang.p2p.entity.repayPlan.RepayPlanEntity;
 import com.herongwang.p2p.service.repayplan.IRepayPlanService;
@@ -31,6 +33,9 @@ public class RepayPlanServiceImpl implements IRepayPlanService
     
     @Autowired
     IFinancingOrdersDao financingOrdersDao;
+    
+    @Autowired
+    IDebtDao debtDao;
     
     @Override
     public void addRepayPlan(RepayPlanEntity plan) throws ServiceException
@@ -90,7 +95,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
      */
     @Override
     @Transactional
-    public String getBalance(String[] ids, String orderId)
+    public String getBalance(String[] ids, String orderId, String debtId)
             throws ServiceException
     {
         try
@@ -115,6 +120,14 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                 account.setBalance(account.getBalance().subtract(monthAmount));//减去余额
                 accountDao.updateAccount(account);
                 repayPlanDao.updateRepayPlanStatus(ids);//还款状态
+                Integer num = repayPlanDao.getRepayPlanCount(orderId);
+                if (num == 0)
+                {
+                    DebtEntity db = new DebtEntity();
+                    db.setDebtId(debtId);
+                    db.setStatus(5);
+                    debtDao.updateDebt(db);
+                }
                 return "ok";
             }
         }
@@ -131,7 +144,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
     }
     
     @Override
-    public String saveRepayPlan(String[] ids, String orderId)
+    public String saveRepayPlan(String[] ids, String orderId, String debtId)
             throws ServiceException
     {
         try
@@ -152,6 +165,14 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                     accountDao.updateAccount(account);//更新账户余额
                     repayPlanEntity.setStatus(1);//
                     repayPlanDao.updateRepayPlan(repayPlanEntity);//更新状态
+                    Integer num = repayPlanDao.getRepayPlanCount(orderId);
+                    if (num == 0)
+                    {
+                        DebtEntity db = new DebtEntity();
+                        db.setDebtId(debtId);
+                        db.setStatus(5);
+                        debtDao.updateDebt(db);
+                    }
                 }
                 else
                 {
@@ -162,6 +183,14 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                     repayPlanEntity.setStatus(1);//
                     repayPlanEntity.setPrepaidStatus(1);//0:为垫付1:垫付
                     repayPlanDao.updateRepayPlan(repayPlanEntity);//更新状态
+                    Integer num = repayPlanDao.getRepayPlanCount(orderId);
+                    if (num == 0)
+                    {
+                        DebtEntity db = new DebtEntity();
+                        db.setDebtId(debtId);
+                        db.setStatus(5);
+                        debtDao.updateDebt(db);
+                    }
                     //生成还款资金明细
                     //更新对应账单
                 }

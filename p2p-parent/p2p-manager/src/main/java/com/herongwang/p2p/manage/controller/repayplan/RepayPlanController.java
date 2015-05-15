@@ -51,7 +51,7 @@ public class RepayPlanController
             map.put("repayPlan", list);
             //map.put("orderId", entity.getOrderId());
             map.put("orderId", order.getOrderId());
-            
+            map.put("debtId", debtId);
             return "manage/repayPlan/repayPlan";
         }
         catch (Exception e)
@@ -71,12 +71,12 @@ public class RepayPlanController
      */
     @RequestMapping("getBalance")
     public @ResponseBody Map<String, Object> getBalance(
-            @RequestParam("ids[]")String[] ids, String orderId) throws WebException
+            @RequestParam("ids[]")String[] ids, String orderId,String debtId) throws WebException
     {
         try
         {
             Map<String, Object> map = new HashMap<String, Object>();
-            String flag = repayPlanService.getBalance(ids, orderId);
+            String flag = repayPlanService.getBalance(ids, orderId,debtId);
             map.put("flag", flag);
             return map;
         }
@@ -96,12 +96,12 @@ public class RepayPlanController
      */
     @RequestMapping("saveRepayPlan")
     public @ResponseBody Map<String, Object> saveRepayPlan(
-            @RequestParam("ids[]")String[] ids, String orderId) throws WebException
+            @RequestParam("ids[]")String[] ids, String orderId,String debtId) throws WebException
     {
         try
         {
             Map<String, Object> map = new HashMap<String, Object>();
-            String flag = repayPlanService.saveRepayPlan(ids, orderId);
+            String flag = repayPlanService.saveRepayPlan(ids, orderId,debtId);
             map.put("flag", flag);
             return map;
         }

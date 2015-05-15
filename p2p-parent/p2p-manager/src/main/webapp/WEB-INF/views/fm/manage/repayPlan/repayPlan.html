@@ -39,6 +39,7 @@
 			return;
 		}
 		var orderId = $("#orderId").val();
+		var debtId = $("#debtId").val();
 		var d = dialog({
 			title : '消息',
 			content : '是否还款?',
@@ -50,7 +51,8 @@
 				});
 				$.post("getBalance.htm", {
 					ids : arrId,
-					orderId : orderId
+					orderId : orderId,
+					debtId:debtId
 				}, function(data) {
 					if (data.flag == 'ok') {
 						//还款
@@ -69,7 +71,8 @@
 								callback : function() {
 									$.post("saveRepayPlan.htm", {
 										ids : arrId,
-										orderId : orderId
+										orderId : orderId,
+										debtId:debtId
 									}, function(data) {
 										//支付
 										if (data.flag == 'ok') {
@@ -117,6 +120,7 @@
 					</div>
 					<div class="mainBox">
 						<input type="hidden" value="${orderId}" id="orderId" />
+						<input type="hidden" value="${debtId}" id="debtId" />
 						<table border="0" cellspacing="0" cellpadding="0" class="tabList">
 							<col width="10%" />
 							<col width="15%" />

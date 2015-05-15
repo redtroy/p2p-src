@@ -63,4 +63,6 @@ public interface IRepayPlanDao
     public List<RepayPlanEntity> getRepayPlanList(String... id);
     
     public void updateRepayPlanStatus(String... id);
+    
+    public Integer getRepayPlanCount(String orderId);
 }
