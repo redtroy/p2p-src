@@ -10,9 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.herongwang.p2p.dao.account.IAccountDao;
 import com.herongwang.p2p.dao.debt.IDebtDao;
 import com.herongwang.p2p.dao.investorder.IInvestOrderDao;
 import com.herongwang.p2p.dao.profitlist.IProfitListDao;
+import com.herongwang.p2p.entity.account.AccountEntity;
+import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.entity.profitlist.ProfitListEntity;
 import com.herongwang.p2p.model.invest.InvestModel;
@@ -40,13 +43,16 @@ public class InvestOrderServiceImpl implements IInvestOrderService
     @Autowired
     IProfitListDao profitListDao;
     
+    @Autowired
+    IAccountDao accountDao;
+    
     /**
      * 生成投资订单
      */
     @Override
     @Transactional
-    public InvestOrderEntity addOrder(String debtId, String amount,String customerId)
-            throws ServiceException
+    public InvestOrderEntity addOrder(String debtId, String amount,
+            String customerId) throws ServiceException
     {
         try
         {
@@ -76,6 +82,7 @@ public class InvestOrderServiceImpl implements IInvestOrderService
      * 订单支付完成
      */
     @Override
+    @Transactional
     public void finishOrder(InvestOrderEntity io) throws ServiceException
     {
         try
@@ -102,6 +109,15 @@ public class InvestOrderServiceImpl implements IInvestOrderService
                 if (io.getStatus() == 1)
                 {
                     investOrderDao.updateInvestOrder(io);
+                    //更新待收金额
+                    AccountEntity account = accountDao.getAcoountByCustomerId(newIo.getCustomerId());
+                    account.setDueAmount(account.getDueAmount()
+                            .add(newIo.getAmount()));
+                    accountDao.updateAccount(account);
+                    //更新融资单已融资金额 
+                    DebtEntity debt = debtDao.getDebtFor(newIo.getDebtId());
+                    debt.setFinance(debt.getFinance().add(newIo.getAmount()));
+                    debtDao.updateDebt(debt);
                 }
             }
             

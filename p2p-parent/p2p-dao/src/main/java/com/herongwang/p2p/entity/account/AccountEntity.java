@@ -11,6 +11,7 @@ import com.sxj.mybatis.orm.annotations.GeneratedValue;
 import com.sxj.mybatis.orm.annotations.GenerationType;
 import com.sxj.mybatis.orm.annotations.Id;
 import com.sxj.mybatis.orm.annotations.Table;
+import com.sxj.mybatis.orm.annotations.Version;
 
 @Entity(mapper = IAccountDao.class)
 @Table(name = "Accounts")
@@ -77,6 +78,20 @@ public class AccountEntity implements Serializable
     @Column(name = "dueAmount")
     private BigDecimal dueAmount;
     
+    @Column(name = "versionLock")
+    @Version
+    private Long version;
+    
+    public Long getVersion()
+    {
+        return version;
+    }
+
+    public void setVersion(Long version)
+    {
+        this.version = version;
+    }
+
     public BigDecimal getDueAmount()
     {
         return dueAmount;

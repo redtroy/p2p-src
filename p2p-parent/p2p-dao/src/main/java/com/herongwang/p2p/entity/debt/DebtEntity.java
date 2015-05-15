@@ -11,6 +11,7 @@ import com.sxj.mybatis.orm.annotations.GeneratedValue;
 import com.sxj.mybatis.orm.annotations.GenerationType;
 import com.sxj.mybatis.orm.annotations.Id;
 import com.sxj.mybatis.orm.annotations.Table;
+import com.sxj.mybatis.orm.annotations.Version;
 import com.sxj.mybatis.pagination.Pagable;
 
 /**
@@ -135,6 +136,20 @@ public class DebtEntity extends Pagable implements Serializable
      * 状态名
      */
     private String statusText;
+    
+    @Column(name = "versionLock")
+    @Version
+    private Long version;
+    
+    public Long getVersion()
+    {
+        return version;
+    }
+    
+    public void setVersion(Long version)
+    {
+        this.version = version;
+    }
     
     public String getDebtId()
     {

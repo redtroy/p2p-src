@@ -9,17 +9,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
+import com.herongwang.p2p.entity.users.UsersEntity;
+import com.herongwang.p2p.service.account.IAccountService;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
+import com.herongwang.p2p.website.controller.BaseController;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
 
 @Controller
 @RequestMapping("/fundDetail")
-public class FundDetailController
+public class FundDetailController extends BaseController
 {
     @Autowired
     IFundDetailService fundDetailService;
+    
+    @Autowired
+    IAccountService accountService;
     
     /**
      * 资金明细
@@ -35,11 +42,17 @@ public class FundDetailController
         //会员信息传到页面
         try
         {
-            query.setCustomerId("1");
+            UsersEntity user = getUsersEntity();
+            if(user==null){
+                return LOGIN;
+            }
+            AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
+            query.setCustomerId(user.getCustomerId());
             query.setPagable(true);
             List<FundDetailEntity> fundList = fundDetailService.queryFundDetail(query);
             map.put("fundList", fundList);
             map.put("query", query);
+            map.put("account", account);
             return "site/fundDetail/fundDetail";
         }
         catch (Exception e)

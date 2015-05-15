@@ -42,8 +42,8 @@ function query(page) {
 					<div class="mainBox fontYH">
 						<div class="capInfo mb10 ly-clearFix">
 							<div class="item">
-								<label>账户信息</label> <span class="color-green">可用余额：5268462元</span><span
-									class="color-red">冻结金额：5268462元</span><span class="color-blue">待收金额：5268462元</span>
+								<label>账户信息</label> <span class="color-green">可用余额：${account.balance/100}元</span><span
+									class="color-red">冻结金额：${account.fozenAmount/100}元</span><span class="color-blue">待收金额：${account.dueAmount/100}元</span>
 									<span><a href="${basePath}post/recharge.htm" class="button button-orange">充值</a></span><span><a href="withdraw.html" class="button button-green">提现</a></span></div>
 							</div>
 						</div>

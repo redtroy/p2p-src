@@ -25,6 +25,7 @@
 		<result property="statusText" column="statusText" jdbcType="VARCHAR" />
 		<result property="repaymentText" column="repaymentText"
 			jdbcType="VARCHAR" />
+		<result property="version" column="versionLock" jdbcType="INTEGER" />
 	</resultMap>
 
 	<!-- 条件查询投标信息 -->
