@@ -1,7 +1,9 @@
 package com.herongwang.p2p.website.controller;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.service.debt.IDebtService;
+import com.herongwang.p2p.service.investorder.IInvestOrderService;
 import com.herongwang.p2p.service.users.IUserService;
 import com.herongwang.p2p.website.login.SupervisorShiroRedisCache;
 import com.sxj.redis.core.pubsub.RedisTopics;
@@ -35,6 +38,9 @@ public class BasicController extends BaseController
     
     @Autowired
     private IUserService userService;
+    
+    @Autowired
+    private IInvestOrderService investService;
     
     @Autowired
     private IDebtService debtService;
@@ -177,6 +183,27 @@ public class BasicController extends BaseController
             throw new WebException("主页查询标的TOP5列表出错", e);
         }
         return INDEX;
+    }
+    
+    @RequestMapping("investPeople")
+    public @ResponseBody Map<String, String> investPeople() throws WebException
+    {
+        Map<String, String> map = new HashMap<String, String>();
+        try
+        {
+            int num = userService.getUserNum();
+            int amout = investService.queryAllAmount();
+            int earnings = investService.queryDueProfitAmount();
+            map.put("num", String.valueOf(num));
+            map.put("amout", String.valueOf(amout));
+            map.put("earnings", String.valueOf(earnings));
+            return map;
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new WebException("主页查询会员人数，投资收益出错", e);
+        }
     }
     
     public static String getIpAddr(HttpServletRequest request)

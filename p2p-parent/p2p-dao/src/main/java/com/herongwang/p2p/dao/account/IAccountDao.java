@@ -38,4 +38,14 @@ public interface IAccountDao
      * @return
      */
     public int updateAccountBalance(QueryCondition<AccountEntity> condition);
+    
+    /**
+     * 查询收益总和
+     */
+    public Integer queryDueProfitAmount();
+    
+    /**
+     * 查询投资总和
+     */
+    public Integer queryAllAmount();
 }

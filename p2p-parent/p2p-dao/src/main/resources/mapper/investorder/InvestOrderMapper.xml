@@ -25,8 +25,10 @@
 	    <result property="title" column="title" jdbcType="VARCHAR" />
 	    <result property="amount" column="amount" jdbcType="INTEGER" />
 	    <result property="finishTime" column="finishTime" jdbcType="TIMESTAMP" />
+	    <result property="createTime" column="createTime" jdbcType="TIMESTAMP" />
 	    <result property="status" column="status" jdbcType="INTEGER" />
 	    <result property="orderId" column="orderId" jdbcType="VARCHAR" />
+	    <result property="statusText" column="statusText" jdbcType="VARCHAR" />
 	</resultMap>
     <!-- 条件查询订单列表 -->
 	<select id="query" resultMap="InvestorderResultMap"
@@ -40,9 +42,20 @@
 	</select>
 	
 	<select id="queryDebt" resultMap="InvestListResultMap" parameterType="String">
-	     <![CDATA[select d.title,d.amount,d.finishTime,d.status,i.orderId from InvestOrder i,Debt d where d.debtId=i.debtId and d.customerId=#{customerId}]]>
+	     <![CDATA[select i.orderId,d.title,i.amount,i.createTime,d.finishTime,d.`status`,p.TEXT as statusText from InvestOrder i]]>
+	     <![CDATA[LEFT JOIN Users u on u.customerId = i.customerId LEFT JOIN Debt d on d.debtId = i.debtId ]]>
+	     <![CDATA[left JOIN PARAMETERS p on p.TYPE = 'tenderType' and p.`VALUE` = d.`status` where i.`status` = 1]]>
+	     <![CDATA[and i.customerId=#{customerId} order by i.createTime desc ]]>
 	</select>
 	<select id="queryInvestorderList" resultMap="InvestorderResultMap" parameterType="String">
 	     <![CDATA[select * from InvestOrder where debtId=#{debtId}]]>
+	</select>
+		<select id="queryDueProfitAmount" resultType="java.lang.Integer"
+		parameterType="String">
+		<![CDATA[SELECT SUM(dueProfitAmount) FROM InvestOrder]]>
+	</select>
+	<select id="queryAllAmount" resultType="java.lang.Integer"
+		parameterType="String">
+		<![CDATA[SELECT SUM(amount) FROM InvestOrder]]>
 	</select>
 </mapper>

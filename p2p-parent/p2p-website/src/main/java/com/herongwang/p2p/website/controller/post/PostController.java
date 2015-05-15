@@ -148,6 +148,7 @@ public class PostController extends BaseController
     public String investPost(ModelMap map, InvestOrderEntity order)
             throws WebException
     {
+        
         UsersEntity user = this.getUsersEntity();
         int flag = accountService.updateAccountBalance(user.getCustomerId(),
                 order.getAmount());
@@ -169,8 +170,9 @@ public class PostController extends BaseController
                 map.put("title", "投资成功");
                 map.put("orderName", "投资");
                 map.put("cz", 0);
+                map.put("tz", this.divide(order.getAmount()));
                 map.put("sxj", 0);
-                map.put("zj", order.getAmount());
+                map.put("zj", this.divide(order.getAmount()));
                 map.put("yve", this.divide(account.getBalance()));
             }
             catch (Exception e)
@@ -195,12 +197,14 @@ public class PostController extends BaseController
     public String rechargeInList(ModelMap map, InvestOrderEntity order)
             throws WebException
     {
-        BigDecimal m = order.getAmount().multiply(new BigDecimal(100));
+        BigDecimal m = order.getAmount().multiply(new BigDecimal(100));//投标订单金额
+        BigDecimal m1 = order.getTotalFee().multiply(new BigDecimal(100));//充值金额
+        
         UsersEntity user = this.getUsersEntity();
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
         try
         {
-            ModelMap map1 = postService.Post(m, user);
+            ModelMap map1 = postService.Post(m1, user);
             
             String pickupUrl = map1.get("pickupUrl").toString();
             String receiveUrl = map1.get("receiveUrl").toString();
@@ -220,7 +224,7 @@ public class PostController extends BaseController
             map.put("ext1", order.getOrderId());
             map.put("ext2", m);
             
-            map.put("amount", order.getAmount());
+            map.put("amount", order.getTotalFee());
             map.put("orderName", "充值");
             map.put("balance", this.divide(account.getBalance()));
         }
@@ -236,9 +240,9 @@ public class PostController extends BaseController
     @RequestMapping("/pickupin")
     public String pickupin(ModelMap map, ResultsModel result) throws Exception
     {
+        UsersEntity user = this.getUsersEntity();
         try
         {
-            UsersEntity user = this.getUsersEntity();
             AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
             TLBillEntity tl = new TLBillEntity();
             tl.setStarus(1);
@@ -288,14 +292,22 @@ public class PostController extends BaseController
             account = accountService.getAccountByCustomerId(user.getCustomerId());
             map.put("title", "充值并投资成功");
             map.put("orderName", "投资");
-            map.put("cz", tl.getActualMoney());
-            map.put("sxj", tl.getBillMoney().subtract(tl.getActualMoney()));
-            map.put("zj", tl.getBillMoney());
+            map.put("cz", this.divide(tl.getActualMoney()));
+            map.put("tz", this.divide(new BigDecimal(result.getExt2())));
+            map.put("sxj",
+                    this.divide(tl.getBillMoney().subtract(tl.getActualMoney())));
+            map.put("zj", this.divide((tl.getBillMoney())));
             map.put("yve", this.divide(account.getBalance()));
         }
         catch (Exception e)
         {
             e.printStackTrace();
+            AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
+            map.put("orderName", "充值失败");
+            map.put("cz", 0);
+            map.put("sxj", 0);
+            map.put("zj", 0);
+            map.put("yve", this.divide(account.getBalance()));
             map.put("title", "充值并投资失败");
         }
         finally

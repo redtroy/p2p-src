@@ -31,4 +31,5 @@
 		<![CDATA[update Accounts set balance=balance-#{condition.balance} where customerId = #{condition.customerId} ]]>
 		<![CDATA[ AND balance >= #{condition.balance}]]>
 	</update>
+
 </mapper>

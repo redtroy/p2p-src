@@ -13,8 +13,8 @@ public interface IInvestOrderService
      * aa
      * @param order 
      */
-    public InvestOrderEntity addOrder(String debtId, String amount,String customerId)
-            throws ServiceException;
+    public InvestOrderEntity addOrder(String debtId, String amount,
+            String customerId) throws ServiceException;
     
     /**
      * 更新投标订单
@@ -49,8 +49,20 @@ public interface IInvestOrderService
     public void delOrder(String id) throws ServiceException;
     
     void finishOrder(InvestOrderEntity io) throws ServiceException;
-     /**
-     * 查询订单，标的详情
-     */
+    
+    /**
+    * 查询订单，标的详情
+    */
     public List<InvestModel> queryInvestModel(String custId);
+    
+    /**
+     * 查询所有收益人 总收益
+     */
+    public int queryDueProfitAmount();
+    
+    /**
+     * 查询投资总额
+     */
+    public int queryAllAmount();
+    
 }

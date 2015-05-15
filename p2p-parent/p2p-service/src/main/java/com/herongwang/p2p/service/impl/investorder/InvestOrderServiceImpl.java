@@ -20,6 +20,7 @@ import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.entity.profitlist.ProfitListEntity;
 import com.herongwang.p2p.model.invest.InvestModel;
 import com.herongwang.p2p.model.profit.ProfitModel;
+import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
 import com.herongwang.p2p.service.profit.IProfitService;
 import com.sxj.util.common.StringUtils;
@@ -45,6 +46,9 @@ public class InvestOrderServiceImpl implements IInvestOrderService
     
     @Autowired
     IAccountDao accountDao;
+    
+    @Autowired
+    IDebtService debtService;
     
     /**
      * 生成投资订单
@@ -117,6 +121,7 @@ public class InvestOrderServiceImpl implements IInvestOrderService
                     //更新融资单已融资金额 
                     DebtEntity debt = debtDao.getDebtFor(newIo.getDebtId());
                     debt.setFinance(debt.getFinance().add(newIo.getAmount()));
+                    debt.setStatus(1);
                     debtDao.updateDebt(debt);
                 }
             }
@@ -182,6 +187,48 @@ public class InvestOrderServiceImpl implements IInvestOrderService
         {
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new ServiceException("查询投资订单列表,标的信息错误", e);
+        }
+    }
+    
+    /**'
+     * 查询收益总额
+     */
+    @Override
+    public int queryDueProfitAmount() throws ServiceException
+    {
+        try
+        {
+            Integer amount = investOrderDao.queryDueProfitAmount();
+            if (amount != null)
+            {
+                return amount;
+            }
+            return 0;
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("查询收益总额错误", e);
+        }
+        
+    }
+    
+    @Override
+    public int queryAllAmount() throws ServiceException
+    {
+        try
+        {
+            Integer amount = investOrderDao.queryAllAmount();
+            if (amount != null)
+            {
+                return amount;
+            }
+            return 0;
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("查询投资总额错误", e);
         }
     }
     
