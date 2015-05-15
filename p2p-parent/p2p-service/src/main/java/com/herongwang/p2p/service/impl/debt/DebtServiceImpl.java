@@ -145,17 +145,23 @@ public class DebtServiceImpl implements IDebtService
             financingOrder.updateOrder(financeOrder);
             //生成还款计划表
             List<RepayPlanEntity> reList = new ArrayList<RepayPlanEntity>();
+            BigDecimal monthCapital = new BigDecimal(df.format(debt.getAmount()
+                    .divide(new BigDecimal(debt.getMonths()),
+                            2,
+                            BigDecimal.ROUND_HALF_UP)));
+            BigDecimal monthProfit = new BigDecimal(
+                    df.format(prift.getTotalInterest().divide(new BigDecimal(
+                            debt.getMonths()),
+                            2,
+                            BigDecimal.ROUND_HALF_UP)));
             for (int i = 0; i < debt.getMonths(); i++)
             {
                 RepayPlanEntity repayPlan = new RepayPlanEntity(); //
                 repayPlan.setOrderId(financeOrder.getOrderId());
+                repayPlan.setDebtId(debtId);
                 repayPlan.setSequence(i + 1);
-                repayPlan.setMonthCapital(new BigDecimal(
-                        df.format(debt.getAmount().divide(new BigDecimal(
-                                debt.getMonths()))))); //月本金
-                repayPlan.setMonthProfit(new BigDecimal(
-                        df.format(prift.getTotalInterest()
-                                .divide(new BigDecimal(debt.getMonths()))))); //月利息
+                repayPlan.setMonthCapital(monthCapital); //月本金
+                repayPlan.setMonthProfit(monthProfit); //月利息
                 repayPlan.setMonthAmount(repayPlan.getMonthCapital()
                         .add(repayPlan.getMonthProfit())); //月总额
                 repayPlan.setLeftAmount(prift.getAmount()
@@ -190,21 +196,22 @@ public class DebtServiceImpl implements IDebtService
             for (int i = 0; i < investList.size(); i++)
             {
                 //查询用户账户
+                FundDetailEntity fundDetail1 = new FundDetailEntity();
                 AccountEntity account1 = accountDao.getAcoountByCustomerId(investList.get(i)
                         .getCustomerId());
-                fundDetail.setCustomerId(investList.get(i).getCustomerId());
-                fundDetail.setAccountId(account1.getAccountId());
-                fundDetail.setOrderId(investList.get(i).getOrderId());
+                fundDetail1.setCustomerId(investList.get(i).getCustomerId());
+                fundDetail1.setAccountId(account1.getAccountId());
+                fundDetail1.setOrderId(investList.get(i).getOrderId());
                 //fundDetail.setType(0);
-                fundDetail.setAmount(investList.get(i).getAmount());
-                fundDetail.setBalance(account.getBalance()
+                fundDetail1.setAmount(investList.get(i).getAmount());
+                fundDetail1.setBalance(account.getBalance()
                         .subtract(investList.get(i).getAmount()));
-                fundDetail.setFrozenAmount(new BigDecimal(0));
-                fundDetail.setDueAmount(account1.getDueAmount());
-                fundDetail.setCreateTime(new Date());
+                fundDetail1.setFrozenAmount(new BigDecimal(0));
+                fundDetail1.setDueAmount(account1.getDueAmount());
+                fundDetail1.setCreateTime(new Date());
                 //fundDetail.setStatus(0);
-                fundDetail.setIncomeStatus(1);
-                fundDetailDao.addFundDetail(fundDetail);
+                fundDetail1.setIncomeStatus(1);
+                fundDetailDao.addFundDetail(fundDetail1);
             }
             return "ok";
         }

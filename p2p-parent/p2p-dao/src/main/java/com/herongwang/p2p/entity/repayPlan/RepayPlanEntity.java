@@ -42,6 +42,12 @@ public class RepayPlanEntity extends Pagable implements Serializable
     private String planId;
     
     /**
+     * 标的ID
+     */
+    @Column(name = "debtId")
+    private String debtId;
+    
+    /**
      * 序号
      */
     @Column(name = "sequence")
@@ -96,6 +102,16 @@ public class RepayPlanEntity extends Pagable implements Serializable
      */
     @Column(name = "prepaidStatus")
     private Integer prepaidStatus;
+    
+    public String getDebtId()
+    {
+        return debtId;
+    }
+    
+    public void setDebtId(String debtId)
+    {
+        this.debtId = debtId;
+    }
     
     public String getOrderId()
     {

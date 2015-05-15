@@ -225,7 +225,9 @@ public class DebtController extends BaseController
     {
         try
         {
-            return debtService.audit(debtId);
+            System.out.println(debtId);
+            String flag = debtService.audit(debtId);
+            return flag;
         }
         catch (Exception e)
         {

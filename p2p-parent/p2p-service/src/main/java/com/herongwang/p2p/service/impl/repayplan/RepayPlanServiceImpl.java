@@ -58,6 +58,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
             List<RepayPlanEntity> planList;
             QueryCondition<RepayPlanEntity> condition = new QueryCondition<RepayPlanEntity>();
             condition.addCondition("orderId", query.getOrderId());//订单id
+            condition.addCondition("debtId", query.getDebtId());//订单id
             planList = repayPlanDao.queryRepayPlan(condition);
             return planList;
         }
@@ -141,7 +142,8 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                 if (flag >= 0)
                 {
                     //扣除款项
-                    BigDecimal b = account.getBalance().subtract(repayPlanEntity.getMonthAmount());
+                    BigDecimal b = account.getBalance()
+                            .subtract(repayPlanEntity.getMonthAmount());
                     account.setBalance(b);//减去余额
                     accountDao.updateAccount(account);//更新账户余额
                     repayPlanEntity.setStatus(1);//
