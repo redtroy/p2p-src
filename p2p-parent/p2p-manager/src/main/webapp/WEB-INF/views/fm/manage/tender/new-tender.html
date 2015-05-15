@@ -49,75 +49,6 @@ function saveApply() {
 	if (!validform.check()) {
 		return false;
 	}
-	var amount = $("#amount").val();
-	var minNum = $("#minAmount").val();
-	var maxNum = $("#maxAmount").val();
-	if(amount.length>15){
-		var success = dialog({
-			title : '消息',
-			cancel : false,
-			ok : function() {
-			}
-		});
-		success.content("借款金额太大，请重新输入。");
-		success.showModal();
-		return false;
-	}
-	if(minNum.length>15){
-		var success = dialog({
-			title : '消息',
-			cancel : false,
-			ok : function() {
-			}
-		});
-		success.content("最小投资金额太大，请重新输入。");
-		success.showModal();
-		return false;
-	}
-	if(maxNum.length>15){
-		var success = dialog({
-			title : '消息',
-			cancel : false,
-			ok : function() {
-			}
-		});
-		success.content("最大投资金额太大，请重新输入。");
-		success.showModal();
-		return false;
-	}
-	if(minNum>amount){
-		var success = dialog({
-			title : '消息',
-			cancel : false,
-			ok : function() {
-			}
-		});
-		success.content("最小投资金额不能高于借款金额。");
-		success.showModal();
-		return false;
-	}
-	if(maxNum>amount){
-		var success = dialog({
-			title : '消息',
-			cancel : false,
-			ok : function() {
-			}
-		});
-		success.content("最大投资金额不能高于借款金额。");
-		success.showModal();
-		return false;
-	}
-	if(minNum>maxNum){
-		var success = dialog({
-			title : '消息',
-			cancel : false,
-			ok : function() {
-			}
-		});
-		success.content("最大投资金额太小。");
-		success.showModal();
-		return false;
-	}
 	 var success = dialog({
 			title : '消息',
 			cancel : false,
@@ -165,6 +96,7 @@ function saveApply() {
         <div class="heading fontYH f20">生成投资标书</div>
         <div class="mainBox">
         <form id="submit_form">
+        <input type="hidden" name="applicationId" value="${applicationId}" />
           <table border="0" cellspacing="0" cellpadding="0" class=" tabTender">
             <col width="20%" />
             <col width="80%" />

@@ -1,6 +1,7 @@
 package com.herongwang.p2p.entity.apply;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.herongwang.p2p.dao.apply.IDebtApplicationDao;
@@ -44,7 +45,7 @@ public class DebtApplicationEntity extends Pagable implements Serializable
      * 金额
      */
     @Column(name = "amount")
-    private Double amount;
+    private BigDecimal amount;
     
     /**
      *联系电话
@@ -122,12 +123,12 @@ public class DebtApplicationEntity extends Pagable implements Serializable
         this.customerId = customerId;
     }
     
-    public Double getAmount()
+    public BigDecimal getAmount()
     {
         return amount;
     }
     
-    public void setAmount(Double amount)
+    public void setAmount(BigDecimal amount)
     {
         this.amount = amount;
     }
