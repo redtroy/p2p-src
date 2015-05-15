@@ -89,10 +89,10 @@ function editPassWord(id){
 	    	}
 	    	$.post("${basePath}user/editPassword.htm",{id:id,password:pwd},function(data){
 	    		if (data=='ok'){
-	    			success.content('修改成功！');
+	    			success.content('修改成功 ！);
 		    		success.showModal();
 	    		}else{
-	    			success.content('修改失败！');
+	    			success.content('修改失败!');
 		    		success.showModal();
 	    		}
 	    	})

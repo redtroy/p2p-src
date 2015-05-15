@@ -39,8 +39,8 @@
 		 <![CDATA[AND M.MEMBER_CODE=#{condition.memberId}]]>
 		 </if>
 	</select>-->
-	<select id="getMemberNum" resultType="int"
+	<select id="getUserNum" resultType="java.lang.Integer"
 		parameterType="String">
-		<![CDATA[SELECT COUNT(*) FROM Users]]>
+		<![CDATA[SELECT COUNT(*) as num FROM Users]]>
 	</select>
 </mapper>
