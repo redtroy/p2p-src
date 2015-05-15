@@ -12,10 +12,11 @@ import com.sxj.mybatis.orm.annotations.GenerationType;
 import com.sxj.mybatis.orm.annotations.Id;
 import com.sxj.mybatis.orm.annotations.Sn;
 import com.sxj.mybatis.orm.annotations.Table;
+import com.sxj.mybatis.pagination.Pagable;
 
 @Entity(mapper = IOrdersDao.class)
 @Table(name = "Orders")
-public class OrdersEntity implements Serializable
+public class OrdersEntity extends Pagable implements Serializable
 {
     /**
      * 
@@ -110,6 +111,66 @@ public class OrdersEntity implements Serializable
      * 会员名称
      */
     private String name;
+    
+    private String statusText;//状态名称
+    
+    private String typeText;//类型名称
+    
+    private String tlNo;//通联订单号
+    
+    private String manageFee;//手续费
+    
+    private String actuaFee;//手续费
+    
+    public String getActuaFee()
+    {
+        return actuaFee;
+    }
+    
+    public void setActuaFee(String actuaFee)
+    {
+        this.actuaFee = actuaFee;
+    }
+    
+    public String getManageFee()
+    {
+        return manageFee;
+    }
+    
+    public void setManageFee(String manageFee)
+    {
+        this.manageFee = manageFee;
+    }
+    
+    public String getStatusText()
+    {
+        return statusText;
+    }
+    
+    public void setStatusText(String statusText)
+    {
+        this.statusText = statusText;
+    }
+    
+    public String getTypeText()
+    {
+        return typeText;
+    }
+    
+    public void setTypeText(String typeText)
+    {
+        this.typeText = typeText;
+    }
+    
+    public String getTlNo()
+    {
+        return tlNo;
+    }
+    
+    public void setTlNo(String tlNo)
+    {
+        this.tlNo = tlNo;
+    }
     
     public String getName()
     {

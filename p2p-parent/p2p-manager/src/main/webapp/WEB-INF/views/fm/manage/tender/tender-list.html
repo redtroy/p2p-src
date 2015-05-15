@@ -103,7 +103,7 @@ function shenhe(){
 		title : '消息',
 		cancel : false,
 		ok : function() {
-			window.location.href = "${basePath}tender/tenderList.htm";
+			
 		}
 	});
 	var show = dialog();
@@ -182,7 +182,7 @@ function shenhe(){
               <td>${tender.statusText}</td>
               <td>
               <#if (tender.status==3)>
-	          <a href="#" class=" button btn-link">审核</a>
+	          <a href="javaScirpt:shenhe('${tender.customerId}');" class=" button btn-link">审核</a>
 			</#if>
 			 <#if (tender.status==4)>
 	          <a href="${basePath}repayPlan/queryRepayPlan.htm?customerId=${tender.customerId}" class=" button btn-link">还款</a>

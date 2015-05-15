@@ -17,16 +17,30 @@
 		<result property="channel" column="channel" jdbcType="VARCHAR" />
 		<result property="strSignMsg" column="strSignMsg" jdbcType="VARCHAR" />
 		<result property="name" column="name" jdbcType="VARCHAR" />
+		<result property="statusText" column="statusText" jdbcType="VARCHAR" />
+		<result property="typeText" column="typeText" jdbcType="VARCHAR" />
+		<result property="tlNo" column="tlNo" jdbcType="VARCHAR" />
+		<result property="manageFee" column="manageFee" jdbcType="VARCHAR" />
+		<result property="actuaFee" column="actuaFee" jdbcType="VARCHAR" />
 	</resultMap>
 	<select id="getOrdersByNo" resultMap="OrdersEntity" parameterType="String">
 		<![CDATA[SELECT * FROM Orders WHERE ordersNo=#{ordersNo}]]>
 	</select>
-	<!-- 条件查询员 -->
+	<!-- 条件查询 -->
 	<select id="query" resultMap="OrdersEntity"
 		parameterType="com.sxj.util.persistent.QueryCondition">
-		<![CDATA[select o.*,u.`name` from Orders o LEFT JOIN Users u on u.customerId = o.customerId where 1=1 ]]>
+		<![CDATA[select o.*,u.`name` ]]>
+		<![CDATA[,p.TEXT as statusText,p1.TEXT as typeText,t.TL_BILL_NO as tlNo]]>
+		<![CDATA[,t.ACTUAL_MONEY as actuaFee,(t.ACTUAL_MONEY-t.BILL_MONEY) as manageFee from Orders o ]]>
+		<![CDATA[LEFT JOIN Users u on u.customerId = o.customerId ]]>
+		<![CDATA[LEFT JOIN PARAMETERS p on p.TYPE='status' and p.`VALUE` = o.`status` ]]>
+		<![CDATA[LEFT JOIN PARAMETERS p1 ON p1.TYPE='orderType' and p1.`VALUE` = o.orderType ]]>
+		<![CDATA[LEFT JOIN TL_BILL t on t.MERCHANT_BILL_NO = o.ordersNo where 1=1 ]]>
 		 <if test="condition.customerId != null and condition.customerId != ''">
-		 	<![CDATA[AND u.customerId =#{condition.customerId}]]>
+		 	<![CDATA[AND o.customerId =#{condition.customerId}]]>
+		 </if>
+		 <if test="condition.orderType != null and condition.orderType != ''">
+		 	<![CDATA[AND o.orderType =#{condition.orderType}]]>
 		 </if>
 		 <if test="condition.orderId != null and condition.orderId != ''">
 		 	<![CDATA[AND o.orderId =#{condition.orderId}]]>

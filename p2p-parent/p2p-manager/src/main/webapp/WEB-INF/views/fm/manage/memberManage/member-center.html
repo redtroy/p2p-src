@@ -7,6 +7,7 @@
 <meta name="description" content="和融网管理平台">
 <link href="${b.staticPath}style/style.css" rel="stylesheet" type="text/css" />
 <script src="${b.staticPath}js/jquery1.8.js" type="text/javascript"></script>
+<@b.pageScript/>
 <@b.dialog/>
 <script>
 jQuery(document).ready(function($) {	
@@ -66,14 +67,14 @@ function editPassWord(id){
 	var success = dialog({
 		title : '消息',
 		cancel : false,
-		width:100,
+		width:150,
 	    okValue:'确定',
 	    ok:function(){
 	    	
 	    }
 	});
 	var content=' <div id="editPassword">'+ 
-                '<p>&nbsp;&nbsp;&nbsp;请输入密码：<input type="password" id="pwd" autofocus /></p>'+
+                '<p>&nbsp&nbsp;&nbsp;&nbsp;请输入密码：<input type="password" id="pwd" autofocus /></p>'+
                 '<p>再次输入密码：<input type="password" id="rePwd"> </p>'+
                 '</div>';
 	var d = dialog({

@@ -96,14 +96,14 @@ $.post("${basePath}deal/recharge.htm",params, function(data) {
             </tr>
             <#list list as deal>
             <tr>
-	         <td>${deal.customerId}</td>
+	         <td>${deal.name}</td>
               <td><#if (deal.createTime??)> ${deal.createTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
-              <td>${deal.orderId}</td>
-              <td>${deal.payNo}</td>
-              <td>${deal.amount}元</td>
-              <td>${deal.manageFee}</td>
-              <td><#if (deal.actuaTime??)> ${deal.actuaTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
-              <td>${deal.actuaFee}元</td>
+              <td>${deal.ordersNo}</td>
+              <td>${deal.tlNo}</td>
+              <td><#if (deal.amount>0)>${deal.amount/100}<#else>0</#if>元</td>
+              <td><#if (deal.manageFee>0)>${deal.manageFee/100}<#else>0</#if></td>
+              <td><#if (deal.arriveTime??)> ${deal.arriveTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
+              <td><#if (deal.actuaFee>0)>${deal.actuaFee/100}<#else>0</#if>元</td>
             </tr>
 			</#list>
           </table>

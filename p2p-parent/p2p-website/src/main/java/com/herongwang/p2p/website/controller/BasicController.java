@@ -96,6 +96,11 @@ public class BasicController extends BaseController
             map.put("message", "用户名不存在");
             return LOGIN;
         }
+        if (user.getStatus() == 1)
+        {
+            map.put("message", "帐号被禁用，请联系管理员");
+            return LOGIN;
+        }
         Subject currentUser = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(account,
                 password);
