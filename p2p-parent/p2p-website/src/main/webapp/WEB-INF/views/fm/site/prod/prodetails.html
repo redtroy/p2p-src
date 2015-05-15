@@ -9,7 +9,7 @@
   function sub(){
 	  $.post("${basePath}checkLogin.htm",function(data){
 		  if (data=='ok'){
-			  var max=${amountMax};
+			  var max=${amountMax}/100;
 			  var min=${model.minInvest};
 			  if (min==null || min==""){
 				  alert('最小投资金额不存在！请联系管理员！');
