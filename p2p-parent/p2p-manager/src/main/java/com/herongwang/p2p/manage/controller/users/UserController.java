@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.manage.controller.BaseController;
 import com.herongwang.p2p.service.users.IUserService;
+import com.sxj.util.common.EncryptUtil;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
 
@@ -37,4 +39,25 @@ public class UserController extends BaseController
         }
         return "manage/memberManage/member-center";
     }
+    
+    @RequestMapping("editPassword")
+    public @ResponseBody String editPassword(String id, String password)
+            throws WebException
+    {
+        try
+        {
+            password = EncryptUtil.md5Hex(password);
+            UsersEntity user = new UsersEntity();
+            user.setCustomerId(id);
+            user.setPassword(password);
+            userService.updateUser(user);
+            return "ok";
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new WebException("查询会员信息错误", e);
+        }
+    }
+    
 }
