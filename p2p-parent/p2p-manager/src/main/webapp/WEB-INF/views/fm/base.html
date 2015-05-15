@@ -31,7 +31,7 @@ $(function(){
 <link rel="stylesheet" href="${staticPath}style/pagination_2.css" />
 <script>
 function loadPage(currentPage,totalPage) {
-	//layer.closeAll();
+	$(".jump").die("click");
 	// 创建分页
 	$(".pagination").attr("currentPage",currentPage);
 	$(".pagination").attr("totalPage",totalPage);
@@ -39,7 +39,7 @@ function loadPage(currentPage,totalPage) {
 		num_edge_entries: 1, //边缘页数
 		num_display_entries: 4, //主体页数
 		callback: function(page_index,jp){
-			loadingImg();
+			//loadingImg();
 			query(page_index+1);
 			$(".pagination").attr("currentPage",page_index+1);
 			return false;
@@ -49,10 +49,38 @@ function loadPage(currentPage,totalPage) {
 		prev_text: "前一页",
 		next_text: "后一页"
 	});
+	jump(currentPage);
  }
 $(".pagination").ready(function(){
 	loadPage(${query.currentPage},${query.totalPage});
 });
+var jump = function(currentPage){
+	$(".pagination").append("&nbsp;<span style='color:#15b;'>到第<input name=''class='pageNumber' style=' width: 35px;margin:0 3px;' value='"+currentPage+"'/>页</span><a class='next jump' >确定</a>");
+	$(".jump").live("click",function(){
+		$(".pageNumber").each(function(i){
+			if(i==0){
+				var totalPage=$(".pagination").attr("totalPage");
+				var pageNumber = $(this).val();
+				$(this).val(pageNumber.replace(/\D/gi, ""));
+				pageNumber=pageNumber.replace(/\D/gi, "");
+				if(pageNumber!=''){
+					if(parseInt(pageNumber)>parseInt(totalPage)){
+						//数值大于当前最大页码,返回当前最大页码
+						$(this).val(totalPage);
+						pageNumber=totalPage;
+					}
+					query(pageNumber);
+				}
+			}
+		})
+	});
+}
+$(".pageNumber").live("keyup",function(){
+	var $val = $(this).val();
+	$(".pageNumber").each(function(){
+		$(this).val($val);
+	})
+})
 </script>
 </#macro>
 <#macro upload>

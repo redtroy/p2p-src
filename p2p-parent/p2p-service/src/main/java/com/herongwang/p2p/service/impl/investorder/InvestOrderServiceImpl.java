@@ -127,11 +127,13 @@ public class InvestOrderServiceImpl implements IInvestOrderService
                     {
                         debt.setStatus(3);
                     }
-                    else if(flag==1)
+                    else if (flag == 1)
                     {
                         debt.setStatus(1);
-                    }else{
-                        throw new ServiceException("标的已满,投资失败"); 
+                    }
+                    else
+                    {
+                        throw new ServiceException("标的已满,投资失败");
                     }
                     debt.setFinance(debt.getFinance().add(newIo.getAmount()));
                     debtDao.updateDebt(debt);
@@ -172,7 +174,9 @@ public class InvestOrderServiceImpl implements IInvestOrderService
             QueryCondition<InvestOrderEntity> condition = new QueryCondition<InvestOrderEntity>();
             List<InvestOrderEntity> investList = new ArrayList<InvestOrderEntity>();
             condition.addCondition("debtId", query.getDebtId());
+            condition.setPage(query);
             investList = investOrderDao.query(condition);
+            query.setPage(condition);
             return investList;
         }
         catch (Exception e)

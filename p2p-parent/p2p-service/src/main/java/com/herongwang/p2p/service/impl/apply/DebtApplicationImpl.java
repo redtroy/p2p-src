@@ -40,7 +40,8 @@ public class DebtApplicationImpl implements IDebtApplicationService
     
     @Override
     @Transactional
-    public void updateApply(DebtApplicationEntity apply) throws ServiceException
+    public void updateApply(DebtApplicationEntity apply)
+            throws ServiceException
     {
         try
         {
@@ -55,9 +56,10 @@ public class DebtApplicationImpl implements IDebtApplicationService
     
     @Override
     @Transactional(readOnly = true)
-    public DebtApplicationEntity getApplyForEntity(String id) throws ServiceException
+    public DebtApplicationEntity getApplyForEntity(String id)
+            throws ServiceException
     {
-
+        
         DebtApplicationEntity debtApplicationEntity = debtApplicationDao.getApply(id);
         return debtApplicationEntity;
     }
@@ -71,6 +73,7 @@ public class DebtApplicationImpl implements IDebtApplicationService
         condition.addCondition("name", query.getName());
         condition.setPage(query);
         List<DebtApplicationEntity> contractList = debtApplicationDao.query(condition);
+        query.setPage(condition);
         return contractList;
     }
     

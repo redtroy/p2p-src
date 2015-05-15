@@ -3,6 +3,7 @@ package com.herongwang.p2p.service.repayplan;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
 import com.herongwang.p2p.entity.repayPlan.RepayPlanEntity;
 import com.sxj.util.exception.ServiceException;
 
@@ -36,7 +37,7 @@ public interface IRepayPlanService
      * @return
      * @throws SQLException 
      */
-    public List<RepayPlanEntity> queryRepayPlan(RepayPlanEntity query)
+    public List<RepayPlanEntity> queryRepayPlan(FinancingOrdersEntity order)
             throws ServiceException;
     
     /**
