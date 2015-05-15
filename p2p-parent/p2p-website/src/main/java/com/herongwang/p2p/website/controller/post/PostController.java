@@ -242,12 +242,7 @@ public class PostController extends BaseController
     {
         UsersEntity user = this.getUsersEntity();
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
-        TLBillEntity tl = new TLBillEntity();
-        tl.setStarus(1);
-        tl.setFinishTime(new Date());
-        tl.setActualMoney(new BigDecimal(result.getOrderAmount()));
-        tl.setBillMoney(new BigDecimal(result.getOrderAmount()));
-        //            TLBillEntity tl = postService.QueryTLBill(result); //测试借款
+        TLBillEntity tl = postService.QueryTLBill(result); //测试借款
         try
         {
             

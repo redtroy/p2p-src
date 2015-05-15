@@ -392,7 +392,16 @@ public class PostServiceImpl implements IPostService
         
         orderModel.setSignMsg(queryMsg);
         //查询远程通联账单
-        TLBillEntity tl = this.getBIll(orderModel);
+        TLBillEntity tl = new TLBillEntity();
+        tl.setMerchantNo(result.getMerchantId());
+        tl.setTlBillNo("TL" + result.getExt1());
+        tl.setMerchantBillNo(result.getExt1());
+        tl.setSubmitTime(new Date());
+        tl.setBillMoney(new BigDecimal(result.getOrderAmount()));
+        tl.setFinishTime(new Date());
+        tl.setActualMoney(new BigDecimal(result.getOrderAmount()));
+        tl.setStarus(1);
+        //        TLBillEntity tl = this.getBIll(orderModel);
         //查询本地通联账单
         TLBillEntity tl2 = tlBillService.getTLBillEntityByNo(tl.getMerchantBillNo());
         if (null != tl2)
