@@ -68,7 +68,7 @@
 	<!-- sessionIdCookie的实现,用于重写覆盖容器默认的JSESSIONID -->
 	<bean id="sharesession" class="org.apache.shiro.web.servlet.SimpleCookie">
 		<!-- cookie的name,对应的默认是 JSESSIONID -->
-		<constructor-arg name="name" value="SHAREJSESSIONID_WEBSITE" />
+		<constructor-arg name="name" value="SHAREJSESSIONID_MANAGE" />
 		<!-- jsessionId的path为 / 用于多个系统共享jsessionId -->
 		<property name="path" value="/" />
 		<property name="domain" value=""></property>

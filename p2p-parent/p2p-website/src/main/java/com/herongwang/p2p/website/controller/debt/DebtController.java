@@ -11,10 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.service.debt.IDebtService;
+import com.herongwang.p2p.website.controller.BaseController;
 
 @Controller
 @RequestMapping("/debt")
-public class DebtController
+public class DebtController extends BaseController
 {
     @Autowired
     IDebtService debtService;
@@ -30,7 +31,7 @@ public class DebtController
     {
         
         //获取会员信息
-        query.setCustomerId("1");
+        query.setCustomerId(getUsersEntity().getCustomerId());
         query.setPagable(true);
         List<DebtEntity> debtList = debtService.queryDebtList(query);
         map.put("debtList", debtList);
