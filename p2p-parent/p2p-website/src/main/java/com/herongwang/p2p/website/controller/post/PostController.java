@@ -241,15 +241,16 @@ public class PostController extends BaseController
     public String pickupin(ModelMap map, ResultsModel result) throws Exception
     {
         UsersEntity user = this.getUsersEntity();
+        AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
+        TLBillEntity tl = new TLBillEntity();
+        tl.setStarus(1);
+        tl.setFinishTime(new Date());
+        tl.setActualMoney(new BigDecimal(result.getOrderAmount()));
+        tl.setBillMoney(new BigDecimal(result.getOrderAmount()));
+        //            TLBillEntity tl = postService.QueryTLBill(result); //测试借款
         try
         {
-            AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
-            TLBillEntity tl = new TLBillEntity();
-            tl.setStarus(1);
-            tl.setFinishTime(new Date());
-            tl.setActualMoney(new BigDecimal(result.getOrderAmount()));
-            tl.setBillMoney(new BigDecimal(result.getOrderAmount()));
-            //            TLBillEntity tl = postService.QueryTLBill(result); //测试借款
+            
             //获取账户信息
             OrdersEntity orders = ordersService.getOrdersEntityByNo(result.getOrderNo());
             
@@ -302,13 +303,20 @@ public class PostController extends BaseController
         catch (Exception e)
         {
             e.printStackTrace();
-            AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
+            account = accountService.getAccountByCustomerId(user.getCustomerId());
             map.put("orderName", "充值失败");
             map.put("cz", 0);
             map.put("sxj", 0);
             map.put("zj", 0);
             map.put("yve", this.divide(account.getBalance()));
-            map.put("title", "充值并投资失败");
+            if (tl.getStarus() == 1)
+            {
+                map.put("title", "充值成功但投资失败");
+            }
+            else
+            {
+                map.put("title", "充值并投资失败");
+            }
         }
         finally
         {

@@ -61,7 +61,6 @@ public class ProdController extends BaseController
             {
                 amountMax = bigDecimalIsNull(debt.getAmount()).subtract(bigDecimalIsNull(debt.getFinance()));
             }
-            amountMax = debt.getMinInvest();
             if (getUsersEntity() != null)
             {
                 account = acountService.getAccountByCustomerId(getUsersEntity().getCustomerId());

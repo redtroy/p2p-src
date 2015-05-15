@@ -129,6 +129,7 @@ public class InvestOrderServiceImpl implements IInvestOrderService
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new ServiceException("生成收益明细错误", e);
         }
