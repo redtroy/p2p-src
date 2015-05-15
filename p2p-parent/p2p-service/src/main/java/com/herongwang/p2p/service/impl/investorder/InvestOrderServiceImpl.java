@@ -120,7 +120,6 @@ public class InvestOrderServiceImpl implements IInvestOrderService
                     accountDao.updateAccount(account);
                     //更新融资单已融资金额 
                     DebtEntity debt = debtDao.getDebtFor(newIo.getDebtId());
-                    debt.setFinance(debt.getFinance().add(newIo.getAmount()));
                     //是否满标
                     int flag = debt.getAmount().compareTo(debt.getFinance()
                             .add(newIo.getAmount()));
@@ -134,6 +133,7 @@ public class InvestOrderServiceImpl implements IInvestOrderService
                     }else{
                         throw new ServiceException("标的已满,投资失败"); 
                     }
+                    debt.setFinance(debt.getFinance().add(newIo.getAmount()));
                     debtDao.updateDebt(debt);
                 }
             }
