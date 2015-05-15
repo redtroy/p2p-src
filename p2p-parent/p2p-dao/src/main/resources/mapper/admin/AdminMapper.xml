@@ -14,6 +14,6 @@
 	
 	<select id="getAdminByName" resultMap="AdminResultMap"
 		parameterType="String">
-		<![CDATA[SELECT * FROM USER_INFO  WHERE USER_NO=#{name}]]>
+		<![CDATA[SELECT * FROM Administrators  WHERE USER_NO=#{name}]]>
 	</select>
 </mapper>

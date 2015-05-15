@@ -11,7 +11,7 @@ import com.sxj.mybatis.orm.annotations.Id;
 import com.sxj.mybatis.orm.annotations.Table;
 
 @Entity(mapper = IAdminDao.class)
-@Table(name = "USER_INFO")
+@Table(name = "Administrators")
 public class AdminEntity implements Serializable
 {
     /**
