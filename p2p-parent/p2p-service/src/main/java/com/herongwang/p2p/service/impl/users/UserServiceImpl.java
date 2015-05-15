@@ -88,6 +88,7 @@ public class UserServiceImpl implements IUserService
         {
             member.setPassword(EncryptUtil.md5Hex(member.getPassword()));
             member.setRegisterTime(new Date());
+            member.setStatus(0);
             userDao.addUser(member);
             AccountEntity account = new AccountEntity();
             account.setCustomerId(member.getCustomerId());
@@ -147,6 +148,32 @@ public class UserServiceImpl implements IUserService
         {
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new ServiceException("查询会员数量错误", e);
+        }
+    }
+    
+    @Override
+    public int checkStatus(String custId) throws ServiceException
+    {
+        try
+        {
+            int status;
+            UsersEntity user = userDao.getUserById(custId);
+            if (user.getStatus() == 0)
+            {
+                user.setStatus(1);
+                status = 1;
+            }
+            else
+            {
+                user.setStatus(0);
+                status = 0;
+            }
+            return status;
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("改变会员状态错误", e);
         }
     }
     
