@@ -4,9 +4,52 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="${b.staticPath}style/member.css" rel="stylesheet" type="text/css" />
 <script src="${b.staticPath}js/jquery.js"></script>
+<@b.dialog/>
 <script>
 function sub(){
 	$("#user_form").submit();
+}
+function editPassWord(id){
+	var success = dialog({
+		title : '消息',
+		cancel : false,
+	    okValue:'确定',
+	    ok:function(){
+	    	
+	    }
+	});
+	var content=' <div id="editPassword">'+ 
+                '<p>&nbsp;&nbsp;&nbsp;请输入密码：<input type="password" id="pwd" autofocus /></p>'+
+                '<p>再次输入密码：<input type="password" id="rePwd"> </p>'+
+                '</div>';
+	var d = dialog({
+	    title: '修改密码',
+	    content: content,
+	    okValue:'确 定',
+	    ok:function(){
+	    	var pwd=$("#pwd").val();
+	    	var rePwd=$("#rePwd").val();
+	    	if (pwd!=rePwd){
+	    		success.content('两次密码输入不一样！');
+	    		success.showModal();
+	    		return false;
+	    	}
+	    	$.post("${basePath}user/editPassword.htm",{id:id,password:pwd},function(data){
+	    		if (data=='ok'){
+	    			success.content('修改成功！');
+		    		success.showModal();
+	    		}else{
+	    			success.content('修改失败！');
+		    		success.showModal();
+	    		}
+	    	})
+	    },
+	    cancelValue : '取消',
+		cancel : function() {
+			
+		}
+	});
+	d.showModal();	
 }
 </script>
 </head>
@@ -54,7 +97,7 @@ function sub(){
   </tbody>
   </table>
   </form>
-<div class="tc"> <a href="javascript:sub();" class="button button-orange">确认个人资料</a>&nbsp;</div>
+<div class="tc"> <a href="javascript:sub();" class="button button-orange">确认个人资料</a>&nbsp;<a href="javascript:editPassWord('${user.customerId}');" class="button button-orange">修改密码</a></div>
 
 
           <div class="ly-clearFix">

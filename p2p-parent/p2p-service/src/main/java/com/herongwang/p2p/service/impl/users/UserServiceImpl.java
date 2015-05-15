@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.herongwang.p2p.dao.users.IUsersDao;
+import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
+import com.herongwang.p2p.service.account.IAccountService;
 import com.herongwang.p2p.service.users.IUserService;
 import com.sxj.util.common.EncryptUtil;
 import com.sxj.util.exception.ServiceException;
@@ -20,6 +22,9 @@ public class UserServiceImpl implements IUserService
 {
     @Autowired
     private IUsersDao userDao;
+    
+    @Autowired
+    private IAccountService accountService;
     
     @Override
     public List<UsersEntity> queryUsers(UsersEntity user)
@@ -84,6 +89,9 @@ public class UserServiceImpl implements IUserService
             member.setPassword(EncryptUtil.md5Hex(member.getPassword()));
             member.setRegisterTime(new Date());
             userDao.addUser(member);
+            AccountEntity account = new AccountEntity();
+            account.setCustomerId(member.getCustomerId());
+            accountService.addAccount(account);
             return member;
         }
         catch (Exception e)
