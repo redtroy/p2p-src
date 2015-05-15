@@ -14,7 +14,14 @@
 var validform;
 $(document).ready(function() {
 	validform = $("#submit_form").Validform({
-		tiptype : 3
+		tiptype : 3,
+		datatype:{
+			"amount":function(){
+				//参数gets是获取到的表单元素值，obj为当前表单元素，curform为当前验证的表单，regxp为内置的一些正则表达式的引用;
+	 
+				//注意return可以返回true 或 false 或 字符串文字，true表示验证通过，返回字符串表示验证失败，字符串作为错误提示显示，返回false则用errmsg或默认的错误提示;
+			}
+		}
 	});
 
 });
@@ -23,7 +30,7 @@ function saveApply() {
 		return false;
 	}
 	var amount = $("#amount").val();
-	var minNum = $("#minNum").val();
+	var minNum = $("#minAmount").val();
 	var maxNum = $("#maxAmount").val();
 	if(amount.length>15){
 		var success = dialog({
@@ -184,8 +191,13 @@ function saveApply() {
             <tr>
               <th>年化利率</th>
               <td><input type="text" name="annualizedRate" id="annualizedRate" autocomplete="off"
-								placeholder="" value="${info.annualizedRate}" datatype="n1-3"
-								errormsg="请输入最多三位整数！" nullmsg="请输入年化利率！" class="input input-w270h30"/> %</td>
+								placeholder="" value="${info.annualizedRate}" datatype="/^((100|[1-9]?\d)(\.\d{0,2})?)$/"
+								errormsg="请输入一百以内最多两位小数的数字！" nullmsg="请输入年化利率！" class="input input-w270h30"/> %</td>
+            </tr>
+            <tr>
+              <th>借款金额</th>
+              <td><input type="text" name="amount" id="amount" value="${info.amount}" datatype="/^(^\d{1,15})+(.[0-9]{0,2})?$/"
+								errormsg="请输入不超过两位小数的数字！" nullmsg="请输入借款金额！" id="borrowingAmount" class="input input-w270h30"/>元</td>
             </tr>
             <tr>
               <th>最小投资金额</th>
@@ -197,11 +209,7 @@ function saveApply() {
               <td><input type="text" name="maxInvest" value="${info.maxInvest}" id="maxAmount" datatype="/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/"
 								errormsg="请输入不超过两位小数的数字！" nullmsg="请输入最大投资金额！" class="input input-w270h30"/>元</td>
             </tr>
-            <tr>
-              <th>借款金额</th>
-              <td><input type="text" name="amount" id="amount" value="${info.amount}" datatype="/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/"
-								errormsg="请输入不超过两位小数的数字！" nullmsg="请输入借款金额！" id="borrowingAmount" class="input input-w270h30"/>元</td>
-            </tr>
+            
           </table>
           <div class="tc mt20 mb20"><a href="javascript:void(0)" onclick="saveApply();" class="button button-orange">确认生成</a></div>
           </form>
