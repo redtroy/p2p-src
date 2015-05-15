@@ -61,10 +61,12 @@ public class PostController extends BaseController
     {
         UsersEntity user = this.getUsersEntity();
         OrdersEntity query = new OrdersEntity();
+        AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
         query.setCustomerId(user.getCustomerId());
         query.setOrderType(4);
         int num = ordersService.queryOrdersList(query).size();
         map.put("type", num);
+        map.put("balance", this.divide(account.getBalance()));
         return "site/post/withdraw";
     }
     
@@ -121,16 +123,16 @@ public class PostController extends BaseController
             orders.setCustomerId(user.getCustomerId());
             orders.setAmount(m);
             orders.setCreateTime(new Date());
-            orders.setStatus(1);
+            orders.setStatus(0);
             orders.setOrderType(4);
             ordersService.addOrders(orders);
             FundDetailEntity deal = new FundDetailEntity();
             deal.setCustomerId(user.getCustomerId());
             deal.setAccountId(account.getAccountId());
             deal.setOrderId(orders.getOrderId());
-            deal.setType(0);
+            deal.setType(4);
             deal.setCreateTime(new Date());
-            deal.setStatus(0);
+            deal.setStatus(1);
             deal.setAmount(m);
             deal.setBalance(account.getBalance());
             deal.setDueAmount(account.getDebtAmount());

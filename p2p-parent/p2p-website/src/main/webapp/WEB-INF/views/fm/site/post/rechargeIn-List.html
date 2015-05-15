@@ -72,6 +72,7 @@
 		<input type="hidden" name="orderDatetime" value="${orderDatetime}" />
 		<input type="hidden" name="OrderAmount" value="${orderAmount}" />
 		<input type="hidden" name="actualMoney" value="${orderAmount}" />
+		<input type="hidden" name="payAmount" value="${orderAmount}" />
 		<input type="hidden" name="signType" value="1"/>
 		<input type="hidden" name="ext1" value="${ext1}" />
 		<input type="hidden" name="ext2" value="${ext2}" />
@@ -102,8 +103,7 @@
 	        <td class="color-red">${balance}元</td>
 	      </tr>
 	  </table>
-        <div class="tc"> <a href="javascript:postInfo();" class="button button-orange">确认充值</a></div>
-        <div class="tc"> <a href="javascript:postTest();" class="button button-orange">测试充值</a></div>
+        <div class="tc"> <a href="javascript:postInfo();" class="button button-orange">确认充值</a><a href="javascript:postTest();" class="button button-orange">测试充值</a></div>
         </div>
       </div>
     </div>
