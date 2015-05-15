@@ -39,6 +39,7 @@ public class UserController extends BaseController
                 return LOGIN;
             }
             UsersEntity user = getUsersEntity();
+            user = userService.getUserById(user.getCustomerId());
             map.put("user", user);
         }
         catch (Exception e)
