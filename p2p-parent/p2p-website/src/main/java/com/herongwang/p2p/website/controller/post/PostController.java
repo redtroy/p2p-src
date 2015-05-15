@@ -150,7 +150,7 @@ public class PostController extends BaseController
     {
         BigDecimal m = order.getAmount().multiply(new BigDecimal(100));
         UsersEntity user = this.getUsersEntity();
-        user.setCustomerId("1");
+        user.setCustomerId("mmfxRv1eX704vWS5qrmHh2XxBbHVDdyg");
         int flag = accountService.updateAccountBalance(user.getCustomerId(), m);
         if (flag == 1)
         {
@@ -198,7 +198,7 @@ public class PostController extends BaseController
     {
         BigDecimal m = order.getAmount().multiply(new BigDecimal(100));
         UsersEntity user = this.getUsersEntity();
-        user.setCustomerId("1");
+        user.setCustomerId("mmfxRv1eX704vWS5qrmHh2XxBbHVDdyg");
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
         try
         {
@@ -241,7 +241,7 @@ public class PostController extends BaseController
         try
         {
             UsersEntity user = this.getUsersEntity();
-            user.setCustomerId("1");
+            user.setCustomerId("mmfxRv1eX704vWS5qrmHh2XxBbHVDdyg");
             AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
             TLBillEntity tl = new TLBillEntity();
             tl.setStarus(1);
