@@ -48,4 +48,9 @@ public interface IUserService
      */
     public int getUserNum();
     
+    /**
+     * 改变会员状态
+     */
+    public int checkStatus(String custId);
+    
 }

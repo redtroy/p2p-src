@@ -86,6 +86,7 @@ public class UsersEntity extends Pagable implements Serializable
     
     /**
      * 状态
+     * 0代表启用，1代表禁用
      */
     @Column(name = "status")
     private Integer status;

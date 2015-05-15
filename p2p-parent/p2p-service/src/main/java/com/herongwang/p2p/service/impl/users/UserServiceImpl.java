@@ -7,10 +7,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.herongwang.p2p.dao.account.IAccountDao;
 import com.herongwang.p2p.dao.users.IUsersDao;
 import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
-import com.herongwang.p2p.service.account.IAccountService;
 import com.herongwang.p2p.service.users.IUserService;
 import com.sxj.util.common.EncryptUtil;
 import com.sxj.util.exception.ServiceException;
@@ -24,7 +24,7 @@ public class UserServiceImpl implements IUserService
     private IUsersDao userDao;
     
     @Autowired
-    private IAccountService accountService;
+    private IAccountDao accountDao;
     
     @Override
     public List<UsersEntity> queryUsers(UsersEntity user)
@@ -88,10 +88,11 @@ public class UserServiceImpl implements IUserService
         {
             member.setPassword(EncryptUtil.md5Hex(member.getPassword()));
             member.setRegisterTime(new Date());
+            member.setStatus(0);
             userDao.addUser(member);
             AccountEntity account = new AccountEntity();
             account.setCustomerId(member.getCustomerId());
-            accountService.addAccount(account);
+            accountDao.addAccount(account);
             return member;
         }
         catch (Exception e)
@@ -147,6 +148,32 @@ public class UserServiceImpl implements IUserService
         {
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new ServiceException("查询会员数量错误", e);
+        }
+    }
+    
+    @Override
+    public int checkStatus(String custId) throws ServiceException
+    {
+        try
+        {
+            int status;
+            UsersEntity user = userDao.getUserById(custId);
+            if (user.getStatus() == 0)
+            {
+                user.setStatus(1);
+                status = 1;
+            }
+            else
+            {
+                user.setStatus(0);
+                status = 0;
+            }
+            return status;
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("改变会员状态错误", e);
         }
     }
     

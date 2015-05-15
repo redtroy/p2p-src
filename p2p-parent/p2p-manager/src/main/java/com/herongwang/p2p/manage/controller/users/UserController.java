@@ -60,4 +60,17 @@ public class UserController extends BaseController
         }
     }
     
+    @RequestMapping("checkStatus")
+    public @ResponseBody String checkStatus(String id) throws WebException
+    {
+        try
+        {
+            return String.valueOf(userService.checkStatus(id));
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new WebException("改变会员状态错误", e);
+        }
+    }
 }
