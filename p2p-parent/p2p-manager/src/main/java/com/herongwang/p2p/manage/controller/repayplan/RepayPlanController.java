@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.herongwang.p2p.dao.financing.IFinancingOrdersDao;
 import com.herongwang.p2p.entity.apply.DebtApplicationEntity;
 import com.herongwang.p2p.entity.debt.DebtEntity;
+import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
 import com.herongwang.p2p.entity.repayPlan.RepayPlanEntity;
+import com.herongwang.p2p.service.financing.IFinancingOrdersService;
 import com.herongwang.p2p.service.repayplan.IRepayPlanService;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
@@ -29,27 +32,26 @@ public class RepayPlanController
     @Autowired
     IRepayPlanService repayPlanService;
     
+    @Autowired
+    IFinancingOrdersService financingOrdersService;
+    
     /**
      * 还款计划
      * @param entity
      * @return
      */
     @RequestMapping("/queryRepayPlan")
-    public String queryRepayPlan(RepayPlanEntity entity, ModelMap map)
+    public String queryRepayPlan(String  debtId, ModelMap map)
             throws WebException
     {
         try
         {
-            if (entity != null)
-            {
-                entity.setPagable(true);
-            }
-            List<RepayPlanEntity> list = repayPlanService.queryRepayPlan(entity);
+           FinancingOrdersEntity order = financingOrdersService.getOrderByDebtId(debtId);
+            List<RepayPlanEntity> list = repayPlanService.queryRepayPlan(order);
             map.put("repayPlan", list);
-            map.put("query", entity);
             //map.put("orderId", entity.getOrderId());
-            map.put("orderId", "cO6z9fdHc7DZvbFW2CUepZLQeIVg8GWb");
-            
+            map.put("orderId", order.getOrderId());
+            map.put("debtId", debtId);
             return "manage/repayPlan/repayPlan";
         }
         catch (Exception e)
@@ -69,12 +71,12 @@ public class RepayPlanController
      */
     @RequestMapping("getBalance")
     public @ResponseBody Map<String, Object> getBalance(
-            @RequestParam("ids[]")String[] ids, String orderId) throws WebException
+            @RequestParam("ids[]")String[] ids, String orderId,String debtId) throws WebException
     {
         try
         {
             Map<String, Object> map = new HashMap<String, Object>();
-            String flag = repayPlanService.getBalance(ids, orderId);
+            String flag = repayPlanService.getBalance(ids, orderId,debtId);
             map.put("flag", flag);
             return map;
         }
@@ -94,12 +96,12 @@ public class RepayPlanController
      */
     @RequestMapping("saveRepayPlan")
     public @ResponseBody Map<String, Object> saveRepayPlan(
-            @RequestParam("ids[]")String[] ids, String orderId) throws WebException
+            @RequestParam("ids[]")String[] ids, String orderId,String debtId) throws WebException
     {
         try
         {
             Map<String, Object> map = new HashMap<String, Object>();
-            String flag = repayPlanService.saveRepayPlan(ids, orderId);
+            String flag = repayPlanService.saveRepayPlan(ids, orderId,debtId);
             map.put("flag", flag);
             return map;
         }

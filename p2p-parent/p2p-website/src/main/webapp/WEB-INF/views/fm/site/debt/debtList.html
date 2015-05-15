@@ -48,7 +48,7 @@
 							debt>
 							<tr>
 								<td class="tl"><a
-									href="${basePath}repayPlan/queryRepayPlan.htm?orderId=${debt.orderId}">${debt.title}</a></td>
+									href="${basePath}repayPlan/queryRepayPlan.htm?debtId=${debt.debtId}">${debt.title}</a></td>
 								<td class="color-purple">${debt.amount}元</td>
 								<td><#if debt.finishTime??> ${debt.finishTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
 								<td><#if debt.status==1> <em class="state normal">投资中</em>

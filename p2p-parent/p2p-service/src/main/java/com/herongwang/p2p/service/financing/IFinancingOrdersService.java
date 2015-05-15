@@ -43,4 +43,7 @@ public interface IFinancingOrdersService {
 	 * @param id
 	 */
 	public void delOrder(String id) throws ServiceException;
+
+    FinancingOrdersEntity getOrderByDebtId(String debtId)
+            throws ServiceException;
 }

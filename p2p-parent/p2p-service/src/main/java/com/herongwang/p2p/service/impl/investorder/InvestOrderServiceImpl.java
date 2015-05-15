@@ -120,8 +120,22 @@ public class InvestOrderServiceImpl implements IInvestOrderService
                     accountDao.updateAccount(account);
                     //更新融资单已融资金额 
                     DebtEntity debt = debtDao.getDebtFor(newIo.getDebtId());
+                    //是否满标
+                    int flag = debt.getAmount().compareTo(debt.getFinance()
+                            .add(newIo.getAmount()));
+                    if (flag == 0)
+                    {
+                        debt.setStatus(3);
+                    }
+                    else if (flag == 1)
+                    {
+                        debt.setStatus(1);
+                    }
+                    else
+                    {
+                        throw new ServiceException("标的已满,投资失败");
+                    }
                     debt.setFinance(debt.getFinance().add(newIo.getAmount()));
-                    debt.setStatus(1);
                     debtDao.updateDebt(debt);
                 }
             }
@@ -160,7 +174,9 @@ public class InvestOrderServiceImpl implements IInvestOrderService
             QueryCondition<InvestOrderEntity> condition = new QueryCondition<InvestOrderEntity>();
             List<InvestOrderEntity> investList = new ArrayList<InvestOrderEntity>();
             condition.addCondition("debtId", query.getDebtId());
+            condition.setPage(query);
             investList = investOrderDao.query(condition);
+            query.setPage(condition);
             return investList;
         }
         catch (Exception e)

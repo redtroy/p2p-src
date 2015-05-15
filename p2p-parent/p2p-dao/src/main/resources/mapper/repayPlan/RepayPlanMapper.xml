@@ -8,6 +8,7 @@
 		<id property="planId" column="planId" jdbcType="VARCHAR" />
 		<result property="orderId" column="orderId" jdbcType="VARCHAR" />
 		<result property="sequence" column="sequence" jdbcType="INTEGER" />
+		<result property="debtId" column="debtId" jdbcType="VARCHAR" />
 		<result property="monthCapital" column="monthCapital" jdbcType="INTEGER" />
 		<result property="monthProfit" column="monthProfit" jdbcType="INTEGER" />
 		<result property="monthAmount" column="monthAmount" jdbcType="INTEGER" />
@@ -25,6 +26,9 @@
 		<!-- 会员名称 -->
 		<if test="condition.orderId != null and condition.orderId != ''">
 			<![CDATA[AND orderId =#{condition.orderId}]]>
+		</if>
+		<if test="condition.debtId != null and condition.debtId != ''">
+			<![CDATA[AND debtId =#{condition.debtId}]]>
 		</if>
 		<![CDATA[ ORDER BY sequence ASC]]>
 	</select>
@@ -44,4 +48,7 @@
 			#{id}
 		</foreach>
 	</update>
+	<select id="getRepayPlanCount" parameterType="String" resultType="java.lang.Integer">
+	<![CDATA[ SELECT COUNT(r.debtId) FROM RepayPlan r  WHERE r.orderId=#{orderId} AND r.status=4]]>
+	</select>
 </mapper>

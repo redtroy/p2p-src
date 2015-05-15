@@ -3,6 +3,7 @@ package com.herongwang.p2p.service.repayplan;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
 import com.herongwang.p2p.entity.repayPlan.RepayPlanEntity;
 import com.sxj.util.exception.ServiceException;
 
@@ -36,7 +37,7 @@ public interface IRepayPlanService
      * @return
      * @throws SQLException 
      */
-    public List<RepayPlanEntity> queryRepayPlan(RepayPlanEntity query)
+    public List<RepayPlanEntity> queryRepayPlan(FinancingOrdersEntity order)
             throws ServiceException;
     
     /**
@@ -51,7 +52,7 @@ public interface IRepayPlanService
      * @param ids
      * @throws ServiceException
      */
-    String saveRepayPlan(String[] ids, String orderId) throws ServiceException;
+    String saveRepayPlan(String[] ids, String orderId,String debtId) throws ServiceException;
     /**
      * 验证余额
      * @param ids
@@ -59,5 +60,5 @@ public interface IRepayPlanService
      * @return
      * @throws ServiceException
      */
-    String getBalance(String[] ids, String orderId) throws ServiceException;
+    String getBalance(String[] ids, String orderId,String debtId) throws ServiceException;
 }

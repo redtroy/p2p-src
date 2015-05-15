@@ -43,7 +43,11 @@ public class OrdersServiceImpl implements IOrdersService
     {
         QueryCondition<OrdersEntity> condition = new QueryCondition<OrdersEntity>();
         condition.addCondition("customerId", query.getCustomerId());
+        condition.addCondition("orderType", query.getOrderType());
+        condition.addCondition("orderId", query.getOrderId());
+        condition.setPage(query);
         List<OrdersEntity> ordersList = ordersDao.query(condition);
+        query.setPage(condition);
         return ordersList;
     }
     

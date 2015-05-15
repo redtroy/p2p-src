@@ -98,10 +98,11 @@ function delTender(id){
 	});
 	d.showModal();
 }
-function shenhe(){
+function shenhe(id){
 	var success = dialog({
 		title : '消息',
 		cancel : false,
+		okValue:'确定',
 		ok : function() {
 			
 		}
@@ -114,12 +115,14 @@ function shenhe(){
 		ok : function() {
 			var that = this;
 			show.showModal();
-			$.post("${basePath}tender/audit.htm",{id:id}, function(
-					data) {
+			$.post("${basePath}tender/audit.htm",{debtId:id},function(data) {
 				if (data == 'ok') {
+					show.close().remove();
 					success.content('审核成功！');
 					success.showModal();
+					query();
 				} else {
+					show.close().remove();
 					success.content('审核失败！');
 					success.showModal();
 				}
@@ -182,10 +185,10 @@ function shenhe(){
               <td>${tender.statusText}</td>
               <td>
               <#if (tender.status==3)>
-	          <a href="javaScirpt:shenhe('${tender.customerId}');" class=" button btn-link">审核</a>
+	          <a href="javascript:shenhe('${tender.debtId}');" class=" button btn-link">审核</a>
 			</#if>
 			 <#if (tender.status==4)>
-	          <a href="${basePath}repayPlan/queryRepayPlan.htm?customerId=${tender.customerId}" class=" button btn-link">还款</a>
+	          <a href="${basePath}repayPlan/queryRepayPlan.htm?debtId=${tender.debtId}" class=" button btn-link">还款</a>
 			</#if>
 			<#if (tender.status==0)>
 	         <a href="${basePath}tender/toEdit.htm?id=${tender.debtId}" class="ml10 lnk-blue lnk-underline">修改</a>

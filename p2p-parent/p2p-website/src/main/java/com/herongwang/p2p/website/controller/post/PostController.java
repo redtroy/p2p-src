@@ -3,6 +3,10 @@ package com.herongwang.p2p.website.controller.post;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.herongwang.p2p.entity.account.AccountEntity;
+import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.entity.orders.OrdersEntity;
 import com.herongwang.p2p.entity.tl.TLBillEntity;
@@ -18,6 +23,7 @@ import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.model.order.OrderModel;
 import com.herongwang.p2p.model.order.ResultsModel;
 import com.herongwang.p2p.service.account.IAccountService;
+import com.herongwang.p2p.service.funddetail.IFundDetailService;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
 import com.herongwang.p2p.service.orders.IOrdersService;
 import com.herongwang.p2p.service.post.IPostService;
@@ -41,10 +47,27 @@ public class PostController extends BaseController
     @Autowired
     IInvestOrderService investOrderService;
     
+    @Autowired
+    IFundDetailService fundDetailService;
+    
     @RequestMapping("/recharge")
     public String recharge(ModelMap map) throws WebException
     {
         return "site/post/recharge";
+    }
+    
+    @RequestMapping("/withdraw")
+    public String withdraw(ModelMap map) throws WebException
+    {
+        UsersEntity user = this.getUsersEntity();
+        OrdersEntity query = new OrdersEntity();
+        AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
+        query.setCustomerId(user.getCustomerId());
+        query.setOrderType(4);
+        int num = ordersService.queryOrdersList(query).size();
+        map.put("type", num);
+        map.put("balance", this.divide(account.getBalance()));
+        return "site/post/withdraw";
     }
     
     @RequestMapping("/rechargeList")
@@ -80,6 +103,50 @@ public class PostController extends BaseController
         }
         
         return "site/post/recharge-list";
+    }
+    
+    @RequestMapping("/withdrawList")
+    public @ResponseBody Map<String, String> withdrawList(HttpSession session,
+            OrderModel order) throws WebException
+    {
+        Map<String, String> map = new HashMap<String, String>();
+        BigDecimal m = this.multiply(new BigDecimal(order.getOrderAmount()));
+        UsersEntity user = this.getUsersEntity();
+        int flag = accountService.updateAccountBalance(user.getCustomerId(), m);
+        if (flag > 0)
+        {
+            AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
+            account.setFozenAmount(account.getFozenAmount().add(m));
+            accountService.updateAccount(account);//更新冻结金额
+            //生成充值订单
+            OrdersEntity orders = new OrdersEntity();
+            orders.setCustomerId(user.getCustomerId());
+            orders.setAmount(m);
+            orders.setCreateTime(new Date());
+            orders.setStatus(0);
+            orders.setOrderType(4);
+            ordersService.addOrders(orders);
+            FundDetailEntity deal = new FundDetailEntity();
+            deal.setCustomerId(user.getCustomerId());
+            deal.setAccountId(account.getAccountId());
+            deal.setOrderId(orders.getOrderId());
+            deal.setType(4);
+            deal.setCreateTime(new Date());
+            deal.setStatus(1);
+            deal.setAmount(m);
+            deal.setBalance(account.getBalance());
+            deal.setDueAmount(account.getDebtAmount());
+            deal.setFrozenAmount(m);
+            fundDetailService.addFundDetail(deal);//生成资金明细
+            
+            map.put("isOK", "ok");
+        }
+        else
+        {
+            map.put("isOK", "提现失败，余额不足");
+        }
+        
+        return map;
     }
     
     @RequestMapping("/pickup")
