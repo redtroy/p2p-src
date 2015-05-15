@@ -168,6 +168,7 @@ public class UserServiceImpl implements IUserService
                 user.setStatus(0);
                 status = 0;
             }
+            userDao.updateUser(user);
             return status;
         }
         catch (Exception e)

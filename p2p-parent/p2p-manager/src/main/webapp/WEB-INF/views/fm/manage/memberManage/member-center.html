@@ -122,11 +122,7 @@ function checkStatus(id){
 	    okValue:'确 定',
 	    ok:function(){
 	    	$.post("${basePath}user/checkStatus.htm",{id:id},function(data){
-	    		if (data=='0'){
-		    		$("#status").text('停用');
-	    		}else{
-	    			$("#status").text('启用');
-	    		}
+	    		 query();
 	    	})
 	    },
 	    cancelValue : '取消',
