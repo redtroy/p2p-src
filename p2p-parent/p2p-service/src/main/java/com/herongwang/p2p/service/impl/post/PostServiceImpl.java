@@ -423,6 +423,7 @@ public class PostServiceImpl implements IPostService
             deal.setBalance(entity.getBalance());
             deal.setDueAmount(new BigDecimal(0));
             deal.setFrozenAmount(new BigDecimal(0));
+            accountService.updateAccount(entity);
         }
         else if (incomeStatus == 2 || incomeStatus == 4)
         {
@@ -431,14 +432,14 @@ public class PostServiceImpl implements IPostService
             deal.setBalance(entity.getBalance());
             deal.setDueAmount(new BigDecimal(0));
             deal.setFrozenAmount(account);
+            
+            accountService.updateAccountBalance(entity.getCustomerId(), account);
         }
         else
         {
             return;
         }
         fundDetailService.addFundDetail(deal);
-        
-        accountService.updateAccount(entity);
         
     }
 }

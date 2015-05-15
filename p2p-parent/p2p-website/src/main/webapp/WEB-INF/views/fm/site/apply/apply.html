@@ -52,6 +52,17 @@
 			}
 		});
 		d.showModal();
+	 
+	}
+	function checkLogin(){
+		$.post("${basePath}checkLogin.htm",function(data){
+			if (data=='erro'){
+				window.location.href = "${basePath}login.htm";
+			}else{
+				saveApply();
+			}
+		})
+		return true;
 	}
 </script>
 </head>
@@ -95,7 +106,7 @@
 						<div class="item">
 							<label>&nbsp;</label> <a href="javascript:void(0)"
 								class="button button-orange btn-regin btn-disable"
-								onclick="saveApply();">提交</a>
+								onclick="checkLogin();">提交</a>
 						</div>
 					</form>
 				</div>
