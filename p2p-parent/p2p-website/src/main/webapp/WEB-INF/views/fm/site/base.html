@@ -291,8 +291,17 @@ function loadUploadMember(id,url,isMulti,text,fn){
 </div>
 </#macro>
 <#macro headerIndex>
-
-<div class="fence-wide bgBlack">
+<script>
+  $.post("${basePath}userName.htm",function(data){
+	  if (data!='erro'){
+		  var content='<div class="yard-1100 topMenu fontYH ly-clearFix">'
+			          +' <p class="ly-right logOut">'+data+'，您好！</span><a href="${basePath}logout.htm">退出当前帐户</a></p>'
+			          +' </div>'
+		  $("#bghead").html(content);
+	  }
+  })
+</script>
+<div class="fence-wide bgBlack" id="bghead">
 <div class="yard-1100 topMenu fontYH ly-clearFix">
 <ul class="ly-clearFix ly-right">
 <li><a href="${basePath}login.htm">登录</a>|</li>

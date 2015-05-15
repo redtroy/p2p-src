@@ -154,8 +154,12 @@ public class BasicController extends BaseController
     @RequestMapping("userName")
     public @ResponseBody String userName(HttpServletRequest request)
     {
-        
-        return getUsersEntity().getName();
+        if (getUsersEntity() == null)
+        {
+            return "erro";
+        }
+        return userService.getUserById(getUsersEntity().getCustomerId())
+                .getName();
     }
     
     @RequestMapping("index")
