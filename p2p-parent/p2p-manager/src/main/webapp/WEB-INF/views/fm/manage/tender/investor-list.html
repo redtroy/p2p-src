@@ -85,17 +85,17 @@ $.post("${basePath}investOrder/orderList.htm?id=${debtId}",params, function(data
             <col width="15%" />
             <tr>
               <th>借款标</th>
-              <th>用户ID</th>
+              <th>客户名称</th>
               <th>投资金额</th>
               <th>利息 </th>
               <th>投资时间</th>
             </tr>
             <#list list as order>
              <tr>
-              <td class="tl">${order.debtId}</td>
-              <td>${order.customerId}</td>
-              <td>${order.amount}</td>
-              <td>${order.dueProfitAmount}</td>
+              <td class="tl">${order.title}</td>
+              <td>${order.name}</td>
+              <td>${order.amount/100}</td>
+              <td>${order.dueProfitAmount/100}</td>
               <td><#if (order.createTime??)> ${order.createTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
             </tr>
             </#list>

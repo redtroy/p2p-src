@@ -68,8 +68,8 @@ public class InvestOrderServiceImpl implements IInvestOrderService
             io.setAmount(new BigDecimal(amount));
             io.setCreateTime(new Date());
             io.setStatus(0);//状态
-            io.setDueProfitAmount(pm.getAmount());//本息总额
-            io.setDueTotalAmount(pm.getTotalInterest());//收益总额
+            io.setDueProfitAmount(pm.getTotalInterest());//本息总额
+            io.setDueTotalAmount(pm.getAmount());//收益总额
             io.setTotalFee(pm.getTotalFee());//平台管理费
             investOrderDao.addInvestOrder(io);
             return io;
