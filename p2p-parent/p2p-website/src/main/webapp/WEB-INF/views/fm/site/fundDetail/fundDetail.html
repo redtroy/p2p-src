@@ -73,7 +73,8 @@ function query(page) {
 									fund.type==3>还款<#elseif fund.type==4>提现<#else>手续费</#if></td> <#if
 								fund.incomeStatus==0>
 								<td class="color-red">-${fund.amount/100}</td><#else>
-								<td class="color-green">${fund.balance/100}</td> </#if>
+								<td class="color-green">${fund.amount/100}</td> </#if>
+								<td>${fund.balance/100}</td>
 								<td>${fund.frozenAmount/100}</td>
 								<td class="color-purple">${fund.dueAmount/100}</td>
 								<td class="tl">${fund.remark}</td>
