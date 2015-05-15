@@ -172,7 +172,7 @@ public class PostController extends BaseController
                 map.put("cz", 0);
                 map.put("tz", this.divide(order.getAmount()));
                 map.put("sxj", 0);
-                map.put("zj", this.divide(order.getAmount()));
+                map.put("zj", 0);
                 map.put("yve", this.divide(account.getBalance()));
             }
             catch (Exception e)
