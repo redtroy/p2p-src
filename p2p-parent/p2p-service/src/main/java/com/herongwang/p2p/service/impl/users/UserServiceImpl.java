@@ -113,7 +113,12 @@ public class UserServiceImpl implements IUserService
     {
         try
         {
-            return userDao.getUserNum();
+            Integer num = userDao.getUserNum();
+            if (num != null)
+            {
+                return num;
+            }
+            return 0;
         }
         catch (Exception e)
         {

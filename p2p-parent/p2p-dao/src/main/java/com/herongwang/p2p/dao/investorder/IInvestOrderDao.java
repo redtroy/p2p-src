@@ -62,4 +62,14 @@ public interface IInvestOrderDao
      */
     public List<InvestOrderEntity> queryInvestorderList(String debtId);
     
+    /**
+     * 查询所有收益人 总收益
+     */
+    public Integer queryDueProfitAmount();
+    
+    /**
+     * 查询投资总额
+     */
+    public Integer queryAllAmount();
+    
 }

@@ -37,7 +37,7 @@ public interface IUsersDao
     /**
      * 查询会员数量
      */
-    public int getUserNum();
+    public Integer getUserNum();
     
     /**
      * 更新会员

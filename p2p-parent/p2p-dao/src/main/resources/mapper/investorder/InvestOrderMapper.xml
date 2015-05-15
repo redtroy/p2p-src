@@ -45,4 +45,12 @@
 	<select id="queryInvestorderList" resultMap="InvestorderResultMap" parameterType="String">
 	     <![CDATA[select * from InvestOrder where debtId=#{debtId}]]>
 	</select>
+		<select id="queryDueProfitAmount" resultType="java.lang.Integer"
+		parameterType="String">
+		<![CDATA[SELECT SUM(dueProfitAmount) FROM InvestOrder]]>
+	</select>
+	<select id="queryAllAmount" resultType="java.lang.Integer"
+		parameterType="String">
+		<![CDATA[SELECT SUM(amount) FROM InvestOrder]]>
+	</select>
 </mapper>

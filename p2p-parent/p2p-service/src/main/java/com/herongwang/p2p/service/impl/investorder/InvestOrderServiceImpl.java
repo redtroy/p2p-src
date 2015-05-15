@@ -45,8 +45,8 @@ public class InvestOrderServiceImpl implements IInvestOrderService
      */
     @Override
     @Transactional
-    public InvestOrderEntity addOrder(String debtId, String amount,String customerId)
-            throws ServiceException
+    public InvestOrderEntity addOrder(String debtId, String amount,
+            String customerId) throws ServiceException
     {
         try
         {
@@ -166,6 +166,48 @@ public class InvestOrderServiceImpl implements IInvestOrderService
         {
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new ServiceException("查询投资订单列表,标的信息错误", e);
+        }
+    }
+    
+    /**'
+     * 查询收益总额
+     */
+    @Override
+    public int queryDueProfitAmount() throws ServiceException
+    {
+        try
+        {
+            Integer amount = investOrderDao.queryDueProfitAmount();
+            if (amount != null)
+            {
+                return amount;
+            }
+            return 0;
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("查询收益总额错误", e);
+        }
+        
+    }
+    
+    @Override
+    public int queryAllAmount() throws ServiceException
+    {
+        try
+        {
+            Integer amount = investOrderDao.queryAllAmount();
+            if (amount != null)
+            {
+                return amount;
+            }
+            return 0;
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("查询投资总额错误", e);
         }
     }
     
