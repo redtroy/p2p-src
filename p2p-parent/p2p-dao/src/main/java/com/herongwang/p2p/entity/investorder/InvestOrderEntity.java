@@ -125,6 +125,30 @@ public class InvestOrderEntity extends Pagable implements Serializable
     @Column(name = "totalFee")
     private BigDecimal totalFee;
     
+    private String name;//会员名称
+    
+    private String title;//标的名称
+    
+    public String getTitle()
+    {
+        return title;
+    }
+    
+    public void setTitle(String title)
+    {
+        this.title = title;
+    }
+    
+    public String getName()
+    {
+        return name;
+    }
+    
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+    
     public String getOrderId()
     {
         return orderId;
