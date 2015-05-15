@@ -16,9 +16,29 @@ $(document).ready(function() {
 	validform = $("#submit_form").Validform({
 		tiptype : 3,
 		datatype:{
-			"amount":function(){
+			minAmount : function(gets){
 				//参数gets是获取到的表单元素值，obj为当前表单元素，curform为当前验证的表单，regxp为内置的一些正则表达式的引用;
-	 
+	 				var amount = $("#amount").val();
+					if(amount%gets != 0){
+						return "输入的最小金额必须能被投资金额整除！";
+					}else if(gets > amount){
+						return "输入的最小金额不能比投资金额大！";
+					}
+				//注意return可以返回true 或 false 或 字符串文字，true表示验证通过，返回字符串表示验证失败，字符串作为错误提示显示，返回false则用errmsg或默认的错误提示;
+			},
+			maxAmount : function(gets){
+				//参数gets是获取到的表单元素值，obj为当前表单元素，curform为当前验证的表单，regxp为内置的一些正则表达式的引用;
+	 				var amount = $("#amount").val();
+	 				var minNum = $("#minAmount").val();
+					if(amount%gets != 0){
+						return "输入的最大金额必须能被投资金额整除！";
+					}else if(gets < minNum){
+						return "输入的最大金额必须比最小金额大！";
+					}else if(gets > amount){
+						return "输入的最大金额不能比投资金额大！";
+					}else if(gets % minNum != 0){
+						return "输入的最大金额必须是最小投资金额倍数！";
+					}
 				//注意return可以返回true 或 false 或 字符串文字，true表示验证通过，返回字符串表示验证失败，字符串作为错误提示显示，返回false则用errmsg或默认的错误提示;
 			}
 		}
@@ -196,18 +216,18 @@ function saveApply() {
             </tr>
             <tr>
               <th>借款金额</th>
-              <td><input type="text" name="amount" id="amount" value="${info.amount}" datatype="/^(\d{1,15})+(.[0-9]{0,2})?$/"
-								errormsg="请输入不超过两位小数的数字！" nullmsg="请输入借款金额！" id="borrowingAmount" class="input input-w270h30"/>元</td>
+              <td><input type="text" name="amount" id="amount" value="${info.amount}" datatype="/^\d{1,15}$/"
+								errormsg="请输入不超过十五位的整数！" nullmsg="请输入借款金额！" id="borrowingAmount" class="input input-w270h30"/>元</td>
             </tr>
             <tr>
               <th>最小投资金额</th>
-              <td><input type="text" name="minInvest" value="${info.minInvest}" id="minAmount" datatype="/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/"
-								errormsg="请输入不超过两位小数的数字！" nullmsg="请输入最小投资金额！" class="input input-w270h30"/>元</td>
+              <td><input type="text" name="minInvest" value="${info.minInvest}" id="minAmount" datatype="minAmount /^\d{1,15}$/"
+								errormsg="请输入不超过十五位的整数！" nullmsg="请输入最小投资金额！" class="input input-w270h30"/>元</td>
             </tr>
             <tr>
               <th>最大投资金额</th>
-              <td><input type="text" name="maxInvest" value="${info.maxInvest}" id="maxAmount" datatype="/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/"
-								errormsg="请输入不超过两位小数的数字！" nullmsg="请输入最大投资金额！" class="input input-w270h30"/>元</td>
+              <td><input type="text" name="maxInvest" value="${info.maxInvest}" id="maxAmount" datatype="maxAmount /^\d{1,15}$/"
+								errormsg="请输入不超过十五位的整数！" nullmsg="请输入最大投资金额！" class="input input-w270h30"/>元</td>
             </tr>
             
           </table>
