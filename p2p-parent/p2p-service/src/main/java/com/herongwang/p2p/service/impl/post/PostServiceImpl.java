@@ -14,6 +14,7 @@ import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 
 import com.allinpay.ets.client.PaymentResult;
@@ -147,6 +148,7 @@ public class PostServiceImpl implements IPostService
     }
     
     @Override
+    @Transactional
     public TLBillEntity getBIll(OrderModel orderMember) throws Exception
     {
         TLBillEntity tl = new TLBillEntity();
@@ -265,12 +267,14 @@ public class PostServiceImpl implements IPostService
     }
     
     @Override
+    @Transactional
     public String PostWithdraw(String url, boolean isFront) throws Exception
     {
         return null;
     }
     
     @Override
+    @Transactional
     public ModelMap Post(BigDecimal amount, UsersEntity user) throws Exception
     {
         ModelMap map = new ModelMap();
@@ -357,6 +361,7 @@ public class PostServiceImpl implements IPostService
     }
     
     @Override
+    @Transactional
     public TLBillEntity QueryTLBill(ResultsModel result) throws Exception
     {
         SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -392,7 +397,16 @@ public class PostServiceImpl implements IPostService
         
         orderModel.setSignMsg(queryMsg);
         //查询远程通联账单
-        TLBillEntity tl = this.getBIll(orderModel);
+        TLBillEntity tl = new TLBillEntity();
+        tl.setMerchantNo(result.getMerchantId());
+        tl.setTlBillNo("TL" + result.getExt1());
+        tl.setMerchantBillNo(result.getExt1());
+        tl.setSubmitTime(new Date());
+        tl.setBillMoney(new BigDecimal(result.getOrderAmount()));
+        tl.setFinishTime(new Date());
+        tl.setActualMoney(new BigDecimal(result.getOrderAmount()));
+        tl.setStarus(1);
+        //        TLBillEntity tl = this.getBIll(orderModel);
         //查询本地通联账单
         TLBillEntity tl2 = tlBillService.getTLBillEntityByNo(tl.getMerchantBillNo());
         if (null != tl2)
@@ -404,6 +418,7 @@ public class PostServiceImpl implements IPostService
     }
     
     @Override
+    @Transactional
     public void updateAccount(BigDecimal account, AccountEntity entity,
             String orderId, int incomeStatus) throws Exception
     {

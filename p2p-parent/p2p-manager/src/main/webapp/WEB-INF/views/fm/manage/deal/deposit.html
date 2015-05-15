@@ -115,7 +115,7 @@ function delTender(orderId){
             <col width="8%" />
             <col width="12%" />
             <col width="13%" />
-            <col width="20%" />
+            <!-- <col width="20%" /> -->
             <col width="10%" />
             <col width="7%" />
             <col width="12%" />
@@ -125,7 +125,7 @@ function delTender(orderId){
               <th>会员名称</th>
               <th>提现时间</th>
               <th>订单号 </th>
-              <th>通联支付单号</th>
+              <!-- <th>通联支付单号</th> -->
               <th>提现金额</th>
               <th>手续费</th>
               <th>实际到账时间</th>
@@ -134,15 +134,18 @@ function delTender(orderId){
             </tr>
             <#list list as deal>
             <tr>
-	        <td>${deal.customerId}</td>
+	        <td>${deal.name}</td>
               <td><#if (deal.createTime??)> ${deal.createTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
-              <td>${deal.orderId}</td>
-              <td>${deal.payNo}</td>
-              <td>${deal.amount}元</td>
-              <td>${deal.manageFee}</td>
-              <td><#if (deal.actuaTime??)> ${deal.actuaTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
-              <td>${deal.actuaFee}元</td>
-              <td><button class="button btn-examine" onclick="delTender('${deal.orderId}');" >审核</button></td>
+              <td>${deal.ordersNo}</td>
+              <!-- <td>${deal.tlNo}</td> -->
+              <td><#if (deal.amount>0)>${deal.amount/100}<#else>0</#if>元</td>
+              <td><#if (deal.manageFee>0)>${deal.manageFee/100}<#else>0</#if></td>
+              <td><#if (deal.withdrawTime??)> ${deal.withdrawTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
+              <td><#if (deal.actuaFee>0)>${deal.actuaFee/100}<#else>0</#if>元</td>
+              <td>
+              <#if (deal.status==0)>
+              <button class="button btn-examine" onclick="delTender('${deal.orderId}');" >审核</button>
+              <#else>已提现</#if></td>
             </tr>
 			</#list>
           </table>

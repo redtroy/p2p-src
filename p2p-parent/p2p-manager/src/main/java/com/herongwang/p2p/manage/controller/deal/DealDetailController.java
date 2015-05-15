@@ -1,5 +1,6 @@
 package com.herongwang.p2p.manage.controller.deal;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.aipg.payreq.Trans_Detail;
 import com.alibaba.druid.util.StringUtils;
-import com.allinpay.xmltrans.service.TranxServiceImpl;
+import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.herongwang.p2p.entity.orders.OrdersEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
@@ -47,7 +48,7 @@ public class DealDetailController extends BaseController
      * @return
      */
     @RequestMapping("/recharge")
-    public String rechargeList(FundDetailEntity entity, ModelMap map)
+    public String rechargeList(OrdersEntity entity, ModelMap map)
             throws WebException
     {
         try
@@ -56,8 +57,9 @@ public class DealDetailController extends BaseController
             {
                 entity.setPagable(true);
             }
-            entity.setType(1);//查询充值记录
-            List<FundDetailEntity> list = fundDetailService.queryFundDetail(entity);
+            entity.setOrderType(1);
+            //查询充值记录
+            List<OrdersEntity> list = ordersService.queryOrdersList(entity);
             map.put("list", list);
             map.put("query", entity);
             return "manage/deal/recharge";
@@ -76,7 +78,7 @@ public class DealDetailController extends BaseController
      * @return
      */
     @RequestMapping("/deposit")
-    public String depositList(FundDetailEntity entity, ModelMap map)
+    public String depositList(OrdersEntity entity, ModelMap map)
             throws WebException
     {
         try
@@ -85,8 +87,9 @@ public class DealDetailController extends BaseController
             {
                 entity.setPagable(true);
             }
-            entity.setType(4);//提现查询
-            List<FundDetailEntity> list = fundDetailService.queryFundDetail(entity);
+            entity.setOrderType(4);
+            //查询提现记录
+            List<OrdersEntity> list = ordersService.queryOrdersList(entity);
             map.put("list", list);
             map.put("query", entity);
             return "manage/deal/deposit";
@@ -187,12 +190,20 @@ public class DealDetailController extends BaseController
         trans_detail.setCURRENCY("CNY");
         try
         {
-            TranxServiceImpl tranxService = new TranxServiceImpl();
+            /*TranxServiceImpl tranxService = new TranxServiceImpl();
             tranxService.nistTest(testTranURL,
                     trx_code,
                     busicode,
                     trans_detail,
-                    true);
+                    true);*/
+            order.setStatus(1);
+            order.setWithdrawTime(new Date());
+            order.setChannel("1");
+            ordersService.updateOrders(order);
+            AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
+            account.setFozenAmount(account.getFozenAmount()
+                    .subtract(order.getAmount()));
+            accountService.updateAccount(account);//更新冻结金额
             map.put("isOK", "ok");
         }
         catch (Exception e)
