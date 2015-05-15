@@ -13,10 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.herongwang.p2p.dao.debt.IDebtDao;
 import com.herongwang.p2p.dao.investorder.IInvestOrderDao;
 import com.herongwang.p2p.dao.profitlist.IProfitListDao;
+import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.entity.profitlist.ProfitListEntity;
 import com.herongwang.p2p.model.invest.InvestModel;
 import com.herongwang.p2p.model.profit.ProfitModel;
+import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
 import com.herongwang.p2p.service.profit.IProfitService;
 import com.sxj.util.common.StringUtils;
@@ -40,13 +42,16 @@ public class InvestOrderServiceImpl implements IInvestOrderService
     @Autowired
     IProfitListDao profitListDao;
     
+    @Autowired
+    IDebtService debtService;
+    
     /**
      * 生成投资订单
      */
     @Override
     @Transactional
-    public InvestOrderEntity addOrder(String debtId, String amount,String customerId)
-            throws ServiceException
+    public InvestOrderEntity addOrder(String debtId, String amount,
+            String customerId) throws ServiceException
     {
         try
         {
@@ -102,6 +107,12 @@ public class InvestOrderServiceImpl implements IInvestOrderService
                 if (io.getStatus() == 1)
                 {
                     investOrderDao.updateInvestOrder(io);
+                    
+                    //更新标的状态为投资中
+                    DebtEntity debt = new DebtEntity();
+                    debt.setDebtId(newIo.getDebtId());
+                    debt.setStatus(1);
+                    debtService.updateDebt(debt);
                 }
             }
             
