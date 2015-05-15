@@ -47,7 +47,7 @@ public class DealDetailController extends BaseController
      * @return
      */
     @RequestMapping("/recharge")
-    public String rechargeList(FundDetailEntity entity, ModelMap map)
+    public String rechargeList(OrdersEntity entity, ModelMap map)
             throws WebException
     {
         try
@@ -56,8 +56,9 @@ public class DealDetailController extends BaseController
             {
                 entity.setPagable(true);
             }
-            entity.setType(1);//查询充值记录
-            List<FundDetailEntity> list = fundDetailService.queryFundDetail(entity);
+            entity.setOrderType(1);
+            //查询充值记录
+            List<OrdersEntity> list = ordersService.queryOrdersList(entity);
             map.put("list", list);
             map.put("query", entity);
             return "manage/deal/recharge";
@@ -76,7 +77,7 @@ public class DealDetailController extends BaseController
      * @return
      */
     @RequestMapping("/deposit")
-    public String depositList(FundDetailEntity entity, ModelMap map)
+    public String depositList(OrdersEntity entity, ModelMap map)
             throws WebException
     {
         try
@@ -85,8 +86,9 @@ public class DealDetailController extends BaseController
             {
                 entity.setPagable(true);
             }
-            entity.setType(4);//提现查询
-            List<FundDetailEntity> list = fundDetailService.queryFundDetail(entity);
+            entity.setOrderType(4);
+            //查询充值记录
+            List<OrdersEntity> list = ordersService.queryOrdersList(entity);
             map.put("list", list);
             map.put("query", entity);
             return "manage/deal/deposit";
