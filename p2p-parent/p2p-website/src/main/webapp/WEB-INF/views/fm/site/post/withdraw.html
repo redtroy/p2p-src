@@ -9,7 +9,19 @@
 	var validform;
 	$(document).ready(function() {
 		validform = $("#postForm").Validform({
-			tiptype : 3
+			tiptype : 3,
+			datatype:{
+				amount : function (gets){
+					var reg1 = /^[0-9]+(.[0-9]{2})?$/;
+					if(gets>${balance}){
+						return "提现金额不能大于账户余额！";
+					}else if(gets.length>15){
+						return "您输入的金额太多，请重新输入！";
+					}else if(!reg1.test(gets)){
+						return "请输入不超过两位小数数字！";
+					}
+				}
+			}
 		});
 
 	});
@@ -81,14 +93,19 @@
     <col width="20%" />
         <col width="80%" />
         <tr>
+      <th>账户余额</th>
+      <td>${balance}元
+	</td>
+    </tr>
+        <tr>
       <th>提现金额</th>
       <td>
       <#if type = 0>
-      <input type="text" id="amount" name="orderAmount" class="input input-w140h30" value="" datatype="/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/"
-										errormsg="请输入不超过两位小数数字！" nullmsg="请输入提现金额！"  /> 元</td>
+      <input type="text" id="amount" name="orderAmount" class="input input-w140h30" value="" datatype="amount" nullmsg="请输入提现金额！"  /> 元
 	<#else>
 	您已有一条提现记录，请等待管理员审核后再申请。
 	</#if>
+	</td>
     </tr>
   </table>
         <div class="tc"> <a class="button button-orange" href="javascript:void(0)" onclick="postInfo();">确认提现</a>&nbsp;</div>
