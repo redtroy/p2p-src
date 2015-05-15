@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.herongwang.p2p.dao.account.IAccountDao;
 import com.herongwang.p2p.dao.users.IUsersDao;
@@ -23,6 +24,7 @@ public class AccountServiceImpl implements IAccountService
     private IUsersDao userDao;
     
     @Override
+    @Transactional
     public void addAccount(AccountEntity account) throws ServiceException
     {
         try
@@ -54,6 +56,7 @@ public class AccountServiceImpl implements IAccountService
     }
     
     @Override
+    @Transactional
     public void updateAccount(AccountEntity account)
     {
         accountDao.updateAccount(account);
@@ -61,6 +64,7 @@ public class AccountServiceImpl implements IAccountService
     }
     
     @Override
+    @Transactional
     public int updateAccountBalance(String customerId, BigDecimal balance)
     {
         QueryCondition<AccountEntity> condition = new QueryCondition<AccountEntity>();
