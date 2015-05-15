@@ -1,5 +1,6 @@
 package com.herongwang.p2p.manage.controller.apply;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,11 @@ public class ApplyForController extends BaseController
                 entity.setPagable(true);
             }
             List<DebtApplicationEntity> list = debtApplicationService.queryApply(entity);
+            for (int i = 0; i < list.size(); i++)
+            {
+                DebtApplicationEntity debt = list.get(i);
+                debt.setAmount(debt.getAmount().divide(new BigDecimal(100), 2));
+            }
             map.put("list", list);
             map.put("query", entity);
             return "manage/apply/apply-list";

@@ -54,7 +54,6 @@ public class ApplyController extends BaseController
             UsersEntity user = getUsersEntity();
             //获取登陆会员ID 
             Map<String, String> map = new HashMap<String, String>();
-            apply.setCustomerId("M999999");
             apply.setApplyTime(new Date());//申请时间
             apply.setStatus(0);
             apply.setCustomerId(user.getCustomerId());

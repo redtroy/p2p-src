@@ -148,10 +148,9 @@ public class PostController extends BaseController
     public String investPost(ModelMap map, InvestOrderEntity order)
             throws WebException
     {
-        BigDecimal m = order.getAmount().multiply(new BigDecimal(100));
         UsersEntity user = this.getUsersEntity();
-        user.setCustomerId("mmfxRv1eX704vWS5qrmHh2XxBbHVDdyg");
-        int flag = accountService.updateAccountBalance(user.getCustomerId(), m);
+        int flag = accountService.updateAccountBalance(user.getCustomerId(),
+                order.getAmount());
         if (flag == 1)
         {
             
@@ -161,7 +160,7 @@ public class PostController extends BaseController
             {
                 InvestOrderEntity io = new InvestOrderEntity();
                 io.setOrderId(order.getOrderId());
-                io.setAmount(m);
+                io.setAmount(order.getAmount());
                 io.setStatus(flag);
                 io.setChannel(1);
                 io.setCreateTime(new Date());
@@ -186,7 +185,7 @@ public class PostController extends BaseController
         }
         else
         {
-            map.put("amount", order.getAmount());
+            map.put("amount", this.divide(order.getAmount()));
             map.put("orderId", order.getOrderId());
         }
         return "site/post/rechargeIn";
@@ -198,7 +197,6 @@ public class PostController extends BaseController
     {
         BigDecimal m = order.getAmount().multiply(new BigDecimal(100));
         UsersEntity user = this.getUsersEntity();
-        user.setCustomerId("mmfxRv1eX704vWS5qrmHh2XxBbHVDdyg");
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
         try
         {
@@ -241,7 +239,6 @@ public class PostController extends BaseController
         try
         {
             UsersEntity user = this.getUsersEntity();
-            user.setCustomerId("mmfxRv1eX704vWS5qrmHh2XxBbHVDdyg");
             AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
             TLBillEntity tl = new TLBillEntity();
             tl.setStarus(1);
@@ -354,7 +351,6 @@ public class PostController extends BaseController
      * @param m
      * @return
      */
-    @SuppressWarnings("unused")
     private BigDecimal divide(BigDecimal m)
     {
         BigDecimal b2 = new BigDecimal(100);
@@ -366,7 +362,6 @@ public class PostController extends BaseController
      * @param m
      * @return
      */
-    @SuppressWarnings("unused")
     private BigDecimal multiply(BigDecimal m)
     {
         BigDecimal b2 = new BigDecimal(100);
