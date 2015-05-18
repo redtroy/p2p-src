@@ -162,8 +162,7 @@ public class InvestOrderServiceImpl implements IInvestOrderService
     public InvestOrderEntity getInvestOrderEntity(String id)
             throws ServiceException
     {
-        // TODO Auto-generated method stub
-        return null;
+        return investOrderDao.getInvestOrder(id);
     }
     
     @Override
