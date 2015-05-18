@@ -38,11 +38,9 @@ public class UserServiceImpl implements IUserService
             {
                 return userList;
             }
-            /* 
-             *  
-            condition.setPage(query);*/
+            condition.setPage(user);
             userList = userDao.queryUserList(condition);
-            // query.setPage(condition);
+            user.setPage(condition);
             return userList;
         }
         catch (Exception e)
