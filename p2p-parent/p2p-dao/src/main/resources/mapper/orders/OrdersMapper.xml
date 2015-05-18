@@ -45,5 +45,8 @@
 		 <if test="condition.orderId != null and condition.orderId != ''">
 		 	<![CDATA[AND o.orderId =#{condition.orderId}]]>
 		 </if>
+		 <if test="condition.status != null">
+		 	<![CDATA[AND o.status =#{condition.status}]]>
+		 </if>
 	</select>
 </mapper>

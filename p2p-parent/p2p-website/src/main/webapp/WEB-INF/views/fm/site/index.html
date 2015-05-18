@@ -96,7 +96,21 @@
     </#if>
     <div class="progress-bar" role="progressbar" aria-valuenow='${bfb?string("#.##")}' aria-valuemin="0" aria-valuemax="100" style='width:${bfb?string("#.##")}%'> <span class="sr-only">${bfb?string("#.##")}%</span> </div>
   </div>
+  <#if (model.status<=1)>
   <button class="button button-red fontYH" onclick="invest('${model.debtId}')">立即投资</button>
+  </#if>
+  <#if (model.status==2)>
+  <button class="button button-red disabled fontYH">流标</button>
+  </#if>
+  <#if (model.status==3)>
+  <button class="button button-red disabled fontYH">满标审核</button>
+  </#if>
+  <#if (model.status==4)>
+  <button class="button button-red disabled fontYH">还款中</button>
+  </#if>
+  <#if (model.status==5)>
+  <button class="button button-red disabled fontYH">完成</button>
+  </#if>
 </div>
 </div>
 </#list>

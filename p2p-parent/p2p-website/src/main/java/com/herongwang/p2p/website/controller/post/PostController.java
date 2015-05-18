@@ -29,6 +29,7 @@ import com.herongwang.p2p.service.orders.IOrdersService;
 import com.herongwang.p2p.service.post.IPostService;
 import com.herongwang.p2p.website.controller.BaseController;
 import com.sxj.util.exception.WebException;
+import com.sxj.util.logger.SxjLogger;
 
 @Controller
 @RequestMapping("/post")
@@ -60,10 +61,15 @@ public class PostController extends BaseController
     public String withdraw(ModelMap map) throws WebException
     {
         UsersEntity user = this.getUsersEntity();
+        if (user == null)
+        {
+            return LOGIN;
+        }
         OrdersEntity query = new OrdersEntity();
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
         query.setCustomerId(user.getCustomerId());
         query.setOrderType(4);
+        query.setStatus(0);
         int num = ordersService.queryOrdersList(query).size();
         map.put("type", num);
         map.put("balance", this.divide(account.getBalance()));
@@ -76,6 +82,10 @@ public class PostController extends BaseController
     {
         BigDecimal m = this.multiply(new BigDecimal(order.getOrderAmount()));
         UsersEntity user = this.getUsersEntity();
+        if (user == null)
+        {
+            return LOGIN;
+        }
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
         try
         {
@@ -100,6 +110,8 @@ public class PostController extends BaseController
         catch (Exception e)
         {
             e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new WebException("生成充值订单失败", e);
         }
         
         return "site/post/recharge-list";
@@ -110,40 +122,52 @@ public class PostController extends BaseController
             OrderModel order) throws WebException
     {
         Map<String, String> map = new HashMap<String, String>();
-        BigDecimal m = this.multiply(new BigDecimal(order.getOrderAmount()));
-        UsersEntity user = this.getUsersEntity();
-        int flag = accountService.updateAccountBalance(user.getCustomerId(), m);
-        if (flag > 0)
+        try
         {
-            AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
-            account.setFozenAmount(account.getFozenAmount().add(m));
-            accountService.updateAccount(account);//更新冻结金额
-            //生成充值订单
-            OrdersEntity orders = new OrdersEntity();
-            orders.setCustomerId(user.getCustomerId());
-            orders.setAmount(m);
-            orders.setCreateTime(new Date());
-            orders.setStatus(0);
-            orders.setOrderType(4);
-            ordersService.addOrders(orders);
-            FundDetailEntity deal = new FundDetailEntity();
-            deal.setCustomerId(user.getCustomerId());
-            deal.setAccountId(account.getAccountId());
-            deal.setOrderId(orders.getOrderId());
-            deal.setType(4);
-            deal.setCreateTime(new Date());
-            deal.setStatus(1);
-            deal.setAmount(m);
-            deal.setBalance(account.getBalance());
-            deal.setDueAmount(account.getDebtAmount());
-            deal.setFrozenAmount(m);
-            fundDetailService.addFundDetail(deal);//生成资金明细
-            
-            map.put("isOK", "ok");
+            BigDecimal m = this.multiply(new BigDecimal(order.getOrderAmount()));
+            UsersEntity user = this.getUsersEntity();
+            int flag = accountService.updateAccountBalance(user.getCustomerId(),
+                    m,
+                    null);
+            if (flag > 0)
+            {
+                AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
+                account.setFozenAmount(account.getFozenAmount().add(m));
+                accountService.updateAccount(account);//更新冻结金额
+                //生成充值订单
+                OrdersEntity orders = new OrdersEntity();
+                orders.setCustomerId(user.getCustomerId());
+                orders.setAmount(m);
+                orders.setCreateTime(new Date());
+                orders.setStatus(0);
+                orders.setOrderType(4);
+                ordersService.addOrders(orders);
+                FundDetailEntity deal = new FundDetailEntity();
+                deal.setCustomerId(user.getCustomerId());
+                deal.setAccountId(account.getAccountId());
+                deal.setOrderId(orders.getOrderId());
+                deal.setType(4);
+                deal.setCreateTime(new Date());
+                deal.setStatus(1);
+                deal.setAmount(m);
+                deal.setBalance(account.getBalance());
+                deal.setDueAmount(account.getDebtAmount());
+                deal.setFrozenAmount(m);
+                fundDetailService.addFundDetail(deal);//生成资金明细
+                
+                map.put("isOK", "ok");
+            }
+            else
+            {
+                map.put("isOK", "提现失败，余额不足");
+            }
         }
-        else
+        catch (Exception e)
         {
+            e.printStackTrace();
             map.put("isOK", "提现失败，余额不足");
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new WebException("生成充值订单失败", e);
         }
         
         return map;
@@ -154,28 +178,43 @@ public class PostController extends BaseController
     {
         
         UsersEntity user = this.getUsersEntity();
+        if (user == null)
+        {
+            return LOGIN;
+        }
         //获取账户信息
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
-        
-        double orderAmount = Double.valueOf(result.getOrderAmount()) / 100;
-        double payAmount = Double.valueOf(result.getPayAmount()) / 100;
-        TLBillEntity tl = postService.QueryTLBill(result);
-        
-        OrdersEntity orders = ordersService.getOrdersEntityByNo(result.getOrderNo());
-        //支付成功更新支付订单状态
-        if (result.getPayResult().equals("1") && tl.getStarus() == 1
-                && orders.getStatus() != 1)
+        double orderAmount = 0;
+        double payAmount = 0;
+        try
         {
+            orderAmount = Double.valueOf(result.getOrderAmount()) / 100;
+            payAmount = Double.valueOf(result.getPayAmount()) / 100;
+            TLBillEntity tl = postService.QueryTLBill(result);
             
-            orders.setStatus(1);
-            orders.setArriveTime(tl.getFinishTime());
-            ordersService.updateOrders(orders);
-            
-            //插入资金明细表
-            postService.updateAccount(tl.getActualMoney(),
-                    account,
-                    orders.getOrderId(),
-                    1);
+            OrdersEntity orders = ordersService.getOrdersEntityByNo(result.getOrderNo());
+            //支付成功更新支付订单状态
+            if (result.getPayResult().equals("1") && tl.getStarus() == 1
+                    && orders.getStatus() != 1)
+            {
+                
+                orders.setStatus(1);
+                orders.setArriveTime(tl.getFinishTime());
+                ordersService.updateOrders(orders);
+                
+                //插入资金明细表
+                postService.updateAccount(tl.getActualMoney(),
+                        account,
+                        orders.getOrderId(),
+                        1);
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            map.put("isOK", "充值失败！");
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new WebException("充值失败", e);
         }
         map.put("orderNo", result.getOrderNo());
         map.put("orderAmount", orderAmount);
@@ -188,24 +227,32 @@ public class PostController extends BaseController
     @RequestMapping("/receive")
     public void receive(ModelMap map, ResultsModel result) throws Exception
     {
-        TLBillEntity tl = postService.QueryTLBill(result);
-        OrdersEntity orders = ordersService.getOrdersEntityByNo(result.getOrderNo());
-        //获取账户信息
-        AccountEntity account = accountService.getAccountByCustomerId(orders.getCustomerId());
-        //支付成功更新支付订单状态
-        if (result.getPayResult().equals("1") && tl.getStarus() == 1
-                && orders.getStatus() != 1)
+        try
         {
-            
-            orders.setStatus(1);
-            orders.setArriveTime(tl.getFinishTime());
-            ordersService.updateOrders(orders);
-            
-            //插入资金明细表
-            postService.updateAccount(tl.getActualMoney(),
-                    account,
-                    orders.getOrderId(),
-                    1);
+            TLBillEntity tl = postService.QueryTLBill(result);
+            OrdersEntity orders = ordersService.getOrdersEntityByNo(result.getOrderNo());
+            //获取账户信息
+            AccountEntity account = accountService.getAccountByCustomerId(orders.getCustomerId());
+            //支付成功更新支付订单状态
+            if (result.getPayResult().equals("1") && tl.getStarus() == 1
+                    && orders.getStatus() != 1)
+            {
+                
+                orders.setStatus(1);
+                orders.setArriveTime(tl.getFinishTime());
+                ordersService.updateOrders(orders);
+                
+                //插入资金明细表
+                postService.updateAccount(tl.getActualMoney(),
+                        account,
+                        orders.getOrderId(),
+                        1);
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
         }
         
     }
@@ -217,8 +264,13 @@ public class PostController extends BaseController
     {
         
         UsersEntity user = this.getUsersEntity();
+        if (user == null)
+        {
+            return LOGIN;
+        }
         int flag = accountService.updateAccountBalance(user.getCustomerId(),
-                order.getAmount());
+                order.getAmount(),
+                order.getOrderId());
         if (flag == 1)
         {
             
@@ -226,14 +278,6 @@ public class PostController extends BaseController
             //支付成功
             try
             {
-                InvestOrderEntity io = new InvestOrderEntity();
-                io.setOrderId(order.getOrderId());
-                io.setAmount(order.getAmount());
-                io.setStatus(flag);
-                io.setChannel(1);
-                io.setCreateTime(new Date());
-                io.setArriveTime(new Date());
-                investOrderService.finishOrder(io);
                 map.put("title", "投资成功");
                 map.put("orderName", "投资");
                 map.put("cz", 0);
@@ -268,6 +312,10 @@ public class PostController extends BaseController
         BigDecimal m1 = order.getTotalFee().multiply(new BigDecimal(100));//充值金额
         
         UsersEntity user = this.getUsersEntity();
+        if (user == null)
+        {
+            return LOGIN;
+        }
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
         try
         {
@@ -308,6 +356,10 @@ public class PostController extends BaseController
     public String pickupin(ModelMap map, ResultsModel result) throws Exception
     {
         UsersEntity user = this.getUsersEntity();
+        if (user == null)
+        {
+            return LOGIN;
+        }
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
         TLBillEntity tl = postService.QueryTLBill(result); //测试借款
         try
@@ -371,14 +423,7 @@ public class PostController extends BaseController
             map.put("sxj", 0);
             map.put("zj", 0);
             map.put("yve", this.divide(account.getBalance()));
-            if (tl.getStarus() == 1)
-            {
-                map.put("title", "充值成功但投资失败");
-            }
-            else
-            {
-                map.put("title", "充值并投资失败");
-            }
+            map.put("title", "充值并投资失败");
         }
         finally
         {
@@ -435,6 +480,10 @@ public class PostController extends BaseController
      */
     private BigDecimal divide(BigDecimal m)
     {
+        if (m == null)
+        {
+            return new BigDecimal(0);
+        }
         BigDecimal b2 = new BigDecimal(100);
         return m.divide(b2, 2, BigDecimal.ROUND_HALF_UP);
     }
@@ -446,6 +495,10 @@ public class PostController extends BaseController
      */
     private BigDecimal multiply(BigDecimal m)
     {
+        if (m == null)
+        {
+            return new BigDecimal(0);
+        }
         BigDecimal b2 = new BigDecimal(100);
         return m.multiply(b2);
     }
