@@ -29,6 +29,18 @@ public class ProfitModel
      */
     private BigDecimal totalFee;
     
+    private Integer Type;
+    
+    public Integer getType()
+    {
+        return Type;
+    }
+    
+    public void setType(Integer type)
+    {
+        Type = type;
+    }
+    
     public BigDecimal getTotalFee()
     {
         return totalFee;
