@@ -22,7 +22,9 @@ import com.allinpay.ets.client.RequestOrder;
 import com.allinpay.ets.client.SecurityUtil;
 import com.allinpay.ets.client.StringUtil;
 import com.herongwang.p2p.entity.account.AccountEntity;
+import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
+import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.entity.orders.OrdersEntity;
 import com.herongwang.p2p.entity.parameters.ParametersEntity;
 import com.herongwang.p2p.entity.tl.TLBillEntity;
@@ -30,7 +32,9 @@ import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.model.order.OrderModel;
 import com.herongwang.p2p.model.order.ResultsModel;
 import com.herongwang.p2p.service.account.IAccountService;
+import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
+import com.herongwang.p2p.service.investorder.IInvestOrderService;
 import com.herongwang.p2p.service.orders.IOrdersService;
 import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.post.IPostService;
@@ -53,6 +57,12 @@ public class PostServiceImpl implements IPostService
     
     @Autowired
     IAccountService accountService;
+    
+    @Autowired
+    private IDebtService debtService;
+    
+    @Autowired
+    IInvestOrderService investOrderService;
     
     @Override
     public String getSignMsg(OrderModel orderModel) throws Exception
@@ -419,11 +429,11 @@ public class PostServiceImpl implements IPostService
     
     @Override
     @Transactional
-    public void updateAccount(BigDecimal account, AccountEntity entity,
+    public void updateAccount(BigDecimal amount, AccountEntity entity,
             String orderId, int incomeStatus) throws Exception
     {
-        BigDecimal zc = entity.getBalance().subtract(account);
-        BigDecimal sr = entity.getBalance().add(account);
+        BigDecimal zc = entity.getBalance().subtract(amount);
+        BigDecimal sr = entity.getBalance().add(amount);
         FundDetailEntity deal = new FundDetailEntity();
         deal.setCustomerId(entity.getCustomerId());
         deal.setAccountId(entity.getAccountId());
@@ -434,7 +444,7 @@ public class PostServiceImpl implements IPostService
         if (incomeStatus == 1 || incomeStatus == 3)
         {
             entity.setBalance(sr);
-            deal.setAmount(account);
+            deal.setAmount(amount);
             deal.setBalance(entity.getBalance());
             deal.setDueAmount(new BigDecimal(0));
             deal.setFrozenAmount(new BigDecimal(0));
@@ -443,18 +453,29 @@ public class PostServiceImpl implements IPostService
         else if (incomeStatus == 2 || incomeStatus == 4)
         {
             entity.setBalance(zc);
-            deal.setAmount(account);
+            deal.setAmount(amount);
             deal.setBalance(entity.getBalance());
             deal.setDueAmount(new BigDecimal(0));
-            deal.setFrozenAmount(account);
+            deal.setFrozenAmount(amount);
             
             accountService.updateAccountBalance(entity.getCustomerId(),
-                    account,
+                    amount,
                     orderId);
         }
         else
         {
             return;
+        }
+        if (incomeStatus == 2)
+        {
+            InvestOrderEntity order = investOrderService.getInvestOrderEntity(orderId);
+            DebtEntity debt = debtService.getDebtEntity(order.getDebtId());
+            deal.setRemark("投资" + debt.getTitle() + "成功！");
+            
+        }
+        else if (incomeStatus == 1)
+        {
+            deal.setRemark("充值" + amount.divide(new BigDecimal(100)) + "元成功！");
         }
         fundDetailService.addFundDetail(deal);
         
