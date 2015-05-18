@@ -448,7 +448,9 @@ public class PostServiceImpl implements IPostService
             deal.setDueAmount(new BigDecimal(0));
             deal.setFrozenAmount(account);
             
-            accountService.updateAccountBalance(entity.getCustomerId(), account);
+            accountService.updateAccountBalance(entity.getCustomerId(),
+                    account,
+                    orderId);
         }
         else
         {

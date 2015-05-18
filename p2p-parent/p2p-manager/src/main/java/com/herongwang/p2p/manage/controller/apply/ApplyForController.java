@@ -75,61 +75,19 @@ public class ApplyForController extends BaseController
         
     }
     
-    @RequestMapping("edit")
-    public @ResponseBody Map<String, String> addApply(String applicationId)
-            throws WebException
-    {
-        DebtApplicationEntity entity = new DebtApplicationEntity();
-        entity.setApplicationId(applicationId);
-        try
-        {
-            if (null == applicationId || applicationId.isEmpty())
-            {
-                debtApplicationService.addApply(entity);
-            }
-            else
-            {
-                entity.setApplicationId(applicationId);
-                debtApplicationService.updateApply(entity);
-            }
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("isOK", "ok");
-            return map;
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            throw new WebException(e);
-        }
-    }
-    
     @RequestMapping("update")
     public @ResponseBody Map<String, String> update(String id)
             throws WebException
     {
-        DebtApplicationEntity info = debtApplicationService.getApplyForEntity(id);
-        info.setStatus(2);
-        debtApplicationService.updateApply(info);
         Map<String, String> map = new HashMap<String, String>();
-        map.put("isOK", "ok");
+        if (!StringUtils.isEmpty(id))
+        {
+            DebtApplicationEntity info = debtApplicationService.getApplyForEntity(id);
+            info.setStatus(2);
+            debtApplicationService.updateApply(info);
+            map.put("isOK", "ok");
+        }
         return map;
     }
     
-    @RequestMapping("delete")
-    public @ResponseBody Map<String, String> delApply(String id)
-            throws WebException
-    {
-        try
-        {
-            debtApplicationService.delApply(id);
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("isOK", "ok");
-            return map;
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            throw new WebException(e);
-        }
-    }
 }

@@ -22,6 +22,11 @@
 		<result property="finishTime" column="finishTime" jdbcType="TIMESTAMP" />
 		<result property="status" column="status" jdbcType="INTEGER" />
 		<result property="name" column="name" jdbcType="VARCHAR" />
+		<result property="commodityType" column="commodityType" jdbcType="INTEGER" />
+		<result property="descriptionProject" column="descriptionProject" jdbcType="VARCHAR" />
+		<result property="capitalUses" column="capitalUses" jdbcType="VARCHAR" />
+		<result property="sourceRepayment" column="sourceRepayment" jdbcType="VARCHAR" />
+		<result property="riskControl" column="riskControl" jdbcType="VARCHAR" />
 		<result property="statusText" column="statusText" jdbcType="VARCHAR" />
 		<result property="repaymentText" column="repaymentText"
 			jdbcType="VARCHAR" />

@@ -111,7 +111,6 @@ function saveApply() {
               <td>
               <input type="hidden" name="customerId" value="${applyId}"/>
               <input type="hidden" name="id" value="${info.debtId}" />
-              <input type="hidden" name="status" value="${info.status}" />
               <input type="text" name="name" id="name" value="${name}" readonly="readonly" class="input input-w270h30"/></td>
             </tr>
             <tr>
@@ -141,6 +140,14 @@ function saveApply() {
               </td>
             </tr>
             <tr>
+              <th>商品类型</th>
+              <td>
+              <select name="commodityType" id="commodityType" class="c_select x_select">
+　　　　　　　　　<option value="1" selected="selected">和融直营</option>
+              </select>
+              </td>
+            </tr>
+            <tr>
               <th>年化利率</th>
               <td><input type="text" name="annualizedRate" id="annualizedRate" autocomplete="off"
 								placeholder="" value="${info.annualizedRate}" datatype="/^((100|[1-9]?\d)(\.\d{0,2})?)$/"
@@ -148,7 +155,7 @@ function saveApply() {
             </tr>
             <tr>
               <th>借款金额</th>
-              <td><input type="text" name="amount" id="amount" value="${info.amount}" datatype="/^\d{1,15}$/"
+              <td><input type="text" name="amount" id="amount" value="${amount/100}" datatype="/^\d{1,15}$/"
 								errormsg="请输入不超过十五位的整数！" nullmsg="请输入借款金额！" id="borrowingAmount" class="input input-w270h30"/>元</td>
             </tr>
             <tr>
@@ -160,6 +167,26 @@ function saveApply() {
               <th>最大投资金额</th>
               <td><input type="text" name="maxInvest" value="${info.maxInvest}" id="maxAmount" datatype="maxAmount /^\d{1,15}$/"
 								errormsg="请输入不超过十五位的整数！" nullmsg="请输入最大投资金额！" class="input input-w270h30"/>元</td>
+            </tr>
+            <tr>
+              <th>项目概述</th>
+              <td><textarea name="descriptionProject" rows="2" cols="39" datatype="*"
+								errormsg="请输入项目概述！" nullmsg="请输入项目概述！">${info.descriptionProject}</textarea></td>
+            </tr>
+            <tr>
+              <th>资金用途</th>
+              <td><textarea name="capitalUses" rows="2" cols="39" datatype="*"
+								errormsg="请输入资金用途！" nullmsg="请输入资金用途！">${info.capitalUses}</textarea></td>
+            </tr>
+            <tr>
+              <th>还款来源</th>
+              <td><textarea name="sourceRepayment" rows="2" cols="39" datatype="*"
+								errormsg="请输入还款来源！" nullmsg="请输入还款来源！">${info.sourceRepayment}</textarea></td>
+            </tr>
+            <tr>
+              <th>风险控制</th>
+              <td><textarea name="riskControl" rows="2" cols="39" datatype="*"
+								errormsg="请输入风险控制！" nullmsg="请输入风险控制！">${info.riskControl}</textarea></td>
             </tr>
             
           </table>
