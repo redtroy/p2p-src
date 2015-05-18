@@ -26,6 +26,7 @@ public interface IAccountService
      * 投标更新账户余额
      * @param account
      */
-    public int updateAccountBalance(String customerId, BigDecimal balance);
+    public int updateAccountBalance(String customerId, BigDecimal balance,
+            String orderId);
     
 }

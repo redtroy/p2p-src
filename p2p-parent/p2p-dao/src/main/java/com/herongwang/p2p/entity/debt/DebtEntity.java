@@ -123,6 +123,36 @@ public class DebtEntity extends Pagable implements Serializable
     private Integer status;
     
     /**
+     *    商品类型
+     */
+    @Column(name = "commodityType")
+    private Integer commodityType;
+    
+    /**
+     *    项目概述
+     */
+    @Column(name = "descriptionProject")
+    private String descriptionProject;
+    
+    /**
+     *    资金用途
+     */
+    @Column(name = "capitalUses")
+    private String capitalUses;
+    
+    /**
+     *    还款来源
+     */
+    @Column(name = "sourceRepayment")
+    private String sourceRepayment;
+    
+    /**
+     *   风险控制
+     */
+    @Column(name = "riskControl")
+    private String riskControl;
+    
+    /**
      * 会员姓名
      */
     private String name;
@@ -329,6 +359,56 @@ public class DebtEntity extends Pagable implements Serializable
     public void setStatusText(String statusText)
     {
         this.statusText = statusText;
+    }
+    
+    public Integer getCommodityType()
+    {
+        return commodityType;
+    }
+    
+    public void setCommodityType(Integer commodityType)
+    {
+        this.commodityType = commodityType;
+    }
+    
+    public String getDescriptionProject()
+    {
+        return descriptionProject;
+    }
+    
+    public void setDescriptionProject(String descriptionProject)
+    {
+        this.descriptionProject = descriptionProject;
+    }
+    
+    public String getCapitalUses()
+    {
+        return capitalUses;
+    }
+    
+    public void setCapitalUses(String capitalUses)
+    {
+        this.capitalUses = capitalUses;
+    }
+    
+    public String getSourceRepayment()
+    {
+        return sourceRepayment;
+    }
+    
+    public void setSourceRepayment(String sourceRepayment)
+    {
+        this.sourceRepayment = sourceRepayment;
+    }
+    
+    public String getRiskControl()
+    {
+        return riskControl;
+    }
+    
+    public void setRiskControl(String riskControl)
+    {
+        this.riskControl = riskControl;
     }
     
 }

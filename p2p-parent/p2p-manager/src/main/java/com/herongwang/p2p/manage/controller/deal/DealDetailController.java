@@ -118,51 +118,6 @@ public class DealDetailController extends BaseController
         
     }
     
-    @RequestMapping("edit")
-    public @ResponseBody Map<String, String> addApply(String dealId)
-            throws WebException
-    {
-        FundDetailEntity entity = new FundDetailEntity();
-        try
-        {
-            if (null == dealId || dealId.isEmpty())
-            {
-                fundDetailService.addFundDetail(entity);
-            }
-            else
-            {
-                entity.setDetailId(dealId);
-                fundDetailService.updateFundDetail(entity);
-            }
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("isOK", "ok");
-            return map;
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            throw new WebException(e);
-        }
-    }
-    
-    @RequestMapping("delete")
-    public @ResponseBody Map<String, String> delApply(String id)
-            throws WebException
-    {
-        try
-        {
-            fundDetailService.delFundDetail(id);
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("isOK", "ok");
-            return map;
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            throw new WebException(e);
-        }
-    }
-    
     @SuppressWarnings("finally")
     @RequestMapping("withdraw")
     public @ResponseBody Map<String, String> Withdraw(String orderId)
@@ -170,51 +125,59 @@ public class DealDetailController extends BaseController
     {
         
         Map<String, String> map = new HashMap<String, String>();
-        OrdersEntity order = ordersService.getOrdersEntity(orderId);
-        UsersEntity user = userService.getUserById(order.getCustomerId());
-        String testTranURL = "https://113.108.182.3/aipg/ProcessServlet";
-        String trx_code, busicode;//100001批量代收 100002批量代付 100011单笔实时代收 100014单笔实时代付
-        trx_code = "100002";
-        if ("100011".equals(trx_code))//收款的时候，填写收款的业务代码
-            busicode = "10600";
-        else
-            busicode = "00600";
-        
-        Trans_Detail trans_detail = new Trans_Detail();
-        trans_detail.setSN("0001");
-        trans_detail.setACCOUNT_NAME(user.getCardHolder());
-        trans_detail.setACCOUNT_PROP("0");
-        trans_detail.setACCOUNT_NO(user.getCardNo());
-        trans_detail.setBANK_CODE("103");
-        trans_detail.setAMOUNT(order.getAmount().toString());
-        trans_detail.setCURRENCY("CNY");
-        try
-        {
-            /*TranxServiceImpl tranxService = new TranxServiceImpl();
-            tranxService.nistTest(testTranURL,
-                    trx_code,
-                    busicode,
-                    trans_detail,
-                    true);*/
-            order.setStatus(1);
-            order.setWithdrawTime(new Date());
-            order.setChannel("1");
-            ordersService.updateOrders(order);
-            AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
-            account.setFozenAmount(account.getFozenAmount()
-                    .subtract(order.getAmount()));
-            accountService.updateAccount(account);//更新冻结金额
-            map.put("isOK", "ok");
-        }
-        catch (Exception e)
+        if (StringUtils.isEmpty(orderId))
         {
             map.put("isOK", "提现失败，请联系管理员。");
-            e.printStackTrace();
-            throw new WebException(e);
-        }
-        finally
-        {
             return map;
+        }
+        else
+        {
+            OrdersEntity order = ordersService.getOrdersEntity(orderId);
+            UsersEntity user = userService.getUserById(order.getCustomerId());
+            String testTranURL = "https://113.108.182.3/aipg/ProcessServlet";
+            String trx_code, busicode;//100001批量代收 100002批量代付 100011单笔实时代收 100014单笔实时代付
+            trx_code = "100002";
+            if ("100011".equals(trx_code))//收款的时候，填写收款的业务代码
+                busicode = "10600";
+            else
+                busicode = "00600";
+            
+            Trans_Detail trans_detail = new Trans_Detail();
+            trans_detail.setSN("0001");
+            trans_detail.setACCOUNT_NAME(user.getCardHolder());
+            trans_detail.setACCOUNT_PROP("0");
+            trans_detail.setACCOUNT_NO(user.getCardNo());
+            trans_detail.setBANK_CODE("103");
+            trans_detail.setAMOUNT(order.getAmount().toString());
+            trans_detail.setCURRENCY("CNY");
+            try
+            {
+                /*TranxServiceImpl tranxService = new TranxServiceImpl();
+                tranxService.nistTest(testTranURL,
+                        trx_code,
+                        busicode,
+                        trans_detail,
+                        true);*/
+                order.setStatus(1);
+                order.setWithdrawTime(new Date());
+                order.setChannel("1");
+                ordersService.updateOrders(order);
+                AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
+                account.setFozenAmount(account.getFozenAmount()
+                        .subtract(order.getAmount()));
+                accountService.updateAccount(account);//更新冻结金额
+                map.put("isOK", "ok");
+            }
+            catch (Exception e)
+            {
+                map.put("isOK", "提现失败，请联系管理员。");
+                e.printStackTrace();
+                throw new WebException(e);
+            }
+            finally
+            {
+                return map;
+            }
         }
     }
 }

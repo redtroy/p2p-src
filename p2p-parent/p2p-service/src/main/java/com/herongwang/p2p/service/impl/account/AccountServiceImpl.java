@@ -1,6 +1,7 @@
 package com.herongwang.p2p.service.impl.account;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.herongwang.p2p.dao.account.IAccountDao;
 import com.herongwang.p2p.dao.users.IUsersDao;
 import com.herongwang.p2p.entity.account.AccountEntity;
+import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.service.account.IAccountService;
+import com.herongwang.p2p.service.investorder.IInvestOrderService;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.logger.SxjLogger;
 import com.sxj.util.persistent.QueryCondition;
@@ -22,6 +25,9 @@ public class AccountServiceImpl implements IAccountService
     
     @Autowired
     private IUsersDao userDao;
+    
+    @Autowired
+    IInvestOrderService investOrderService;
     
     @Override
     @Transactional
@@ -65,12 +71,26 @@ public class AccountServiceImpl implements IAccountService
     
     @Override
     @Transactional
-    public int updateAccountBalance(String customerId, BigDecimal balance)
+    public int updateAccountBalance(String customerId, BigDecimal amount,
+            String orderId)
     {
         QueryCondition<AccountEntity> condition = new QueryCondition<AccountEntity>();
         condition.addCondition("customerId", customerId);
-        condition.addCondition("balance", balance);
-        return accountDao.updateAccountBalance(condition);
+        condition.addCondition("balance", amount);
+        
+        int num = accountDao.updateAccountBalance(condition);
+        if (num == 1 && null != orderId)
+        {
+            InvestOrderEntity io = new InvestOrderEntity();
+            io.setOrderId(orderId);
+            io.setAmount(amount);
+            io.setStatus(num);
+            io.setChannel(1);
+            io.setCreateTime(new Date());
+            io.setArriveTime(new Date());
+            investOrderService.finishOrder(io);
+        }
+        return num;
         
     }
     

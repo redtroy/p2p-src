@@ -84,8 +84,8 @@ public class DebtController extends BaseController
     }
     
     @RequestMapping("/toEdit")
-    public String toEdit(String id, String applyId, String name,
-            String applicationId, ModelMap map) throws WebException
+    public String toEdit(String id, String applicationId, String customerId,
+            String name, ModelMap map) throws WebException
     {
         ParametersEntity query = new ParametersEntity();
         query.setType("repaymentType");
@@ -94,25 +94,28 @@ public class DebtController extends BaseController
             List<ParametersEntity> repaymentList = parametersService.queryParameters(query);//还款方式
             query.setType("tenderType");
             List<ParametersEntity> tenderList = parametersService.queryParameters(query);//标的状态
+            
             map.put("repaymentList", repaymentList);
             map.put("tenderList", tenderList);
             if (StringUtils.isEmpty(id))
             {
-                map.put("applyId", applyId);
+                DebtApplicationEntity entity = debtApplicationService.getApplyForEntity(applicationId);
+                map.put("applyId", customerId);
                 map.put("applicationId", applicationId);
                 map.put("name", name);
+                map.put("amount", entity.getAmount());
                 return "manage/tender/new-tender";
             }
             else
             {
                 DebtEntity info = debtService.getDebtEntity(id);
-                info.setAmount(info.getAmount().divide(new BigDecimal(100)));
                 info.setMaxInvest(info.getMaxInvest()
                         .divide(new BigDecimal(100)));
                 info.setMinInvest(info.getMinInvest()
                         .divide(new BigDecimal(100)));
                 map.put("info", info);
                 map.put("applyId", info.getCustomerId());
+                map.put("amount", info.getAmount());
                 map.put("name",
                         userService.getUserByUserId(info.getCustomerId())
                                 .getName());
@@ -127,34 +130,25 @@ public class DebtController extends BaseController
     }
     
     @RequestMapping("edit")
-    public @ResponseBody Map<String, String> addApply(String id, String title,
-            String customerId, Integer repayType, Integer months,
-            Double annualizedRate, BigDecimal minInvest, BigDecimal maxInvest,
-            BigDecimal amount, Integer status, String applicationId)
-            throws WebException
+    public @ResponseBody Map<String, String> addApply(DebtEntity tender,
+            String applicationId) throws WebException
     {
-        BigDecimal m = amount.multiply(new BigDecimal(100));
-        BigDecimal m1 = minInvest.multiply(new BigDecimal(100));
-        BigDecimal m2 = maxInvest.multiply(new BigDecimal(100));
+        BigDecimal m = tender.getAmount().multiply(new BigDecimal(100));
+        BigDecimal m1 = tender.getMinInvest().multiply(new BigDecimal(100));
+        BigDecimal m2 = tender.getMaxInvest().multiply(new BigDecimal(100));
         Map<String, String> map = new HashMap<String, String>();
-        DebtEntity tender = new DebtEntity();
         FinancingOrdersEntity order = new FinancingOrdersEntity();
-        tender.setTitle(title);
-        tender.setCustomerId(customerId);
-        tender.setRepayType(repayType);
-        tender.setMonths(months);
-        tender.setAnnualizedRate(annualizedRate);
         tender.setMinInvest(m1);
         tender.setMaxInvest(m2);
         tender.setAmount(m);
-        order.setCustomerId(customerId);
+        order.setCustomerId(tender.getCustomerId());
         order.setAmount(m);
         order.setCreateTime(new Date());
         order.setLoanAmount(m);
         
         try
         {
-            if (null == id || id.isEmpty())
+            if (null == tender.getDebtId() || tender.getDebtId().isEmpty())
             {
                 tender.setCreateTime(new Date());
                 tender.setStatus(0);
@@ -172,15 +166,11 @@ public class DebtController extends BaseController
             }
             else
             {
-                DebtEntity info = debtService.getDebtEntity(id);
+                DebtEntity info = debtService.getDebtEntity(tender.getDebtId());
                 if (info.getStatus() == 0)
                 {
-                    tender.setCreateTime(info.getCreateTime());
-                    tender.setDebtId(id);
-                    tender.setStatus(status);
                     debtService.updateDebt(tender);
-                    order.setDebtId(id);
-                    order.setStatus(status);
+                    order.setDebtId(tender.getDebtId());
                     financingOrdersService.updateOrder(order);
                     map.put("isOK", "ok");
                 }
