@@ -23,6 +23,13 @@ public interface IUsersDao
     public UsersEntity getUserByAccount(String email);
     
     /**
+     * 检查邮箱帐号是否存在(邮箱帐号)
+     * @param phone
+     * @return
+     */
+    public List<UsersEntity> getUserByPhone(String phone);
+    
+    /**
      * 新增用户
      */
     @Insert

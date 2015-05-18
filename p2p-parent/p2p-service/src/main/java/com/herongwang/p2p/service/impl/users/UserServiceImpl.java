@@ -11,7 +11,9 @@ import com.herongwang.p2p.dao.account.IAccountDao;
 import com.herongwang.p2p.dao.users.IUsersDao;
 import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
+import com.herongwang.p2p.service.sendms.ISendMsService;
 import com.herongwang.p2p.service.users.IUserService;
+import com.sxj.spring.modules.util.Identities;
 import com.sxj.util.common.EncryptUtil;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.logger.SxjLogger;
@@ -25,6 +27,9 @@ public class UserServiceImpl implements IUserService
     
     @Autowired
     private IAccountDao accountDao;
+    
+    @Autowired
+    private ISendMsService sendMsService;
     
     @Override
     public List<UsersEntity> queryUsers(UsersEntity user)
@@ -173,6 +178,72 @@ public class UserServiceImpl implements IUserService
         {
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new ServiceException("改变会员状态错误", e);
+        }
+    }
+    
+    @Override
+    public String sendMs(String phone) throws ServiceException
+    {
+        try
+        {
+            String message = Identities.randomNumber(6);
+            if (sendMsService.sendMs(phone, message))
+            {
+                return message;
+            }
+            else
+            {
+                return "erro";
+            }
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("发送短信错误", e);
+        }
+    }
+    
+    @Override
+    public Boolean checkPhone(String phone) throws ServiceException
+    {
+        try
+        {
+            List<UsersEntity> list = userDao.getUserByPhone(phone);
+            if (list.size() == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("手机号验证错误", e);
+        }
+    }
+    
+    @Override
+    public Boolean checkEmail(String email) throws ServiceException
+    {
+        try
+        {
+            UsersEntity user = userDao.getUserByAccount(email);
+            if (user == null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("邮箱验证错误", e);
         }
     }
     

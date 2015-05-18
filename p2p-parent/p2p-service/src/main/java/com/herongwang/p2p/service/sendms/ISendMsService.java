@@ -1,6 +1,6 @@
 package com.herongwang.p2p.service.sendms;
 
-public interface ISendMs
+public interface ISendMsService
 {
     public Boolean sendMs(String phones, String content);
 }

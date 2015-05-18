@@ -2,12 +2,15 @@ package com.herongwang.p2p.service.impl.sendms;
 
 import java.net.URLEncoder;
 
+import org.springframework.stereotype.Service;
+
 import com.herongwang.p2p.ms.Client;
-import com.herongwang.p2p.service.sendms.ISendMs;
+import com.herongwang.p2p.service.sendms.ISendMsService;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.logger.SxjLogger;
 
-public class SendMsServiceImpl implements ISendMs
+@Service
+public class SendMsServiceImpl implements ISendMsService
 {
     
     @Override
@@ -27,13 +30,13 @@ public class SendMsServiceImpl implements ISendMs
             {
                 System.out.print("发送失败！返回值为：" + result_mt
                         + "请查看webservice返回值对照表");
-                return true;
+                return false;
             }
             //输出返回标识，为小于19位的正数，String类型的。记录您发送的批次。
             else
             {
                 System.out.print("发送成功，返回值为：" + result_mt);
-                return false;
+                return true;
             }
         }
         catch (Exception e)
