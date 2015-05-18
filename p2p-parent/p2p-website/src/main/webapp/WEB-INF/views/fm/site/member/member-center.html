@@ -19,6 +19,7 @@ function editPassWord(id){
 	    	
 	    }
 	});
+	var show = dialog();
 	var content=' <div id="editPassword">'+ 
                 '<p>&nbsp&nbsp;&nbsp;&nbsp;请输入密码：<input type="password" id="pwd" autofocus /></p>'+
                 '<p>再次输入密码：<input type="password" id="rePwd"> </p>'+
@@ -30,14 +31,16 @@ function editPassWord(id){
 	    ok:function(){
 	    	var pwd=$("#pwd").val();
 	    	var rePwd=$("#rePwd").val();
-	    	if (pwd.length<=6){
+	    	if (pwd.length<6){
 	    		success.content('密码长度不能小于6！');
 	    		success.showModal();
+	    		d.close();
 	    		return false;
 	    	}
 	    	if (pwd!=rePwd){
 	    		success.content('两次密码输入不一样！');
 	    		success.showModal();
+	    		d.close();
 	    		return false;
 	    	}
 	    	$.post("${basePath}user/editPassword.htm",{id:id,password:pwd},function(data){
