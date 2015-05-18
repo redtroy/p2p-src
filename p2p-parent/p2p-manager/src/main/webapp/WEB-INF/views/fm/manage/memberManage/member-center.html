@@ -123,7 +123,7 @@ function checkStatus(id){
 	    okValue:'确 定',
 	    ok:function(){
 	    	$.post("${basePath}user/checkStatus.htm",{id:id},function(data){
-	    		 query();
+	    		 query($("#pager").attr("currentPage"));
 	    	})
 	    },
 	    cancelValue : '取消',
@@ -175,7 +175,11 @@ function checkStatus(id){
               <td>${model.cardNo}</td>
               <td>${model.cardHolder}</td>
               <td class="edit"><#if (model.registerTime??)> ${model.registerTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
-              <td class="edit"><a href="javaScript:checkStatus('${model.customerId}')" class="del" id="status"><#if (model.status ==0 )>停用<#else>启用</#if></a><a href="javascript:editPassWord('${model.customerId}')" class="allot">修改密码</a></td>
+              <#if (model.status ==0 )>
+              <td class="edit"><a href="javaScript:checkStatus('${model.customerId}')" class="del" id="status">停用</a><a href="javascript:editPassWord('${model.customerId}')" class="allot">修改密码</a></td>
+              <#else>
+              <td class="edit"><a href="javaScript:checkStatus('${model.customerId}')" class="unfr" id="status">启用</a><a href="javascript:editPassWord('${model.customerId}')" class="allot">修改密码</a></td>
+              </#if>
             </tr>
             </#list>
           </table>
