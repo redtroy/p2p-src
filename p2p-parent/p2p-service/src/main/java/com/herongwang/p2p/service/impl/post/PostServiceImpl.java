@@ -475,6 +475,7 @@ public class PostServiceImpl implements IPostService
         }
         else if (incomeStatus == 1)
         {
+            deal.setStatus(1);
             deal.setRemark("充值" + amount.divide(new BigDecimal(100)) + "元成功！");
         }
         fundDetailService.addFundDetail(deal);

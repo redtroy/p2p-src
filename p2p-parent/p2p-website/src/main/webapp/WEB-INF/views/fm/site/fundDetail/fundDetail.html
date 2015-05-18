@@ -66,11 +66,14 @@ function query(page) {
 								<th scope="col" class="tdHeard" style="width: 80px;">说明</th>
 							</tr>
 							<#if fundList?exists && (fundList?size>0)> <#list fundList as fund>
-							<!-- 1：充值；2：提现；3：还款；4：投标冻结。5 手续费冻结 6:投标解冻  7:手续费解冻 -->
+							<!-- 1：充值；2：提现；3：还款；4：投标冻结。5 手续费冻结 6:投标解冻  7:手续费解冻 
+								8:融资 9融资手续费
+							-->
 							<tr>
 								<td>${fund.createTime?string("yyyy-MM-dd HH:mm:ss")}</td>
 								<td><#if fund.type==1>充值<#elseif fund.type==2 >提现<#elseif
-									fund.type==3>还款<#elseif fund.type==4>投标冻结<#elseif fund.type==5>手续费冻结<#elseif fund.type==6>投标解冻<#elseif fund.type==7>手续费解冻<#else></#if></td> 
+									fund.type==3>还款<#elseif fund.type==4>投标冻结<#elseif fund.type==5>
+									手续费冻结<#elseif fund.type==6>投标解冻<#elseif fund.type==7>手续费解冻<#elseif fund.type==8>融资<#elseif fund.type==9>融资手续费<#else></#if></td> 
 									<#if
 								fund.status==0>
 								<td class="color-red">-${fund.amount/100}</td><#else>

@@ -99,6 +99,7 @@ public class ProfitServiceImpl implements IProfitService
             profits.setAmount(money1.add(totalMoney));
             profits.setInvestment(money1);
             profits.setTotalFee(totalFee);
+            profits.setType(debt.getRepayType());
             //            System.out.println("总利息" + df.format(money));
             //            System.out.println("总额" + df.format(new BigDecimal(10000).add(money)));
             profits.setMonthProfit(monthProfits);
@@ -109,6 +110,7 @@ public class ProfitServiceImpl implements IProfitService
             /*
              *每月还息到期还本
              */
+            
             int num = debt.getMonths();
             for (int i = num; i >= 1; i--)
             {
@@ -117,7 +119,7 @@ public class ProfitServiceImpl implements IProfitService
                 BigDecimal fee = profit.multiply(new BigDecimal("0.09"));//手续费
                 BigDecimal subtract = profit.subtract(fee);
                 ProfitListEntity mp = new ProfitListEntity();
-                if (i != 12)
+                if (i != 1)
                 {
                     mp.setMonthAmount(subtract.setScale(2,
                             BigDecimal.ROUND_HALF_UP));
@@ -155,7 +157,7 @@ public class ProfitServiceImpl implements IProfitService
             profits.setMonthProfit(monthProfits);
             profits.setTotalFee(totalFee.setScale(2,
                     BigDecimal.ROUND_HALF_UP));
-            
+            profits.setType(debt.getRepayType());
         }
         return profits;
     }
