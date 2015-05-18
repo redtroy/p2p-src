@@ -30,6 +30,11 @@ function editPassWord(id){
 	    ok:function(){
 	    	var pwd=$("#pwd").val();
 	    	var rePwd=$("#rePwd").val();
+	    	if (pwd.length<=6){
+	    		success.content('密码长度不能小于6！');
+	    		success.showModal();
+	    		return false;
+	    	}
 	    	if (pwd!=rePwd){
 	    		success.content('两次密码输入不一样！');
 	    		success.showModal();

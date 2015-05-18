@@ -24,6 +24,9 @@ public class UserController extends BaseController
     @Autowired
     private IAccountService accountService;
     
+    //  @Autowired
+    // private RedisConcurrent redisConcurrent;
+    
     @RequestMapping("register")
     public String register(ModelMap map, UsersEntity member)
             throws WebException
@@ -104,4 +107,52 @@ public class UserController extends BaseController
             throw new WebException("查询会员信息错误", e);
         }
     }
+    
+    /**
+     * 短信验证
+     */
+    /*@RequestMapping("checkMs")
+    public @ResponseBody Map<String,String> checkMs(String phoneNo){
+        Map<String, String> map = new HashMap<String, String>();
+        try
+        {
+            if (StringUtils.isEmpty(phoneNo))
+            {
+                map.put("error", "手机号不能为空");
+                return map;
+            }
+            phoneNo = phoneNo.trim();
+            RAtomicLong num = redisConcurrent.getAtomicLong("num_" + phoneNo,
+                    59);// 记录次数59秒只能发送一次
+            if (num.incrementAndGet() == 1)
+            {
+                RAtomicLong sendMax = redisConcurrent.getAtomicLong("sendMax_"
+                        + phoneNo, DateTimeUtils.getNextZeroTime());
+                if (sendMax.incrementAndGet() <= 5)
+                {
+                    String message = "";
+                    message = memberService.createvalidata(phoneNo, message);
+                    HierarchicalCacheManager.set(CacheLevel.REDIS,
+                            "checkMs",
+                            phoneNo + "_checkMs",
+                            message,
+                            600);
+                }
+                else
+                {
+                    map.put("error", "每个号码每天限制发送5次");
+                }
+            }
+            else
+            {
+                map.put("error", " 每一分钟发送一次");
+            }
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error("信息发送错误", e, this.getClass());
+            throw new WebException("发送信息错误");
+        }
+        return map;
+    }*/
 }

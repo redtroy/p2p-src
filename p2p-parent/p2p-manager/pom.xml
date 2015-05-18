@@ -219,6 +219,11 @@
 			<artifactId>allinpay-entity</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.herongwang</groupId>
+			<artifactId>p2p-dao</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
   </dependencies>
   <build>
     <finalName>p2p-manager</finalName>

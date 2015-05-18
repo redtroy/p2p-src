@@ -126,6 +126,7 @@ public class InvestOrderServiceImpl implements IInvestOrderService
                     if (flag == 0)
                     {
                         debt.setStatus(3);
+                        debt.setFinishTime(new Date());
                     }
                     else if (flag == 1)
                     {

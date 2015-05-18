@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
+import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
 import com.herongwang.p2p.entity.repayPlan.RepayPlanEntity;
 import com.herongwang.p2p.service.repayplan.IRepayPlanService;
 import com.sxj.util.exception.WebException;
@@ -32,11 +32,13 @@ public class RepayPlanController
      */
     @RequestMapping("queryRepayPlan")
     public String queryRepayPlan(HttpSession session, ModelMap map,
-            RepayPlanEntity query) throws WebException
+            String debtId) throws WebException
     {
         //会员信息传到页面
         try
         {
+            FinancingOrdersEntity query = new FinancingOrdersEntity();
+            query.setDebtId(debtId);
             query.setPagable(true);
             List<RepayPlanEntity> repayPlanList = repayPlanService.queryRepayPlan(query);
             map.put("repayPlan", repayPlanList);
