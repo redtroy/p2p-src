@@ -1,5 +1,8 @@
 package com.herongwang.p2p.dao.fee;
 
+import java.sql.SQLException;
+import java.util.List;
+
 import com.herongwang.p2p.entity.fee.DiscountEntity;
 import com.sxj.mybatis.orm.annotations.Delete;
 import com.sxj.mybatis.orm.annotations.Get;
@@ -19,4 +22,7 @@ public interface IDiscountDAO
     
     @Delete
     public int deleteDiscountById(String discountId);
+    
+    public List<DiscountEntity> getDiscountByCustomerId(String customerId)
+            throws SQLException;
 }

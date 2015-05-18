@@ -16,6 +16,10 @@
 		<result property="discountFee" column="discountFee" jdbcType="FLOAT"/>
 		<result property="name" column="name" jdbcType="VARCHAR"/>
 		<result property="target" column="target" jdbcType="INTEGER"/>
+		<result property="type" column="type" jdbcType="INTEGER"/>
 	</resultMap>
-
+	<select id="getDiscountByCustomerId" resultMap="DiscountEntity"
+		parameterType="String">
+		<![CDATA[SELECT * FROM Discount d LEFT JOIN UserFee u on d.discountId=u.discountId WHERE u.customerId=#{customerId} ]]>
+	</select>
 </mapper>

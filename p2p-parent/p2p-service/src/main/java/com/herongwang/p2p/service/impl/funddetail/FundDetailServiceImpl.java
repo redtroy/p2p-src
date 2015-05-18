@@ -1,13 +1,21 @@
 package com.herongwang.p2p.service.impl.funddetail;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.herongwang.p2p.dao.account.IAccountDao;
 import com.herongwang.p2p.dao.funddetail.IFundDetailDao;
+import com.herongwang.p2p.entity.account.AccountEntity;
+import com.herongwang.p2p.entity.fee.DiscountEntity;
+import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
+import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
+import com.herongwang.p2p.service.fee.IDiscountService;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.logger.SxjLogger;
@@ -19,6 +27,12 @@ public class FundDetailServiceImpl implements IFundDetailService
 {
     @Autowired
     IFundDetailDao fundDetailDao;
+    
+    @Autowired
+    IAccountDao accountDao;
+    
+    @Autowired
+    IDiscountService discountService;
     
     @Override
     public void addFundDetail(FundDetailEntity deal) throws ServiceException
@@ -74,6 +88,66 @@ public class FundDetailServiceImpl implements IFundDetailService
     {
         // TODO Auto-generated method stub
         
+    }
+    
+    /**
+     * 投资资金明细(投资成功,冻结金额)
+     */
+    @Override
+    @Transactional
+    public void investRepayPlan(InvestOrderEntity io)
+    {
+        try
+        {
+            FundDetailEntity fd = new FundDetailEntity();
+            AccountEntity account = accountDao.getAcoountByCustomerId(io.getCustomerId());
+            fd.setCustomerId(io.getCustomerId());//用户ID
+            fd.setAccountId(account.getAccountId());
+            fd.setOrderId(io.getOrderId());
+            fd.setAmount(io.getAmount());
+            fd.setTotalResult(0);//0投资冻结
+            fd.setBalance(account.getBalance());
+            fd.setFrozenAmount(account.getFozenAmount());
+            fd.setDueAmount(account.getDueAmount());
+            fd.setCreateTime(new Date());
+            fd.setStatus(0);//支出
+            fd.setType(4);//投标
+            fundDetailDao.addFundDetail(fd);//插入总金额明细
+            
+            //获取到当前会员折扣
+            List<DiscountEntity> list = discountService.getDiscountByCustomerId(io.getCustomerId());
+            //重新设置对象
+            for (DiscountEntity discountEntity : list)
+            {
+                if (discountEntity.getType() == 0
+                        && discountEntity.getFee() != 0)
+                {
+                    fd.setDetailId(null);
+                    BigDecimal fee = new BigDecimal(discountEntity.getFee()).divide(new BigDecimal(
+                            100),
+                            2,
+                            BigDecimal.ROUND_HALF_UP);
+                    fd.setAmount(io.getAmount().multiply(fee));
+                    fd.setType(5);
+                    fundDetailDao.addFundDetail(fd);//插入手续费
+                }
+            }
+        }
+        catch (ServiceException e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException(e.getMessage());
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("生成资金明细错误", e);
+        }
+    }
+    
+    public void debtRepayPlan(FinancingOrdersEntity fo)
+    {
+        //所有投资订单
     }
     
 }

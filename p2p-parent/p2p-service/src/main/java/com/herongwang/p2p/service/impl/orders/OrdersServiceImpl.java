@@ -45,6 +45,7 @@ public class OrdersServiceImpl implements IOrdersService
         condition.addCondition("customerId", query.getCustomerId());
         condition.addCondition("orderType", query.getOrderType());
         condition.addCondition("orderId", query.getOrderId());
+        condition.addCondition("status", query.getStatus());
         condition.setPage(query);
         List<OrdersEntity> ordersList = ordersDao.query(condition);
         query.setPage(condition);

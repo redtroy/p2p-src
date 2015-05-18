@@ -42,8 +42,8 @@ function query(page) {
 					<div class="mainBox fontYH">
 						<div class="capInfo mb10 ly-clearFix">
 							<div class="item">
-								<label>账户信息</label> <span class="color-green">可用余额：${account.balance/100}元</span><span
-									class="color-red">冻结金额：${account.fozenAmount/100}元</span><span class="color-blue">待收金额：${account.dueAmount/100}元</span>
+								<label>账户信息</label> <span class="color-green">可用余额：<#if account.balance??>${account.balance/100}<#else>0</#if>元</span><span
+									class="color-red">冻结金额：<#if account.fozenAmount??>${account.fozenAmount/100}<#else>0</#if>元</span><span class="color-blue">待收金额：<#if account.dueAmount??>${account.dueAmount/100}<#else>0</#if>元</span>
 									<span><a href="${basePath}post/recharge.htm" class="button button-orange">充值</a></span><span><a href="${basePath}post/withdraw.htm" class="button button-green">提现</a></span></div>
 							</div>
 						</div>
@@ -66,12 +66,13 @@ function query(page) {
 								<th scope="col" class="tdHeard" style="width: 80px;">说明</th>
 							</tr>
 							<#if fundList?exists && (fundList?size>0)> <#list fundList as fund>
-							<!-- 1：充值；2：投标；3：还款；4：提现。5 手续费 -->
+							<!-- 1：充值；2：提现；3：还款；4：投标冻结。5 手续费冻结 6:投标解冻  7:手续费解冻 -->
 							<tr>
 								<td>${fund.createTime?string("yyyy-MM-dd HH:mm:ss")}</td>
-								<td><#if fund.type==1>充值<#elseif fund.type==2 >投标<#elseif
-									fund.type==3>还款<#elseif fund.type==4>提现<#else>手续费</#if></td> <#if
-								fund.incomeStatus==0>
+								<td><#if fund.type==1>充值<#elseif fund.type==2 >提现<#elseif
+									fund.type==3>还款<#elseif fund.type==4>投标冻结<#elseif fund.type==5>手续费冻结<#elseif fund.type==6>投标解冻<#elseif fund.type==7>手续费解冻<#else></#if></td> 
+									<#if
+								fund.status==0>
 								<td class="color-red">-${fund.amount/100}</td><#else>
 								<td class="color-green">${fund.amount/100}</td> </#if>
 								<td>${fund.balance/100}</td>

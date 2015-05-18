@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
+import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.sxj.util.exception.ServiceException;
 
 public interface IFundDetailService
@@ -45,4 +46,6 @@ public interface IFundDetailService
      * @param id
      */
     public void delFundDetail(String id) throws ServiceException;
+
+    void investRepayPlan(InvestOrderEntity io);
 }

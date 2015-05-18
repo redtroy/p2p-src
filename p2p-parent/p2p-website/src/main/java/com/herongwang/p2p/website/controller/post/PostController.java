@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.herongwang.p2p.entity.account.AccountEntity;
+import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.entity.orders.OrdersEntity;
@@ -23,6 +24,7 @@ import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.model.order.OrderModel;
 import com.herongwang.p2p.model.order.ResultsModel;
 import com.herongwang.p2p.service.account.IAccountService;
+import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
 import com.herongwang.p2p.service.orders.IOrdersService;
@@ -51,6 +53,9 @@ public class PostController extends BaseController
     @Autowired
     IFundDetailService fundDetailService;
     
+    @Autowired
+    private IDebtService debtService;
+    
     @RequestMapping("/recharge")
     public String recharge(ModelMap map) throws WebException
     {
@@ -69,6 +74,7 @@ public class PostController extends BaseController
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
         query.setCustomerId(user.getCustomerId());
         query.setOrderType(4);
+        query.setStatus(0);
         int num = ordersService.queryOrdersList(query).size();
         map.put("type", num);
         map.put("balance", this.divide(account.getBalance()));
@@ -152,6 +158,7 @@ public class PostController extends BaseController
                 deal.setBalance(account.getBalance());
                 deal.setDueAmount(account.getDebtAmount());
                 deal.setFrozenAmount(m);
+                deal.setRemark("申请提现，冻结对应的账户余额。");
                 fundDetailService.addFundDetail(deal);//生成资金明细
                 
                 map.put("isOK", "ok");
@@ -274,6 +281,21 @@ public class PostController extends BaseController
         {
             
             AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
+            FundDetailEntity deal = new FundDetailEntity();
+            deal.setCustomerId(user.getCustomerId());
+            deal.setAccountId(account.getAccountId());
+            deal.setOrderId(order.getOrderId());
+            deal.setType(2);
+            deal.setCreateTime(new Date());
+            deal.setStatus(1);
+            deal.setAmount(order.getAmount());
+            deal.setBalance(account.getBalance());
+            deal.setDueAmount(new BigDecimal(0));
+            deal.setFrozenAmount(order.getAmount());
+            InvestOrderEntity ivorder = investOrderService.getInvestOrderEntity(order.getOrderId());
+            DebtEntity debt = debtService.getDebtEntity(ivorder.getDebtId());
+            deal.setRemark("投资" + debt.getTitle() + "成功！");
+            fundDetailService.addFundDetail(deal);
             //支付成功
             try
             {
@@ -417,12 +439,19 @@ public class PostController extends BaseController
         {
             e.printStackTrace();
             account = accountService.getAccountByCustomerId(user.getCustomerId());
-            map.put("orderName", "充值失败");
+            if (tl.getStarus() == 1)
+            {
+                map.put("orderName", "充值成功");
+            }
+            else
+            {
+                map.put("orderName", "充值失败");
+            }
             map.put("cz", 0);
             map.put("sxj", 0);
             map.put("zj", 0);
             map.put("yve", this.divide(account.getBalance()));
-            map.put("title", "充值并投资失败");
+            map.put("title", "投资失败");
         }
         finally
         {
