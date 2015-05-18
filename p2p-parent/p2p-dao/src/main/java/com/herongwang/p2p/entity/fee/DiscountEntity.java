@@ -67,7 +67,7 @@ public class DiscountEntity
      * 
      * @pdOid 36eaa55f-354d-4dbe-9404-b4676f856dc8 */
     @Column(name = "status")
-    private FeeStatus status = FeeStatus.AVAILABLE;
+    private Integer status;
     
     /** 创建时间
      * 
@@ -88,7 +88,7 @@ public class DiscountEntity
     private String name;
     
     @Column(name = "target")
-    private DiscountTarget target = DiscountTarget.USERLEVEL;
+    private Integer target;
     
     public Integer getType()
     {
@@ -126,6 +126,41 @@ public class DiscountEntity
                 * (getFee() == null ? 0 : getFee());
     }
     
+    public java.lang.String getFeeId()
+    {
+        return feeId;
+    }
+    
+    public void setFeeId(java.lang.String feeId)
+    {
+        this.feeId = feeId;
+    }
+    
+    public java.lang.Float getFee()
+    {
+        return fee;
+    }
+    
+    public void setFee(java.lang.Float fee)
+    {
+        this.fee = fee;
+    }
+    
+    public String getParentId()
+    {
+        return parentId;
+    }
+    
+    public void setParentId(String parentId)
+    {
+        this.parentId = parentId;
+    }
+    
+    public Integer getLevel()
+    {
+        return level;
+    }
+    
     public void setDiscountFee(java.lang.Float discountFee)
     {
         this.discountFee = discountFee;
@@ -141,60 +176,12 @@ public class DiscountEntity
         this.feeEntity = feeEntity;
     }
     
-    public void setFeeId(String feeId)
-    {
-        throw new UnsupportedOperationException();
-    }
-    
-    public void setFee(Float fee)
-    {
-        throw new UnsupportedOperationException();
-    }
-    
-    public void setLevel(int level)
-    {
-        throw new UnsupportedOperationException();
-    }
-    
-    public void setParentId(String parentId)
-    {
-        throw new UnsupportedOperationException();
-    }
-    
-    public String getFeeId()
-    {
-        if (feeEntity == null)
-            return null;
-        return feeEntity.getFeeId();
-    }
-    
-    public Float getFee()
-    {
-        if (feeEntity == null)
-            return null;
-        return feeEntity.getFee();
-    }
-    
-    public Integer getLevel()
-    {
-        if (feeEntity == null)
-            return null;
-        return feeEntity.getLevel();
-    }
-    
-    public String getParentId()
-    {
-        if (feeEntity == null)
-            return null;
-        return feeEntity.getParentId();
-    }
-    
-    public FeeStatus getStatus()
+    public Integer getStatus()
     {
         return status;
     }
     
-    public void setStatus(FeeStatus status)
+    public void setStatus(Integer status)
     {
         this.status = status;
     }
@@ -229,12 +216,12 @@ public class DiscountEntity
         this.name = name;
     }
     
-    public DiscountTarget getTarget()
+    public Integer getTarget()
     {
         return target;
     }
     
-    public void setTarget(DiscountTarget target)
+    public void setTarget(Integer target)
     {
         this.target = target;
     }

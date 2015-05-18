@@ -117,9 +117,9 @@ public class InvestOrderServiceImpl implements IInvestOrderService
                 if (io.getStatus() == 1)
                 {
                     investOrderDao.updateInvestOrder(io);
-                    //更新待收金额
+                    //更新冻结金额
                     AccountEntity account = accountDao.getAcoountByCustomerId(newIo.getCustomerId());
-                    account.setDueAmount(account.getDueAmount()
+                    account.setFozenAmount(account.getFozenAmount()
                             .add(newIo.getAmount()));
                     accountDao.updateAccount(account);
                     //更新融资单已融资金额 

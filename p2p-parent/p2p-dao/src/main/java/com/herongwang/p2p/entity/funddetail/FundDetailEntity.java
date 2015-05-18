@@ -55,7 +55,7 @@ public class FundDetailEntity extends Pagable implements Serializable
     
     /**
      * 类型
-     * 0:投标冻结
+     * 2:投标冻结 5:手续费冻结
      */
     @Column(name = "type")
     private Integer type;
@@ -108,7 +108,7 @@ public class FundDetailEntity extends Pagable implements Serializable
      * 说明
      */
     @Column(name = "remark")
-    private Integer remark;
+    private String remark;
     
     public String getDetailId()
     {
@@ -230,12 +230,12 @@ public class FundDetailEntity extends Pagable implements Serializable
         this.incomeStatus = incomeStatus;
     }
     
-    public Integer getRemark()
+    public String getRemark()
     {
         return remark;
     }
     
-    public void setRemark(Integer remark)
+    public void setRemark(String remark)
     {
         this.remark = remark;
     }

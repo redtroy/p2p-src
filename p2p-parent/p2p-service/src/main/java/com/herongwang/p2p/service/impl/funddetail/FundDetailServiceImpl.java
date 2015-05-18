@@ -12,6 +12,7 @@ import com.herongwang.p2p.dao.account.IAccountDao;
 import com.herongwang.p2p.dao.funddetail.IFundDetailDao;
 import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.fee.DiscountEntity;
+import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.service.fee.IDiscountService;
@@ -96,33 +97,57 @@ public class FundDetailServiceImpl implements IFundDetailService
     @Transactional
     public void investRepayPlan(InvestOrderEntity io)
     {
-        FundDetailEntity fd = new FundDetailEntity();
-        AccountEntity account = accountDao.getAcoountByCustomerId(io.getCustomerId());
-        fd.setCustomerId(io.getCustomerId());//用户ID
-        fd.setAccountId(account.getAccountId());
-        fd.setOrderId(io.getOrderId());
-        fd.setAmount(io.getAmount());
-        fd.setTotalResult(0);//0投资冻结
-        fd.setBalance(account.getBalance());
-        fd.setFrozenAmount(account.getFozenAmount());
-        fd.setDueAmount(account.getDueAmount());
-        fd.setCreateTime(new Date());
-        fd.setStatus(0);//支出
-        fundDetailDao.addFundDetail(fd);//插入总金额明细
-        
-        //获取到当前会员折扣
-        List<DiscountEntity> list = discountService.getDiscountByCustomerId(io.getCustomerId());
-        //重新设置对象
-        for (DiscountEntity discountEntity : list)
+        try
         {
-            if (discountEntity.getType() == 0 && discountEntity.getFee() != 0)
+            FundDetailEntity fd = new FundDetailEntity();
+            AccountEntity account = accountDao.getAcoountByCustomerId(io.getCustomerId());
+            fd.setCustomerId(io.getCustomerId());//用户ID
+            fd.setAccountId(account.getAccountId());
+            fd.setOrderId(io.getOrderId());
+            fd.setAmount(io.getAmount());
+            fd.setTotalResult(0);//0投资冻结
+            fd.setBalance(account.getBalance());
+            fd.setFrozenAmount(account.getFozenAmount());
+            fd.setDueAmount(account.getDueAmount());
+            fd.setCreateTime(new Date());
+            fd.setStatus(0);//支出
+            fd.setType(4);//投标
+            fundDetailDao.addFundDetail(fd);//插入总金额明细
+            
+            //获取到当前会员折扣
+            List<DiscountEntity> list = discountService.getDiscountByCustomerId(io.getCustomerId());
+            //重新设置对象
+            for (DiscountEntity discountEntity : list)
             {
-                fd.setDetailId(null);
-                fd.setAmount(io.getAmount().multiply(new BigDecimal(
-                        discountEntity.getFee())));
+                if (discountEntity.getType() == 0
+                        && discountEntity.getFee() != 0)
+                {
+                    fd.setDetailId(null);
+                    BigDecimal fee = new BigDecimal(discountEntity.getFee()).divide(new BigDecimal(
+                            100),
+                            2,
+                            BigDecimal.ROUND_HALF_UP);
+                    fd.setAmount(io.getAmount().multiply(fee));
+                    fd.setType(5);
+                    fundDetailDao.addFundDetail(fd);//插入手续费
+                }
             }
         }
-        fundDetailDao.addFundDetail(fd);
-        
+        catch (ServiceException e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException(e.getMessage());
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("生成资金明细错误", e);
+        }
     }
+    
+    public void debtRepayPlan(FinancingOrdersEntity fo)
+    {
+        //所有投资订单
+    }
+    
 }
