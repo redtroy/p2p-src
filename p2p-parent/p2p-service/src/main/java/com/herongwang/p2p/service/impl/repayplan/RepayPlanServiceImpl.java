@@ -14,7 +14,9 @@ import com.herongwang.p2p.dao.repayPlan.IRepayPlanDao;
 import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
+import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.entity.repayPlan.RepayPlanEntity;
+import com.herongwang.p2p.model.profit.ProfitModel;
 import com.herongwang.p2p.service.repayplan.IRepayPlanService;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.logger.SxjLogger;
@@ -208,5 +210,4 @@ public class RepayPlanServiceImpl implements IRepayPlanService
             throw new ServiceException("验证余额错误", e);
         }
     }
-    
 }

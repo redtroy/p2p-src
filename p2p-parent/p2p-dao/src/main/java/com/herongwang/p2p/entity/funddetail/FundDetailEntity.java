@@ -55,6 +55,7 @@ public class FundDetailEntity extends Pagable implements Serializable
     
     /**
      * 类型
+     * 0:投标冻结
      */
     @Column(name = "type")
     private Integer type;
@@ -91,13 +92,14 @@ public class FundDetailEntity extends Pagable implements Serializable
     
     /**
      * 状态
+     * 0 : 支出  1: 收入
      */
     @Column(name = "status")
     private Integer status;
     
     /**
      * 出入状态
-     * 0 : 支出  1: 收入
+     * 废弃字段
      */
     @Column(name = "incomeStatus")
     private Integer incomeStatus;

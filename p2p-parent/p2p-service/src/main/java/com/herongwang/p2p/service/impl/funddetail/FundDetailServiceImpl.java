@@ -1,13 +1,20 @@
 package com.herongwang.p2p.service.impl.funddetail;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.herongwang.p2p.dao.account.IAccountDao;
 import com.herongwang.p2p.dao.funddetail.IFundDetailDao;
+import com.herongwang.p2p.entity.account.AccountEntity;
+import com.herongwang.p2p.entity.fee.DiscountEntity;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
+import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
+import com.herongwang.p2p.service.fee.IDiscountService;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.logger.SxjLogger;
@@ -19,6 +26,12 @@ public class FundDetailServiceImpl implements IFundDetailService
 {
     @Autowired
     IFundDetailDao fundDetailDao;
+    
+    @Autowired
+    IAccountDao accountDao;
+    
+    @Autowired
+    IDiscountService discountService;
     
     @Override
     public void addFundDetail(FundDetailEntity deal) throws ServiceException
@@ -76,4 +89,40 @@ public class FundDetailServiceImpl implements IFundDetailService
         
     }
     
+    /**
+     * 投资资金明细(投资成功,冻结金额)
+     */
+    @Override
+    @Transactional
+    public void investRepayPlan(InvestOrderEntity io)
+    {
+        FundDetailEntity fd = new FundDetailEntity();
+        AccountEntity account = accountDao.getAcoountByCustomerId(io.getCustomerId());
+        fd.setCustomerId(io.getCustomerId());//用户ID
+        fd.setAccountId(account.getAccountId());
+        fd.setOrderId(io.getOrderId());
+        fd.setAmount(io.getAmount());
+        fd.setTotalResult(0);//0投资冻结
+        fd.setBalance(account.getBalance());
+        fd.setFrozenAmount(account.getFozenAmount());
+        fd.setDueAmount(account.getDueAmount());
+        fd.setCreateTime(new Date());
+        fd.setStatus(0);//支出
+        fundDetailDao.addFundDetail(fd);//插入总金额明细
+        
+        //获取到当前会员折扣
+        List<DiscountEntity> list = discountService.getDiscountByCustomerId(io.getCustomerId());
+        //重新设置对象
+        for (DiscountEntity discountEntity : list)
+        {
+            if (discountEntity.getType() == 0 && discountEntity.getFee() != 0)
+            {
+                fd.setDetailId(null);
+                fd.setAmount(io.getAmount().multiply(new BigDecimal(
+                        discountEntity.getFee())));
+            }
+        }
+        fundDetailDao.addFundDetail(fd);
+        
+    }
 }

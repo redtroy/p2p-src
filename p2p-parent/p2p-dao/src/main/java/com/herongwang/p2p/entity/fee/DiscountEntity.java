@@ -57,6 +57,12 @@ public class DiscountEntity
     @Column(name = "level")
     private Integer level;
     
+    /**
+     * 类型(0投资订单)
+     */
+    @Column(name = "type")
+    private Integer type;
+    
     /** 状态
      * 
      * @pdOid 36eaa55f-354d-4dbe-9404-b4676f856dc8 */
@@ -83,6 +89,16 @@ public class DiscountEntity
     
     @Column(name = "target")
     private DiscountTarget target = DiscountTarget.USERLEVEL;
+    
+    public Integer getType()
+    {
+        return type;
+    }
+    
+    public void setType(Integer type)
+    {
+        this.type = type;
+    }
     
     public java.lang.String getDiscountId()
     {

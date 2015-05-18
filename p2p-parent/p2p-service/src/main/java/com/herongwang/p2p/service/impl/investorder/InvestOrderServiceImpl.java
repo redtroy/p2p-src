@@ -21,6 +21,7 @@ import com.herongwang.p2p.entity.profitlist.ProfitListEntity;
 import com.herongwang.p2p.model.invest.InvestModel;
 import com.herongwang.p2p.model.profit.ProfitModel;
 import com.herongwang.p2p.service.debt.IDebtService;
+import com.herongwang.p2p.service.funddetail.IFundDetailService;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
 import com.herongwang.p2p.service.profit.IProfitService;
 import com.sxj.util.common.StringUtils;
@@ -49,6 +50,9 @@ public class InvestOrderServiceImpl implements IInvestOrderService
     
     @Autowired
     IDebtService debtService;
+    
+    @Autowired
+    IFundDetailService fundDetailService;
     
     /**
      * 生成投资订单
@@ -138,6 +142,7 @@ public class InvestOrderServiceImpl implements IInvestOrderService
                     }
                     debt.setFinance(debt.getFinance().add(newIo.getAmount()));
                     debtDao.updateDebt(debt);
+                    fundDetailService.investRepayPlan(newIo);//创建资金明细
                 }
             }
             
