@@ -1,5 +1,8 @@
 package com.herongwang.p2p.website.controller.user;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -10,7 +13,13 @@ import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.service.account.IAccountService;
 import com.herongwang.p2p.service.users.IUserService;
 import com.herongwang.p2p.website.controller.BaseController;
+import com.sxj.cache.manager.CacheLevel;
+import com.sxj.cache.manager.HierarchicalCacheManager;
+import com.sxj.redis.core.RAtomicLong;
+import com.sxj.redis.core.concurrent.RedisConcurrent;
+import com.sxj.util.common.DateTimeUtils;
 import com.sxj.util.common.EncryptUtil;
+import com.sxj.util.common.StringUtils;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
 
@@ -24,8 +33,8 @@ public class UserController extends BaseController
     @Autowired
     private IAccountService accountService;
     
-    //  @Autowired
-    // private RedisConcurrent redisConcurrent;
+    @Autowired
+    private RedisConcurrent redisConcurrent;
     
     @RequestMapping("register")
     public String register(ModelMap map, UsersEntity member)
@@ -56,10 +65,22 @@ public class UserController extends BaseController
     }
     
     @RequestMapping("saveUser")
-    public String saveUser(UsersEntity user, ModelMap map) throws WebException
+    public String saveUser(UsersEntity user, ModelMap map, String ms)
+            throws WebException
     {
         try
         {
+            String message = (String) HierarchicalCacheManager.get(CacheLevel.REDIS,
+                    "p2pCheckMs",
+                    user.getCellphone() + "_checkMs");
+            if (StringUtils.isEmpty(message))
+            {
+                return "site/member/register";
+            }
+            if (!message.equals(ms))
+            {
+                return "site/member/register";
+            }
             UsersEntity info = userService.addUser(user);
             map.put("user", info);
         }
@@ -109,43 +130,57 @@ public class UserController extends BaseController
     }
     
     /**
-     * 短信验证
+     * 发送验证短信
      */
-    /*@RequestMapping("checkMs")
-    public @ResponseBody Map<String,String> checkMs(String phoneNo){
+    @RequestMapping("checkMs")
+    public @ResponseBody Map<String, String> checkMs(String phoneNo)
+            throws WebException
+    {
         Map<String, String> map = new HashMap<String, String>();
         try
         {
             if (StringUtils.isEmpty(phoneNo))
             {
-                map.put("error", "手机号不能为空");
+                map.put("status", "n");
+                map.put("info", "手机号不能为空");
                 return map;
             }
             phoneNo = phoneNo.trim();
-            RAtomicLong num = redisConcurrent.getAtomicLong("num_" + phoneNo,
+            RAtomicLong num = redisConcurrent.getAtomicLong("p2pNum_" + phoneNo,
                     59);// 记录次数59秒只能发送一次
             if (num.incrementAndGet() == 1)
             {
-                RAtomicLong sendMax = redisConcurrent.getAtomicLong("sendMax_"
-                        + phoneNo, DateTimeUtils.getNextZeroTime());
+                RAtomicLong sendMax = redisConcurrent.getAtomicLong("p2pSendMax_"
+                        + phoneNo,
+                        DateTimeUtils.getNextZeroTime());
                 if (sendMax.incrementAndGet() <= 5)
                 {
                     String message = "";
-                    message = memberService.createvalidata(phoneNo, message);
-                    HierarchicalCacheManager.set(CacheLevel.REDIS,
-                            "checkMs",
-                            phoneNo + "_checkMs",
-                            message,
-                            600);
+                    message = userService.sendMs(phoneNo);
+                    if (message.equals("erro"))
+                    {
+                        map.put("status", "n");
+                        map.put("info", "发送失败!");
+                    }
+                    else
+                    {
+                        HierarchicalCacheManager.set(CacheLevel.REDIS,
+                                "p2pCheckMs",
+                                phoneNo + "_checkMs",
+                                message,
+                                600);
+                    }
                 }
                 else
                 {
-                    map.put("error", "每个号码每天限制发送5次");
+                    map.put("status", "n");
+                    map.put("info", "每个号码每天限制发送5次");
                 }
             }
             else
             {
-                map.put("error", " 每一分钟发送一次");
+                map.put("status", "n");
+                map.put("info", " 每一分钟发送一次");
             }
         }
         catch (Exception e)
@@ -154,5 +189,95 @@ public class UserController extends BaseController
             throw new WebException("发送信息错误");
         }
         return map;
-    }*/
+    }
+    
+    /**
+     * 检查电话号码是否存在
+     * @param cellphone
+     * @return
+     * @throws WebException
+     */
+    @RequestMapping("checkPhone")
+    public @ResponseBody Map<String, String> checkPhone(String param)
+            throws WebException
+    {
+        Map<String, String> map = new HashMap<String, String>();
+        try
+        {
+            if (userService.checkPhone(param))
+            {
+                map.put("status", "y");
+                map.put("info", "");
+            }
+            else
+            {
+                map.put("status", "n");
+                map.put("info", "手机号码已存在！");
+            }
+            return map;
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error("手机号验证出错", e, this.getClass());
+            throw new WebException("手机号验证出错");
+        }
+    }
+    
+    /**
+     * 检查邮箱是否存在
+     * @param cellphone
+     * @return
+     * @throws WebException
+     */
+    @RequestMapping("checkEmail")
+    public @ResponseBody Map<String, String> checkEmail(String param)
+            throws WebException
+    {
+        Map<String, String> map = new HashMap<String, String>();
+        try
+        {
+            if (userService.checkEmail(param))
+            {
+                map.put("status", "y");
+                map.put("info", "可以注册");
+            }
+            else
+            {
+                map.put("status", "n");
+                map.put("info", "邮箱已存在");
+            }
+            return map;
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error("验证邮箱出错", e, this.getClass());
+            throw new WebException("验证邮箱出错");
+        }
+    }
+    
+    /**
+     * 验证码校验
+     */
+    @RequestMapping("verification")
+    public @ResponseBody Map<String, String> verification(String phone,
+            String ms) throws WebException
+    {
+        Map<String, String> map = new HashMap<String, String>();
+        try
+        {
+            String message = (String) HierarchicalCacheManager.get(CacheLevel.REDIS,
+                    "p2pCheckMs",
+                    phone + "_checkMs");
+            if (ms.equals(message))
+            {
+                map.put("status", "ok");
+            }
+            return map;
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error("验证码校验出错", e, this.getClass());
+            throw new WebException("验证码校验出错");
+        }
+    }
 }

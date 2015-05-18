@@ -53,4 +53,19 @@ public interface IUserService
      */
     public int checkStatus(String custId);
     
+    /**
+     * 会员短信验证码
+     */
+    public String sendMs(String phone);
+    
+    /**
+     * 检查号码是否被注册
+     */
+    public Boolean checkPhone(String phone);
+    
+    /**
+     * 检查邮箱是否被注册
+     */
+    public Boolean checkEmail(String email);
+    
 }

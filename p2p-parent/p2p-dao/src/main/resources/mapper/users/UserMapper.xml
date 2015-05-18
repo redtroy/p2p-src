@@ -23,6 +23,10 @@
 		parameterType="String">
 		<![CDATA[SELECT * FROM Users WHERE email=#{email}]]>
 	</select>
+	<select id="getUserByPhone" resultMap="UserResultMap"
+		parameterType="String">
+		<![CDATA[SELECT * FROM Users WHERE cellphone=#{phone}]]>
+	</select>
     
     <!-- 查询会员列表 -->
     <select id="queryUserList" resultMap="UserResultMap"

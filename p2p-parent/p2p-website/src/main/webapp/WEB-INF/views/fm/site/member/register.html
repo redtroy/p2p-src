@@ -4,6 +4,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>和融网</title>
 <link href="${b.staticPath}style/member.css" rel="stylesheet" type="text/css" />
+<link href="${b.staticPath}style/style.css" rel="stylesheet" type="text/css" />
+<link href="${b.staticPath}style/slide.css" rel="stylesheet" type="text/css" />
 <script src="${b.staticPath}js/jquery1.8.js"></script>
 <@b.validate/>
 <script>
@@ -17,9 +19,72 @@
 	  if (!validform.check()){
 		  return false;
 	  }
-	  $("#member_register").submit();
+	  $.post("${basePath}user/verification.htm",{phone:$("#cellphone").val(),ms:$("#ms").val()},function(data){
+		  if (data.status=='ok'){
+			  $("#member_register").submit();
+		  }else{
+			  var obj=$("#ms").parent().children().eq(2);
+			  obj.text("验证码输入错误！");
+			  obj.addClass("Validform_wrong");
+			  obj.show();
+		  }
+	  })
+	  
   }
-  
+  var timer1;
+  function timer(intDiff){
+	   timer1=window.setInterval(function(){
+	    var day=0,
+	        hour=0,
+	        minute=0,
+	        second=0;//时间默认值       
+	    if(intDiff > 0){
+	        day = Math.floor(intDiff / (60 * 60 * 24));
+	        hour = Math.floor(intDiff / (60 * 60)) - (day * 24);
+	        minute = Math.floor(intDiff / 60) - (day * 24 * 60) - (hour * 60);
+	        second = Math.floor(intDiff) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+	    }
+	    if (minute <= 9) minute = '0' + minute;
+	    if (second <= 9) second = '0' + second;
+	    /*
+	    $('#day_show').html(day+"天");
+	    $('#hour_show').html('<s id="h"></s>'+hour+'时');
+	    $('#minute_show').html('<s></s>'+minute+'分');
+	    $('#second_show').html('<s></s>'+second+'秒');
+	    */
+	    $("#sendMs").text(second+"秒")
+	    if (second==0){
+	    	 $("#sendMs").removeClass("disabled");
+	    	 clearInterval(timer1);
+	    	 $("#sendMs").text("获取短信验证码")
+	    	 $("#sendMs").removeClass("button-disable");
+	    	 $("#sendMs").attr("status","");
+	    }
+	    intDiff--;
+	    }, 1000);
+	} 
+  function sendMs(){
+	  var phoneNo=$("#cellphone").val();
+	  var obj=$("#cellphone").parent().children().eq(3);
+	  var status=$("#sendMs").attr("status");
+	  if (status=="button-disable"){
+		  return false;
+	  }
+	  $.post("${basePath}user/checkMs.htm",{phoneNo:phoneNo},function(data){
+		   if (data.status=='n'){
+			   obj.removeClass("Validform_right");
+			   obj.addClass("Validform_wrong");
+			   obj.text(data.info);
+		   }else{
+			   obj.removeClass("Validform_wrong");
+			   obj.removeClass("Validform_right");
+			   obj.text('');
+			   $("#sendMs").attr("status","button-disable");
+			   $("#sendMs").addClass("button-disable");
+			   timer(59);
+		   }
+	  });
+  }
 </script>
 </head>
 <body>
@@ -32,7 +97,7 @@
      <form action="saveUser.htm" method="post" id="member_register">
 	<div class="item">
           <label><span class="color-red mr5 fb">*</span>常用邮箱</label>
-          <input class="input input-w270h36" type="text" autocomplete="off" datatype="e" errormsg="请正确输入您的邮箱！" nullmsg="请输入您的邮箱！"  placeholder="" id="input" name="email" value="" />
+          <input class="input input-w270h36" type="text" autocomplete="off" datatype="e" errormsg="请正确输入您的邮箱！" nullmsg="请输入您的邮箱！" ajaxurl="${basePath}user/checkEmail.htm" placeholder="" id="email" name="email" value="" />
       </div>
       <div class="item">
           <label><span class="color-red mr5 fb">*</span>密码</label>
@@ -44,11 +109,12 @@
       </div>
       <div class="item">
           <label><span class="color-red mr5 fb">*</span>联系人手机</label>
-          <input class="input" type="text" autocomplete="off" placeholder="" datatype="m" errormsg="请正确输入您的手机号！" nullmsg="请正确输入您的手机号！" id="input" name="cellphone" value="" />
+          <input class="input" type="text" autocomplete="off" placeholder="" datatype="m" errormsg="请正确输入您的手机号！" nullmsg="请正确输入您的手机号！" ajaxurl="${basePath}user/checkPhone.htm" id="cellphone" name="cellphone" value="" />
+          <span onclick="sendMs();return false;" class="button button-gray f12 ml10" id="sendMs" status="">获取短信验证码</span>
         </div>
       <div class="item">
           <label><span class="color-red mr5 fb">*</span>手机验证码</label>
-          <input class="input input-w50h30" type="text" autocomplete="off" placeholder="" id="input" name="input2" value=""/>
+          <input class="input input-w50h30" type="text" autocomplete="off"  datatype="*"  nullmsg="请正确输入您的验证码！" placeholder="" id="ms"  name="ms" value=""/>
         </div>
 	  </form>
       <div class="item">
