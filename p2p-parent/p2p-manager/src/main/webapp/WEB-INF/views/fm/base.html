@@ -250,7 +250,8 @@ function classLoadUpload(text){
 <#macro leftMenu isLoad>
 <div id="leftList"></div>
 <script>
-$("#leftList").load("${basePath}leftMenu.htm");	
+var url=window.location.href;
+$("#leftList").load("${basePath}leftMenu.htm");
 /* $.post("${basePath}checkLogin.htm",function(data){
 	if (data=="erro"){
 		location.href="${basePath}login.htm";
