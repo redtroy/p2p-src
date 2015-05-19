@@ -85,7 +85,7 @@ public class DebtController extends BaseController
     
     @RequestMapping("/toEdit")
     public String toEdit(String id, String applicationId, String customerId,
-            String name, ModelMap map) throws WebException
+            ModelMap map) throws WebException
     {
         ParametersEntity query = new ParametersEntity();
         query.setType("repaymentType");
@@ -100,9 +100,9 @@ public class DebtController extends BaseController
             if (StringUtils.isEmpty(id))
             {
                 DebtApplicationEntity entity = debtApplicationService.getApplyForEntity(applicationId);
-                map.put("applyId", customerId);
+                map.put("applyId", entity.getCustomerId());
                 map.put("applicationId", applicationId);
-                map.put("name", name);
+                map.put("name", entity.getName());
                 map.put("amount", entity.getAmount());
                 return "manage/tender/new-tender";
             }
@@ -131,7 +131,7 @@ public class DebtController extends BaseController
     
     @RequestMapping("edit")
     public @ResponseBody Map<String, String> addApply(DebtEntity tender,
-            String applicationId) throws WebException
+            String applicationId, String id) throws WebException
     {
         BigDecimal m = tender.getAmount().multiply(new BigDecimal(100));
         BigDecimal m1 = tender.getMinInvest().multiply(new BigDecimal(100));
@@ -148,7 +148,7 @@ public class DebtController extends BaseController
         
         try
         {
-            if (null == tender.getDebtId() || tender.getDebtId().isEmpty())
+            if (null == id || id.isEmpty())
             {
                 tender.setCreateTime(new Date());
                 tender.setStatus(0);
@@ -166,7 +166,7 @@ public class DebtController extends BaseController
             }
             else
             {
-                DebtEntity info = debtService.getDebtEntity(tender.getDebtId());
+                DebtEntity info = debtService.getDebtEntity(id);
                 if (info.getStatus() == 0)
                 {
                     debtService.updateDebt(tender);
@@ -194,6 +194,8 @@ public class DebtController extends BaseController
     {
         try
         {
+            FinancingOrdersEntity entity = financingOrdersService.getOrderByDebtId(id);
+            financingOrdersService.delOrder(entity.getOrderId());
             debtService.delDebt(id);
             Map<String, String> map = new HashMap<String, String>();
             map.put("isOK", "ok");

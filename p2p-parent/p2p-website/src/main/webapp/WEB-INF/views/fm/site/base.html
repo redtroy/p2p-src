@@ -272,6 +272,14 @@ function loadUploadMember(id,url,isMulti,text,fn){
   $.post("${basePath}userName.htm",function(data){
 	  $("#headName").html(data+"，您好！");
   })
+  $(document).ready(function(){
+	  var url=window.location.href;
+	  $("#header li").removeClass("current");
+	  $("#header li").each(function(){
+		  if(url.indexOf($(this).children("a").attr("href"))>=0)
+			  $(this).addClass("current");
+	  });
+  });
   </Script>
  <div class="fence-wide bgBlack">
   <div class="yard-1100 topMenu fontYH">
@@ -300,6 +308,14 @@ function loadUploadMember(id,url,isMulti,text,fn){
 		  $("#bghead").html(content);
 	  }
   })
+  $(document).ready(function(){
+	  var url=window.location.href;
+	  $("#header li").removeClass("current");
+	  $("#header li").each(function(){
+		  if(url.indexOf($(this).children("a").attr("href"))>=0)
+			  $(this).addClass("current");
+	  });
+  });
 </script>
 <div class="fence-wide bgBlack" id="bghead">
 <div class="yard-1100 topMenu fontYH ly-clearFix">

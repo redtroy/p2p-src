@@ -1,4 +1,4 @@
-﻿package com.herongwang.p2p.ms;
+package com.herongwang.p2p.ms;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;

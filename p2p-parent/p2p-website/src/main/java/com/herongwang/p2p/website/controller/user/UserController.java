@@ -3,6 +3,12 @@ package com.herongwang.p2p.website.controller.user;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -13,6 +19,7 @@ import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.service.account.IAccountService;
 import com.herongwang.p2p.service.users.IUserService;
 import com.herongwang.p2p.website.controller.BaseController;
+import com.herongwang.p2p.website.login.SupervisorShiroRedisCache;
 import com.sxj.cache.manager.CacheLevel;
 import com.sxj.cache.manager.HierarchicalCacheManager;
 import com.sxj.redis.core.RAtomicLong;
@@ -65,9 +72,11 @@ public class UserController extends BaseController
     }
     
     @RequestMapping("saveUser")
-    public String saveUser(UsersEntity user, ModelMap map, String ms)
-            throws WebException
+    public String saveUser(UsersEntity user, ModelMap map, String ms,
+            HttpServletRequest request) throws WebException
     {
+        Map<String, String> mappost = new HashMap<String, String>();
+        String password = user.getPassword();
         try
         {
             String message = (String) HierarchicalCacheManager.get(CacheLevel.REDIS,
@@ -75,38 +84,46 @@ public class UserController extends BaseController
                     user.getCellphone() + "_checkMs");
             if (StringUtils.isEmpty(message))
             {
-                return "site/member/register";
+                return "site/member/login";
             }
             if (!message.equals(ms))
             {
-                return "site/member/register";
+                return "site/member/login";
             }
             UsersEntity info = userService.addUser(user);
             map.put("user", info);
+            Subject currentUser = SecurityUtils.getSubject();
+            UsernamePasswordToken token = new UsernamePasswordToken(
+                    user.getEmail(), password);
+            currentUser.login(token);
+            PrincipalCollection principals = SecurityUtils.getSubject()
+                    .getPrincipals();
+            String userNo = info.getCustomerNo();
+            SupervisorShiroRedisCache.addToMap(userNo, principals);
         }
         catch (Exception e)
         {
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new WebException("保存用户信息出错", e);
         }
+        // return "redirect:" + getBasePath(request) + "login.htm?account=";
         return "site/member/member-center";
     }
     
     @RequestMapping("updateUser")
-    public String updateUser(ModelMap map, UsersEntity user)
+    public @ResponseBody String updateUser(ModelMap map, UsersEntity user)
             throws WebException
     {
         try
         {
             UsersEntity info = userService.updateUser(user);
-            map.put("user", info);
+            return "ok";
         }
         catch (Exception e)
         {
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new WebException("保存用户信息出错", e);
         }
-        return "site/member/member-center";
     }
     
     @RequestMapping("editPassword")
