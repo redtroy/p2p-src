@@ -223,6 +223,7 @@ public class DebtServiceImpl implements IDebtService
                             0.03)))));
             fd1.setFrozenAmount(account.getFozenAmount());
             fd1.setDueAmount(account.getDueAmount());
+            fd1.setType(6);//投标
             fd1.setCreateTime(new Date());
             fd1.setStatus(0);//支出
             // fd1.setType(5);//投标
