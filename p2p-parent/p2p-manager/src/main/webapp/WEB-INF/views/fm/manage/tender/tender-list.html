@@ -190,6 +190,9 @@ function shenhe(id){
 			 <#if (tender.status==4)>
 	          <a href="${basePath}repayPlan/queryRepayPlan.htm?debtId=${tender.debtId}" class=" button btn-link">还款</a>
 			</#if>
+			<#if (tender.status==5)>
+	          <a href="${basePath}repayPlan/queryRepayPlan.htm?debtId=${tender.debtId}" class="ml10 lnk-blue lnk-underline">还款计划</a>
+			</#if>
 			<#if (tender.status==0)>
 	         <a href="${basePath}tender/toEdit.htm?id=${tender.debtId}" class="ml10 lnk-blue lnk-underline">修改</a>
               <a href="javascript:delTender('${tender.debtId}');"  class="ml10 lnk-blue lnk-underline">删除</a>
@@ -211,55 +214,5 @@ function shenhe(id){
 <div id="footer" class="fence">
   <div class="fence-wide">&copy; 2015 南京紫金财富企业管理有限公司&nbsp;版权所有<span class="ml10"><a href="http://www.miitbeian.gov.cn/" target="_blank">苏ICP备14047993号-1</a></span></div>
 </div>
-<div class="modal-wrap popDemo remList" style="display:none;">
-      <div class="modal-header"><span class="close">关闭</span></div>
-     <div class="modal-body memberBox" title="优先显示通过UnionID匹配到的员工编号，如果没有的情况下显示UnionID">
-       <div class="item fontYH color-blue">第一度推荐 ：<span title="陈绍伟">oO_eAjtxCKoRnicolAYtKcx3cu8c</span></div>
-	   <div class="item fontYH color-blue">第二度推荐 ：<span title="陈绍伟">oO_eAjtxCKoRnicolAYtKcx3cu8c</span></div>
-	   <div class="item fontYH color-blue">第三度推荐 ：<span title="陈绍伟">oO_eAjtxCKoRnicolAYtKcx3cu8c</span></div>
-	   <div class="item fontYH color-blue">第四度推荐 ：<span title="陈绍伟">oO_eAjtxCKoRnicolAYtKcx3cu8c</span></div>
-	   <div class="item fontYH color-blue">第五度推荐 ：<span title="陈绍伟">oO_eAjtxCKoRnicolAYtKcx3cu8c</span></div>
-  </div>
-  </div>
-<div class="modal-wrap popDemo memLevel" style="display:none;">
-  <div class="modal-header"><span class="close">关闭</span></div>
-  <div class="modal-body memberBox">
-    <div class="item fontYH color-blue">客户分级 :
-      <select name="select4" id="select4" class="fontYH">
-                <option>新客户</option>
-                <option>准客户</option>
-                <option>大客户</option>
-                <option>VIP客户</option>
-              </select>
-    </div>
-    <button class="popBtn">确认</button>
-  </div>
-</div>
-<div class="modal-wrap popDemo memberList" style="display:none;">
-      <div class="modal-header"><span class="close">关闭</span></div>
-     <div class="modal-body memberBox">
-       <div class="item fontYH color-blue">
-         归属员工 :<input name="" type="text" class="input input-w220h30 ml5 fontYH" title="联想输入员工编号" value="请输入员工编号" /> </div>
-  <button class="popBtn">确认</button></div>
-  </div>
-<div class="maskdivgen" style="display:none"></div>
-<script type="text/javascript">
-		$(function() {
-			$("#pager").paginate({
-				count 		: 50,
-				start 		: 1,
-				display     : 10,
-				border					: true,
-				border_color			: '#CCC',
-				text_color  			: '#333',
-				background_color    	: '',	
-				border_hover_color		: '#ff4400',
-				text_hover_color  		: '',
-				background_hover_color	: '', 
-				images					: false,
-				mouse					: 'press'
-			});
-});
-		</script>
 </body>
 </html>

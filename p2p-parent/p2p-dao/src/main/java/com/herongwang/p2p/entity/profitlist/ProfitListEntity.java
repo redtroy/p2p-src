@@ -89,6 +89,9 @@ public class ProfitListEntity extends Pagable implements Serializable
     @Column(name = "updateTime")
     private Date updateTime;
     
+    /**
+     * 手续费
+     */
     private BigDecimal fee;
     
     public BigDecimal getFee()
