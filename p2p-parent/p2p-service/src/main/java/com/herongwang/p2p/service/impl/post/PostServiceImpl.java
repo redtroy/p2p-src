@@ -22,9 +22,7 @@ import com.allinpay.ets.client.RequestOrder;
 import com.allinpay.ets.client.SecurityUtil;
 import com.allinpay.ets.client.StringUtil;
 import com.herongwang.p2p.entity.account.AccountEntity;
-import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
-import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.entity.orders.OrdersEntity;
 import com.herongwang.p2p.entity.parameters.ParametersEntity;
 import com.herongwang.p2p.entity.tl.TLBillEntity;
@@ -466,19 +464,19 @@ public class PostServiceImpl implements IPostService
         {
             return;
         }
-        if (incomeStatus == 2)
+        /*if (incomeStatus == 2)
         {
             InvestOrderEntity order = investOrderService.getInvestOrderEntity(orderId);
             DebtEntity debt = debtService.getDebtEntity(order.getDebtId());
             deal.setRemark("投资" + debt.getTitle() + "成功！");
             
         }
-        else if (incomeStatus == 1)
+        else */if (incomeStatus == 1)
         {
             deal.setStatus(1);
             deal.setRemark("充值" + amount.divide(new BigDecimal(100)) + "元成功！");
+            fundDetailService.addFundDetail(deal);
         }
-        fundDetailService.addFundDetail(deal);
         
     }
 }

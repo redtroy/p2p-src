@@ -131,7 +131,7 @@ public class DebtController extends BaseController
     
     @RequestMapping("edit")
     public @ResponseBody Map<String, String> addApply(DebtEntity tender,
-            String applicationId) throws WebException
+            String applicationId, String id) throws WebException
     {
         BigDecimal m = tender.getAmount().multiply(new BigDecimal(100));
         BigDecimal m1 = tender.getMinInvest().multiply(new BigDecimal(100));
@@ -148,7 +148,7 @@ public class DebtController extends BaseController
         
         try
         {
-            if (null == tender.getDebtId() || tender.getDebtId().isEmpty())
+            if (null == id || id.isEmpty())
             {
                 tender.setCreateTime(new Date());
                 tender.setStatus(0);
@@ -166,7 +166,7 @@ public class DebtController extends BaseController
             }
             else
             {
-                DebtEntity info = debtService.getDebtEntity(tender.getDebtId());
+                DebtEntity info = debtService.getDebtEntity(id);
                 if (info.getStatus() == 0)
                 {
                     debtService.updateDebt(tender);
@@ -194,6 +194,8 @@ public class DebtController extends BaseController
     {
         try
         {
+            FinancingOrdersEntity entity = financingOrdersService.getOrderByDebtId(id);
+            financingOrdersService.delOrder(entity.getOrderId());
             debtService.delDebt(id);
             Map<String, String> map = new HashMap<String, String>();
             map.put("isOK", "ok");
