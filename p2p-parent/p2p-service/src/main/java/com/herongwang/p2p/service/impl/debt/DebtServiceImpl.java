@@ -59,7 +59,7 @@ public class DebtServiceImpl implements IDebtService
     private IInvestOrderDao investDao;
     
     @Autowired
-    IDiscountService discountService;
+    private IDiscountService discountService;
     
     @Override
     public void addDebt(DebtEntity Debt) throws ServiceException
@@ -182,6 +182,11 @@ public class DebtServiceImpl implements IDebtService
             repayDao.addRepayPlanList(reList);
             //根据会员ID 查询账户
             AccountEntity account = accountDao.getAcoountByCustomerId(debt.getCustomerId());
+            //更新账户信息
+            account.setBalance(financeOrder.getAmount()
+                    .subtract((financeOrder.getAmount().multiply(new BigDecimal(
+                            0.03)))));
+            accountDao.updateAccount(account);
             //生成融资方资金明细
             //获取到融资方费率
             FundDetailEntity fd = new FundDetailEntity();
@@ -196,7 +201,7 @@ public class DebtServiceImpl implements IDebtService
             fd.setCreateTime(new Date());
             fd.setStatus(1);//收入
             fd.setType(8);//投标
-            fd.setRemark("融资"+debt.getTitle()+",完成");
+            fd.setRemark("融资" + debt.getTitle() + ",完成");
             fundDetailDao.addFundDetail(fd);
             List<DiscountEntity> list = discountService.getDiscountByCustomerId(debt.getCustomerId());
             //重新设置对象
@@ -214,7 +219,7 @@ public class DebtServiceImpl implements IDebtService
                                 BigDecimal.ROUND_HALF_UP);
                         fd.setAmount(debt.getAmount().multiply(fee));
                         fd.setType(9);
-                        fd.setRemark("融资"+debt.getTitle()+"完成");
+                        fd.setRemark("融资" + debt.getTitle() + "完成");
                         fundDetailDao.addFundDetail(fd);//插入手续费
                     }
                 }
@@ -228,6 +233,15 @@ public class DebtServiceImpl implements IDebtService
                 FundDetailEntity fundDetail = new FundDetailEntity();
                 AccountEntity account1 = accountDao.getAcoountByCustomerId(investList.get(i)
                         .getCustomerId());
+                //更新账户
+                account1.setFozenAmount(account1.getFozenAmount()
+                        .subtract(investList.get(i).getAmount()));//账户冻结资金减去账单资金
+                ProfitModel prift2 = profitService.calculatingProfit(debtId,
+                        investList.get(i).getAmount());//获取利息，总额
+                account1.setDueAmount(account1.getDueAmount()
+                        .add(prift2.getAmount()));//更新代收金额
+                accountDao.updateAccount(account1);
+                //生成明细
                 fundDetail.setCustomerId(investList.get(i).getCustomerId());//用户ID
                 fundDetail.setAccountId(account1.getAccountId());
                 fundDetail.setOrderId(investList.get(i).getOrderId());
@@ -238,9 +252,10 @@ public class DebtServiceImpl implements IDebtService
                 fundDetail.setCreateTime(new Date());
                 fundDetail.setStatus(0);//收入
                 fundDetail.setType(6);//解冻
-                fundDetail.setRemark("投资"+debt.getTitle()+"完成,资金解冻");
+                fundDetail.setRemark("投资" + debt.getTitle() + "完成,资金解冻");
                 fundDetailDao.addFundDetail(fundDetail);
-                List<DiscountEntity> disList = discountService.getDiscountByCustomerId(investList.get(i).getCustomerId());
+                List<DiscountEntity> disList = discountService.getDiscountByCustomerId(investList.get(i)
+                        .getCustomerId());
                 if (!CollectionUtils.isEmpty(disList))
                 {
                     for (DiscountEntity discountEntity : disList)
@@ -249,13 +264,15 @@ public class DebtServiceImpl implements IDebtService
                                 && discountEntity.getFee() != 0)
                         {
                             fundDetail.setDetailId(null);
-                            BigDecimal fee = new BigDecimal(discountEntity.getFee()).divide(new BigDecimal(
+                            BigDecimal fee = new BigDecimal(
+                                    discountEntity.getFee()).divide(new BigDecimal(
                                     100),
                                     2,
                                     BigDecimal.ROUND_HALF_UP);
                             fundDetail.setAmount(debt.getAmount().multiply(fee));
                             fundDetail.setType(7);
-                            fundDetail.setRemark("投资"+debt.getTitle()+"完成,手续费解冻");
+                            fundDetail.setRemark("投资" + debt.getTitle()
+                                    + "完成,手续费解冻");
                             fundDetailDao.addFundDetail(fundDetail);//插入手续费
                         }
                     }

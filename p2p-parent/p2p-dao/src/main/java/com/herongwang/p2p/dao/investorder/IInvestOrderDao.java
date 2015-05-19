@@ -72,4 +72,10 @@ public interface IInvestOrderDao
      */
     public Integer queryAllAmount();
     
+    /**
+     * 根据会员ID，标的ID查询订单
+     */
+    public InvestOrderEntity getInvestOrderByCustIdAndDebtId(String debtId,
+            String custId);
+    
 }
