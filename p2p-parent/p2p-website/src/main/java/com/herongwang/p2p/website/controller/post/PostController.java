@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,8 +83,8 @@ public class PostController extends BaseController
     }
     
     @RequestMapping("/rechargeList")
-    public String rechargeList(ModelMap map, OrderModel order)
-            throws WebException
+    public String rechargeList(HttpServletRequest request, ModelMap map,
+            OrderModel order) throws WebException
     {
         BigDecimal m = this.multiply(new BigDecimal(order.getOrderAmount()));
         UsersEntity user = this.getUsersEntity();
@@ -95,10 +96,12 @@ public class PostController extends BaseController
         try
         {
             ModelMap map1 = postService.Post(m, user);
-            
+            String basePath = this.getBasePath(request);
             map.put("serverip", map1.get("serverip"));
-            map.put("pickupUrl", map1.get("pickupUrl"));
-            map.put("receiveUrl", map1.get("receiveUrl"));
+            /* map.put("pickupUrl", map1.get("pickupUrl"));
+             map.put("receiveUrl", map1.get("receiveUrl"));*/
+            map.put("pickupUrl", basePath + "post/pickup.htm");
+            map.put("receiveUrl", basePath + "post/receive.htm");
             map.put("merchantId", map1.get("merchantId"));
             map.put("orderNo", map1.get("orderNo"));
             map.put("orderAmount", map1.get("orderAmount"));
@@ -327,8 +330,8 @@ public class PostController extends BaseController
     }
     
     @RequestMapping("/rechargeInList")
-    public String rechargeInList(ModelMap map, InvestOrderEntity order)
-            throws WebException
+    public String rechargeInList(HttpServletRequest request, ModelMap map,
+            InvestOrderEntity order) throws WebException
     {
         BigDecimal m = order.getAmount().multiply(new BigDecimal(100));//投标订单金额
         BigDecimal m1 = order.getTotalFee().multiply(new BigDecimal(100));//充值金额
@@ -341,15 +344,19 @@ public class PostController extends BaseController
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
         try
         {
+            String basePath = this.getBasePath(request);
             ModelMap map1 = postService.Post(m1, user);
             
             String pickupUrl = map1.get("pickupUrl").toString();
             String receiveUrl = map1.get("receiveUrl").toString();
+            
+            map.put("pickupUrl", basePath + "post/pickupin.htm");
+            map.put("receiveUrl", basePath + "post/receivein.htm");
             map.put("serverip", map1.get("serverip"));
-            map.put("pickupUrl", pickupUrl.substring(0, pickupUrl.length() - 4)
+            /*map.put("pickupUrl", pickupUrl.substring(0, pickupUrl.length() - 4)
                     + "in.htm");
             map.put("receiveUrl",
-                    receiveUrl.substring(0, receiveUrl.length() - 4) + "in.htm");
+                    receiveUrl.substring(0, receiveUrl.length() - 4) + "in.htm");*/
             map.put("merchantId", map1.get("merchantId"));
             map.put("orderNo", map1.get("orderNo"));
             map.put("orderAmount", map1.get("orderAmount"));
