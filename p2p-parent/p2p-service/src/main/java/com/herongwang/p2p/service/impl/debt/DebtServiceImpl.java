@@ -4,9 +4,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +24,6 @@ import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.entity.repayPlan.RepayPlanEntity;
-import com.herongwang.p2p.model.MonthProfit;
 import com.herongwang.p2p.model.profit.ProfitModel;
 import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.fee.IDiscountService;
@@ -163,6 +160,7 @@ public class DebtServiceImpl implements IDebtService
                             debt.getMonths()),
                             2,
                             BigDecimal.ROUND_HALF_UP)));
+            BigDecimal ljMonthAmount = new BigDecimal(0);
             for (int i = 0; i < prift.getMonthProfit().size(); i++)
             {
                 RepayPlanEntity repayPlan = new RepayPlanEntity(); //
@@ -178,14 +176,16 @@ public class DebtServiceImpl implements IDebtService
                 repayPlan.setMonthAmount(prift.getMonthProfit()
                         .get(i)
                         .getMonthAmount()); //月总额
-                repayPlan.setLeftAmount(prift.getMonthProfit()
-                        .get(i)
-                        .getLeftAmount()); //剩余本息总额
+                repayPlan.setLeftAmount(prift.getAmount()
+                        .subtract(ljMonthAmount)); //剩余本息总额
                 repayPlan.setStatus(0);
                 repayPlan.setCreateTime(new Date());
                 repayPlan.setUpdateTime(new Date());
                 repayPlan.setPrepaidStatus(0);
                 reList.add(repayPlan);
+                ljMonthAmount = ljMonthAmount.add(prift.getMonthProfit()
+                        .get(i)
+                        .getMonthAmount());
             }
             repayDao.addRepayPlanList(reList);
             //根据会员ID 查询账户
@@ -295,56 +295,4 @@ public class DebtServiceImpl implements IDebtService
         }
     }
     
-    public Map<String, String> testLoan(BigDecimal money, int num)
-    {
-        Map<String, Object> map = new HashMap<String, Object>();
-        BigDecimal yearRatio = new BigDecimal("0.22");
-        BigDecimal monthRatio = yearRatio.divide(new BigDecimal(num),
-                128,
-                BigDecimal.ROUND_HALF_UP);
-        System.out.println(monthRatio);
-        DecimalFormat df = new DecimalFormat(".00");
-        List<MonthProfit> profits = new ArrayList<MonthProfit>();
-        /*
-         * 计算应还总额
-         */
-        //  BigDecimal money = new BigDecimal(10000);//总投资
-        for (int i = num; i >= 1; i--)
-        {
-            BigDecimal operand = monthRatio.add(new BigDecimal(1)).pow(i);
-            BigDecimal monthMoney = money.multiply(monthRatio)
-                    .multiply(operand)
-                    .divide(operand.subtract(new BigDecimal(1)),
-                            6,
-                            BigDecimal.ROUND_HALF_UP);
-            /**
-             * 计算当月利息
-             */
-            BigDecimal profit = money.multiply(monthRatio);
-            //BigDecimal fee = profit.multiply(new BigDecimal("0.09"));
-            //BigDecimal subtract = profit.subtract(fee);
-            money = money.subtract(monthMoney.subtract(profit)).setScale(2,
-                    BigDecimal.ROUND_HALF_UP);
-            profits.add(new MonthProfit(monthMoney.setScale(2,
-                    BigDecimal.ROUND_HALF_UP), profit.setScale(2,
-                    BigDecimal.ROUND_HALF_UP), monthMoney.subtract(profit)
-                    .setScale(2, BigDecimal.ROUND_HALF_UP)));
-        }
-        money = new BigDecimal(0);
-        List<Map<String, BigDecimal>> list = new ArrayList<Map<String, BigDecimal>>();
-        for (MonthProfit profit : profits)
-        {
-            /* System.out.println("当期应还总额:" + df.format(profit.getTotal())
-                     + ",当期应还利息:" + (profit.getProfit()) + ",当期应还本金:"
-                     + df.format(profit.getCapital()));*/
-            //            System.out.println(profit.getProfit());
-            money = money.add(profit.getProfit());
-            Map<String, BigDecimal> map1 = new HashMap<String, BigDecimal>();
-            
-        }
-        System.out.println("总利息" + df.format(money));
-        System.out.println("总额" + df.format(new BigDecimal(10000).add(money)));
-        return null;
-        
-    }
 }

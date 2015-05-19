@@ -147,10 +147,10 @@
 									name="chk_list" class="chk_list" value="${plan.planId}" /></#if>
 								</td>
 								<td>${plan.sequence}</td>
-								<td>${plan.monthCapital}元</td>
-								<td>${plan.monthProfit}元</td>
-								<td>${plan.monthAmount}元</td>
-								<td>${plan.leftAmount}</td>
+								<td>${plan.monthCapital/100}元</td>
+								<td>${plan.monthProfit/100}元</td>
+								<td>${plan.monthAmount/100}元</td>
+								<td>${plan.leftAmount/100}</td>
 								<td><#if plan.status==0>未还款 <#else>已还款 </#if></td>
 								<td><#if plan.prepaidStatus==1>垫付 </#if></td>
 							</tr>
