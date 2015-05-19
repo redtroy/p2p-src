@@ -311,6 +311,7 @@ public class PostController extends BaseController
             {
                 e.printStackTrace();
                 map.put("title", "投资失败");
+                SxjLogger.error(e.getMessage(), e, this.getClass());
             }
             finally
             {
@@ -367,6 +368,7 @@ public class PostController extends BaseController
         catch (Exception e)
         {
             e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
         }
         
         return "site/post/rechargeIn-list";
@@ -452,6 +454,7 @@ public class PostController extends BaseController
             map.put("zj", 0);
             map.put("yve", this.divide(account.getBalance()));
             map.put("title", "投资失败");
+            SxjLogger.error(e.getMessage(), e, this.getClass());
         }
         finally
         {

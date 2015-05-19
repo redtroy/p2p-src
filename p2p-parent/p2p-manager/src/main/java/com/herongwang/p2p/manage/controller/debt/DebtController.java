@@ -85,7 +85,7 @@ public class DebtController extends BaseController
     
     @RequestMapping("/toEdit")
     public String toEdit(String id, String applicationId, String customerId,
-            String name, ModelMap map) throws WebException
+            ModelMap map) throws WebException
     {
         ParametersEntity query = new ParametersEntity();
         query.setType("repaymentType");
@@ -100,9 +100,9 @@ public class DebtController extends BaseController
             if (StringUtils.isEmpty(id))
             {
                 DebtApplicationEntity entity = debtApplicationService.getApplyForEntity(applicationId);
-                map.put("applyId", customerId);
+                map.put("applyId", entity.getCustomerId());
                 map.put("applicationId", applicationId);
-                map.put("name", name);
+                map.put("name", entity.getName());
                 map.put("amount", entity.getAmount());
                 return "manage/tender/new-tender";
             }

@@ -139,7 +139,7 @@ function updateApp(id){
               <td class="tl">${apply.remark}</td>
               <td class="edit">
               <#if (apply.status==0)>
-	         <a href="${basePath}tender/toEdit.htm?applicationId=${apply.applicationId}&customerId=${apply.customerId}&name=${apply.userName}" class="reset">生成投资标书</a>
+	         <a href="${basePath}tender/toEdit.htm?applicationId=${apply.applicationId}" class="reset">生成投资标书</a>
 	         <a href="javascript:void(0)" onclick="updateApp('${apply.applicationId}');" class="reset">忽略</a>
 	          <#elseif (apply.status==2)>
 	         		 已忽略
