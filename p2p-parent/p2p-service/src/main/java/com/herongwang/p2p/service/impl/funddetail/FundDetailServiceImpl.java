@@ -185,19 +185,24 @@ public class FundDetailServiceImpl implements IFundDetailService
             fd.setFrozenAmount(account.getFozenAmount());
             fd.setDueAmount(account.getDueAmount());
             fd.setCreateTime(new Date());
+            
             if (order.getOrderType() == 1)
             {
                 fd.setType(1);//投标
                 fd.setStatus(1);//
                 fd.setRemark("充值"
-                        + order.getAmount().divide(new BigDecimal(100)) + "元");
+                        + order.getAmount().divide(new BigDecimal(100),
+                                2,
+                                BigDecimal.ROUND_HALF_UP) + "元");
             }
             else if (order.getOrderType() == 2)
             {
                 fd.setType(2);//投标
                 fd.setStatus(1);//
                 fd.setRemark("提现"
-                        + order.getAmount().divide(new BigDecimal(100)) + "元");
+                        + order.getAmount().divide(new BigDecimal(100),
+                                2,
+                                BigDecimal.ROUND_HALF_UP) + "元");
             }
             
             fundDetailDao.addFundDetail(fd);//插入总金额明细
@@ -209,7 +214,13 @@ public class FundDetailServiceImpl implements IFundDetailService
                         BigDecimal.ROUND_HALF_UP);
                 fd.setAmount(order.getAmount().multiply(fee));
                 fd.setType(12);
-                fd.setRemark("提现手续费" + order.getAmount().multiply(fee) + "元");
+                fd.setRemark("提现手续费"
+                        + order.getAmount()
+                                .multiply(fee)
+                                .multiply(new BigDecimal(100))
+                                .divide(new BigDecimal(100),
+                                        2,
+                                        BigDecimal.ROUND_HALF_UP) + "元");
                 fundDetailDao.addFundDetail(fd);//插入手续费
             }
             
