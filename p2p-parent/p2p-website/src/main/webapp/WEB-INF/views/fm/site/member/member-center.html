@@ -7,7 +7,22 @@
 <@b.dialog/>
 <script>
 function sub(){
-	$("#user_form").submit();
+	var parem=$("#user_form").serialize();
+	$.post("${basePath}user/updateUser.htm",parem,function(data){
+		if (data=='ok'){
+			var success = dialog({
+				title : '消息',
+				cancel : false,
+				width:150,
+				content:'修改成功！',
+			    okValue:'确定',
+			    ok:function(){
+			    	
+			    }
+			});
+			success.showModal();
+		}
+	});
 }
 function editPassWord(id){
 	var success = dialog({
