@@ -200,8 +200,8 @@ public class DebtServiceImpl implements IDebtService
             fd.setDueAmount(account.getDueAmount());
             fd.setCreateTime(new Date());
             fd.setStatus(1);//收入
-            fd.setType(8);//投标
-            fd.setRemark("融资" + debt.getTitle() + ",完成");
+            fd.setType(5);//投标
+            fd.setRemark("融资" + debt.getTitle());
             fundDetailDao.addFundDetail(fd);
             List<DiscountEntity> list = discountService.getDiscountByCustomerId(debt.getCustomerId());
             //重新设置对象
@@ -219,7 +219,7 @@ public class DebtServiceImpl implements IDebtService
                                 BigDecimal.ROUND_HALF_UP);
                         fd.setAmount(debt.getAmount().multiply(fee));
                         fd.setType(9);
-                        fd.setRemark("融资" + debt.getTitle() + "完成");
+                        fd.setRemark("融资" + debt.getTitle());
                         fundDetailDao.addFundDetail(fd);//插入手续费
                     }
                 }
@@ -251,7 +251,7 @@ public class DebtServiceImpl implements IDebtService
                 fundDetail.setDueAmount(account1.getDueAmount());
                 fundDetail.setCreateTime(new Date());
                 fundDetail.setStatus(0);//收入
-                fundDetail.setType(6);//解冻
+                fundDetail.setType(4);//解冻
                 fundDetail.setRemark("投资" + debt.getTitle() + "完成,资金解冻");
                 fundDetailDao.addFundDetail(fundDetail);
                 List<DiscountEntity> disList = discountService.getDiscountByCustomerId(investList.get(i)
