@@ -7,3 +7,11 @@
         <li><a href="${basePath}deal/deposit.htm">提现管理</a></li>
       </ul>
  </div>
+ <script>
+ 	var url=window.location.href
+ 	$(".leftMenu").select("a").removeClass("on");
+ 	$(".leftMenu").select("a").each(function(){
+ 		if(url.indexOf($(this).attr("href"))>=0)
+ 			$(this).addClass("on");
+ 	})
+ </script>
