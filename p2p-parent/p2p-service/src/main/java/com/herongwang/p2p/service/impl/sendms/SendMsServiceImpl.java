@@ -23,7 +23,8 @@ public class SendMsServiceImpl implements ISendMsService
             String sn = "DXX-WSS-11M-06110";
             String pwd = "502503";
             String mobiles = phones;
-            content = URLEncoder.encode(content + "短信内容【签名】", "utf8");
+            content = URLEncoder.encode(content + "（平台注册验证码，10分钟有效）【和融网】",
+                    "utf8");
             Client client = new Client(sn, pwd);
             String result_mt = client.mdSmsSend_u(mobiles, content, "", "", "");
             if (result_mt.startsWith("-") || result_mt.equals(""))//发送短信，如果是以负号开头就是发送失败。
