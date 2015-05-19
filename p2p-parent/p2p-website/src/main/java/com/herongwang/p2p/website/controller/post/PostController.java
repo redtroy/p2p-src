@@ -73,7 +73,7 @@ public class PostController extends BaseController
         OrdersEntity query = new OrdersEntity();
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
         query.setCustomerId(user.getCustomerId());
-        query.setOrderType(4);
+        query.setOrderType(2);
         query.setStatus(0);
         int num = ordersService.queryOrdersList(query).size();
         map.put("type", num);
