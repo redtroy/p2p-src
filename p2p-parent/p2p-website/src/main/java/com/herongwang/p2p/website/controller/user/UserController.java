@@ -111,20 +111,19 @@ public class UserController extends BaseController
     }
     
     @RequestMapping("updateUser")
-    public String updateUser(ModelMap map, UsersEntity user)
+    public @ResponseBody String updateUser(ModelMap map, UsersEntity user)
             throws WebException
     {
         try
         {
             UsersEntity info = userService.updateUser(user);
-            map.put("user", info);
+            return "ok";
         }
         catch (Exception e)
         {
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new WebException("保存用户信息出错", e);
         }
-        return "site/member/member-center";
     }
     
     @RequestMapping("editPassword")

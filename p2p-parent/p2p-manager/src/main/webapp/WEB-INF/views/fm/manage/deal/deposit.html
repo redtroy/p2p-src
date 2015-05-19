@@ -11,44 +11,6 @@
 <@b.pageScript/>
 <@b.dialog/>
 <script>
-jQuery(document).ready(function($) {	
-	$('.levinput').click(function(){
-		$('.maskdivgen').fadeIn(100);
-		$('.memLevel').slideDown(200);
-	})
-	$('.modal-header .close').click(function(){
-		$('.maskdivgen').fadeOut(100);
-		$('.memLevel').slideUp(200);
-	})
-	$('.popBtn').click(function(){
-		$('.maskdivgen').fadeOut(100);
-		$('.memLevel').slideUp(200);
-	})
-	$('.reminput').click(function(){
-		$('.maskdivgen').fadeIn(100);
-		$('.remList').slideDown(200);
-	})
-	$('.modal-header .close').click(function(){
-		$('.maskdivgen').fadeOut(100);
-		$('.remList').slideUp(200);
-	})
-	$('.popBtn').click(function(){
-		$('.maskdivgen').fadeOut(100);
-		$('.remList').slideUp(200);
-	})
-	$('.meminput').click(function(){
-		$('.maskdivgen').fadeIn(100);
-		$('.memberList').slideDown(200);
-	})
-	$('.modal-header .close').click(function(){
-		$('.maskdivgen').fadeOut(100);
-		$('.memberList').slideUp(200);
-	})
-	$('.popBtn').click(function(){
-		$('.maskdivgen').fadeOut(100);
-		$('.memberList').slideUp(200);
-	})
-})
 function query(page) {
 var params="";
 if(page!=undefined){
@@ -160,37 +122,5 @@ function delTender(orderId){
 <div id="footer" class="fence">
   <div class="fence-wide">&copy; 2015 南京紫金财富企业管理有限公司&nbsp;版权所有<span class="ml10"><a href="http://www.miitbeian.gov.cn/" target="_blank">苏ICP备14047993号-1</a></span></div>
 </div>
-<div class="modal-wrap popDemo remList" style="display:none;">
-      <div class="modal-header"><span class="close">关闭</span></div>
-     <div class="modal-body memberBox" title="优先显示通过UnionID匹配到的员工编号，如果没有的情况下显示UnionID">
-       <div class="item fontYH color-blue">第一度推荐 ：<span title="陈绍伟">oO_eAjtxCKoRnicolAYtKcx3cu8c</span></div>
-	   <div class="item fontYH color-blue">第二度推荐 ：<span title="陈绍伟">oO_eAjtxCKoRnicolAYtKcx3cu8c</span></div>
-	   <div class="item fontYH color-blue">第三度推荐 ：<span title="陈绍伟">oO_eAjtxCKoRnicolAYtKcx3cu8c</span></div>
-	   <div class="item fontYH color-blue">第四度推荐 ：<span title="陈绍伟">oO_eAjtxCKoRnicolAYtKcx3cu8c</span></div>
-	   <div class="item fontYH color-blue">第五度推荐 ：<span title="陈绍伟">oO_eAjtxCKoRnicolAYtKcx3cu8c</span></div>
-  </div>
-  </div>
-<div class="modal-wrap popDemo memLevel" style="display:none;">
-  <div class="modal-header"><span class="close">关闭</span></div>
-  <div class="modal-body memberBox">
-    <div class="item fontYH color-blue">客户分级 :
-      <select name="select4" id="select4" class="fontYH">
-                <option>新客户</option>
-                <option>准客户</option>
-                <option>大客户</option>
-                <option>VIP客户</option>
-              </select>
-    </div>
-    <button class="popBtn">确认</button>
-  </div>
-</div>
-<div class="modal-wrap popDemo memberList" style="display:none;">
-      <div class="modal-header"><span class="close">关闭</span></div>
-     <div class="modal-body memberBox">
-       <div class="item fontYH color-blue">
-         归属员工 :<input name="" type="text" class="input input-w220h30 ml5 fontYH" title="联想输入员工编号" value="请输入员工编号" /> </div>
-  <button class="popBtn">确认</button></div>
-  </div>
-<div class="maskdivgen" style="display:none"></div>
 </body>
 </html>

@@ -6,6 +6,7 @@ import java.util.List;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.entity.orders.OrdersEntity;
+import com.herongwang.p2p.entity.repayPlan.RepayPlanEntity;
 import com.sxj.util.exception.ServiceException;
 
 public interface IFundDetailService
@@ -52,4 +53,6 @@ public interface IFundDetailService
     void investFundDetail(InvestOrderEntity io);
 
     void orderFundDetail(OrdersEntity order) throws ServiceException;
+
+    void repayPlanFundDetail(List<RepayPlanEntity> planlist) throws ServiceException;
 }
