@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.herongwang.p2p.entity.account.AccountEntity;
-import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.entity.orders.OrdersEntity;
@@ -142,19 +141,19 @@ public class PostController extends BaseController
                 AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
                 account.setFozenAmount(account.getFozenAmount().add(m));
                 accountService.updateAccount(account);//更新冻结金额
-                //生成充值订单
+                //生成提现订单
                 OrdersEntity orders = new OrdersEntity();
                 orders.setCustomerId(user.getCustomerId());
                 orders.setAmount(m);
                 orders.setCreateTime(new Date());
                 orders.setStatus(0);
-                orders.setOrderType(4);
+                orders.setOrderType(2);
                 ordersService.addOrders(orders);
                 FundDetailEntity deal = new FundDetailEntity();
                 deal.setCustomerId(user.getCustomerId());
                 deal.setAccountId(account.getAccountId());
                 deal.setOrderId(orders.getOrderId());
-                deal.setType(4);
+                deal.setType(2);
                 deal.setCreateTime(new Date());
                 deal.setStatus(1);
                 deal.setAmount(m);
@@ -282,26 +281,18 @@ public class PostController extends BaseController
                 order.getOrderId());
         if (flag == 1)
         {
-            
-            AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
-            FundDetailEntity deal = new FundDetailEntity();
-            deal.setCustomerId(user.getCustomerId());
-            deal.setAccountId(account.getAccountId());
-            deal.setOrderId(order.getOrderId());
-            deal.setType(2);
-            deal.setCreateTime(new Date());
-            deal.setStatus(1);
-            deal.setAmount(order.getAmount());
-            deal.setBalance(account.getBalance());
-            deal.setDueAmount(new BigDecimal(0));
-            deal.setFrozenAmount(order.getAmount());
-            InvestOrderEntity ivorder = investOrderService.getInvestOrderEntity(order.getOrderId());
-            DebtEntity debt = debtService.getDebtEntity(ivorder.getDebtId());
-            deal.setRemark("投资" + debt.getTitle() + "成功！");
-            fundDetailService.addFundDetail(deal);
-            //支付成功
             try
             {
+                //支付成功
+                InvestOrderEntity io = new InvestOrderEntity();
+                io.setOrderId(order.getOrderId());
+                io.setAmount(order.getAmount());
+                io.setStatus(1);
+                io.setChannel(2);
+                io.setCreateTime(new Date());
+                io.setArriveTime(new Date());
+                investOrderService.finishOrder(io);
+                AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
                 map.put("title", "投资成功");
                 map.put("orderName", "投资");
                 map.put("cz", 0);
