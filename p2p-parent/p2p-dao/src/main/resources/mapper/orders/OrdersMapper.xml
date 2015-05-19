@@ -48,5 +48,6 @@
 		 <if test="condition.status != null">
 		 	<![CDATA[AND o.status =#{condition.status}]]>
 		 </if>
+		 <![CDATA[ order by status,createTime desc ]]>
 	</select>
 </mapper>

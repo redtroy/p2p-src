@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +15,6 @@ import com.herongwang.p2p.dao.investorder.IInvestOrderDao;
 import com.herongwang.p2p.dao.profitlist.IProfitListDao;
 import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.debt.DebtEntity;
-import com.herongwang.p2p.entity.fee.DiscountEntity;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.entity.orders.OrdersEntity;
@@ -187,32 +185,41 @@ public class FundDetailServiceImpl implements IFundDetailService
             fd.setFrozenAmount(account.getFozenAmount());
             fd.setDueAmount(account.getDueAmount());
             fd.setCreateTime(new Date());
-            if (order.getStatus() == 1)
+            
+            if (order.getOrderType() == 1)
             {
                 fd.setType(1);//投标
                 fd.setStatus(1);//
                 fd.setRemark("充值"
-                        + order.getAmount().divide(new BigDecimal(100)) + "元");
+                        + order.getAmount().divide(new BigDecimal(100),
+                                2,
+                                BigDecimal.ROUND_HALF_UP) + "元");
             }
-            else if (order.getStatus() == 2)
+            else if (order.getOrderType() == 2)
             {
                 fd.setType(2);//投标
-                fd.setStatus(0);//
+                fd.setStatus(1);//
                 fd.setRemark("提现"
-                        + order.getAmount().divide(new BigDecimal(100)) + "元");
+                        + order.getAmount().divide(new BigDecimal(100),
+                                2,
+                                BigDecimal.ROUND_HALF_UP) + "元");
             }
             
             fundDetailDao.addFundDetail(fd);//插入总金额明细
-            if (order.getStatus() == 2)
+            if (order.getOrderType() == 2)
             {
                 fd.setDetailId(null);
                 BigDecimal fee = new BigDecimal(0.25).divide(new BigDecimal(100),
-                        2,
+                        6,
                         BigDecimal.ROUND_HALF_UP);
                 fd.setAmount(order.getAmount().multiply(fee));
-                fd.setType(5);
-                fd.setRemark("充值手续费"
-                        + order.getAmount().divide(new BigDecimal(100)) + "元");
+                fd.setType(12);
+                fd.setRemark("提现手续费"
+                        + order.getAmount()
+                                .multiply(fee)
+                                .divide(new BigDecimal(100),
+                                        2,
+                                        BigDecimal.ROUND_HALF_UP) + "元");
                 fundDetailDao.addFundDetail(fd);//插入手续费
             }
             
@@ -295,67 +302,67 @@ public class FundDetailServiceImpl implements IFundDetailService
                         + repayPlan.getSequence() + "期利息");
                 list.add(fd2);//融资利息
                 //获取到所有的投资人
-                List<InvestOrderEntity> investOrser = investOrderDao.queryInvestorderList(debt.getDebtId());
-                for (InvestOrderEntity investOrderEntity : investOrser)
-                {
-                    //投资人账户
-                    AccountEntity InvestAccount = accountDao.getAcoountByCustomerId(debt.getCustomerId());
-                    //收益明细
-                    QueryCondition<ProfitListEntity> condition = new QueryCondition<ProfitListEntity>();
-                    condition.addCondition("orderId",
-                            investOrderEntity.getOrderId());//会员id
-                    List<ProfitListEntity> profit = profitListDao.query(condition);
-                    
-                    for (ProfitListEntity profitListEntity : profit)
-                    {
-                        if (profitListEntity.getSequence() == repayPlan.getSequence())
-                        {
-                            FundDetailEntity investDetail = new FundDetailEntity();
-                            investDetail.setCustomerId(investOrderEntity.getCustomerId());//用户ID
-                            investDetail.setAccountId(InvestAccount.getAccountId());
-                            investDetail.setOrderId(investOrderEntity.getOrderId());
-                            investDetail.setAmount(profitListEntity.getMonthCapital());//月本金
-                            investDetail.setBalance(InvestAccount.getBalance());
-                            investDetail.setFrozenAmount(InvestAccount.getFozenAmount());
-                            investDetail.setDueAmount(InvestAccount.getDueAmount());
-                            investDetail.setCreateTime(new Date());
-                            investDetail.setStatus(1);//
-                            investDetail.setType(9);//投资本金
-                            investDetail.setRemark("被偿还投资" + debt.getTitle() + "第"
-                                    + profitListEntity.getSequence() + "期本金");
-                            list.add(investDetail);//投资本金
-                            FundDetailEntity investDetail2 = new FundDetailEntity();
-                            investDetail2.setCustomerId(investOrderEntity.getCustomerId());//用户ID
-                            investDetail2.setAccountId(InvestAccount.getAccountId());
-                            investDetail2.setOrderId(investOrderEntity.getOrderId());
-                            investDetail2.setAmount(profitListEntity.getMonthProfit());//月利息
-                            investDetail2.setBalance(InvestAccount.getBalance());
-                            investDetail2.setFrozenAmount(InvestAccount.getFozenAmount());
-                            investDetail2.setDueAmount(InvestAccount.getDueAmount());
-                            investDetail2.setCreateTime(new Date());
-                            investDetail2.setStatus(1);//
-                            investDetail2.setType(10);//投资利息
-                            investDetail2.setRemark("被偿还投资" + debt.getTitle()
-                                    + "第" + profitListEntity.getSequence()
-                                    + "期利息");
-                            FundDetailEntity investDetail3 = new FundDetailEntity();
-                            investDetail3.setCustomerId(investOrderEntity.getCustomerId());//用户ID
-                            investDetail3.setAccountId(InvestAccount.getAccountId());
-                            investDetail3.setOrderId(investOrderEntity.getOrderId());
-                            investDetail3.setAmount(profitListEntity.getFee());//月利息手续费
-                            investDetail3.setBalance(InvestAccount.getBalance());
-                            investDetail3.setFrozenAmount(InvestAccount.getFozenAmount());
-                            investDetail3.setDueAmount(InvestAccount.getDueAmount());
-                            investDetail3.setCreateTime(new Date());
-                            investDetail3.setStatus(0);//
-                            investDetail3.setType(11);//收益管理费
-                            investDetail3.setRemark("投资" + debt.getTitle()
-                                    + "第" + profitListEntity.getSequence()
-                                    + "期利息手续费");
-                            list.add(investDetail3);//投资利息 
-                        }
-                    }
-                }
+//                List<InvestOrderEntity> investOrser = investOrderDao.queryInvestorderList(debt.getDebtId());
+//                for (InvestOrderEntity investOrderEntity : investOrser)
+//                {
+//                    //投资人账户
+//                    AccountEntity InvestAccount = accountDao.getAcoountByCustomerId(investOrderEntity.getCustomerId());
+//                    //收益明细
+//                    QueryCondition<ProfitListEntity> condition = new QueryCondition<ProfitListEntity>();
+//                    condition.addCondition("orderId",
+//                            investOrderEntity.getOrderId());//会员id
+//                    List<ProfitListEntity> profit = profitListDao.query(condition);
+//                    
+//                    for (ProfitListEntity profitListEntity : profit)
+//                    {
+//                        if (profitListEntity.getSequence() == repayPlan.getSequence())
+//                        {
+//                            FundDetailEntity investDetail = new FundDetailEntity();
+//                            investDetail.setCustomerId(investOrderEntity.getCustomerId());//用户ID
+//                            investDetail.setAccountId(InvestAccount.getAccountId());
+//                            investDetail.setOrderId(investOrderEntity.getOrderId());
+//                            investDetail.setAmount(profitListEntity.getMonthCapital());//月本金
+//                            investDetail.setBalance(InvestAccount.getBalance());
+//                            investDetail.setFrozenAmount(InvestAccount.getFozenAmount());
+//                            investDetail.setDueAmount(InvestAccount.getDueAmount());
+//                            investDetail.setCreateTime(new Date());
+//                            investDetail.setStatus(1);//
+//                            investDetail.setType(9);//投资本金
+//                            investDetail.setRemark("被偿还投资" + debt.getTitle() + "第"
+//                                    + profitListEntity.getSequence() + "期本金");
+//                            list.add(investDetail);//投资本金
+//                            FundDetailEntity investDetail2 = new FundDetailEntity();
+//                            investDetail2.setCustomerId(investOrderEntity.getCustomerId());//用户ID
+//                            investDetail2.setAccountId(InvestAccount.getAccountId());
+//                            investDetail2.setOrderId(investOrderEntity.getOrderId());
+//                            investDetail2.setAmount(profitListEntity.getMonthProfit());//月利息
+//                            investDetail2.setBalance(InvestAccount.getBalance());
+//                            investDetail2.setFrozenAmount(InvestAccount.getFozenAmount());
+//                            investDetail2.setDueAmount(InvestAccount.getDueAmount());
+//                            investDetail2.setCreateTime(new Date());
+//                            investDetail2.setStatus(1);//
+//                            investDetail2.setType(10);//投资利息
+//                            investDetail2.setRemark("被偿还投资" + debt.getTitle()
+//                                    + "第" + profitListEntity.getSequence()
+//                                    + "期利息");
+//                            FundDetailEntity investDetail3 = new FundDetailEntity();
+//                            investDetail3.setCustomerId(investOrderEntity.getCustomerId());//用户ID
+//                            investDetail3.setAccountId(InvestAccount.getAccountId());
+//                            investDetail3.setOrderId(investOrderEntity.getOrderId());
+//                            investDetail3.setAmount(profitListEntity.getFee());//月利息手续费
+//                            investDetail3.setBalance(InvestAccount.getBalance());
+//                            investDetail3.setFrozenAmount(InvestAccount.getFozenAmount());
+//                            investDetail3.setDueAmount(InvestAccount.getDueAmount());
+//                            investDetail3.setCreateTime(new Date());
+//                            investDetail3.setStatus(0);//
+//                            investDetail3.setType(11);//收益管理费
+//                            investDetail3.setRemark("投资" + debt.getTitle()
+//                                    + "第" + profitListEntity.getSequence()
+//                                    + "期利息手续费");
+//                            list.add(investDetail3);//投资利息 
+//                        }
+//                    }
+//                }
             }
             
             fundDetailDao.addFundDetailList(list);//插入总金额明细

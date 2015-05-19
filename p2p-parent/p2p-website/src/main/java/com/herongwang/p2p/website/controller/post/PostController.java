@@ -140,7 +140,6 @@ public class PostController extends BaseController
             {
                 AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
                 account.setFozenAmount(account.getFozenAmount().add(m));
-                accountService.updateAccount(account);//更新冻结金额
                 //生成提现订单
                 OrdersEntity orders = new OrdersEntity();
                 orders.setCustomerId(user.getCustomerId());
