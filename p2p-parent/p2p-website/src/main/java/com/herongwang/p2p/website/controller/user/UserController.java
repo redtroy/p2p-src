@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.service.account.IAccountService;
 import com.herongwang.p2p.service.users.IUserService;
 import com.herongwang.p2p.website.controller.BaseController;
+import com.herongwang.p2p.website.login.SupervisorShiroRedisCache;
 import com.sxj.cache.manager.CacheLevel;
 import com.sxj.cache.manager.HierarchicalCacheManager;
 import com.sxj.redis.core.RAtomicLong;
@@ -94,6 +96,10 @@ public class UserController extends BaseController
             UsernamePasswordToken token = new UsernamePasswordToken(
                     user.getEmail(), password);
             currentUser.login(token);
+            PrincipalCollection principals = SecurityUtils.getSubject()
+                    .getPrincipals();
+            String userNo = info.getCustomerNo();
+            SupervisorShiroRedisCache.addToMap(userNo, principals);
         }
         catch (Exception e)
         {
