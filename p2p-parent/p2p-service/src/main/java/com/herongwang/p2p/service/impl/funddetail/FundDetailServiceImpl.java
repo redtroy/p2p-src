@@ -128,32 +128,32 @@ public class FundDetailServiceImpl implements IFundDetailService
             fd.setDueAmount(account.getDueAmount());
             fd.setCreateTime(new Date());
             fd.setStatus(0);//支出
-            fd.setType(4);//投标
-            fd.setRemark("投资" + debt.getCapitalUses() + ",资金冻结");
+            fd.setType(3);//投标
+            fd.setRemark("投资" + debt.getTitle() + ",资金冻结");
             fundDetailDao.addFundDetail(fd);//插入总金额明细
             
-            //获取到当前会员折扣
-            List<DiscountEntity> list = discountService.getDiscountByCustomerId(io.getCustomerId());
-            //重新设置对象
-            if (!CollectionUtils.isEmpty(list))
-            {
-                for (DiscountEntity discountEntity : list)
-                {
-                    if (discountEntity.getType() == 0
-                            && discountEntity.getFee() != 0)
-                    {
-                        fd.setDetailId(null);
-                        BigDecimal fee = new BigDecimal(discountEntity.getFee()).divide(new BigDecimal(
-                                100),
-                                2,
-                                BigDecimal.ROUND_HALF_UP);
-                        fd.setAmount(io.getAmount().multiply(fee));
-                        fd.setType(5);
-                        fd.setRemark("投资" + debt.getCapitalUses() + ",手续费冻结");
-                        fundDetailDao.addFundDetail(fd);//插入手续费
-                    }
-                }
-            }
+            //            //获取到当前会员折扣
+            //            List<DiscountEntity> list = discountService.getDiscountByCustomerId(io.getCustomerId());
+            //            //重新设置对象
+            //            if (!CollectionUtils.isEmpty(list))
+            //            {
+            //                for (DiscountEntity discountEntity : list)
+            //                {
+            //                    if (discountEntity.getType() == 0
+            //                            && discountEntity.getFee() != 0)
+            //                    {
+            //                        fd.setDetailId(null);
+            //                        BigDecimal fee = new BigDecimal(discountEntity.getFee()).divide(new BigDecimal(
+            //                                100),
+            //                                2,
+            //                                BigDecimal.ROUND_HALF_UP);
+            //                        fd.setAmount(io.getAmount().multiply(fee));
+            //                        fd.setType(5);
+            //                        fd.setRemark("投资" + debt.getCapitalUses() + ",手续费冻结");
+            //                        fundDetailDao.addFundDetail(fd);//插入手续费
+            //                    }
+            //                }
+            //            }
             
         }
         catch (ServiceException e)
@@ -187,19 +187,34 @@ public class FundDetailServiceImpl implements IFundDetailService
             fd.setFrozenAmount(account.getFozenAmount());
             fd.setDueAmount(account.getDueAmount());
             fd.setCreateTime(new Date());
-            fd.setStatus(1);//
             if (order.getStatus() == 1)
             {
                 fd.setType(1);//投标
-                fd.setRemark("充值" + order.getAmount() + "成功");
+                fd.setStatus(1);//
+                fd.setRemark("充值"
+                        + order.getAmount().divide(new BigDecimal(100)) + "元");
             }
             else if (order.getStatus() == 2)
             {
-                fd.setType(1);//投标
-                fd.setRemark("提现" + order.getAmount() + "成功");
+                fd.setType(2);//投标
+                fd.setStatus(0);//
+                fd.setRemark("提现"
+                        + order.getAmount().divide(new BigDecimal(100)) + "元");
             }
             
             fundDetailDao.addFundDetail(fd);//插入总金额明细
+            if (order.getStatus() == 2)
+            {
+                fd.setDetailId(null);
+                BigDecimal fee = new BigDecimal(0.25).divide(new BigDecimal(100),
+                        2,
+                        BigDecimal.ROUND_HALF_UP);
+                fd.setAmount(order.getAmount().multiply(fee));
+                fd.setType(5);
+                fd.setRemark("充值手续费"
+                        + order.getAmount().divide(new BigDecimal(100)) + "元");
+                fundDetailDao.addFundDetail(fd);//插入手续费
+            }
             
             //获取到当前会员折扣
             //            List<DiscountEntity> list = discountService.getDiscountByCustomerId(io.getCustomerId());
@@ -260,8 +275,8 @@ public class FundDetailServiceImpl implements IFundDetailService
                 fd.setDueAmount(account.getDueAmount());
                 fd.setCreateTime(new Date());
                 fd.setStatus(0);//
-                fd.setType(1);//投标
-                fd.setRemark("还款" + debt.getTitle() + "融资第"
+                fd.setType(7);//偿还本金
+                fd.setRemark("偿还" + debt.getTitle() + "融资第"
                         + repayPlan.getSequence() + "期本金");
                 list.add(fd);//融资本金
                 FundDetailEntity fd2 = new FundDetailEntity();
@@ -275,8 +290,8 @@ public class FundDetailServiceImpl implements IFundDetailService
                 fd2.setDueAmount(account.getDueAmount());
                 fd2.setCreateTime(new Date());
                 fd2.setStatus(0);//
-                fd2.setType(1);//投标
-                fd2.setRemark("还款" + debt.getTitle() + "融资第"
+                fd2.setType(8);//偿还利息
+                fd2.setRemark("偿还" + debt.getTitle() + "融资第"
                         + repayPlan.getSequence() + "期利息");
                 list.add(fd2);//融资利息
                 //获取到所有的投资人
@@ -305,8 +320,8 @@ public class FundDetailServiceImpl implements IFundDetailService
                             investDetail.setDueAmount(InvestAccount.getDueAmount());
                             investDetail.setCreateTime(new Date());
                             investDetail.setStatus(1);//
-                            investDetail.setType(1);//投标
-                            investDetail.setRemark("投资" + debt.getTitle() + "第"
+                            investDetail.setType(9);//投资本金
+                            investDetail.setRemark("被偿还投资" + debt.getTitle() + "第"
                                     + profitListEntity.getSequence() + "期本金");
                             list.add(investDetail);//投资本金
                             FundDetailEntity investDetail2 = new FundDetailEntity();
@@ -319,8 +334,8 @@ public class FundDetailServiceImpl implements IFundDetailService
                             investDetail2.setDueAmount(InvestAccount.getDueAmount());
                             investDetail2.setCreateTime(new Date());
                             investDetail2.setStatus(1);//
-                            investDetail2.setType(1);//投标
-                            investDetail2.setRemark("投资" + debt.getTitle()
+                            investDetail2.setType(10);//投资利息
+                            investDetail2.setRemark("被偿还投资" + debt.getTitle()
                                     + "第" + profitListEntity.getSequence()
                                     + "期利息");
                             FundDetailEntity investDetail3 = new FundDetailEntity();
@@ -333,7 +348,7 @@ public class FundDetailServiceImpl implements IFundDetailService
                             investDetail3.setDueAmount(InvestAccount.getDueAmount());
                             investDetail3.setCreateTime(new Date());
                             investDetail3.setStatus(0);//
-                            investDetail3.setType(1);//投标
+                            investDetail3.setType(11);//收益管理费
                             investDetail3.setRemark("投资" + debt.getTitle()
                                     + "第" + profitListEntity.getSequence()
                                     + "期利息手续费");

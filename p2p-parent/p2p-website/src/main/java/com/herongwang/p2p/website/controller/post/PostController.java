@@ -309,7 +309,7 @@ public class PostController extends BaseController
             }
             finally
             {
-                return "site/post/resultsIn";
+                return "site/post/resultsin";
             }
         }
         else
@@ -317,7 +317,7 @@ public class PostController extends BaseController
             map.put("amount", this.divide(order.getAmount()));
             map.put("orderId", order.getOrderId());
         }
-        return "site/post/rechargeIn";
+        return "site/post/rechargein";
     }
     
     @RequestMapping("/rechargeInList")
@@ -369,7 +369,7 @@ public class PostController extends BaseController
             SxjLogger.error(e.getMessage(), e, this.getClass());
         }
         
-        return "site/post/rechargeIn-list";
+        return "site/post/rechargein-list";
     }
     
     @SuppressWarnings("finally")
@@ -456,7 +456,7 @@ public class PostController extends BaseController
         }
         finally
         {
-            return "site/post/resultsIn";
+            return "site/post/resultsin";
         }
     }
     

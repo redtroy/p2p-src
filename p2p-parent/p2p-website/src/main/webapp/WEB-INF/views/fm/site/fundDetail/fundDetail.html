@@ -7,16 +7,16 @@
 <script src="${b.staticPath}js/jquery1.8.js"></script>
 <@b.pageScript/>
 <script>
-function query(page) {
-// 		var params = $("#search_form").serialize();
-// 		if (page != undefined) {
-// 			params = params + "&currentPage=" + page;
-// 		}
-	var params="";
-	if(page!=undefined){
-		params=params+"&currentPage="+page;
-	}
-		$.post("queryFundDetail.htm",params, function(data) {
+	function query(page) {
+		// 		var params = $("#search_form").serialize();
+		// 		if (page != undefined) {
+		// 			params = params + "&currentPage=" + page;
+		// 		}
+		var params = "";
+		if (page != undefined) {
+			params = params + "&currentPage=" + page;
+		}
+		$.post("queryFundDetail.htm", params, function(data) {
 			var res = $(data).find("#res_table");
 			var pager = $(data).find("#pager");
 			$("#res_table").empty();
@@ -42,63 +42,72 @@ function query(page) {
 					<div class="mainBox fontYH">
 						<div class="capInfo mb10 ly-clearFix">
 							<div class="item">
-								<label>账户信息</label> <span class="color-green">可用余额：<#if account.balance??>${account.balance/100}<#else>0</#if>元</span><span
-									class="color-red">冻结金额：<#if account.fozenAmount??>${account.fozenAmount/100}<#else>0</#if>元</span><span class="color-blue">待收金额：<#if account.dueAmount??>${account.dueAmount/100}<#else>0</#if>元</span>
-									<span><a href="${basePath}post/recharge.htm" class="button button-orange">充值</a></span><span><a href="${basePath}post/withdraw.htm" class="button button-green">提现</a></span></div>
+								<label>账户信息</label> <span class="color-green">可用余额：<#if
+									account.balance??>${account.balance/100}<#else>0</#if>元</span><span
+									class="color-red">冻结金额：<#if
+									account.fozenAmount??>${account.fozenAmount/100}<#else>0</#if>元</span><span
+									class="color-blue">待收金额：<#if
+									account.dueAmount??>${account.dueAmount/100}<#else>0</#if>元</span> <span><a
+									href="${basePath}post/recharge.htm"
+									class="button button-orange">充值</a></span><span><a
+									href="${basePath}post/withdraw.htm" class="button button-green">提现</a></span>
 							</div>
 						</div>
-						<table border="0" cellpadding="0" cellspacing="0" id="res_table"
-							class="table tabList tableCapital">
-							<col width="15%" />
-							<col width="15%" />
-							<col width="10%" />
-							<col width="10%" />
-							<col width="10%" />
-							<col width="10%" />
-							<col width="20%" />
-							<tr>
-								<th>发生日期</th>
-								<th>类型</th>
-								<th>影响金额</th>
-								<th>可用余额</th>
-								<th>冻结金额</th>
-								<th>待收金额</th>
-								<th scope="col" class="tdHeard" style="width: 80px;">说明</th>
-							</tr>
-							<#if fundList?exists && (fundList?size>0)> <#list fundList as fund>
-							<!-- 1：充值；2：提现；3：还款；4：投标冻结。5 手续费冻结 6:投标解冻  7:手续费解冻 
-								8:融资 9融资手续费
-							-->
-							<tr>
-								<td>${fund.createTime?string("yyyy-MM-dd HH:mm:ss")}</td>
-								<td><#if fund.type==1>充值<#elseif fund.type==2 >提现<#elseif
-									fund.type==3>还款<#elseif fund.type==4>投标冻结<#elseif fund.type==5>
-									手续费冻结<#elseif fund.type==6>投标解冻<#elseif fund.type==7>手续费解冻<#elseif fund.type==8>融资<#elseif fund.type==9>融资手续费<#else></#if></td> 
-									<#if
-								fund.status==0>
-								<td class="color-red">-${fund.amount/100}</td><#else>
-								<td class="color-green">${fund.amount/100}</td> </#if>
-								<td>${fund.balance/100}</td>
-								<td>${fund.frozenAmount/100}</td>
-								<td class="color-purple">${fund.dueAmount/100}</td>
-								<td class="tl">${fund.remark}</td>
-							</tr>
-							<tr>
-								<td colspan="7" class="line"></td>
-							</tr>
-							</#list>
-								<#else>
-								<tr>
-								<td colspan="7" align="center">暂无数据</td>
-							</tr>
-							 </#if>
-							
-						</table>
-						<@b.pager/>
 					</div>
+					<table border="0" cellpadding="0" cellspacing="0" id="res_table"
+						class="table tabList tableCapital">
+						<col width="15%" />
+						<col width="15%" />
+						<col width="10%" />
+						<col width="10%" />
+						<col width="10%" />
+						<col width="10%" />
+						<col width="20%" />
+						<tr>
+							<th>发生日期</th>
+							<th>类型</th>
+							<th>影响金额</th>
+							<th>可用余额</th>
+							<th>冻结金额</th>
+							<th>待收金额</th>
+							<th scope="col" class="tdHeard" style="width: 80px;">说明</th>
+						</tr>
+						<#if fundList?exists && (fundList?size>0)> <#list fundList as
+						fund>
+						<!-- 
+						1.	充值 2.	提现 3.	投资冻结 4.	投资解冻 5.	借款入账 6.	借款管理费 7.	偿还本金 8.	偿还利息 9.	投资本金
+						10.	投资收益 11.	投资收益管理费
+							-->
+						<tr>
+							<td>${fund.createTime?string("yyyy-MM-dd HH:mm:ss")}</td>
+							<td><#if fund.type==1> 充值 <#elseif fund.type==2 > 提现
+								<#elseif fund.type==3 > 投资冻结 <#elseif fund.type==4 > 投资解冻
+								<#elseif fund.type==5 > 借款入账 <#elseif fund.type==6 > 借款管理费
+								<#elseif fund.type==7 > 偿还本金 <#elseif fund.type==8 > 偿还利息
+								<#elseif fund.type==9 > 投资本金 <#elseif fund.type==10 > 投资收益
+								<#else> 投资收益管理费 </#if></td> <#if fund.status==0>
+							<td class="color-red">-${fund.amount/100}</td><#else>
+							<td class="color-green">${fund.amount/100}</td> </#if>
+							<td>${fund.balance/100}</td>
+							<td>${fund.frozenAmount/100}</td>
+							<td class="color-purple">${fund.dueAmount/100}</td>
+							<td class="tl">${fund.remark}</td>
+						</tr>
+						<tr>
+							<td colspan="7" class="line"></td>
+						</tr>
+						</#list> <#else>
+						<tr>
+							<td colspan="7" align="center">暂无数据</td>
+						</tr>
+						</#if>
+
+					</table>
+					<@b.pager/>
 				</div>
 			</div>
 		</div>
+	</div>
 	</div>
 	<@b.footer />
 </body>

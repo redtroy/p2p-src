@@ -14,9 +14,8 @@ import com.herongwang.p2p.dao.repayPlan.IRepayPlanDao;
 import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
-import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.entity.repayPlan.RepayPlanEntity;
-import com.herongwang.p2p.model.profit.ProfitModel;
+import com.herongwang.p2p.service.funddetail.IFundDetailService;
 import com.herongwang.p2p.service.repayplan.IRepayPlanService;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.logger.SxjLogger;
@@ -35,6 +34,9 @@ public class RepayPlanServiceImpl implements IRepayPlanService
     
     @Autowired
     IFinancingOrdersDao financingOrdersDao;
+    
+    @Autowired
+    IFundDetailService fundDetailService;
     
     @Autowired
     IDebtDao debtDao;
@@ -130,6 +132,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                     db.setStatus(5);
                     debtDao.updateDebt(db);
                 }
+                fundDetailService.repayPlanFundDetail(planlist);//还款资金明细
                 return "ok";
             }
         }
@@ -193,10 +196,9 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                         db.setStatus(5);
                         debtDao.updateDebt(db);
                     }
-                    //生成还款资金明细
-                    //更新对应账单
                 }
             }
+            fundDetailService.repayPlanFundDetail(planlist);//还款资金明细
             return "ok";
         }
         catch (ServiceException e)

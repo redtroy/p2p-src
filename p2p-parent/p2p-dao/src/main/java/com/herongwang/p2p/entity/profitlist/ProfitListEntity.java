@@ -92,6 +92,7 @@ public class ProfitListEntity extends Pagable implements Serializable
     /**
      * 手续费
      */
+    @Column(name = "fee")
     private BigDecimal fee;
     
     public BigDecimal getFee()

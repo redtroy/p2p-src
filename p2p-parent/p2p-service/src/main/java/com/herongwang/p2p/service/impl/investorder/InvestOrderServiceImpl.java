@@ -118,10 +118,10 @@ public class InvestOrderServiceImpl implements IInvestOrderService
                 {
                     investOrderDao.updateInvestOrder(io);
                     //更新冻结金额
-                    AccountEntity account = accountDao.getAcoountByCustomerId(newIo.getCustomerId());
-                    account.setFozenAmount(account.getFozenAmount()
-                            .add(newIo.getAmount()));
-                    accountDao.updateAccount(account);
+                    //                    AccountEntity account = accountDao.getAcoountByCustomerId(newIo.getCustomerId());
+                    //                    account.setFozenAmount(account.getFozenAmount()
+                    //                            .add(newIo.getAmount()));
+                    //                    accountDao.updateAccount(account);
                     //更新融资单已融资金额 
                     DebtEntity debt = debtDao.getDebtFor(newIo.getDebtId());
                     //是否满标
