@@ -244,10 +244,8 @@ public class DebtServiceImpl implements IDebtService
                 //更新账户
                 account1.setFozenAmount(account1.getFozenAmount()
                         .subtract(investList.get(i).getAmount()));//账户冻结资金减去账单资金
-                ProfitModel prift2 = profitService.calculatingProfit(debtId,
-                        investList.get(i).getAmount());//获取利息，总额
                 account1.setDueAmount(account1.getDueAmount()
-                        .add(prift2.getAmount()));//更新代收金额
+                        .add(investList.get(i).getDueTotalAmount()));//更新代收金额
                 accountDao.updateAccount(account1);
                 //生成明细
                 fundDetail.setCustomerId(investList.get(i).getCustomerId());//用户ID
