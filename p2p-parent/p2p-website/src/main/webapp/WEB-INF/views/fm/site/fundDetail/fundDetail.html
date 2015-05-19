@@ -76,7 +76,7 @@
 						fund>
 						<!-- 
 						1.	充值 2.	提现 3.	投资冻结 4.	投资解冻 5.	借款入账 6.	借款管理费 7.	偿还本金 8.	偿还利息 9.	投资本金
-						10.	投资收益 11.	投资收益管理费
+						10.	投资收益 11.	投资收益管理费12提现手续费
 							-->
 						<tr>
 							<td>${fund.createTime?string("yyyy-MM-dd HH:mm:ss")}</td>
@@ -85,7 +85,8 @@
 								<#elseif fund.type==5 > 借款入账 <#elseif fund.type==6 > 借款管理费
 								<#elseif fund.type==7 > 偿还本金 <#elseif fund.type==8 > 偿还利息
 								<#elseif fund.type==9 > 投资本金 <#elseif fund.type==10 > 投资收益
-								<#else> 投资收益管理费 </#if></td> <#if fund.status==0>
+								<#elseif fund.type==11 > 投资收益管理费 
+								<#else>提现手续费</#if></td> <#if fund.status==0>
 							<td class="color-red">-${fund.amount/100}</td><#else>
 							<td class="color-green">${fund.amount/100}</td> </#if>
 							<td>${fund.balance/100}</td>
