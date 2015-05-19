@@ -169,8 +169,12 @@ public class DebtController extends BaseController
                 DebtEntity info = debtService.getDebtEntity(id);
                 if (info.getStatus() == 0)
                 {
+                    tender.setDebtId(id);
                     debtService.updateDebt(tender);
                     order.setDebtId(tender.getDebtId());
+                    FinancingOrdersEntity o = financingOrdersService.getOrderByDebtId(id);
+                    order.setOrderId(o.getOrderId());
+                    order.setStatus(1);
                     financingOrdersService.updateOrder(order);
                     map.put("isOK", "ok");
                 }

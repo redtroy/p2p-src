@@ -439,7 +439,7 @@ public class PostServiceImpl implements IPostService
         deal.setType(incomeStatus);
         deal.setCreateTime(new Date());
         deal.setStatus(1);
-        if (incomeStatus == 1 || incomeStatus == 3)
+        if (incomeStatus == 1)//充值
         {
             entity.setBalance(sr);
             deal.setAmount(amount);
@@ -447,8 +447,11 @@ public class PostServiceImpl implements IPostService
             deal.setDueAmount(new BigDecimal(0));
             deal.setFrozenAmount(new BigDecimal(0));
             accountService.updateAccount(entity);
+            deal.setStatus(1);
+            deal.setRemark("充值" + amount.divide(new BigDecimal(100)) + "元成功！");
+            fundDetailService.addFundDetail(deal);
         }
-        else if (incomeStatus == 2 || incomeStatus == 4)
+        else if (incomeStatus == 2)//提现
         {
             entity.setBalance(zc);
             deal.setAmount(amount);
@@ -464,19 +467,5 @@ public class PostServiceImpl implements IPostService
         {
             return;
         }
-        /*if (incomeStatus == 2)
-        {
-            InvestOrderEntity order = investOrderService.getInvestOrderEntity(orderId);
-            DebtEntity debt = debtService.getDebtEntity(order.getDebtId());
-            deal.setRemark("投资" + debt.getTitle() + "成功！");
-            
-        }
-        else */if (incomeStatus == 1)
-        {
-            deal.setStatus(1);
-            deal.setRemark("充值" + amount.divide(new BigDecimal(100)) + "元成功！");
-            fundDetailService.addFundDetail(deal);
-        }
-        
     }
 }

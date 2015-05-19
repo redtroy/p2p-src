@@ -87,7 +87,7 @@ public class DealDetailController extends BaseController
             {
                 entity.setPagable(true);
             }
-            entity.setOrderType(4);
+            entity.setOrderType(2);
             //查询提现记录
             List<OrdersEntity> list = ordersService.queryOrdersList(entity);
             map.put("list", list);
@@ -166,19 +166,7 @@ public class DealDetailController extends BaseController
                 account.setFozenAmount(account.getFozenAmount()
                         .subtract(order.getAmount()));
                 accountService.updateAccount(account);//更新冻结金额
-                FundDetailEntity deal = new FundDetailEntity();
-                deal.setCustomerId(user.getCustomerId());
-                deal.setAccountId(account.getAccountId());
-                deal.setOrderId(orderId);
-                deal.setType(4);
-                deal.setCreateTime(new Date());
-                deal.setStatus(1);
-                deal.setAmount(order.getAmount());
-                deal.setBalance(account.getBalance());
-                deal.setDueAmount(account.getDebtAmount());
-                deal.setFrozenAmount(account.getFozenAmount());
-                deal.setRemark("提现审核通过，扣除相应的冻结金额。");
-                fundDetailService.addFundDetail(deal);//生成资金明细
+                fundDetailService.orderFundDetail(order);//生成资金明细
                 map.put("isOK", "ok");
             }
             catch (Exception e)

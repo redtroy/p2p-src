@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.herongwang.p2p.entity.account.AccountEntity;
-import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.entity.orders.OrdersEntity;
@@ -73,7 +73,7 @@ public class PostController extends BaseController
         OrdersEntity query = new OrdersEntity();
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
         query.setCustomerId(user.getCustomerId());
-        query.setOrderType(4);
+        query.setOrderType(2);
         query.setStatus(0);
         int num = ordersService.queryOrdersList(query).size();
         map.put("type", num);
@@ -82,8 +82,8 @@ public class PostController extends BaseController
     }
     
     @RequestMapping("/rechargeList")
-    public String rechargeList(ModelMap map, OrderModel order)
-            throws WebException
+    public String rechargeList(HttpServletRequest request, ModelMap map,
+            OrderModel order) throws WebException
     {
         BigDecimal m = this.multiply(new BigDecimal(order.getOrderAmount()));
         UsersEntity user = this.getUsersEntity();
@@ -95,10 +95,12 @@ public class PostController extends BaseController
         try
         {
             ModelMap map1 = postService.Post(m, user);
-            
+            String basePath = this.getBasePath(request);
             map.put("serverip", map1.get("serverip"));
-            map.put("pickupUrl", map1.get("pickupUrl"));
-            map.put("receiveUrl", map1.get("receiveUrl"));
+            /* map.put("pickupUrl", map1.get("pickupUrl"));
+             map.put("receiveUrl", map1.get("receiveUrl"));*/
+            map.put("pickupUrl", basePath + "post/pickup.htm");
+            map.put("receiveUrl", basePath + "post/receive.htm");
             map.put("merchantId", map1.get("merchantId"));
             map.put("orderNo", map1.get("orderNo"));
             map.put("orderAmount", map1.get("orderAmount"));
@@ -139,19 +141,19 @@ public class PostController extends BaseController
                 AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
                 account.setFozenAmount(account.getFozenAmount().add(m));
                 accountService.updateAccount(account);//更新冻结金额
-                //生成充值订单
+                //生成提现订单
                 OrdersEntity orders = new OrdersEntity();
                 orders.setCustomerId(user.getCustomerId());
                 orders.setAmount(m);
                 orders.setCreateTime(new Date());
                 orders.setStatus(0);
-                orders.setOrderType(4);
+                orders.setOrderType(2);
                 ordersService.addOrders(orders);
                 FundDetailEntity deal = new FundDetailEntity();
                 deal.setCustomerId(user.getCustomerId());
                 deal.setAccountId(account.getAccountId());
                 deal.setOrderId(orders.getOrderId());
-                deal.setType(4);
+                deal.setType(2);
                 deal.setCreateTime(new Date());
                 deal.setStatus(1);
                 deal.setAmount(m);
@@ -279,26 +281,18 @@ public class PostController extends BaseController
                 order.getOrderId());
         if (flag == 1)
         {
-            
-            AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
-            FundDetailEntity deal = new FundDetailEntity();
-            deal.setCustomerId(user.getCustomerId());
-            deal.setAccountId(account.getAccountId());
-            deal.setOrderId(order.getOrderId());
-            deal.setType(2);
-            deal.setCreateTime(new Date());
-            deal.setStatus(1);
-            deal.setAmount(order.getAmount());
-            deal.setBalance(account.getBalance());
-            deal.setDueAmount(new BigDecimal(0));
-            deal.setFrozenAmount(order.getAmount());
-            InvestOrderEntity ivorder = investOrderService.getInvestOrderEntity(order.getOrderId());
-            DebtEntity debt = debtService.getDebtEntity(ivorder.getDebtId());
-            deal.setRemark("投资" + debt.getTitle() + "成功！");
-            fundDetailService.addFundDetail(deal);
-            //支付成功
             try
             {
+                //支付成功
+                InvestOrderEntity io = new InvestOrderEntity();
+                io.setOrderId(order.getOrderId());
+                io.setAmount(order.getAmount());
+                io.setStatus(1);
+                io.setChannel(2);
+                io.setCreateTime(new Date());
+                io.setArriveTime(new Date());
+                investOrderService.finishOrder(io);
+                AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
                 map.put("title", "投资成功");
                 map.put("orderName", "投资");
                 map.put("cz", 0);
@@ -327,8 +321,8 @@ public class PostController extends BaseController
     }
     
     @RequestMapping("/rechargeInList")
-    public String rechargeInList(ModelMap map, InvestOrderEntity order)
-            throws WebException
+    public String rechargeInList(HttpServletRequest request, ModelMap map,
+            InvestOrderEntity order) throws WebException
     {
         BigDecimal m = order.getAmount().multiply(new BigDecimal(100));//投标订单金额
         BigDecimal m1 = order.getTotalFee().multiply(new BigDecimal(100));//充值金额
@@ -341,15 +335,19 @@ public class PostController extends BaseController
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
         try
         {
+            String basePath = this.getBasePath(request);
             ModelMap map1 = postService.Post(m1, user);
             
             String pickupUrl = map1.get("pickupUrl").toString();
             String receiveUrl = map1.get("receiveUrl").toString();
+            
+            map.put("pickupUrl", basePath + "post/pickupin.htm");
+            map.put("receiveUrl", basePath + "post/receivein.htm");
             map.put("serverip", map1.get("serverip"));
-            map.put("pickupUrl", pickupUrl.substring(0, pickupUrl.length() - 4)
+            /*map.put("pickupUrl", pickupUrl.substring(0, pickupUrl.length() - 4)
                     + "in.htm");
             map.put("receiveUrl",
-                    receiveUrl.substring(0, receiveUrl.length() - 4) + "in.htm");
+                    receiveUrl.substring(0, receiveUrl.length() - 4) + "in.htm");*/
             map.put("merchantId", map1.get("merchantId"));
             map.put("orderNo", map1.get("orderNo"));
             map.put("orderAmount", map1.get("orderAmount"));
