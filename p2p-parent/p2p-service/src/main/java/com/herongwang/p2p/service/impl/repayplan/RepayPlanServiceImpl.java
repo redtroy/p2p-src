@@ -131,8 +131,8 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                     db.setDebtId(debtId);
                     db.setStatus(5);
                     debtDao.updateDebt(db);
-                    fundDetailService.repayPlanFundDetail(planlist);//还款资金明细
                 }
+                fundDetailService.repayPlanFundDetail(planlist);//还款资金明细
                 return "ok";
             }
         }
