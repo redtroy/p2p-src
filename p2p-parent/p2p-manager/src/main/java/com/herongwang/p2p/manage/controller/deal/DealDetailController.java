@@ -1,5 +1,6 @@
 package com.herongwang.p2p.manage.controller.deal;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -161,11 +162,16 @@ public class DealDetailController extends BaseController
                 order.setStatus(1);
                 order.setWithdrawTime(new Date());
                 order.setChannel("1");
-                ordersService.updateOrders(order);
                 AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
                 account.setFozenAmount(account.getFozenAmount()
                         .subtract(order.getAmount()));
                 accountService.updateAccount(account);//更新冻结金额
+                BigDecimal fee = new BigDecimal(0.25).divide(new BigDecimal(100),
+                        6,
+                        BigDecimal.ROUND_HALF_UP);
+                order.setAmount(order.getAmount().subtract(order.getAmount()
+                        .multiply(fee)));
+                ordersService.updateOrders(order);
                 fundDetailService.orderFundDetail(order);//生成资金明细
                 map.put("isOK", "ok");
             }

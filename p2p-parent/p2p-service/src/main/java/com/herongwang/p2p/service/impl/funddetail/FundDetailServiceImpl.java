@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +15,6 @@ import com.herongwang.p2p.dao.investorder.IInvestOrderDao;
 import com.herongwang.p2p.dao.profitlist.IProfitListDao;
 import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.debt.DebtEntity;
-import com.herongwang.p2p.entity.fee.DiscountEntity;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.entity.orders.OrdersEntity;
@@ -187,32 +185,41 @@ public class FundDetailServiceImpl implements IFundDetailService
             fd.setFrozenAmount(account.getFozenAmount());
             fd.setDueAmount(account.getDueAmount());
             fd.setCreateTime(new Date());
-            if (order.getStatus() == 1)
+            
+            if (order.getOrderType() == 1)
             {
                 fd.setType(1);//投标
                 fd.setStatus(1);//
                 fd.setRemark("充值"
-                        + order.getAmount().divide(new BigDecimal(100)) + "元");
+                        + order.getAmount().divide(new BigDecimal(100),
+                                2,
+                                BigDecimal.ROUND_HALF_UP) + "元");
             }
-            else if (order.getStatus() == 2)
+            else if (order.getOrderType() == 2)
             {
                 fd.setType(2);//投标
-                fd.setStatus(0);//
+                fd.setStatus(1);//
                 fd.setRemark("提现"
-                        + order.getAmount().divide(new BigDecimal(100)) + "元");
+                        + order.getAmount().divide(new BigDecimal(100),
+                                2,
+                                BigDecimal.ROUND_HALF_UP) + "元");
             }
             
             fundDetailDao.addFundDetail(fd);//插入总金额明细
-            if (order.getStatus() == 2)
+            if (order.getOrderType() == 2)
             {
                 fd.setDetailId(null);
                 BigDecimal fee = new BigDecimal(0.25).divide(new BigDecimal(100),
-                        2,
+                        6,
                         BigDecimal.ROUND_HALF_UP);
                 fd.setAmount(order.getAmount().multiply(fee));
-                fd.setType(5);
-                fd.setRemark("充值手续费"
-                        + order.getAmount().divide(new BigDecimal(100)) + "元");
+                fd.setType(12);
+                fd.setRemark("提现手续费"
+                        + order.getAmount()
+                                .multiply(fee)
+                                .divide(new BigDecimal(100),
+                                        2,
+                                        BigDecimal.ROUND_HALF_UP) + "元");
                 fundDetailDao.addFundDetail(fd);//插入手续费
             }
             
