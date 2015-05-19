@@ -217,7 +217,6 @@ public class FundDetailServiceImpl implements IFundDetailService
                 fd.setRemark("提现手续费"
                         + order.getAmount()
                                 .multiply(fee)
-                                .multiply(new BigDecimal(100))
                                 .divide(new BigDecimal(100),
                                         2,
                                         BigDecimal.ROUND_HALF_UP) + "元");
