@@ -1,4 +1,4 @@
-<div class="yard-180 ly-left leftMenu fontYH">
+<div class="yard-180 ly-left leftMenu fontYH" id="leftMenu">
       <ul>
         <li><a href="${basePath}user/manage.htm">会员管理</a></li>
         <li><a href="${basePath}apply/applyList.htm">融资申请管理</a></li>
@@ -7,11 +7,10 @@
         <li><a href="${basePath}deal/deposit.htm">提现管理</a></li>
       </ul>
  </div>
- <script>
- 	var url=window.location.href
- 	$(".leftMenu").select("a").removeClass("on");
- 	$(".leftMenu").select("a").each(function(){
- 		if(url.indexOf($(this).attr("href"))>=0)
- 			$(this).addClass("on");
- 	})
- </script>
+<script>
+	$("#leftMenu a").removeClass("on");
+	$("#leftMenu a").each(function(){
+		if(window.location.href.indexOf($(this).attr("href"))>=0)
+			$(this).addClass("on");
+	});
+</script>
