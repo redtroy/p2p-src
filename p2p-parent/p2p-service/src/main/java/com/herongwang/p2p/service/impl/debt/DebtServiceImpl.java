@@ -191,9 +191,10 @@ public class DebtServiceImpl implements IDebtService
             //根据会员ID 查询账户
             AccountEntity account = accountDao.getAcoountByCustomerId(debt.getCustomerId());
             //更新账户信息
-            account.setBalance(financeOrder.getAmount()
-                    .subtract((financeOrder.getAmount().multiply(new BigDecimal(
-                            0.03)))));
+            account.setBalance(account.getBalance()
+                    .add(financeOrder.getAmount()
+                            .subtract((financeOrder.getAmount().multiply(new BigDecimal(
+                                    0.03))))));
             accountDao.updateAccount(account);
             //生成融资方资金明细
             //获取到融资方费率
@@ -202,7 +203,7 @@ public class DebtServiceImpl implements IDebtService
             fd.setCustomerId(debt.getCustomerId());//用户ID
             fd.setAccountId(account.getAccountId());
             fd.setOrderId(financeOrder.getOrderId());
-            fd.setAmount(debt.getAmount());
+            fd.setAmount(financeOrder.getAmount());
             fd.setBalance(account.getBalance());
             fd.setFrozenAmount(account.getFozenAmount());
             fd.setDueAmount(account.getDueAmount());
@@ -211,6 +212,23 @@ public class DebtServiceImpl implements IDebtService
             fd.setType(5);//投标
             fd.setRemark("融资" + debt.getTitle());
             fundDetailDao.addFundDetail(fd);
+            FundDetailEntity fd1 = new FundDetailEntity();
+            fd1.setCustomerId(debt.getCustomerId());//用户ID
+            fd1.setAccountId(account.getAccountId());
+            fd.setOrderId(financeOrder.getOrderId());
+            fd1.setAmount((financeOrder.getAmount().multiply(new BigDecimal(
+                    0.03))));
+            fd1.setBalance(account.getBalance()
+                    .subtract((financeOrder.getAmount().multiply(new BigDecimal(
+                            0.03)))));
+            fd1.setFrozenAmount(account.getFozenAmount());
+            fd1.setDueAmount(account.getDueAmount());
+            fd1.setCreateTime(new Date());
+            fd1.setStatus(0);//支出
+            // fd1.setType(5);//投标
+            fd1.setRemark("平台手续费");
+            fundDetailDao.addFundDetail(fd1);
+            
             List<DiscountEntity> list = discountService.getDiscountByCustomerId(debt.getCustomerId());
             //重新设置对象
             if (!CollectionUtils.isEmpty(list))
