@@ -129,7 +129,7 @@ public class FundDetailServiceImpl implements IFundDetailService
             fd.setCreateTime(new Date());
             fd.setStatus(0);//支出
             fd.setType(3);//投标
-            fd.setRemark("投资" + debt.getCapitalUses() + ",资金冻结");
+            fd.setRemark("投资" + debt.getTitle() + ",资金冻结");
             fundDetailDao.addFundDetail(fd);//插入总金额明细
             
             //            //获取到当前会员折扣
