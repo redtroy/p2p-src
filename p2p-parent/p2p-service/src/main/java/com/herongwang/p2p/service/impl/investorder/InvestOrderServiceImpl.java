@@ -142,7 +142,7 @@ public class InvestOrderServiceImpl implements IInvestOrderService
                     }
                     debt.setFinance(debt.getFinance().add(newIo.getAmount()));
                     debtDao.updateDebt(debt);
-                    fundDetailService.investRepayPlan(newIo);//创建资金明细
+                    fundDetailService.investFundDetail(newIo);//创建资金明细
                 }
             }
             

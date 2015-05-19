@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
+import com.herongwang.p2p.entity.orders.OrdersEntity;
 import com.sxj.util.exception.ServiceException;
 
 public interface IFundDetailService
@@ -47,5 +48,8 @@ public interface IFundDetailService
      */
     public void delFundDetail(String id) throws ServiceException;
 
-    void investRepayPlan(InvestOrderEntity io);
+
+    void investFundDetail(InvestOrderEntity io);
+
+    void orderFundDetail(OrdersEntity order) throws ServiceException;
 }
