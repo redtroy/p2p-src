@@ -160,24 +160,32 @@ public class DebtServiceImpl implements IDebtService
                             debt.getMonths()),
                             2,
                             BigDecimal.ROUND_HALF_UP)));
-            for (int i = 0; i < debt.getMonths(); i++)
+            BigDecimal ljMonthAmount = new BigDecimal(0);
+            for (int i = 0; i < prift.getMonthProfit().size(); i++)
             {
                 RepayPlanEntity repayPlan = new RepayPlanEntity(); //
                 repayPlan.setOrderId(financeOrder.getOrderId());
                 repayPlan.setDebtId(debtId);
                 repayPlan.setSequence(i + 1);
-                repayPlan.setMonthCapital(monthCapital); //月本金
-                repayPlan.setMonthProfit(monthProfit); //月利息
-                repayPlan.setMonthAmount(repayPlan.getMonthCapital()
-                        .add(repayPlan.getMonthProfit())); //月总额
+                repayPlan.setMonthCapital(prift.getMonthProfit()
+                        .get(i)
+                        .getMonthCapital()); //月本金
+                repayPlan.setMonthProfit(prift.getMonthProfit()
+                        .get(i)
+                        .getMonthProfit()); //月利息
+                repayPlan.setMonthAmount(prift.getMonthProfit()
+                        .get(i)
+                        .getMonthAmount()); //月总额
                 repayPlan.setLeftAmount(prift.getAmount()
-                        .subtract(repayPlan.getMonthAmount()
-                                .multiply(new BigDecimal(i)))); //剩余本息总额
+                        .subtract(ljMonthAmount)); //剩余本息总额
                 repayPlan.setStatus(0);
                 repayPlan.setCreateTime(new Date());
                 repayPlan.setUpdateTime(new Date());
                 repayPlan.setPrepaidStatus(0);
                 reList.add(repayPlan);
+                ljMonthAmount = ljMonthAmount.add(prift.getMonthProfit()
+                        .get(i)
+                        .getMonthAmount());
             }
             repayDao.addRepayPlanList(reList);
             //根据会员ID 查询账户
@@ -236,10 +244,8 @@ public class DebtServiceImpl implements IDebtService
                 //更新账户
                 account1.setFozenAmount(account1.getFozenAmount()
                         .subtract(investList.get(i).getAmount()));//账户冻结资金减去账单资金
-                ProfitModel prift2 = profitService.calculatingProfit(debtId,
-                        investList.get(i).getAmount());//获取利息，总额
                 account1.setDueAmount(account1.getDueAmount()
-                        .add(prift2.getAmount()));//更新代收金额
+                        .add(investList.get(i).getDueTotalAmount()));//更新代收金额
                 accountDao.updateAccount(account1);
                 //生成明细
                 fundDetail.setCustomerId(investList.get(i).getCustomerId());//用户ID
