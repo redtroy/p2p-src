@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import com.herongwang.p2p.dao.account.IAccountDao;
 import com.herongwang.p2p.dao.funddetail.IFundDetailDao;
@@ -15,10 +16,10 @@ import com.herongwang.p2p.dao.investorder.IInvestOrderDao;
 import com.herongwang.p2p.dao.profitlist.IProfitListDao;
 import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.debt.DebtEntity;
+import com.herongwang.p2p.entity.fee.DiscountEntity;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.entity.orders.OrdersEntity;
-import com.herongwang.p2p.entity.profitlist.ProfitListEntity;
 import com.herongwang.p2p.entity.repayPlan.RepayPlanEntity;
 import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.fee.IDiscountService;
@@ -208,43 +209,33 @@ public class FundDetailServiceImpl implements IFundDetailService
             fundDetailDao.addFundDetail(fd);//插入总金额明细
             if (order.getOrderType() == 2)
             {
-                fd.setDetailId(null);
-                BigDecimal fee = new BigDecimal(0.25).divide(new BigDecimal(100),
-                        6,
-                        BigDecimal.ROUND_HALF_UP);
-                fd.setAmount(order.getAmount().multiply(fee));
-                fd.setType(12);
-                fd.setRemark("提现手续费"
-                        + order.getAmount()
-                                .multiply(fee)
-                                .divide(new BigDecimal(100),
-                                        2,
-                                        BigDecimal.ROUND_HALF_UP) + "元");
-                fundDetailDao.addFundDetail(fd);//插入手续费
+                List<DiscountEntity> list = discountService.getDiscountByCustomerId(order.getCustomerId());
+                //重新设置对象
+                if (!CollectionUtils.isEmpty(list))
+                {
+                    for (DiscountEntity discountEntity : list)
+                    {
+                        if (discountEntity.getType() == 2
+                                && discountEntity.getFee() != 0)
+                        {
+                            fd.setDetailId(null);
+                            BigDecimal fee = new BigDecimal(discountEntity.getFee()).divide(new BigDecimal(100),
+                                    6,
+                                    BigDecimal.ROUND_HALF_UP);
+                            fd.setAmount(order.getAmount().multiply(fee));
+                            fd.setType(12);
+                            fd.setRemark("提现手续费"
+                                    + order.getAmount()
+                                            .multiply(fee)
+                                            .divide(new BigDecimal(100),
+                                                    2,
+                                                    BigDecimal.ROUND_HALF_UP) + "元");
+                            fundDetailDao.addFundDetail(fd);//插入手续费
+                        }
+                    }
+                }
             }
             
-            //获取到当前会员折扣
-            //            List<DiscountEntity> list = discountService.getDiscountByCustomerId(io.getCustomerId());
-            //            //重新设置对象
-            //            if (!CollectionUtils.isEmpty(list))
-            //            {
-            //                for (DiscountEntity discountEntity : list)
-            //                {
-            //                    if (discountEntity.getType() == 0
-            //                            && discountEntity.getFee() != 0)
-            //                    {
-            //                        fd.setDetailId(null);
-            //                        BigDecimal fee = new BigDecimal(discountEntity.getFee()).divide(new BigDecimal(
-            //                                100),
-            //                                2,
-            //                                BigDecimal.ROUND_HALF_UP);
-            //                        fd.setAmount(io.getAmount().multiply(fee));
-            //                        fd.setType(5);
-            //                        fd.setRemark("投资" + debt.getCapitalUses() + ",手续费冻结");
-            //                        fundDetailDao.addFundDetail(fd);//插入手续费
-            //                    }
-            //                }
-            //            }
         }
         catch (ServiceException e)
         {

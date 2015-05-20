@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
 import com.herongwang.p2p.entity.users.UsersEntity;
+import com.herongwang.p2p.service.users.IUserService;
 import com.sxj.util.exception.SystemException;
 import com.sxj.util.logger.SxjLogger;
 
@@ -27,6 +29,9 @@ public class BaseController
     public static final String INDEX = "site/index";
     
     public static final String SPRING_SECURITY_CONTEXT = "SPRING_SECURITY_CONTEXT";
+    
+    @Autowired
+    private IUserService userService;
     
     @InitBinder
     public void initBinder(WebDataBinder binder)
@@ -81,7 +86,7 @@ public class BaseController
     public UsersEntity getUsersEntity()
     {
         Subject user = SecurityUtils.getSubject();
-        return (UsersEntity) user.getPrincipal();
+        return userService.getUserById(((UsersEntity) user.getPrincipal()).getCustomerId());
     }
     
     /**

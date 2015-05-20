@@ -1,7 +1,6 @@
 package com.herongwang.p2p.service.impl.profit;
 
 import java.math.BigDecimal;
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,13 +8,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import com.herongwang.p2p.dao.debt.IDebtDao;
 import com.herongwang.p2p.dao.profitlist.IProfitListDao;
 import com.herongwang.p2p.entity.debt.DebtEntity;
-import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
+import com.herongwang.p2p.entity.fee.DiscountEntity;
 import com.herongwang.p2p.entity.profitlist.ProfitListEntity;
 import com.herongwang.p2p.model.profit.ProfitModel;
+import com.herongwang.p2p.service.fee.IDiscountService;
 import com.herongwang.p2p.service.profit.IProfitService;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.logger.SxjLogger;
@@ -31,14 +32,30 @@ public class ProfitServiceImpl implements IProfitService
     @Autowired
     IProfitListDao profitListDao;
     
+    @Autowired
+    IDiscountService discountService;
+    
     /**
      * 计算收益
      */
     @Override
     @Transactional
-    public ProfitModel calculatingProfit(String debtId, BigDecimal money)
+    public ProfitModel calculatingProfit(String debtId, BigDecimal money,String customerId)
             throws ServiceException
     {
+        float InvestFee =0;
+        List<DiscountEntity> list = discountService.getDiscountByCustomerId(customerId);
+        if (!CollectionUtils.isEmpty(list))
+        {
+            for (DiscountEntity discountEntity : list)
+            {
+                if (discountEntity.getType() == 1
+                        && discountEntity.getFee() != 0)
+                {
+                    InvestFee=discountEntity.getFee();
+                }
+            }
+        }
         BigDecimal money1 = money;
         //获取到标的详情
         DebtEntity debt = debtDao.getDebtFor(debtId);
@@ -71,7 +88,7 @@ public class ProfitServiceImpl implements IProfitService
                  * 计算当月利息
                  */
                 BigDecimal profit = money.multiply(monthRatio);
-                BigDecimal fee = profit.multiply(new BigDecimal("0.09"));//手续费
+                BigDecimal fee = profit.multiply(new BigDecimal(InvestFee));//手续费
                 BigDecimal subtract = profit.subtract(fee);
                 money = money.subtract(monthMoney.subtract(profit));
                 ProfitListEntity pm = new ProfitListEntity();
@@ -116,7 +133,7 @@ public class ProfitServiceImpl implements IProfitService
             {
                 month++;
                 BigDecimal profit = money.multiply(monthRatio);
-                BigDecimal fee = profit.multiply(new BigDecimal("0.09"));//手续费
+                BigDecimal fee = profit.multiply(new BigDecimal(InvestFee));//手续费
                 BigDecimal subtract = profit.subtract(fee);
                 ProfitListEntity mp = new ProfitListEntity();
                 if (i != 1)
