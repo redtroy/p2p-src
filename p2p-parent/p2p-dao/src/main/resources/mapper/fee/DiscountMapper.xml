@@ -20,6 +20,6 @@
 	</resultMap>
 	<select id="getDiscountByCustomerId" resultMap="DiscountEntity"
 		parameterType="String">
-		<![CDATA[SELECT * FROM Discount d LEFT JOIN UserFee u on d.discountId=u.discountId WHERE u.customerId=#{customerId} ]]>
+		<![CDATA[SELECT * FROM Discount d LEFT JOIN UserLevelFee uf ON d.discountId=uf.discountId LEFT JOIN Users u ON uf.levelId=u.levelId where u.customerId=#{customerId} ]]>
 	</select>
 </mapper>

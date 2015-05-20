@@ -64,9 +64,10 @@ public class InvestOrderServiceImpl implements IInvestOrderService
     {
         try
         {
+            
             InvestOrderEntity io = new InvestOrderEntity();//投资订单
             ProfitModel pm = profitService.calculatingProfit(debtId,
-                    new BigDecimal(amount));
+                    new BigDecimal(amount),customerId);
             io.setDebtId(debtId);
             io.setCustomerId(customerId);
             io.setAmount(new BigDecimal(amount));
@@ -95,16 +96,34 @@ public class InvestOrderServiceImpl implements IInvestOrderService
     {
         try
         {
+            
             InvestOrderEntity newIo = investOrderDao.getInvestOrder(io.getOrderId());
+            DebtEntity debt = debtDao.getDebtFor(io.getDebtId());
             ProfitModel pm = profitService.calculatingProfit(newIo.getDebtId(),
-                    newIo.getAmount());
+                    newIo.getAmount(),newIo.getCustomerId());
             List<ProfitListEntity> profits = new ArrayList<ProfitListEntity>();
-            for (ProfitListEntity pro : pm.getMonthProfit())
+            if (debt.getRepayType() == 3)
             {
-                pro.setProfitId(StringUtils.getUUID());
-                pro.setOrderId(io.getOrderId());
-                pro.setStatus(0);
-                profits.add(pro);
+                ProfitListEntity pl = new ProfitListEntity();
+                pl.setProfitId(StringUtils.getUUID());
+                pl.setOrderId(io.getOrderId());
+                pl.setStatus(0);
+                pl.setCreateTime(new Date());
+                pl.setFee(newIo.getTotalFee());
+                pl.setMonthAmount(newIo.getDueTotalAmount());
+                pl.setMonthCapital(newIo.getAmount());
+                pl.setMonthProfit(newIo.getDueProfitAmount());
+                profits.add(pl);
+            }
+            else
+            {
+                for (ProfitListEntity pro : pm.getMonthProfit())
+                {
+                    pro.setProfitId(StringUtils.getUUID());
+                    pro.setOrderId(io.getOrderId());
+                    pro.setStatus(0);
+                    profits.add(pro);
+                }
             }
             List<ProfitListEntity> list;
             QueryCondition<ProfitListEntity> condition = new QueryCondition<ProfitListEntity>();
@@ -122,8 +141,6 @@ public class InvestOrderServiceImpl implements IInvestOrderService
                     //                    account.setFozenAmount(account.getFozenAmount()
                     //                            .add(newIo.getAmount()));
                     //                    accountDao.updateAccount(account);
-                    //更新融资单已融资金额 
-                    DebtEntity debt = debtDao.getDebtFor(newIo.getDebtId());
                     //是否满标
                     int flag = debt.getAmount().compareTo(debt.getFinance()
                             .add(newIo.getAmount()));

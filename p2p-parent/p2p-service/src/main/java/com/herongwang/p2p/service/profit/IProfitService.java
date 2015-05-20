@@ -15,7 +15,7 @@ import com.sxj.util.exception.ServiceException;
 public interface IProfitService
 {
     
-    ProfitModel calculatingProfit(String debtId, BigDecimal amount)
+    ProfitModel calculatingProfit(String debtId, BigDecimal amount,String customerId)
             throws ServiceException;
     
     List<ProfitListEntity> queryProfit(String debtId);
