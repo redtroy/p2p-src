@@ -52,12 +52,13 @@
 		});
 		var show = dialog();
 		var d = dialog({
-			title : '消息',
-			content : '是否提交提现申请?',
+			title : '请输入密码',
+			content : '<input id=property-returnValue-demo type=password />',
 			okValue : '确 定',
 			ok : function() {
 				var that = this;
 				show.showModal();
+				$('#signMsg').val($('#property-returnValue-demo').val());
 				$.post("${basePath}post/withdrawList.htm", $("#postForm").serialize(), function(
 						data) {
 					if (data.isOK == 'ok') {
@@ -89,6 +90,7 @@
         <div class="heading fontYH f20"><span>账户提现</span></div>
         <div class="mainBox fontYH">
         <form action="withdraw.htm" id="postForm">
+        <input type="hidden" id="signMsg" name = "signMsg" />
         <table border="0" cellpadding="0" cellspacing="0" class="table tabList mb20">
     <col width="20%" />
         <col width="80%" />

@@ -30,6 +30,8 @@ import com.herongwang.p2p.service.investorder.IInvestOrderService;
 import com.herongwang.p2p.service.orders.IOrdersService;
 import com.herongwang.p2p.service.post.IPostService;
 import com.herongwang.p2p.website.controller.BaseController;
+import com.sxj.util.common.EncryptUtil;
+import com.sxj.util.common.StringUtils;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
 
@@ -133,6 +135,17 @@ public class PostController extends BaseController
         {
             BigDecimal m = this.multiply(new BigDecimal(order.getOrderAmount()));
             UsersEntity user = this.getUsersEntity();
+            if (StringUtils.isEmpty(order.getSignMsg()))
+            {
+                map.put("isOK", "提现失败，密码为空！");
+                return map;
+            }
+            String signMsg = EncryptUtil.md5Hex(order.getSignMsg());
+            if (!signMsg.equals(user.getPassword()))
+            {
+                map.put("isOK", "提现失败，输入密码错误！");
+                return map;
+            }
             int flag = accountService.updateAccountBalance(user.getCustomerId(),
                     m,
                     null);
