@@ -1,6 +1,8 @@
 package com.herongwang.p2p.service.impl.repayplan;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +12,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.herongwang.p2p.dao.account.IAccountDao;
 import com.herongwang.p2p.dao.debt.IDebtDao;
 import com.herongwang.p2p.dao.financing.IFinancingOrdersDao;
+import com.herongwang.p2p.dao.investorder.IInvestOrderDao;
+import com.herongwang.p2p.dao.profitlist.IProfitListDao;
 import com.herongwang.p2p.dao.repayPlan.IRepayPlanDao;
 import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
+import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
+import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
+import com.herongwang.p2p.entity.profitlist.ProfitListEntity;
 import com.herongwang.p2p.entity.repayPlan.RepayPlanEntity;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
 import com.herongwang.p2p.service.repayplan.IRepayPlanService;
@@ -37,6 +44,12 @@ public class RepayPlanServiceImpl implements IRepayPlanService
     
     @Autowired
     IFundDetailService fundDetailService;
+    
+    @Autowired
+    private IInvestOrderDao investOrderDao;
+    
+    @Autowired
+    private IProfitListDao profitListDao;
     
     @Autowired
     IDebtDao debtDao;
@@ -156,6 +169,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
         {
             //获取到还款计划
             List<RepayPlanEntity> planlist = repayPlanDao.getRepayPlanList(ids);
+            List<Integer> xhlist = new ArrayList<Integer>();//获取还款序号
             for (RepayPlanEntity repayPlanEntity : planlist)
             {
                 AccountEntity account = accountDao.getAccountByOrderId(orderId);//账户余额
@@ -197,8 +211,71 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                         debtDao.updateDebt(db);
                     }
                 }
+                xhlist.add(repayPlanEntity.getSequence());
             }
             fundDetailService.repayPlanFundDetail(planlist);//还款资金明细
+            //投资方收款
+            List<InvestOrderEntity> orderList = investOrderDao.queryInvestorderList(debtId);//根据标的ID获取投资订单详情
+            for (InvestOrderEntity orderEntity : orderList)
+            {
+                for (Integer se : xhlist)
+                {
+                    ProfitListEntity entity = profitListDao.getEntityBySeAndOrderId(se,
+                            orderEntity.getOrderId());//通过订单ID和序号获取投资收益
+                    AccountEntity account = accountDao.getAcoountByCustomerId(orderEntity.getCustomerId());//获取账户信息
+                    account.setBalance(account.getBalance()
+                            .add(entity.getMonthCapital()));//账户增加月本金
+                    account.setDueAmount(account.getDueAmount()
+                            .subtract(entity.getMonthCapital()));
+                    FundDetailEntity fund1 = new FundDetailEntity();
+                    fund1.setCustomerId(orderEntity.getCustomerId());
+                    fund1.setAccountId(account.getAccountId());
+                    fund1.setOrderId(orderEntity.getOrderId());
+                    fund1.setAmount(entity.getMonthCapital());//金额 
+                    fund1.setBalance(account.getBalance());//账户可用额
+                    fund1.setFrozenAmount(account.getFozenAmount());
+                    fund1.setDueAmount(account.getDueAmount());//代收金额
+                    fund1.setCreateTime(new Date());
+                    fund1.setStatus(0);
+                    fund1.setType(7);
+                    fundDetailService.addFundDetail(fund1);
+                    account.setBalance(account.getBalance()
+                            .add(entity.getMonthProfit()));
+                    account.setDueAmount(account.getDueAmount()
+                            .subtract(entity.getMonthProfit()));
+                    FundDetailEntity fund2 = new FundDetailEntity();
+                    fund2.setCustomerId(orderEntity.getCustomerId());
+                    fund2.setAccountId(account.getAccountId());
+                    fund2.setOrderId(orderEntity.getOrderId());
+                    fund2.setAmount(entity.getMonthProfit());//金额 
+                    fund2.setBalance(account.getBalance());//账户可用额
+                    fund2.setFrozenAmount(account.getFozenAmount());
+                    fund2.setDueAmount(account.getDueAmount());//代收金额
+                    fund2.setCreateTime(new Date());
+                    fund2.setStatus(0);
+                    fund2.setType(8);
+                    fundDetailService.addFundDetail(fund2);
+                    if (entity.getFee() == null)
+                    {
+                        entity.setFee(new BigDecimal(0));
+                    }
+                    account.setBalance(account.getBalance()
+                            .subtract(entity.getFee()));
+                    FundDetailEntity fund3 = new FundDetailEntity();
+                    fund3.setCustomerId(orderEntity.getCustomerId());
+                    fund3.setAccountId(account.getAccountId());
+                    fund3.setOrderId(orderEntity.getOrderId());
+                    fund3.setAmount(entity.getFee());//金额 
+                    fund3.setBalance(account.getBalance());//账户可用额
+                    fund3.setFrozenAmount(account.getFozenAmount());
+                    fund3.setDueAmount(account.getDueAmount());//代收金额
+                    fund3.setCreateTime(new Date());
+                    fund3.setStatus(1);
+                    fund3.setType(11);
+                    fundDetailService.addFundDetail(fund2);
+                    accountDao.updateAccount(account);
+                }
+            }
             return "ok";
         }
         catch (ServiceException e)

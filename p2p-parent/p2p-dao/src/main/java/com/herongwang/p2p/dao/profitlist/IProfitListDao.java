@@ -26,4 +26,12 @@ public interface IProfitListDao
     public List<ProfitListEntity> query(QueryCondition<ProfitListEntity> query)
             throws SQLException;
     
+    /**
+     * 根据 序号和 订单ID查询实体
+     * @param se
+     * @param orderId
+     * @return
+     */
+    public ProfitListEntity getEntityBySeAndOrderId(Integer se, String orderId);
+    
 }
