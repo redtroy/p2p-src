@@ -34,6 +34,6 @@
 		<if test="condition.type != null">
 			<![CDATA[AND D.type = #{condition.type}]]>
 		</if>
-		<![CDATA[ ORDER BY D.createTime DESC]]>
+		<![CDATA[ ORDER BY D.sortId DESC]]>
 	</select>
 </mapper>
