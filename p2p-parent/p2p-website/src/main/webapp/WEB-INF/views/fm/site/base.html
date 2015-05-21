@@ -50,38 +50,39 @@ function loadPage(currentPage,totalPage) {
 		prev_text: "前一页",
 		next_text: "后一页"
 	});
-	jump(currentPage);
+	//jump(currentPage);
  }
 $(".pagination").ready(function(){
 	loadPage(${query.currentPage},${query.totalPage});
 });
-var jump = function(currentPage){
-	$(".pagination").append("&nbsp;<span style='color:#15b;'>到第<input name=''class='pageNumber' style=' width: 35px;margin:0 3px;' value='"+currentPage+"'/>页</span><a class='next jump' >确定</a>");
-	$(".jump").live("click",function(){
-		$(".pageNumber").each(function(i){
-			if(i==0){
-				var totalPage=$(".pagination").attr("totalPage");
-				var pageNumber = $(this).val();
-				$(this).val(pageNumber.replace(/\D/gi, ""));
-				pageNumber=pageNumber.replace(/\D/gi, "");
-				if(pageNumber!=''){
-					if(parseInt(pageNumber)>parseInt(totalPage)){
-						//数值大于当前最大页码,返回当前最大页码
-						$(this).val(totalPage);
-						pageNumber=totalPage;
-					}
-					query(pageNumber);
-				}
-			}
-		})
-	});
-}
-$(".pageNumber").live("keyup",function(){
-	var $val = $(this).val();
-	$(".pageNumber").each(function(){
-		$(this).val($val);
-	})
-})
+// var jump = function(currentPage){
+// 	$(".pagination").append("&nbsp;<span style='color:#15b;'>到第<input name=''class='pageNumber' style=' width: 35px;margin:0 3px;' value='"+currentPage+"'/>页</span><a class='next jump' >确定</a>");
+// 	$(".jump").live("click",function(){
+// 		$(".pageNumber").each(function(i){
+// 			if(i==0){
+// 				var totalPage=$(".pagination").attr("totalPage");
+// 				var pageNumber = $(this).val();
+// 				$(this).val(pageNumber.replace(/\D/gi, ""));
+// 				pageNumber=pageNumber.replace(/\D/gi, "");
+// 				if(pageNumber!=''){
+// 					if(parseInt(pageNumber)>parseInt(totalPage)){
+// 						//数值大于当前最大页码,返回当前最大页码
+// 						$(this).val(totalPage);
+// 						pageNumber=totalPage;
+// 					}
+// 					alert(pageNumber);
+// 					query(pageNumber);
+// 				}
+// 			}
+// 		})
+// 	});
+// }
+// $(".pageNumber").live("keyup",function(){
+// 	var $val = $(this).val();
+// 	$(".pageNumber").each(function(){
+// 		$(this).val($val);
+// 	})
+// })
 </script>
 </#macro>
 <#macro upload>
