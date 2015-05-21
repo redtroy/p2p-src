@@ -28,6 +28,6 @@
 	</select>
 	<select id="getEntityBySeAndOrderId" resultMap="ProfitListEntity"
 		parameterType="String">
-		<![CDATA[SELECT * FROM ProfitList where sequence=#{se} and orderId=#{orderId}]]>
+		<![CDATA[SELECT * FROM ProfitList where sequence=#{0} and orderId=#{1}]]>
 	</select>
 </mapper>
