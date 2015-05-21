@@ -169,8 +169,7 @@ public class BasicController extends BaseController
         {
             return "erro";
         }
-        return userService.getUserById(getUsersEntity().getCustomerId())
-                .getName();
+        return getUsersEntity().getName();
     }
     
     @RequestMapping("index")

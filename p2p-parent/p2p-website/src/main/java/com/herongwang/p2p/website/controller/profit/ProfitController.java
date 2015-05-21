@@ -9,14 +9,16 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.herongwang.p2p.entity.profitlist.ProfitListEntity;
+import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.model.profit.ProfitModel;
 import com.herongwang.p2p.service.profit.IProfitService;
+import com.herongwang.p2p.website.controller.BaseController;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
 
 @Controller
 @RequestMapping("/profit")
-public class ProfitController
+public class ProfitController  extends BaseController
 {
     @Autowired
     private IProfitService profitService;
@@ -35,8 +37,9 @@ public class ProfitController
     {
         try
         {
+            UsersEntity user=getUsersEntity();
             ProfitModel pm = profitService.calculatingProfit(debtId,
-                    new BigDecimal(amount).multiply(new BigDecimal(100)));
+                    new BigDecimal(amount).multiply(new BigDecimal(100)),user.getCustomerId());
             map.put("pm", pm);
             map.put("debtId", debtId);
         }
