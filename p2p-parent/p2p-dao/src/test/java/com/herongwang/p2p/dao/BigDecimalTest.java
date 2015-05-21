@@ -82,7 +82,7 @@ public class BigDecimalTest
          * 计算应还总额
          */
         int num = 12;
-        BigDecimal money = new BigDecimal(10000);//总投资
+        BigDecimal money = new BigDecimal(200000);//总投资
         for (int i = num; i >= 1; i--)
         {
             BigDecimal operand = monthRatio.add(new BigDecimal(1)).pow(i);
