@@ -8,11 +8,38 @@
 <script src="${b.staticPath}js/jquery1.8.js"></script>
 <script src="${b.staticPath}js/datepicker.js"></script>
 <script src="${b.staticPath}js/jquery.paginate.js"></script>
+<script src="${b.staticPath}js/jquery.elastislide-style.js" type="text/javascript"></script>
+<script src="${b.staticPath}js/jquery.elastislide.js" type="text/javascript"></script>
 <@b.validate/>
 <@b.dialog/>
+<@b.upload/>
 <script>
 var validform;
 $(document).ready(function() {
+	$('.modal-header .close').click(function() {
+		$('.maskdivgen').fadeOut(100);
+		$('.viewer').slideUp(200);
+	})
+	$('.elastislide-list').find("li").live("click", function() {
+		var el = $(this);
+		var imageSource = el.find("a").attr("data-image");
+		if(typeof(imageSource) == 'undefined'){
+			var filePath =el.find("a").attr("data-pdf");
+			window.location.href = "${basePath}downloadFile.htm?filePath=" + filePath;
+		}else{
+			currentHiddenImages=$(this).parent().parent().parent().parent().siblings(":hidden");
+			currentLi=$(this);
+			refreshIviewer($("#viewer2"), imageSource, $("#iviewerModal"));
+			el.parent().children("li").removeClass("view");
+			el.addClass("view");
+			$(".maskdivgen").show();
+			$(".viewer").show();
+		}
+	});
+	uploadImg($("#zbFile"));
+	imgBinding();
+	
+	
 	validform = $("#submit_form").Validform({
 		tiptype : 3,
 		datatype:{
@@ -48,6 +75,58 @@ $(document).ready(function() {
 	});
 
 });
+//图片处理事件
+//加载绑定扫描件(默认图片地址,滚动UL)
+var imgBinding = function() {
+	$(".elastislide-list").each(function() {
+		var $this = $(this);
+		var imgPath = $(this).parent().siblings(":hidden").val();
+		$.post("${basePath}filesort.htm", {
+			fileId : imgPath
+		}, function(imgPaths) {
+			refreshElastislide($this.parent(), $this, imgPaths);
+		});
+	});
+}
+closeViewer = function() {
+	$('.maskdivgen').fadeOut(100);
+	$('.viewer').slideUp(200);
+}
+var uploadImg = function($file) {
+	var $div = $file.parent().parent().parent();
+	var $carousel = $div.find(".elastislide-list");
+	var $container = $carousel.parent();
+	var $hidden = $container.parent().find(":input");
+	$file.uploadify({
+		swf : '${basePath}upload/uploadify.swf',
+		uploader : "${basePath}upload.htm;sessionId=${sessionId}",
+		 fileTypeExts: '*.jpg;*.png',
+		auto : true,
+		multi : true,
+		height : 30,
+		width : 120,
+		buttonText : '上传资质证明',
+		onUploadSuccess : function(file, data, response) {
+			var num = 1;
+			var dataObj = eval("(" + data + ")");//转换为json对象 
+			var hideVal = $hidden.val();
+			if (hideVal == '') {
+				hideVal = dataObj.fileIds;
+			} else {
+				var arrays = hideVal.split(",");
+				for (var i = 0; i < arrays.length; i++) {
+					if (arrays[i]) {
+						num += 1;
+					}
+				}
+				hideVal += "," + dataObj.fileIds;
+			}
+			$hidden.val(hideVal);
+			refreshElastislide($container, $carousel, dataObj);
+		}
+	});
+}
+
 function saveApply() {
 	if (!validform.check()) {
 		return false;
@@ -191,6 +270,19 @@ function saveApply() {
               <td><textarea name="riskControl" rows="2" cols="39" datatype="*"
 								errormsg="请输入风险控制！" nullmsg="请输入风险控制！">${info.riskControl}</textarea></td>
             </tr>
+            <tr>
+              <th>资质证明</th>
+              <td> 
+				 <div class="item"><label>&nbsp;</label> 
+				 	<input type="hidden" value="" name="imgPath" id="zbimgPath" />
+					<div class="rollBox" id="zbRollBox"> <ul id="zbcarousel" class="elastislide-list"></ul></div>
+				</div>
+				<div class="item">
+					<label>&nbsp;</label>
+					<div class="ly-left"> <input type="file" name="zbFile" id="zbFile" class="upload" multiple="true" /> </div>
+				</div>
+			</td>
+            </tr>
             
           </table>
           <div class="tc mt20 mb20"><a href="javascript:void(0)" onclick="saveApply();" class="button button-orange">确认生成</a></div>
@@ -200,6 +292,14 @@ function saveApply() {
     </div>
   </div>
 </div>
+<div class="viewer modal-wrap" id="iviewerModal">
+		<div class="modal-header" style="display: none;">
+			<span class="close">关闭</span>
+		</div>
+		<div id="viewer2" class="modal-body iviewer"
+			style="width: 100%; display: none; top: 0px"></div>
+	</div>
+	<div class="maskdivgen" style="display: none"></div>
 <div id="footer" class="fence">
   <div class="fence-wide">&copy; 2015 南京紫金财富企业管理有限公司&nbsp;版权所有<span class="ml10"><a href="http://www.miitbeian.gov.cn/" target="_blank">苏ICP备14047993号-1</a></span></div>
 </div>

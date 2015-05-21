@@ -15,6 +15,7 @@
                         http://www.springframework.org/schema/aop/spring-aop-4.0.xsd"
 	default-lazy-init="true">
 	<import resource="classpath*:spring/database-config.xml" />
+	<import resource="classpath*:spring/fast-dfs.xml" />
 	<import resource="classpath*:spring/applicationContext-shiro.xml" />
 	<task:annotation-driven />
 	<context:annotation-config />
