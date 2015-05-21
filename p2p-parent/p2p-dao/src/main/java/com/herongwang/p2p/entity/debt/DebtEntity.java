@@ -153,6 +153,12 @@ public class DebtEntity extends Pagable implements Serializable
     private String riskControl;
     
     /**
+     *   资质证明
+     */
+    @Column(name = "imgPath")
+    private String imgPath;
+    
+    /**
      * 会员姓名
      */
     private String name;
@@ -409,6 +415,16 @@ public class DebtEntity extends Pagable implements Serializable
     public void setRiskControl(String riskControl)
     {
         this.riskControl = riskControl;
+    }
+    
+    public String getImgPath()
+    {
+        return imgPath;
+    }
+    
+    public void setImgPath(String imgPath)
+    {
+        this.imgPath = imgPath;
     }
     
 }

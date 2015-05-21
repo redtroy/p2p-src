@@ -31,6 +31,7 @@
 		<result property="repaymentText" column="repaymentText"
 			jdbcType="VARCHAR" />
 		<result property="version" column="versionLock" jdbcType="INTEGER" />
+		<result property="imgPath" column="imgPath" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<!-- 条件查询投标信息 -->

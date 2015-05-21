@@ -136,8 +136,7 @@ public class DebtController extends BaseController
     
     @RequestMapping("edit")
     public @ResponseBody Map<String, String> addApply(DebtEntity tender,
-            String applicationId, String id, String imgPath)
-            throws WebException
+            String applicationId, String id) throws WebException
     {
         BigDecimal m = tender.getAmount().multiply(new BigDecimal(100));
         BigDecimal m1 = tender.getMinInvest().multiply(new BigDecimal(100));

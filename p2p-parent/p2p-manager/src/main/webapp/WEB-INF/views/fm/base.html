@@ -1,5 +1,5 @@
 <#assign staticPath="http://static.menchuang.org.cn/p2p-manager/" />
-<#assign imagePath="http://storage.menchuang.org.cn/p2p-manager/" />
+<#assign imagePath="${basePath}/" />
 <#macro dialog>
 <script src="${staticPath}js/dialog.js"></script>
 <link rel="stylesheet" href="${staticPath}style/ui-dialog.css" />
@@ -8,6 +8,7 @@
 <!--<script src="${staticPath}js/jquery.validate.js"></script>-->
 <script src="${staticPath}js/Validform_v5.3.2.js"></script>
 <script src="${staticPath}js/jquery.poshytip.min.js"></script>
+
 <script>
 $(function(){
 	$(":input").each(function(){
@@ -85,7 +86,175 @@ $(".pageNumber").live("keyup",function(){
 </#macro>
 <#macro upload>
 <script src="${staticPath}js/jquery.uploadify.js"></script>
-<link href="${staticPath}style/uploadify.css" rel="stylesheet" type="text/css" />
+<link href="${staticPath}style/uploadify.css" rel="stylesheet"
+	type="text/css" />
+<script>
+var iviewer;
+var msie=$.browser.msie
+var elastislideConfig={
+		count:6//当前显示数量
+}
+var slideTimes=elastislideConfig.count;
+var currentHiddenImages;
+var currentLi;
+var closeViewer;
+$(document).ready(function(){
+	$(".iviewer_del").live("click",function(){
+		var url=$(this).siblings("img").attr("src");
+		var prefix="${b.imagePath}";
+		var image=url.substring(url.indexOf(prefix)+prefix.length);
+		var images=currentHiddenImages.attr("value");
+		var result=images.replace(image+",","").replace(","+image,"").replace(image,"");
+		currentHiddenImages.attr("value",result)
+		currentLi.remove();
+		closeViewer();
+	});
+});
+var refreshIviewer=function($viewer,src,$container){
+	$viewer.find("img").attr("src","");
+	if($viewer.children().length==0){
+		iviewer=$viewer.iviewer({
+			src : src,
+			mousewheel : true
+		});
+	}else{
+		iviewer.iviewer('loadImage', src);
+	}
+	if($container){
+		$container.css("top",$(window).scrollTop());
+		$container.show();
+		$container.find(".modal-header").show();
+	}else{
+		$(".modal-wrap").show();
+		$(".modal-header").show();
+	}
+	$viewer.show();
+}
+var errorImage=function($this){
+	var times=parseInt($($this).attr("times"));
+	if(times<3){
+		$($this).attr("src", $($this).attr("src"));
+		$($this).attr("times",times+1);
+	}else if(times==3){
+		$($this).attr("src", "http://static.menchuang.org.cn/images/bg404.jpg");
+		$($this).attr("times",times+1);
+	}
+}
+
+var imageSrc=function(src){
+	if($.browser.msie) {
+		return src;
+	} 
+	return "";
+}
+
+var refreshElastislide=function($container,$carousel,data,empty){
+	if(!data)
+		return;
+	var start=0;
+	if(empty)
+		$carousel.empty();
+	if(data){
+		if(data instanceof Array){
+			for (var i = 0; i < data.length; i++) {
+				var suffix=/\.[^\.]+$/.exec(data[i]);
+				var $img,$a;
+				 $img=$('<img data-image="${basePath}'+data[i]+'80x100.JPG" alt="" src="'+imageSrc(data[i])+'" onerror="errorImage(this)" times="0"/>');
+				 $a=$('<a href="javascript:void(0);" class="demo-image" data-image="${basePath}'+data[i]+'"></a>');
+				$a.append($img);
+				var $p=$('<p>'+(i+1)+'</p>');
+				var $li=$('<li></li>');
+				$li.append($a);
+				$li.append($p);
+				$carousel.append($li);
+			}
+		}else{
+			var suffix=/\.[^\.]+$/.exec(data.fileIds);
+			
+			var $img,$a;
+			 $img=$('<img src="${basePath}'+data.fileIds+'80x100.JPG" src="'+imageSrc(data.fileIds)+'"  onerror="errorImage(this)" times="0"/>');
+			 $a=$('<a href="javascript:void(0);" class="demo-image" data-image="${basePath}'+data.fileIds+'"></a>');
+			$a.append($img);
+			var $li=$('<li></li>');
+			$li.append($a);
+			
+			$carousel.append($li);
+			var $p=$('<p>'+$carousel.children().length+'</p>');
+			$li.append($p);
+			start=$carousel.children().length;
+		}
+	}
+	$container.empty();
+	$container.append($carousel);
+	$carousel.elastislide({
+		orientation : 'horizontal',
+		speed : 500,
+		easing : 'ease-in-out',
+		minItems : elastislideConfig.count,
+		start : start,
+		onClick : function( el, position, evt ) { 
+			return false; 
+		},
+		onReady : function() { 
+			$carousel.children("li:lt("+elastislideConfig.count+")").each(function(){
+				var $image=$(this).find("img");
+				if($image.attr("data-image"))
+					$image.attr("src",$image.attr("data-image"));
+			});
+			if($carousel.children("li").length<elastislideConfig.count)
+				$(".elastislide-prev").hide();
+			return false; },
+		onBeforeSlide : function() { return false; },
+		onAfterSlide : function() { 
+			if(start>0)
+				slideTimes=slideTimes+start;
+			$carousel.children("li:lt("+slideTimes+")").each(function(){
+				var $image=$(this).find("img");
+				if($image.attr("data-image"))
+					$image.attr("src",$image.attr("data-image"));
+			});
+			slideTimes=slideTimes+elastislideConfig.count;
+			return false; }
+	});
+	$container.show();
+	
+}
+
+function loadUpload(id,url,isMulti,text,fn){
+	  $("#"+id).uploadify({
+	        swf: '${basePath}upload/uploadify.swf',
+	        uploader: url,
+	        fileTypeExts: '*.jpg',
+	        auto: true,
+	        multi: false,
+	        simUploadLimit:1,
+	        height:30,
+	        width:200,
+	        buttonText:text,
+	        onUploadSuccess : function(file, data, response) {
+	        	fn(data);
+	        }
+	        
+	    });
+}
+function loadUploadMember(id,url,isMulti,text,fn){
+	  $("#"+id).uploadify({
+	        swf: '${basePath}upload/uploadify.swf',
+	        uploader: url,
+	        fileTypeExts: '*.jpg',
+	        auto: true,
+	        multi: false,
+	        simUploadLimit:1,
+	        height:30,
+	        width:100,
+	        buttonText:text,
+	        onUploadSuccess : function(file, data, response) {
+	        	fn(data);
+	        }
+	        
+	    });
+}
+</script>
 </#macro>
 <#macro header>
   <Script>

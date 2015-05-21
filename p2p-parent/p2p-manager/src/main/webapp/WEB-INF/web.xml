@@ -22,6 +22,10 @@
 			<servlet-name>springmvc</servlet-name>
 			<url-pattern>*.htm</url-pattern>
 		</servlet-mapping>
+		<servlet-mapping>
+			<servlet-name>springmvc</servlet-name>
+			<url-pattern>*.JPG</url-pattern>
+		</servlet-mapping>
 		<session-config>
 			<session-timeout>15</session-timeout>
 		</session-config>
