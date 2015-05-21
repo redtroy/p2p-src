@@ -99,7 +99,7 @@ var uploadImg = function($file) {
 	var $hidden = $container.parent().find(":input");
 	$file.uploadify({
 		swf : '${basePath}upload/uploadify.swf',
-		uploader : "${basePath}upload.htm;sessionId=${sessionId}",
+		uploader : "${basePath}upload.htm",
 		 fileTypeExts: '*.jpg;*.png',
 		auto : true,
 		multi : true,
