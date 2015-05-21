@@ -98,7 +98,7 @@ public class InvestOrderServiceImpl implements IInvestOrderService
         {
             
             InvestOrderEntity newIo = investOrderDao.getInvestOrder(io.getOrderId());
-            DebtEntity debt = debtDao.getDebtFor(io.getDebtId());
+            DebtEntity debt = debtDao.getDebtFor(newIo.getDebtId());
             ProfitModel pm = profitService.calculatingProfit(newIo.getDebtId(),
                     newIo.getAmount(),newIo.getCustomerId());
             List<ProfitListEntity> profits = new ArrayList<ProfitListEntity>();
