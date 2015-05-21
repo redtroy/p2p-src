@@ -103,6 +103,7 @@
 		<!-- 访问地址的过滤规则,从上至下的优先级,如果有匹配的规则,就会返回,不会再进行匹配 -->
 		<property name="filterChainDefinitions">
 			<value>
+				/login.htm=anon
 				/upload.htm=anon
 				/**=user
 			</value>

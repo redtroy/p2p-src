@@ -37,7 +37,7 @@ $(document).ready(function() {
 		}
 	});
 	uploadImg($("#zbFile"));
-	imgBinding();
+	//imgBinding();
 	
 	
 	validform = $("#submit_form").Validform({
@@ -75,19 +75,7 @@ $(document).ready(function() {
 	});
 
 });
-//图片处理事件
-//加载绑定扫描件(默认图片地址,滚动UL)
-var imgBinding = function() {
-	$(".elastislide-list").each(function() {
-		var $this = $(this);
-		var imgPath = $(this).parent().siblings(":hidden").val();
-		$.post("${basePath}filesort.htm", {
-			fileId : imgPath
-		}, function(imgPaths) {
-			refreshElastislide($this.parent(), $this, imgPaths);
-		});
-	});
-}
+
 closeViewer = function() {
 	$('.maskdivgen').fadeOut(100);
 	$('.viewer').slideUp(200);
@@ -123,7 +111,11 @@ var uploadImg = function($file) {
 			}
 			$hidden.val(hideVal);
 			refreshElastislide($container, $carousel, dataObj);
-		}
+		},
+		'onUploadError' : function(file, errorCode, errorMsg, errorString) {
+            alert('The file ' + file.name + ' could not be uploaded: ' +errorCode+":"+ errorString);
+        }
+
 	});
 }
 
