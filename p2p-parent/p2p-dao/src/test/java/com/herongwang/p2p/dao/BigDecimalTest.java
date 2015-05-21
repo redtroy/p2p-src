@@ -18,6 +18,7 @@ public class BigDecimalTest
     {
     }
     
+    @Test
     public void testInvest()
     {
         BigDecimal yearRatio = new BigDecimal("0.098");
@@ -68,7 +69,6 @@ public class BigDecimalTest
         
     }
     
-    @Test
     public void testLoan()
     {
         BigDecimal yearRatio = new BigDecimal("0.12");
