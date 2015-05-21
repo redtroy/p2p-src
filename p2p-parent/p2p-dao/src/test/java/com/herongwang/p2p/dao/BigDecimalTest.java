@@ -71,7 +71,7 @@ public class BigDecimalTest
     @Test
     public void testLoan()
     {
-        BigDecimal yearRatio = new BigDecimal("0.22");
+        BigDecimal yearRatio = new BigDecimal("0.12");
         BigDecimal monthRatio = yearRatio.divide(new BigDecimal("12"),
                 128,
                 BigDecimal.ROUND_HALF_UP);
