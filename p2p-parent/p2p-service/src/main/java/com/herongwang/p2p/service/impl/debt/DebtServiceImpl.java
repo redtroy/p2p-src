@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,12 +18,11 @@ import com.herongwang.p2p.dao.investorder.IInvestOrderDao;
 import com.herongwang.p2p.dao.repayPlan.IRepayPlanDao;
 import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.debt.DebtEntity;
-import com.herongwang.p2p.entity.fee.DiscountEntity;
 import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.entity.repayPlan.RepayPlanEntity;
-import com.herongwang.p2p.model.profit.ProfitModel;
+import com.herongwang.p2p.model.repayplan.RepayPlanModel;
 import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.fee.IDiscountService;
 import com.herongwang.p2p.service.profit.IProfitService;
@@ -140,7 +138,9 @@ public class DebtServiceImpl implements IDebtService
             DebtDao.updateDebt(debt);
             //---
             BigDecimal amout = debt.getAmount();
-            ProfitModel prift = profitService.calculatingProfit(debtId, amout,debt.getCustomerId());//获取利息，总额
+            RepayPlanModel prift = profitService.FinancingProfit(debtId,
+                    amout,
+                    debt.getCustomerId());//获取利息，总额
             //查询更新融资订单
             FinancingOrdersEntity financeOrder = financingOrder.getOrderByDebtId(debtId);//查询订单
             financeOrder.setLoanAmount(debt.getAmount());

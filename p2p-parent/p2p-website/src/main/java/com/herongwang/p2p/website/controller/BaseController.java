@@ -86,6 +86,10 @@ public class BaseController
     public UsersEntity getUsersEntity()
     {
         Subject user = SecurityUtils.getSubject();
+        if (((UsersEntity) user.getPrincipal()) == null)
+        {
+            return null;
+        }
         return userService.getUserById(((UsersEntity) user.getPrincipal()).getCustomerId());
     }
     

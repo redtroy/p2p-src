@@ -26,4 +26,8 @@
 		</if>
 		<![CDATA[ ORDER BY sequence ASC]]>
 	</select>
+	<select id="getEntityBySeAndOrderId" resultMap="ProfitListEntity"
+		parameterType="String">
+		<![CDATA[SELECT * FROM ProfitList where sequence=#{se} and orderId=#{orderId}]]>
+	</select>
 </mapper>
