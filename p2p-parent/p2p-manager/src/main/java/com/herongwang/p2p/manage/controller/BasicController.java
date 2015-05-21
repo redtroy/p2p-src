@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -216,30 +215,30 @@ public class BasicController extends BaseController
      * @param filePath
      * @throws IOException
      */
-    @RequestMapping("downloadFile")
-    public void downloadFile(HttpServletRequest request,
-            HttpServletResponse response, String filePath) throws IOException
-    {
-        try
-        {
-            ServletOutputStream output = response.getOutputStream();
-            String fileName = "扫描件" + stringDate();
-            String group = filePath.substring(0, filePath.indexOf("/"));
-            response.addHeader("Content-Disposition", "attachment;filename="
-                    + fileName + ".pdf");
-            response.setContentType("application/pdf");
-            String path = filePath.substring(filePath.indexOf("/") + 1,
-                    filePath.length());
-            storageClientService.downloadFile(group, path, output);
-            output.flush();
-            output.close();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-            SxjLogger.debug("下载文件出错", e.getClass());
-        }
-    }
+    //    @RequestMapping("downloadFile")
+    //    public void downloadFile(HttpServletRequest request,
+    //            HttpServletResponse response, String filePath) throws IOException
+    //    {
+    //        try
+    //        {
+    //            ServletOutputStream output = response.getOutputStream();
+    //            String fileName = "扫描件" + stringDate();
+    //            String group = filePath.substring(0, filePath.indexOf("/"));
+    //            response.addHeader("Content-Disposition", "attachment;filename="
+    //                    + fileName + ".pdf");
+    //            response.setContentType("application/pdf");
+    //            String path = filePath.substring(filePath.indexOf("/") + 1,
+    //                    filePath.length());
+    //            storageClientService.downloadFile(group, path, output);
+    //            output.flush();
+    //            output.close();
+    //        }
+    //        catch (IOException e)
+    //        {
+    //            e.printStackTrace();
+    //            SxjLogger.debug("下载文件出错", e.getClass());
+    //        }
+    //    }
     
     @RequestMapping("logout")
     public String logout(HttpServletRequest request)
