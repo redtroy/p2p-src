@@ -11,7 +11,6 @@ import com.herongwang.p2p.dao.account.IAccountDao;
 import com.herongwang.p2p.dao.users.IUserLevelDAO;
 import com.herongwang.p2p.dao.users.IUsersDao;
 import com.herongwang.p2p.entity.account.AccountEntity;
-import com.herongwang.p2p.entity.users.UserLevel;
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.service.sendms.ISendMsService;
 import com.herongwang.p2p.service.users.IUserService;
@@ -94,20 +93,19 @@ public class UserServiceImpl implements IUserService
     {
         try
         {
-            UserLevel level = new UserLevel();
+            /*UserLevel level = new UserLevel();
             level.setName("普通会员");
             level.setStatus(1);
             level.setCreateTime(new Date());
-            levelDao.createUserLevel(level);
+            levelDao.createUserLevel(level);*/
             member.setPassword(EncryptUtil.md5Hex(member.getPassword()));
             member.setRegisterTime(new Date());
             member.setStatus(0);
-            member.setLevelId(level.getLevelId());
+            member.setLevelId("1000");
             userDao.addUser(member);
             AccountEntity account = new AccountEntity();
             account.setCustomerId(member.getCustomerId());
             accountDao.addAccount(account);
-            
             return member;
         }
         catch (Exception e)

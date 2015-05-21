@@ -273,7 +273,11 @@ public class FundDetailServiceImpl implements IFundDetailService
                 fd.setDueAmount(account.getDueAmount());
                 fd.setCreateTime(new Date());
                 fd.setStatus(0);//
-                fd.setType(7);//偿还本金
+                fd.setType(7);//偿还本金.
+                if(repayPlan.getPrepaidStatus()==1){
+                    fd.setRemark("平台垫付偿还" + debt.getTitle() + "融资第"
+                            + repayPlan.getSequence() + "期本金");
+                }
                 fd.setRemark("偿还" + debt.getTitle() + "融资第"
                         + repayPlan.getSequence() + "期本金");
                 list.add(fd);//融资本金

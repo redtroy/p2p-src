@@ -120,13 +120,16 @@ public class RepayPlanServiceImpl implements IRepayPlanService
             //获取到还款计划
             List<RepayPlanEntity> planlist = repayPlanDao.getRepayPlanList(ids);
             BigDecimal monthAmount = new BigDecimal(0);
+            List<Integer> xhlist = new ArrayList<Integer>();//获取还款序号
             //统计所有还款总价格
             for (RepayPlanEntity repayPlanEntity : planlist)
             {
                 monthAmount = monthAmount.add(repayPlanEntity.getMonthAmount());
+                xhlist.add(repayPlanEntity.getSequence());
             }
             AccountEntity account = accountDao.getAccountByOrderId(orderId);
             int flag = account.getBalance().compareTo(monthAmount);
+            
             if (flag == -1)
             {
                 return "no";
@@ -146,6 +149,8 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                     debtDao.updateDebt(db);
                 }
                 fundDetailService.repayPlanFundDetail(planlist);//还款资金明细
+                //投资方收款
+                investGetMoney(debtId, xhlist);
                 return "ok";
             }
         }
@@ -215,67 +220,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
             }
             fundDetailService.repayPlanFundDetail(planlist);//还款资金明细
             //投资方收款
-            List<InvestOrderEntity> orderList = investOrderDao.queryInvestorderList(debtId);//根据标的ID获取投资订单详情
-            for (InvestOrderEntity orderEntity : orderList)
-            {
-                for (Integer se : xhlist)
-                {
-                    ProfitListEntity entity = profitListDao.getEntityBySeAndOrderId(se,
-                            orderEntity.getOrderId());//通过订单ID和序号获取投资收益
-                    AccountEntity account = accountDao.getAcoountByCustomerId(orderEntity.getCustomerId());//获取账户信息
-                    account.setBalance(account.getBalance()
-                            .add(entity.getMonthCapital()));//账户增加月本金
-                    account.setDueAmount(account.getDueAmount()
-                            .subtract(entity.getMonthCapital()));
-                    FundDetailEntity fund1 = new FundDetailEntity();
-                    fund1.setCustomerId(orderEntity.getCustomerId());
-                    fund1.setAccountId(account.getAccountId());
-                    fund1.setOrderId(orderEntity.getOrderId());
-                    fund1.setAmount(entity.getMonthCapital());//金额 
-                    fund1.setBalance(account.getBalance());//账户可用额
-                    fund1.setFrozenAmount(account.getFozenAmount());
-                    fund1.setDueAmount(account.getDueAmount());//代收金额
-                    fund1.setCreateTime(new Date());
-                    fund1.setStatus(0);
-                    fund1.setType(7);
-                    fundDetailService.addFundDetail(fund1);
-                    account.setBalance(account.getBalance()
-                            .add(entity.getMonthProfit()));
-                    account.setDueAmount(account.getDueAmount()
-                            .subtract(entity.getMonthProfit()));
-                    FundDetailEntity fund2 = new FundDetailEntity();
-                    fund2.setCustomerId(orderEntity.getCustomerId());
-                    fund2.setAccountId(account.getAccountId());
-                    fund2.setOrderId(orderEntity.getOrderId());
-                    fund2.setAmount(entity.getMonthProfit());//金额 
-                    fund2.setBalance(account.getBalance());//账户可用额
-                    fund2.setFrozenAmount(account.getFozenAmount());
-                    fund2.setDueAmount(account.getDueAmount());//代收金额
-                    fund2.setCreateTime(new Date());
-                    fund2.setStatus(0);
-                    fund2.setType(8);
-                    fundDetailService.addFundDetail(fund2);
-                    if (entity.getFee() == null)
-                    {
-                        entity.setFee(new BigDecimal(0));
-                    }
-                    account.setBalance(account.getBalance()
-                            .subtract(entity.getFee()));
-                    FundDetailEntity fund3 = new FundDetailEntity();
-                    fund3.setCustomerId(orderEntity.getCustomerId());
-                    fund3.setAccountId(account.getAccountId());
-                    fund3.setOrderId(orderEntity.getOrderId());
-                    fund3.setAmount(entity.getFee());//金额 
-                    fund3.setBalance(account.getBalance());//账户可用额
-                    fund3.setFrozenAmount(account.getFozenAmount());
-                    fund3.setDueAmount(account.getDueAmount());//代收金额
-                    fund3.setCreateTime(new Date());
-                    fund3.setStatus(1);
-                    fund3.setType(11);
-                    fundDetailService.addFundDetail(fund2);
-                    accountDao.updateAccount(account);
-                }
-            }
+            investGetMoney(debtId, xhlist);
             return "ok";
         }
         catch (ServiceException e)
@@ -287,6 +232,77 @@ public class RepayPlanServiceImpl implements IRepayPlanService
         {
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new ServiceException("验证余额错误", e);
+        }
+    }
+    
+    //投资方收款并生成明细
+    public void investGetMoney(String debtId, List<Integer> xhlist)
+    {
+        //投资方收款
+        List<InvestOrderEntity> orderList = investOrderDao.queryInvestorderList(debtId);//根据标的ID获取投资订单详情
+        for (InvestOrderEntity orderEntity : orderList)
+        {
+            for (Integer se : xhlist)
+            {
+                if (orderEntity.getStatus() == 0)
+                {
+                    continue;
+                }
+                ProfitListEntity entity = profitListDao.getEntityBySeAndOrderId(se.toString(),
+                        orderEntity.getOrderId());//通过订单ID和序号获取投资收益
+                AccountEntity account = accountDao.getAcoountByCustomerId(orderEntity.getCustomerId());//获取账户信息
+                account.setBalance(account.getBalance()
+                        .add(entity.getMonthCapital()));//账户增加月本金
+                account.setDueAmount(account.getDueAmount()
+                        .subtract(entity.getMonthCapital()));
+                FundDetailEntity fund1 = new FundDetailEntity();
+                fund1.setCustomerId(orderEntity.getCustomerId());
+                fund1.setAccountId(account.getAccountId());
+                fund1.setOrderId(orderEntity.getOrderId());
+                fund1.setAmount(entity.getMonthCapital());//金额 
+                fund1.setBalance(account.getBalance());//账户可用额
+                fund1.setFrozenAmount(account.getFozenAmount());
+                fund1.setDueAmount(account.getDueAmount());//代收金额
+                fund1.setCreateTime(new Date());
+                fund1.setStatus(1);
+                fund1.setType(7);
+                fundDetailService.addFundDetail(fund1);
+                account.setBalance(account.getBalance()
+                        .add(entity.getMonthProfit()));
+                account.setDueAmount(account.getDueAmount()
+                        .subtract(entity.getMonthProfit()));
+                FundDetailEntity fund2 = new FundDetailEntity();
+                fund2.setCustomerId(orderEntity.getCustomerId());
+                fund2.setAccountId(account.getAccountId());
+                fund2.setOrderId(orderEntity.getOrderId());
+                fund2.setAmount(entity.getMonthProfit());//金额 
+                fund2.setBalance(account.getBalance());//账户可用额
+                fund2.setFrozenAmount(account.getFozenAmount());
+                fund2.setDueAmount(account.getDueAmount());//代收金额
+                fund2.setCreateTime(new Date());
+                fund2.setStatus(1);
+                fund2.setType(8);
+                fundDetailService.addFundDetail(fund2);
+                if (entity.getFee() == null)
+                {
+                    entity.setFee(new BigDecimal(0));
+                }
+                account.setBalance(account.getBalance()
+                        .subtract(entity.getFee()));
+                FundDetailEntity fund3 = new FundDetailEntity();
+                fund3.setCustomerId(orderEntity.getCustomerId());
+                fund3.setAccountId(account.getAccountId());
+                fund3.setOrderId(orderEntity.getOrderId());
+                fund3.setAmount(entity.getFee());//金额 
+                fund3.setBalance(account.getBalance());//账户可用额
+                fund3.setFrozenAmount(account.getFozenAmount());
+                fund3.setDueAmount(account.getDueAmount());//代收金额
+                fund3.setCreateTime(new Date());
+                fund3.setStatus(0);
+                fund3.setType(11);
+                fundDetailService.addFundDetail(fund3);
+                accountDao.updateAccount(account);
+            }
         }
     }
 }

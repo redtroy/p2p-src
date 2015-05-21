@@ -32,6 +32,6 @@ public interface IProfitListDao
      * @param orderId
      * @return
      */
-    public ProfitListEntity getEntityBySeAndOrderId(Integer se, String orderId);
+    public ProfitListEntity getEntityBySeAndOrderId(String se, String orderId);
     
 }

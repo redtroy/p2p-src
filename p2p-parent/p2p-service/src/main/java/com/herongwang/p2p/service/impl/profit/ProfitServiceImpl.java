@@ -91,7 +91,8 @@ public class ProfitServiceImpl implements IProfitService
                  * 计算当月利息
                  */
                 BigDecimal profit = money.multiply(monthRatio);
-                BigDecimal fee = profit.multiply(new BigDecimal(InvestFee));//手续费
+                BigDecimal fee = profit.multiply(new BigDecimal(InvestFee).divide(new BigDecimal(
+                        100)));//手续费
                 BigDecimal subtract = profit.subtract(fee);
                 money = money.subtract(monthMoney.subtract(profit));
                 ProfitListEntity pm = new ProfitListEntity();
@@ -135,7 +136,8 @@ public class ProfitServiceImpl implements IProfitService
             {
                 month++;
                 BigDecimal profit = money.multiply(monthRatio);
-                BigDecimal fee = profit.multiply(new BigDecimal(InvestFee));//手续费
+                BigDecimal fee = profit.multiply(new BigDecimal(InvestFee).divide(new BigDecimal(
+                        100)));//手续费
                 BigDecimal subtract = profit.subtract(fee);
                 ProfitListEntity mp = new ProfitListEntity();
                 if (i != 1)

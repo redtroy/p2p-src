@@ -21,7 +21,7 @@
 	
 	<select id="getUserByAccount" resultMap="UserResultMap"
 		parameterType="String">
-		<![CDATA[SELECT * FROM Users WHERE email=#{email}]]>
+		<![CDATA[SELECT * FROM Users WHERE email=#{email} or cellphone=#{email}]]>
 	</select>
 	<select id="getUserByPhone" resultMap="UserResultMap"
 		parameterType="String">

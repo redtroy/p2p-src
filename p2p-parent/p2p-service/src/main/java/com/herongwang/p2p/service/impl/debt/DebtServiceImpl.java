@@ -163,6 +163,9 @@ public class DebtServiceImpl implements IDebtService
             BigDecimal ljMonthAmount = new BigDecimal(0);
             for (int i = 0; i < prift.getMonthProfit().size(); i++)
             {
+                ljMonthAmount = ljMonthAmount.add(prift.getMonthProfit()
+                        .get(i)
+                        .getMonthAmount());
                 RepayPlanEntity repayPlan = new RepayPlanEntity(); //
                 repayPlan.setOrderId(financeOrder.getOrderId());
                 repayPlan.setDebtId(debtId);
@@ -183,9 +186,7 @@ public class DebtServiceImpl implements IDebtService
                 repayPlan.setUpdateTime(new Date());
                 repayPlan.setPrepaidStatus(0);
                 reList.add(repayPlan);
-                ljMonthAmount = ljMonthAmount.add(prift.getMonthProfit()
-                        .get(i)
-                        .getMonthAmount());
+                
             }
             repayDao.addRepayPlanList(reList);
             //根据会员ID 查询账户
@@ -280,11 +281,11 @@ public class DebtServiceImpl implements IDebtService
                 fundDetail.setRemark("投资" + debt.getTitle() + "完成,资金解冻");
                 fundDetailDao.addFundDetail(fundDetail);
                 //重置实体
-                fundDetail.setDetailId(null);
-                fundDetail.setAmount(investList.get(i).getTotalFee());
-                fundDetail.setType(7);
-                fundDetail.setRemark("投资" + debt.getTitle() + "完成,手续费");
-                fundDetailDao.addFundDetail(fundDetail);//插入手续费
+                //                fundDetail.setDetailId(null);
+                //                fundDetail.setAmount(investList.get(i).getTotalFee());
+                //                fundDetail.setType(11);
+                //                fundDetail.setRemark("投资" + debt.getTitle() + "完成,手续费");
+                //                fundDetailDao.addFundDetail(fundDetail);//插入手续费
             }
             return "ok";
         }
