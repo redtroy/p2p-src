@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -84,9 +86,11 @@ public class DebtController extends BaseController
     }
     
     @RequestMapping("/toEdit")
-    public String toEdit(String id, String applicationId, String customerId,
-            ModelMap map) throws WebException
+    public String toEdit(HttpServletRequest request, String id,
+            String applicationId, String customerId, ModelMap map)
+            throws WebException
     {
+        String sessionId = request.getSession().getId();
         ParametersEntity query = new ParametersEntity();
         query.setType("repaymentType");
         try
@@ -96,6 +100,7 @@ public class DebtController extends BaseController
             List<ParametersEntity> tenderList = parametersService.queryParameters(query);//标的状态
             
             map.put("repaymentList", repaymentList);
+            map.put("sessionId", sessionId);
             map.put("tenderList", tenderList);
             if (StringUtils.isEmpty(id))
             {
@@ -131,7 +136,8 @@ public class DebtController extends BaseController
     
     @RequestMapping("edit")
     public @ResponseBody Map<String, String> addApply(DebtEntity tender,
-            String applicationId, String id) throws WebException
+            String applicationId, String id, String imgPath)
+            throws WebException
     {
         BigDecimal m = tender.getAmount().multiply(new BigDecimal(100));
         BigDecimal m1 = tender.getMinInvest().multiply(new BigDecimal(100));
