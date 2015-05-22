@@ -128,6 +128,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                 xhlist.add(repayPlanEntity.getSequence());
             }
             AccountEntity account = accountDao.getAccountByOrderId(orderId);
+            BigDecimal blance = account.getBalance();
             int flag = account.getBalance().compareTo(monthAmount);
             
             if (flag == -1)
@@ -148,7 +149,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                     db.setStatus(5);
                     debtDao.updateDebt(db);
                 }
-                fundDetailService.repayPlanFundDetail(planlist);//还款资金明细
+                fundDetailService.repayPlanFundDetail(planlist, blance);//还款资金明细
                 //投资方收款
                 investGetMoney(debtId, xhlist);
                 return "ok";
@@ -175,9 +176,11 @@ public class RepayPlanServiceImpl implements IRepayPlanService
             //获取到还款计划
             List<RepayPlanEntity> planlist = repayPlanDao.getRepayPlanList(ids);
             List<Integer> xhlist = new ArrayList<Integer>();//获取还款序号
+            BigDecimal blance = new BigDecimal(0);
             for (RepayPlanEntity repayPlanEntity : planlist)
             {
                 AccountEntity account = accountDao.getAccountByOrderId(orderId);//账户余额
+                blance = account.getBalance();
                 int flag = account.getBalance()
                         .compareTo(repayPlanEntity.getMonthAmount());//0 相等 1大于  -1 小于
                 if (flag >= 0)
@@ -218,7 +221,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                 }
                 xhlist.add(repayPlanEntity.getSequence());
             }
-            fundDetailService.repayPlanFundDetail(planlist);//还款资金明细
+            fundDetailService.repayPlanFundDetail(planlist, blance);//还款资金明细
             //投资方收款
             investGetMoney(debtId, xhlist);
             return "ok";
