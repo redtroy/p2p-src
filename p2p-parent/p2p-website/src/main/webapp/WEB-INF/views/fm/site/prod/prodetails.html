@@ -4,7 +4,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>和融网</title>
 <link href="${b.staticPath}style/style.css" rel="stylesheet" type="text/css" />
-<script src="${b.staticPath}js/jquery1.8.js"></script>
+<!-- <script src="${b.staticPath}js/jquery1.8.js"></script> -->
+<link href="${b.staticPath}css/jquery.lightbox.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="${b.staticPath}js/jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="${b.staticPath}js/jquery.lightbox.min.js"></script>
+<script type="text/javascript" src="${b.staticPath}js/jquery.color.min.js"></script>
 <script>
   function sub(){
 	  $.post("${basePath}checkLogin.htm",function(data){
@@ -103,6 +107,17 @@
 <li><p>${model.sourceRepayment}</p></li>
 <dt><span class="f20 fontYH">风险控制</span></dt>
 <li><p>${model.riskControl}</p></li>
+<dt><span class="f20 fontYH">资质证明</span></dt>
+<li>
+<#if (model.imgPath??)>
+<p> 
+    <#list model.imgPath?split(",") as imgPath>
+	<a href="${b.imagePath}${imgPath}" rel="lightbox-tour" title="资质">
+    	<img src="${b.imagePath}${imgPath}" width="100px" height="100px"/>
+    </#list>
+</p>
+</#if>
+</li>
 </dl>
 </div>
 </div>
