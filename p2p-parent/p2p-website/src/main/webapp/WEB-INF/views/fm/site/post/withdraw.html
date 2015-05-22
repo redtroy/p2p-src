@@ -1,6 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<title>和融网</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="${b.staticPath}style/member.css" rel="stylesheet" type="text/css" />
 <script src="${b.staticPath}js/jquery.js"></script>
@@ -53,11 +54,24 @@
 		var show = dialog();
 		var d = dialog({
 			title : '请输入密码',
-			content : '<input id=property-returnValue-demo type=password />',
+			content : "<input id='property-returnValue-demo' type='password' />",
 			okValue : '确 定',
 			ok : function() {
 				var that = this;
 				show.showModal();
+				var password = $('#property-returnValue-demo').val()
+				if(password == ''){
+					var pw = dialog({
+						title : '消息',
+						cancel : false,
+						ok : function() {
+						}
+					});
+					pw.content('请输入密码！');
+					pw.showModal();
+					show.close().remove();
+					return;
+				}
 				$('#signMsg').val($('#property-returnValue-demo').val());
 				$.post("${basePath}post/withdrawList.htm", $("#postForm").serialize(), function(
 						data) {

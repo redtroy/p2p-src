@@ -48,7 +48,6 @@ $(document).ready(function() {
 					}else if(maxAmount < minNum){
 						return "输入的最大金额必须比最小金额大！";
 					}else if(maxAmount > amount){
-						alert("");
 						return "输入的最大金额不能比投资金额大！";
 					}else if(maxAmount % minNum != 0){
 						return "输入的最大金额必须是最小投资金额倍数！";
@@ -146,7 +145,6 @@ $(document).ready(function() {
 
 function saveApply() {
 	if (!validform.check()) {
-		alert(imgPath == '');
 		return false;
 	}
 	var imgPath = $("#imgPath").val();
@@ -206,7 +204,6 @@ $(function() {
 		url : "${basePath}tender/userList.htm",
 		callback : function(data) {
 			if (data){
-				alert(data.result);
 				$("#customerId").val(data.result);
 			}
 		},
