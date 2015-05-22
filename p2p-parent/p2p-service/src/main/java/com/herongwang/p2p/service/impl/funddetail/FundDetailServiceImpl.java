@@ -286,8 +286,11 @@ public class FundDetailServiceImpl implements IFundDetailService
                     fd.setRemark("平台垫付偿还" + debt.getTitle() + "融资第"
                             + repayPlan.getSequence() + "期本金");
                 }
-                fd.setRemark("偿还" + debt.getTitle() + "融资第"
-                        + repayPlan.getSequence() + "期本金");
+                else
+                {
+                    fd.setRemark("偿还" + debt.getTitle() + "融资第"
+                            + repayPlan.getSequence() + "期本金");
+                }
                 list.add(fd);//融资本金
                 FundDetailEntity fd2 = new FundDetailEntity();
                 if (blance.intValue() >= repayPlan.getMonthProfit().intValue())

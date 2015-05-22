@@ -243,6 +243,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
     {
         //投资方收款
         List<InvestOrderEntity> orderList = investOrderDao.queryInvestorderList(debtId);//根据标的ID获取投资订单详情
+        DebtEntity debt = debtDao.getDebtFor(debtId);
         for (InvestOrderEntity orderEntity : orderList)
         {
             for (Integer se : xhlist)
@@ -268,7 +269,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                 fund1.setDueAmount(account.getDueAmount());//代收金额
                 fund1.setCreateTime(new Date());
                 fund1.setStatus(1);
-                fund1.setRemark("第" + se + "期月本金");
+                fund1.setRemark("被偿还投资" + debt.getTitle() +"第" + se + "期月本金");
                 fund1.setType(7);
                 fundDetailService.addFundDetail(fund1);
                 account.setBalance(account.getBalance()
@@ -284,7 +285,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                 fund2.setFrozenAmount(account.getFozenAmount());
                 fund2.setDueAmount(account.getDueAmount());//代收金额
                 fund2.setCreateTime(new Date());
-                fund2.setRemark("第" + se + "期月收益");
+                fund2.setRemark("被偿还投资" + debt.getTitle() +"第" + se + "期月收益");
                 fund2.setStatus(1);
                 fund2.setType(8);
                 fundDetailService.addFundDetail(fund2);
@@ -302,7 +303,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                 fund3.setBalance(account.getBalance());//账户可用额
                 fund3.setFrozenAmount(account.getFozenAmount());
                 fund3.setDueAmount(account.getDueAmount());//代收金额
-                fund3.setRemark("第" + se + "期平台管理费");
+                fund3.setRemark("投资" + debt.getTitle() +"第" + se + "期平台管理费");
                 fund3.setCreateTime(new Date());
                 fund3.setStatus(0);
                 fund3.setType(11);
