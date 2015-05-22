@@ -53,11 +53,24 @@
 		var show = dialog();
 		var d = dialog({
 			title : '请输入密码',
-			content : '<input id=property-returnValue-demo type=password />',
+			content : "<input id='property-returnValue-demo' type='password' />",
 			okValue : '确 定',
 			ok : function() {
 				var that = this;
 				show.showModal();
+				var password = $('#property-returnValue-demo').val()
+				if(password == ''){
+					var pw = dialog({
+						title : '消息',
+						cancel : false,
+						ok : function() {
+						}
+					});
+					pw.content('请输入密码！');
+					pw.showModal();
+					show.close().remove();
+					return;
+				}
 				$('#signMsg').val($('#property-returnValue-demo').val());
 				$.post("${basePath}post/withdrawList.htm", $("#postForm").serialize(), function(
 						data) {
