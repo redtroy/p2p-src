@@ -7,6 +7,7 @@
 <link href="${b.staticPath}style/style.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="${b.staticPath}style/elastislide.css" />
 <link href="${b.staticPath}style/jquery.iviewer.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="${b.staticPath}style/jquery.bigautocomplete.css" />
 
 <script src="${b.staticPath}js/jquery1.8.js"></script>
 <script src="${b.staticPath}js/jqueryui.js"></script>
@@ -16,6 +17,7 @@
 <script src="${b.staticPath}js/jquery.mousewheel.js"></script>
 <script src="${b.staticPath}js/datepicker.js"></script>
 <script src="${b.staticPath}js/jquery.paginate.js"></script>
+<script src="${b.staticPath}js/jquery.bigautocomplete.js"></script>
 <@b.validate/>
 <@b.dialog/>
 <@b.upload/>
@@ -143,7 +145,17 @@ function saveApply() {
 		alert(imgPath == '');
 		return false;
 	}
-	
+	var imgPath = $("#imgPath").val();
+	if(imgPath == ''){
+		var img = dialog({
+			title : '消息',
+			content : '请上传资质证明！',
+			ok : function() {
+			}
+		});
+		img.showModal();
+		return false;
+	}
 	 var success = dialog({
 			title : '消息',
 			cancel : false,
@@ -177,6 +189,32 @@ function saveApply() {
 		});
 		d.showModal();
 }
+$(function() {
+	$(document).keydown(function(event){
+	if(event.keyCode==9){
+		//隐藏
+		$("#bigAutocompleteContent").hide();
+	}
+	});
+	
+	$("#name").bigAutocomplete({
+		width: '256',
+		url : "${basePath}tender/userList.htm",
+		callback : function(data) {
+			if (data){
+				alert(data.result);
+				$("#customerId").val(data.result);
+			}
+		},
+		beforeShow : function(data) {
+			var memberNameB = $("#name").val();
+
+		}
+	});
+	$("#name").keyup(function() {
+		//$("#refContractNo").val("");
+	})
+});
 </script>
 </head>
 <body>
@@ -204,9 +242,9 @@ function saveApply() {
             <tr>
               <th>借款人</th>
               <td>
-              <input type="hidden" name="customerId" value="${applyId}"/>
+              <input type="hidden" name="customerId" id="customerId" value="${applyId}"/>
               <input type="hidden" name="id" value="${info.debtId}" />
-              <input type="text" name="name" id="name" value="${name}" readonly="readonly" class="input input-w270h30"/></td>
+              <input type="text" name="name" id="name" value="${name}" class="input input-w270h30"/></td>
             </tr>
             <tr>
               <th>还款类型</th>
@@ -265,23 +303,23 @@ function saveApply() {
             </tr>
             <tr>
               <th>项目概述</th>
-              <td><textarea name="descriptionProject" rows="2" cols="39" datatype="*"
-								errormsg="请输入项目概述！" nullmsg="请输入项目概述！">${info.descriptionProject}</textarea></td>
+              <td><textarea name="descriptionProject" rows="10" cols="90" datatype="*1-1024"
+								errormsg="项目概述太长！" nullmsg="请输入项目概述！">${info.descriptionProject}</textarea></td>
             </tr>
             <tr>
               <th>资金用途</th>
-              <td><textarea name="capitalUses" rows="2" cols="39" datatype="*"
-								errormsg="请输入资金用途！" nullmsg="请输入资金用途！">${info.capitalUses}</textarea></td>
+              <td><textarea name="capitalUses" rows="10" cols="90" datatype="*1-1024"
+								errormsg="资金用途太长！" nullmsg="请输入资金用途！">${info.capitalUses}</textarea></td>
             </tr>
             <tr>
               <th>还款来源</th>
-              <td><textarea name="sourceRepayment" rows="2" cols="39" datatype="*"
-								errormsg="请输入还款来源！" nullmsg="请输入还款来源！">${info.sourceRepayment}</textarea></td>
+              <td><textarea name="sourceRepayment" rows="10" cols="90" datatype="*1-1024"
+								errormsg="还款来源太长！" nullmsg="请输入还款来源！">${info.sourceRepayment}</textarea></td>
             </tr>
             <tr>
               <th>风险控制</th>
-              <td><textarea name="riskControl" rows="2" cols="39" datatype="*"
-								errormsg="请输入风险控制！" nullmsg="请输入风险控制！">${info.riskControl}</textarea></td>
+              <td><textarea name="riskControl" rows="10" cols="90" datatype="*1-1024"
+								errormsg="风险控制太长！" nullmsg="请输入风险控制！">${info.riskControl}</textarea></td>
             </tr>
             <tr>
               <th>资质证明</th>

@@ -1,12 +1,16 @@
 package com.herongwang.p2p.manage.controller.debt;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +23,7 @@ import com.herongwang.p2p.entity.apply.DebtApplicationEntity;
 import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
 import com.herongwang.p2p.entity.parameters.ParametersEntity;
+import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.manage.controller.BaseController;
 import com.herongwang.p2p.service.apply.IDebtApplicationService;
 import com.herongwang.p2p.service.debt.IDebtService;
@@ -90,7 +95,6 @@ public class DebtController extends BaseController
             String applicationId, String customerId, ModelMap map)
             throws WebException
     {
-        String sessionId = request.getSession().getId();
         ParametersEntity query = new ParametersEntity();
         query.setType("repaymentType");
         try
@@ -98,9 +102,7 @@ public class DebtController extends BaseController
             List<ParametersEntity> repaymentList = parametersService.queryParameters(query);//还款方式
             query.setType("tenderType");
             List<ParametersEntity> tenderList = parametersService.queryParameters(query);//标的状态
-            
             map.put("repaymentList", repaymentList);
-            map.put("sessionId", sessionId);
             map.put("tenderList", tenderList);
             if (StringUtils.isEmpty(id))
             {
@@ -235,5 +237,43 @@ public class DebtController extends BaseController
             SxjLogger.error("审核失败", e.getClass());
             throw new WebException(e);
         }
+    }
+    
+    /**
+     * 会员联想
+     * 
+     * @param request
+     * @param response
+     * @param keyword
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("userList")
+    public @ResponseBody Map<String, String> userList(
+            HttpServletRequest request, HttpServletResponse response,
+            String keyword) throws IOException
+    {
+        UsersEntity user = new UsersEntity();
+        if (keyword != "" && keyword != null)
+        {
+            user.setName(keyword);
+            ;
+        }
+        List<UsersEntity> list = userService.queryUsers(user);
+        List<String> strlist = new ArrayList<String>();
+        String sb = "";
+        for (UsersEntity userEntity : list)
+        {
+            sb = "{\"title\":\"" + userEntity.getName() + "\",\"result\":\""
+                    + userEntity.getCustomerId() + "\"}";
+            strlist.add(sb);
+        }
+        String json = "{\"data\":" + strlist.toString() + "}";
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+        out.print(json);
+        out.flush();
+        out.close();
+        return null;
     }
 }

@@ -32,6 +32,9 @@
     <select id="queryUserList" resultMap="UserResultMap"
 		parameterType="com.sxj.util.persistent.QueryCondition">
 		<![CDATA[select * from Users where 1=1]]>
+		<if test="condition.name != null and condition.name != ''">
+		 <![CDATA[AND name LIKE CONCAT('%',#{condition.name},'%')]]>
+		 </if>
 	</select>
     
 	<!-- 条件查询会员 
