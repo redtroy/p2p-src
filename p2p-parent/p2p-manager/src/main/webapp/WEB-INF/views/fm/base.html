@@ -159,8 +159,8 @@ var refreshElastislide=function($container,$carousel,data,empty){
 			for (var i = 0; i < data.length; i++) {
 				var suffix=/\.[^\.]+$/.exec(data[i]);
 				var $img,$a;
-				 $img=$('<img data-image="${basePath}'+data[i]+'80x100.JPG" alt="" src="'+imageSrc(data[i])+'" onerror="errorImage(this)" times="0"/>');
-				 $a=$('<a href="javascript:void(0);" class="demo-image" data-image="${basePath}'+data[i]+'"></a>');
+				 $img=$('<img width = "80px" data-image="${basePath}'+data[i]+'80x100.JPG?random='+Math.random()+' alt="" src="'+imageSrc(data[i])+'" onerror="errorImage(this)" times="0"/>');
+				 $a=$('<a href="javascript:void(0);" class="demo-image" width = "80px" data-image="${basePath}'+data[i]+'"></a>');
 				$a.append($img);
 				var $p=$('<p>'+(i+1)+'</p>');
 				var $li=$('<li></li>');
@@ -172,8 +172,8 @@ var refreshElastislide=function($container,$carousel,data,empty){
 			var suffix=/\.[^\.]+$/.exec(data.fileIds);
 			
 			var $img,$a;
-			 $img=$('<img src="${basePath}'+data.fileIds+'80x100.JPG" src="'+imageSrc(data.fileIds)+'"  onerror="errorImage(this)" times="0"/>');
-			 $a=$('<a href="javascript:void(0);" class="demo-image" data-image="${basePath}'+data.fileIds+'"></a>');
+			 $img=$('<img src="${basePath}'+data.fileIds+'80x100.JPG?random='+Math.random()+' width = "80px" src="'+imageSrc(data.fileIds)+'"  onerror="errorImage(this)" times="0"/>');
+			 $a=$('<a href="javascript:void(0);" class="demo-image" width = "80px" data-image="${basePath}'+data.fileIds+'"></a>');
 			$a.append($img);
 			var $li=$('<li></li>');
 			$li.append($a);
