@@ -112,7 +112,7 @@
 <#if (model.imgPath??)>
 <p> 
     <#list model.imgPath?split(",") as imgPath>
-	<a href="${b.imagePath}${imgPath}" rel="lightbox-tour" title="资质">
+	<a href="${b.imagePath}${imgPath}" rel="lightbox-tour" title="资质" />
     	<img src="${b.imagePath}${imgPath}" width="100px" height="100px"/>
     </#list>
 </p>
