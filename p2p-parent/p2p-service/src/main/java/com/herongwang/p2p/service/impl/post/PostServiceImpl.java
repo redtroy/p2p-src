@@ -444,8 +444,8 @@ public class PostServiceImpl implements IPostService
             entity.setBalance(sr);
             deal.setAmount(amount);
             deal.setBalance(entity.getBalance());
-            deal.setDueAmount(new BigDecimal(0));
-            deal.setFrozenAmount(new BigDecimal(0));
+            deal.setDueAmount(entity.getDueAmount());
+            deal.setFrozenAmount(entity.getFozenAmount());
             accountService.updateAccount(entity);
             deal.setStatus(1);
             deal.setRemark("充值" + amount.divide(new BigDecimal(100)) + "元成功！");

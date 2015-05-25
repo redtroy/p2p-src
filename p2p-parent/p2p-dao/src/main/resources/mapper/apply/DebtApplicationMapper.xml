@@ -25,6 +25,6 @@ LEFT JOIN Users u on d.customerId = u.customerId WHERE 1=1 ]]>
 		<if test="condition.name != null and condition.name != ''">
 			<![CDATA[AND u.userName LIKE CONCAT('%',#{condition.name},'%')]]>
 		</if>
-		<![CDATA[ ORDER BY d.applyTime DESC]]>
+		<![CDATA[ ORDER BY d.status,d.applyTime DESC]]>
 	</select>
 </mapper>

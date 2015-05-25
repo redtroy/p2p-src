@@ -1,5 +1,6 @@
 package com.herongwang.p2p.service.funddetail;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -48,11 +49,11 @@ public interface IFundDetailService
      * @param id
      */
     public void delFundDetail(String id) throws ServiceException;
-
-
+    
     void investFundDetail(InvestOrderEntity io);
-
+    
     void orderFundDetail(OrdersEntity order) throws ServiceException;
-
-    void repayPlanFundDetail(List<RepayPlanEntity> planlist) throws ServiceException;
+    
+    void repayPlanFundDetail(List<RepayPlanEntity> planlist, BigDecimal blance)
+            throws ServiceException;
 }
