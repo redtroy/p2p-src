@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>和融网</title>
+<title>和融网-我要投资</title>
 <link href="${b.staticPath}style/style.css" rel="stylesheet" type="text/css" />
 <script src="${b.staticPath}js/jquery1.8.js"></script>
 <@b.pageScript/>
@@ -36,7 +36,7 @@ $.post("${basePath}prod/bdList.htm",params, function(data) {
 <#list list as model>
 <div class="prodBox ly-clearFix">
 <div class="prodInfo ly-left">
-<div class="prodTit fontYH ly-clearFix"><span class="icon blue"></span><span>和融直营</span><span>${model.title}</span></div>
+<div class="prodTit fontYH ly-clearFix"><span class="icon blue"></span><span>和融直营</span><span><a href="javascript:invest('${model.debtId}');">${model.title}</a></span></div>
 <table border="0" cellspacing="0" cellpadding="0" class="tableProd">
   <tr>
     <td>
