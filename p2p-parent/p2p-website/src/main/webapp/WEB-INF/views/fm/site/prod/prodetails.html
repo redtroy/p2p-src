@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>和融网</title>
+<title>和融网-投资详情</title>
 <link href="${b.staticPath}style/style.css" rel="stylesheet" type="text/css" />
 <!-- <script src="${b.staticPath}js/jquery1.8.js"></script> -->
 <link href="${b.staticPath}css/jquery.lightbox.css" rel="stylesheet" type="text/css" />
@@ -10,9 +10,18 @@
 <script type="text/javascript" src="${b.staticPath}js/jquery.lightbox.min.js"></script>
 <script type="text/javascript" src="${b.staticPath}js/jquery.color.min.js"></script>
 <script>
+var min=${model.minInvest};
+  $(function(){
+	  $("#invest_money").text(($("#fs").val()*min/100)+"元");
+	  $("#fs").keyup(function(){
+		  var fs=$("#fs").val();
+		  var je=fs*min/100; 
+		  $("#invest_money").text(je+"元");
+	  })
+  })
   function sub(){
 	  $.post("${basePath}checkLogin.htm",function(data){
-		  if (data=='ok'){
+		  if (eval(data)=="ok"){
 			  var max=${amountMax}/100;
 			  var min=${model.minInvest};
 			  if (min==null || min==""){
@@ -94,6 +103,7 @@
 <div class="mt10"><span class="f14 fontYH">可用余额：</span><span class="mr5 fontYH f12">￥<#if (account.balance?? && account.balance>0)>${account.balance/100}<#else>0</#if></>元</span></div>
 <#if (model.status<=1)>
 <div class="mt10"><span class="f14 fontYH">投资份数：</span><input class="input input-w50h30" type="text" autocomplete="off" placeholder="" id="fs" name="input2" value="1"/>	<span class="mr5 fontYH f14">份</span></div>
+<div class="mt10"><span class="f14 fontYH">投资总额：</span><span class="mr5 fontYH f12" id="invest_money"></span></div>
 <div class="mt10" title=""><span class="button button-red fontYH" onclick="sub();">立即投资</span></div>
 </#if>
 </form>
@@ -102,22 +112,22 @@
 <div class="aboutBox fontYH f16">
 <dl>
 <dt><span class="f20 fontYH">项目概述</span></dt>
-<li><p>${model.descriptionProject}</p></li>
+<dd><p>${model.descriptionProject}</p></dd>
 <dt><span class="f20 fontYH">资金用途</span></dt>
-<li><p>${model.capitalUses}</p></li>
+<dd><p>${model.capitalUses}</p></dd>
 <dt><span class="f20 fontYH">还款来源</span></dt>
-<li><p>${model.sourceRepayment}</p></li>
+<dd><p>${model.sourceRepayment}</p></dd>
 <dt><span class="f20 fontYH">风险控制</span></dt>
-<li><p>${model.riskControl}</p></li>
+<dd><p>${model.riskControl}</p></dd>
 <dt><span class="f20 fontYH">资质证明</span></dt>
-<li>
+<div>
 <#if (model.imgPath??)>
     <#list model.imgPath?split(",") as imgPath>
 	<a href="${b.imagePath}${imgPath}" rel="lightbox-tour" title="资质" />
     	<img src="${b.imagePath}${imgPath}" width="100px" height="100px"/>
     </#list>
 </#if>
-</li>
+</div>
 </dl>
 </div>
 </div>
