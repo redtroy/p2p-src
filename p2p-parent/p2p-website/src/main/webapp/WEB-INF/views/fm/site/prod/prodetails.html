@@ -92,8 +92,10 @@
 <input type="hidden" id="invest_amount" name="amount" value=""/>
 <input type="hidden" id="" name="debtId" value="${model.debtId}"/>
 <div class="mt10"><span class="f14 fontYH">可用余额：</span><span class="mr5 fontYH f12">￥<#if (account.balance?? && account.balance>0)>${account.balance/100}<#else>0</#if></>元</span></div>
+<#if (model.status<=1)>
 <div class="mt10"><span class="f14 fontYH">投资份数：</span><input class="input input-w50h30" type="text" autocomplete="off" placeholder="" id="fs" name="input2" value="1"/>	<span class="mr5 fontYH f14">份</span></div>
 <div class="mt10" title=""><span class="button button-red fontYH" onclick="sub();">立即投资</span></div>
+</#if>
 </form>
 </div>
 </div>
@@ -110,12 +112,10 @@
 <dt><span class="f20 fontYH">资质证明</span></dt>
 <li>
 <#if (model.imgPath??)>
-<p> 
     <#list model.imgPath?split(",") as imgPath>
 	<a href="${b.imagePath}${imgPath}" rel="lightbox-tour" title="资质" />
     	<img src="${b.imagePath}${imgPath}" width="100px" height="100px"/>
     </#list>
-</p>
 </#if>
 </li>
 </dl>
