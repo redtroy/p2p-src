@@ -72,7 +72,8 @@ public class ProfitListEntity extends Pagable implements Serializable
     private BigDecimal leftAmount;
     
     /**
-     * 状态
+     * 状态 
+     * 0 未结算（未还），1 已结算（已还）
      */
     @Column(name = "status")
     private Integer status;

@@ -299,22 +299,22 @@ public class ProfitServiceImpl implements IProfitService
             {
                 month++;
                 BigDecimal profit = money.multiply(monthRatio);
-                BigDecimal fee = profit.multiply(new BigDecimal(InvestFee));//手续费
-                BigDecimal subtract = profit.subtract(fee);
+                //  BigDecimal fee = profit.multiply(new BigDecimal(InvestFee));//手续费
+                //  BigDecimal subtract = profit.subtract(fee);
                 RepayPlanEntity mp = new RepayPlanEntity();
                 if (i != 1)
                 {
-                    mp.setMonthAmount(subtract.setScale(2,
+                    mp.setMonthAmount(profit.setScale(2,
                             BigDecimal.ROUND_HALF_UP));
-                    mp.setMonthProfit(subtract.setScale(2,
+                    mp.setMonthProfit(profit.setScale(2,
                             BigDecimal.ROUND_HALF_UP));
                     mp.setMonthCapital(new BigDecimal(0));
                 }
                 else
                 {
-                    mp.setMonthAmount(subtract.add(money).setScale(2,
+                    mp.setMonthAmount(profit.add(money).setScale(2,
                             BigDecimal.ROUND_HALF_UP));
-                    mp.setMonthProfit(subtract.setScale(2,
+                    mp.setMonthProfit(profit.setScale(2,
                             BigDecimal.ROUND_HALF_UP));
                     mp.setMonthCapital(money.setScale(2,
                             BigDecimal.ROUND_HALF_UP));
