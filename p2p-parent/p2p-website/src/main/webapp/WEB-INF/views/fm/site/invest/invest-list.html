@@ -4,9 +4,26 @@
 <title>和融网-我的投资</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="${b.staticPath}style/member.css" rel="stylesheet" type="text/css" />
-<script src="${b.staticPath}js/jquery.js"></script>
+<script src="${b.staticPath}js/jquery1.8.js"></script>
+<@b.pageScript/>
 </head>
-
+<script>
+function query(page) {
+	var params="";
+	if(page!=undefined){
+		params=params+"&currentPage="+page;
+	}
+	$.post("${basePath}invest/list.htm",params, function(data) {
+		var res = $(data).find(".tabList");
+		var pager = $(data).find("#pager");
+		$(".tabList").empty();
+		$(".tabList").append(res.html());
+		var totalPage = pager.attr("totalPage");
+		var currentPage = pager.attr("currentPage");
+		loadPage(currentPage, totalPage, query);
+	});
+	}
+</script>
 <body>
 <@b.header />
 <div class="fence-wide memCenter">
@@ -35,10 +52,11 @@
               <td class="color-purple">${model.amount/100}元</td>
               <td><#if (model.createTime??)> ${model.createTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
               <td><#if (model.finishTime??)> ${model.finishTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
-              <td><em class="state normal"> ${model.statusText } </em></td>
+              <td><em class="state normal"> ${model.statusText} </em></td>
             </tr>
             </#list>
           </table>
+          <@b.pager/>
         </div>
       </div>
     </div>
