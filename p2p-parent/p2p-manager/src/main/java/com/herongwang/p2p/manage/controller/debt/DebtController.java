@@ -120,6 +120,18 @@ public class DebtController extends BaseController
                         .divide(new BigDecimal(100)));
                 info.setMinInvest(info.getMinInvest()
                         .divide(new BigDecimal(100)));
+                String descriptionProject = info.getDescriptionProject()
+                        .replaceAll("<br />", "\r");
+                String capitalUses = info.getCapitalUses().replaceAll("<br />",
+                        "\r");
+                String sourceRepayment = info.getSourceRepayment()
+                        .replaceAll("<br />", "\r");
+                String riskControl = info.getRiskControl().replaceAll("<br />",
+                        "\r");
+                info.setDescriptionProject(descriptionProject);
+                info.setCapitalUses(capitalUses);
+                info.setSourceRepayment(sourceRepayment);
+                info.setRiskControl(riskControl);
                 map.put("info", info);
                 map.put("applyId", info.getCustomerId());
                 map.put("amount", info.getAmount());
