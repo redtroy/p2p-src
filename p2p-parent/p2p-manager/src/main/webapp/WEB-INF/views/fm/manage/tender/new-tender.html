@@ -20,9 +20,13 @@
 <script src="${b.staticPath}js/jquery.bigautocomplete.js"></script>
 <@b.validate/>
 <@b.dialog/>
+
 <@b.upload/>
+
+
 <script>
 var validform;
+
 $(document).ready(function() {
 	validform = $("#submit_form").Validform({
 		tiptype : 3,

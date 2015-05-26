@@ -152,7 +152,30 @@ public class DebtController extends BaseController
         order.setAmount(m);
         order.setCreateTime(new Date());
         order.setLoanAmount(m);
-        
+        String descriptionProject = tender.getDescriptionProject()
+                .replaceAll("\n\r", "<br />")
+                .replaceAll("\r\n", "<br />")
+                .replaceAll("\n", "<br />")
+                .replaceAll("\r", "<br />");
+        String capitalUses = tender.getCapitalUses()
+                .replaceAll("\n\r", "<br />")
+                .replaceAll("\r\n", "<br />")
+                .replaceAll("\n", "<br />")
+                .replaceAll("\r", "<br />");
+        String sourceRepayment = tender.getSourceRepayment()
+                .replaceAll("\n\r", "<br />")
+                .replaceAll("\r\n", "<br />")
+                .replaceAll("\n", "<br />")
+                .replaceAll("\r", "<br />");
+        String riskControl = tender.getRiskControl()
+                .replaceAll("\n\r", "<br />")
+                .replaceAll("\r\n", "<br />")
+                .replaceAll("\n", "<br />")
+                .replaceAll("\r", "<br />");
+        tender.setDescriptionProject(descriptionProject);
+        tender.setCapitalUses(capitalUses);
+        tender.setSourceRepayment(sourceRepayment);
+        tender.setRiskControl(riskControl);
         try
         {
             if (null == id || id.isEmpty())
