@@ -107,9 +107,12 @@ public class DebtController extends BaseController
             if (StringUtils.isEmpty(id))
             {
                 DebtApplicationEntity entity = debtApplicationService.getApplyForEntity(applicationId);
-                map.put("applyId", entity.getCustomerId());
+                if (!StringUtils.isEmpty(entity.getCustomerId()))
+                {
+                    map.put("applyId", entity.getCustomerId());
+                    map.put("name", entity.getName());
+                }
                 map.put("applicationId", applicationId);
-                map.put("name", entity.getName());
                 map.put("amount", entity.getAmount());
                 return "manage/tender/new-tender";
             }
