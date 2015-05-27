@@ -53,7 +53,7 @@ public interface IInvestOrderService
     /**
     * 查询订单，标的详情
     */
-    public List<InvestModel> queryInvestModel(String custId);
+    public List<InvestModel> queryInvestModel(InvestOrderEntity query);
     
     /**
      * 查询所有收益人 总收益

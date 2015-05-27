@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.herongwang.p2p.entity.apply.DebtApplicationEntity;
-import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.service.apply.IDebtApplicationService;
 import com.herongwang.p2p.website.controller.BaseController;
 import com.sxj.util.exception.WebException;
@@ -53,13 +52,13 @@ public class ApplyController extends BaseController
     {
         try
         {
-            UsersEntity user = getUsersEntity();
+            // UsersEntity user = getUsersEntity();
             //获取登陆会员ID 
             apply.setAmount(apply.getAmount().multiply(new BigDecimal(100)));
             Map<String, String> map = new HashMap<String, String>();
             apply.setApplyTime(new Date());//申请时间
             apply.setStatus(0);
-            apply.setCustomerId(user.getCustomerId());
+            // apply.setCustomerId(user.getCustomerId());
             applyForService.addApply(apply);
             map.put("isOK", "ok");
             return map;

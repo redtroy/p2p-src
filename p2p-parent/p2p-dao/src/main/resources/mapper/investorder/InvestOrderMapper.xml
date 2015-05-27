@@ -44,11 +44,11 @@
 		<![CDATA[ ORDER BY i.createTime DESC]]>
 	</select>
 	
-	<select id="queryDebt" resultMap="InvestListResultMap" parameterType="String">
+	<select id="queryDebt" resultMap="InvestListResultMap" parameterType="com.sxj.util.persistent.QueryCondition">
 	     <![CDATA[select i.orderId,d.title,i.amount,i.createTime,d.finishTime,d.`status`,p.TEXT as statusText from InvestOrder i]]>
 	     <![CDATA[LEFT JOIN Users u on u.customerId = i.customerId LEFT JOIN Debt d on d.debtId = i.debtId ]]>
 	     <![CDATA[left JOIN PARAMETERS p on p.TYPE = 'tenderType' and p.`VALUE` = d.`status` where i.`status` = 1]]>
-	     <![CDATA[and i.customerId=#{customerId} order by i.createTime desc ]]>
+	     <![CDATA[and i.customerId=#{condition.customerId} order by i.createTime desc ]]>
 	</select>
 	<select id="queryInvestorderList" resultMap="InvestorderResultMap" parameterType="String">
 	     <![CDATA[select * from InvestOrder where debtId=#{debtId}]]>

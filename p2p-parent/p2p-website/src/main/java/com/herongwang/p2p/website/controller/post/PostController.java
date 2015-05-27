@@ -170,7 +170,7 @@ public class PostController extends BaseController
                 deal.setStatus(1);
                 deal.setAmount(m);
                 deal.setBalance(account.getBalance());
-                deal.setDueAmount(account.getDebtAmount());
+                deal.setDueAmount(account.getDueAmount());
                 deal.setFrozenAmount(m);
                 deal.setRemark("申请提现，冻结对应的账户余额。");
                 fundDetailService.addFundDetail(deal);//生成资金明细

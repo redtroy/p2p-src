@@ -8,7 +8,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.model.invest.InvestModel;
@@ -33,7 +32,8 @@ public class InvestOrderController extends BaseController
      * @return
      */
     @RequestMapping("list")
-    public String list(ModelMap map, DebtEntity invest) throws WebException
+    public String list(ModelMap map, InvestOrderEntity invest)
+            throws WebException
     {
         try
         {
@@ -41,8 +41,10 @@ public class InvestOrderController extends BaseController
             {
                 return "site/invest/invest-list";
             }
-            List<InvestModel> investList = ivestService.queryInvestModel(getUsersEntity().getCustomerId());
+            invest.setCustomerId(getUsersEntity().getCustomerId());
+            List<InvestModel> investList = ivestService.queryInvestModel(invest);
             map.put("list", investList);
+            map.put("query", invest);
         }
         catch (Exception e)
         {
@@ -59,7 +61,9 @@ public class InvestOrderController extends BaseController
         try
         {
             UsersEntity user = getUsersEntity();
-            InvestOrderEntity io = ivestService.addOrder(debtId, amount,user.getCustomerId());
+            InvestOrderEntity io = ivestService.addOrder(debtId,
+                    amount,
+                    user.getCustomerId());
             //加MD5
             ra.addAttribute("orderId", io.getOrderId());
             ra.addAttribute("amount", io.getAmount().doubleValue());

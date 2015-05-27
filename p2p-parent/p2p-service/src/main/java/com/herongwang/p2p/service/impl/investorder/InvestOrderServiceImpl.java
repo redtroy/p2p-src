@@ -14,7 +14,6 @@ import com.herongwang.p2p.dao.account.IAccountDao;
 import com.herongwang.p2p.dao.debt.IDebtDao;
 import com.herongwang.p2p.dao.investorder.IInvestOrderDao;
 import com.herongwang.p2p.dao.profitlist.IProfitListDao;
-import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.entity.profitlist.ProfitListEntity;
@@ -67,7 +66,8 @@ public class InvestOrderServiceImpl implements IInvestOrderService
             
             InvestOrderEntity io = new InvestOrderEntity();//投资订单
             ProfitModel pm = profitService.calculatingProfit(debtId,
-                    new BigDecimal(amount),customerId);
+                    new BigDecimal(amount),
+                    customerId);
             io.setDebtId(debtId);
             io.setCustomerId(customerId);
             io.setAmount(new BigDecimal(amount));
@@ -100,7 +100,8 @@ public class InvestOrderServiceImpl implements IInvestOrderService
             InvestOrderEntity newIo = investOrderDao.getInvestOrder(io.getOrderId());
             DebtEntity debt = debtDao.getDebtFor(newIo.getDebtId());
             ProfitModel pm = profitService.calculatingProfit(newIo.getDebtId(),
-                    newIo.getAmount(),newIo.getCustomerId());
+                    newIo.getAmount(),
+                    newIo.getCustomerId());
             List<ProfitListEntity> profits = new ArrayList<ProfitListEntity>();
             if (debt.getRepayType() == 3)
             {
@@ -108,6 +109,7 @@ public class InvestOrderServiceImpl implements IInvestOrderService
                 pl.setProfitId(StringUtils.getUUID());
                 pl.setOrderId(io.getOrderId());
                 pl.setStatus(0);
+                pl.setSequence(1);//2015.5.26-QJJ 增加序号
                 pl.setCreateTime(new Date());
                 pl.setFee(newIo.getTotalFee());
                 pl.setMonthAmount(newIo.getDueTotalAmount());
@@ -216,11 +218,17 @@ public class InvestOrderServiceImpl implements IInvestOrderService
     }
     
     @Override
-    public List<InvestModel> queryInvestModel(String custId)
+    public List<InvestModel> queryInvestModel(InvestOrderEntity query)
     {
         try
         {
-            return investOrderDao.queryDebt(custId);
+            QueryCondition<InvestOrderEntity> condition = new QueryCondition<InvestOrderEntity>();
+            List<InvestModel> investList = new ArrayList<InvestModel>();
+            condition.addCondition("customerId", query.getCustomerId());
+            condition.setPage(query);
+            investList = investOrderDao.queryDebt(condition);
+            query.setPage(condition);
+            return investList;
         }
         catch (Exception e)
         {
