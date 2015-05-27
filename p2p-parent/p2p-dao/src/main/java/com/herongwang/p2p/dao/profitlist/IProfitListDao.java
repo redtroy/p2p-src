@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.herongwang.p2p.entity.profitlist.ProfitListEntity;
 import com.sxj.mybatis.orm.annotations.BatchInsert;
+import com.sxj.mybatis.orm.annotations.Update;
 import com.sxj.util.persistent.QueryCondition;
 
 public interface IProfitListDao
@@ -34,4 +35,9 @@ public interface IProfitListDao
      */
     public ProfitListEntity getEntityBySeAndOrderId(String se, String orderId);
     
+    /**
+     * 更新受益明细
+     */
+    @Update
+    public void updateProfitList(ProfitListEntity pro);
 }

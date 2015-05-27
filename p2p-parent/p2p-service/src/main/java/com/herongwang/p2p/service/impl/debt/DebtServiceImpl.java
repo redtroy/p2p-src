@@ -161,32 +161,51 @@ public class DebtServiceImpl implements IDebtService
                             2,
                             BigDecimal.ROUND_HALF_UP)));
             BigDecimal ljMonthAmount = new BigDecimal(0);
-            for (int i = 0; i < prift.getMonthProfit().size(); i++)
+            if (debt.getRepayType() != 3)
             {
-                ljMonthAmount = ljMonthAmount.add(prift.getMonthProfit()
-                        .get(i)
-                        .getMonthAmount());
+                for (int i = 0; i < prift.getMonthProfit().size(); i++)
+                {
+                    ljMonthAmount = ljMonthAmount.add(prift.getMonthProfit()
+                            .get(i)
+                            .getMonthAmount());
+                    RepayPlanEntity repayPlan = new RepayPlanEntity(); //
+                    repayPlan.setOrderId(financeOrder.getOrderId());
+                    repayPlan.setDebtId(debtId);
+                    repayPlan.setSequence(i + 1);
+                    repayPlan.setMonthCapital(prift.getMonthProfit()
+                            .get(i)
+                            .getMonthCapital()); //月本金
+                    repayPlan.setMonthProfit(prift.getMonthProfit()
+                            .get(i)
+                            .getMonthProfit()); //月利息
+                    repayPlan.setMonthAmount(prift.getMonthProfit()
+                            .get(i)
+                            .getMonthAmount()); //月总额
+                    repayPlan.setLeftAmount(prift.getAmount()
+                            .subtract(ljMonthAmount)); //剩余本息总额
+                    repayPlan.setStatus(0);
+                    repayPlan.setCreateTime(new Date());
+                    repayPlan.setUpdateTime(new Date());
+                    repayPlan.setPrepaidStatus(0);
+                    reList.add(repayPlan);
+                    
+                }
+            }
+            else
+            {
                 RepayPlanEntity repayPlan = new RepayPlanEntity(); //
                 repayPlan.setOrderId(financeOrder.getOrderId());
                 repayPlan.setDebtId(debtId);
-                repayPlan.setSequence(i + 1);
-                repayPlan.setMonthCapital(prift.getMonthProfit()
-                        .get(i)
-                        .getMonthCapital()); //月本金
-                repayPlan.setMonthProfit(prift.getMonthProfit()
-                        .get(i)
-                        .getMonthProfit()); //月利息
-                repayPlan.setMonthAmount(prift.getMonthProfit()
-                        .get(i)
-                        .getMonthAmount()); //月总额
-                repayPlan.setLeftAmount(prift.getAmount()
-                        .subtract(ljMonthAmount)); //剩余本息总额
+                repayPlan.setSequence(1);
+                repayPlan.setMonthCapital(prift.getInvestment()); //月本金
+                repayPlan.setMonthProfit(prift.getTotalInterest()); //月利息
+                repayPlan.setMonthAmount(prift.getAmount()); //月总额
+                repayPlan.setLeftAmount(new BigDecimal(0)); //剩余本息总额
                 repayPlan.setStatus(0);
                 repayPlan.setCreateTime(new Date());
                 repayPlan.setUpdateTime(new Date());
                 repayPlan.setPrepaidStatus(0);
                 reList.add(repayPlan);
-                
             }
             repayDao.addRepayPlanList(reList);
             //根据会员ID 查询账户

@@ -13,11 +13,11 @@
 		if (page != undefined) {
 			params = params + "&currentPage=" + page;
 		}
-		$.post("queryFundDetail.htm", params, function(data) {
-			var res = $(data).find("#res_table");
+		$.post("${basePath}fundDetail/queryFundDetail.htm", params, function(data) {
+			var res = $(data).find("#resTable");
 			var pager = $(data).find("#pager");
-			$("#res_table").empty();
-			$("#res_table").append(res.html());
+			$("#resTable").empty();
+			$("#resTable").html(res.html());
 			var totalPage = pager.attr("totalPage");
 			var currentPage = pager.attr("currentPage");
 			loadPage(currentPage, totalPage, query);
@@ -51,7 +51,7 @@
 							</div>
 						</div>
 					</div>
-					<table border="0" cellpadding="0" cellspacing="0" id="res_table"
+					<table border="0" cellpadding="0" cellspacing="0" id="resTable"
 						class="table tabList tableCapital">
 						<col width="15%" />
 						<col width="15%" />

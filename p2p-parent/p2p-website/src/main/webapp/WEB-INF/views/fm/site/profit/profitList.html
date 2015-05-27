@@ -22,17 +22,19 @@
 					<div class="mainBox fontYH">
 						<table border="0" cellpadding="0" cellspacing="0"
 							class="tabList tableInvest mb20">
-							<col width="12%" />
-							<col width="22%" />
-							<col width="22%" />
-							<col width="22%" />
-							<col width="22%" />
+							<col width="10%" />
+							<col width="20%" />
+							<col width="20%" />
+							<col width="20%" />
+							<col width="20%" />
+							<col width="10%" />
 							<tr>
 								<th>月份</th>
 								<th>月返还本金</th>
 								<th>月返还利息</th>
 								<th>月返还总额</th>
 								<th>管理费</th>
+								<th>收益状态</th>
 							</tr>
 							<#list list as profit>
 							<tr>
@@ -41,6 +43,11 @@
 								<td class="color-red">${profit.monthProfit/100}</td>
 								<td class="color-purple">${profit.monthAmount/100}</td>
 								<td class="color-green"></td>
+								<#if (profit.stauts==0)>
+								<td class="color-green">未结算</td>
+								<#else>
+								<td class="state verified">已结算</td>
+								<#if>
 							</tr>
 							</#list>
 						</table>
