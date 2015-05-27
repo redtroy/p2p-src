@@ -43,6 +43,10 @@ public class LoanController extends BaseController
             + "QC/K4FmKZf51Y6HmSxLI/0FtzOHPjTc3z2v6JdBTur5fQRXHUB86JcztiDMi3+5LZVg8gTJ1fzM8"
             + "/S93FKFLK84=";
     
+    public static final String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCcU6n7OKcX3KQ+vpUtT/xqZ2C0tIX64Mav1xPF"
+            + "gFTf540uUxbenL4nPfBhYG9EOx//3rDhnSeb6MB4PKIR045LwQ5Ilikc5QPjKWrIq9YchgbuLXLB"
+            + "uVsGHU+GY0qRdhQ1wAw0vLp+hUvRR4zwmoE6en6RZtzE3XrH+3loi5XBMwIDAQAB";
+    
     @Autowired
     IOrdersService ordersService;
     
@@ -61,6 +65,7 @@ public class LoanController extends BaseController
     @Autowired
     private IDebtService debtService;
     
+    /*----------------------------------------------充值--------------------------------*/
     @RequestMapping("/recharge")
     public String recharge(ModelMap map) throws WebException
     {
@@ -155,6 +160,7 @@ public class LoanController extends BaseController
         System.out.println(result.getMessage());
     }
     
+    /*----------------------------------------------提现--------------------------------*/
     /**
      * 除100
      * @param m
