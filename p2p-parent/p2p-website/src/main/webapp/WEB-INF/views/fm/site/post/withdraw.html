@@ -118,13 +118,17 @@
       <td>
       <#if type = 0>
       <input type="text" id="amount" name="orderAmount" class="input input-w140h30" value="" datatype="amount" nullmsg="请输入提现金额！"  /> 元
-	<#else>
+	<#else if = 999>
 	您已有一条提现记录，请等待管理员审核后再申请。
+	<#else>
+	您未绑定提现银行卡，请绑定提现银行卡。
 	</#if>
 	</td>
     </tr>
   </table>
+  <#if type = 0>
         <div class="tc"> <a class="button button-orange" href="javascript:void(0)" onclick="postInfo();">确认提现</a>&nbsp;</div>
+        </#if>
         </form>
         </div>
       </div>

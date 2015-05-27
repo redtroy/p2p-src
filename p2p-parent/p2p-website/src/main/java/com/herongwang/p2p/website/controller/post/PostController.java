@@ -29,6 +29,7 @@ import com.herongwang.p2p.service.funddetail.IFundDetailService;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
 import com.herongwang.p2p.service.orders.IOrdersService;
 import com.herongwang.p2p.service.post.IPostService;
+import com.herongwang.p2p.service.users.IUserService;
 import com.herongwang.p2p.website.controller.BaseController;
 import com.sxj.util.common.EncryptUtil;
 import com.sxj.util.common.StringUtils;
@@ -58,6 +59,9 @@ public class PostController extends BaseController
     @Autowired
     private IDebtService debtService;
     
+    @Autowired
+    private IUserService userService;
+    
     @RequestMapping("/recharge")
     public String recharge(ModelMap map) throws WebException
     {
@@ -74,10 +78,15 @@ public class PostController extends BaseController
         }
         OrdersEntity query = new OrdersEntity();
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
+        UsersEntity u = userService.getUserById(user.getCustomerId());
         query.setCustomerId(user.getCustomerId());
         query.setOrderType(2);
         query.setStatus(0);
         int num = ordersService.queryOrdersList(query).size();
+        if (StringUtils.isEmpty(u.getCardNo()))
+        {
+            num = 999;
+        }
         map.put("type", num);
         map.put("balance", this.divide(account.getBalance()));
         return "site/post/withdraw";
