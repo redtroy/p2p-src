@@ -8,10 +8,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +31,7 @@ import com.herongwang.p2p.entity.tl.TLBillEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.model.order.OrderModel;
 import com.herongwang.p2p.model.order.ResultsModel;
+import com.herongwang.p2p.model.post.RegisterModel;
 import com.herongwang.p2p.service.account.IAccountService;
 import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
@@ -467,5 +470,106 @@ public class PostServiceImpl implements IPostService
         {
             return;
         }
+    }
+    
+    @Override
+    public String register(RegisterModel rg)
+    {
+        try
+        {
+            
+            String SubmitURL = "http://218.4.234.150:88/main/loan/toloanregisterbind.action";
+            
+            String privatekey = Common.privateKeyPKCS8;
+            
+            if (antistate == 1)
+            {
+                Date d = new Date();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+                RandomTimeStamp = Common.getRandomNum(2) + sdf.format(d);
+            }
+            
+            String dataStr = rg.getRegisterType() + rg.getAccountType()
+                    + rg.getMobile() + rg.getEmail() + rg.getRealName()
+                    + rg.getIdentificationNo() + rg.getImage1()
+                    + rg.getImage2() + rg.getLoanPlatformAccount()
+                    + rg.getPlatformMoneymoremore() + rg.getRandomTimeStamp()
+                    + rg.getRemark1() + rg.getRemark2() + rg.getRemark3()
+                    + rg.getReturnURL() + rg.getNotifyURL();
+            // 签名
+            MD5 md5 = new MD5();
+            RsaHelper rsa = RsaHelper.getInstance();
+            if (antistate == 1)
+            {
+                dataStr = md5.getMD5Info(dataStr);
+            }
+            SignInfo = rsa.signData(dataStr, privatekey);
+            
+            if (RegisterType.equals("1"))
+            {
+                Map<String, String> req = new TreeMap<String, String>();
+                req.put("RegisterType", RegisterType);
+                req.put("AccountType", AccountType);
+                req.put("Mobile", Mobile);
+                req.put("Email", Email);
+                req.put("RealName", RealName);
+                req.put("IdentificationNo", IdentificationNo);
+                req.put("Image1", Image1);
+                req.put("Image2", Image2);
+                req.put("LoanPlatformAccount", LoanPlatformAccount);
+                req.put("PlatformMoneymoremore", PlatformMoneymoremore);
+                req.put("RandomTimeStamp", RandomTimeStamp);
+                req.put("Remark1", Remark1);
+                req.put("Remark2", Remark2);
+                req.put("Remark3", Remark3);
+                req.put("ReturnURL", ReturnURL);
+                req.put("NotifyURL", NotifyURL);
+                req.put("SignInfo", SignInfo);
+                
+                String[] resultarr = HttpClientUtil.doPostQueryCmd(SubmitURL,
+                        req);
+                System.out.println(resultarr[1]);
+                
+                if (StringUtils.isNotBlank(resultarr[1])
+                        && resultarr[1].startsWith("{"))
+                {
+                    // 转账
+                    LoanRegisterBindReturnBean lrbrb = (LoanRegisterBindReturnBean) Common.JSONDecode(resultarr[1],
+                            LoanRegisterBindReturnBean.class);
+                    if (lrbrb != null)
+                    {
+                        String publickey = Common.publicKey;
+                        
+                        dataStr = lrbrb.getAccountType()
+                                + lrbrb.getAccountNumber() + lrbrb.getMobile()
+                                + lrbrb.getEmail() + lrbrb.getRealName()
+                                + lrbrb.getIdentificationNo()
+                                + lrbrb.getLoanPlatformAccount()
+                                + lrbrb.getMoneymoremoreId()
+                                + lrbrb.getPlatformMoneymoremore()
+                                + lrbrb.getRandomTimeStamp()
+                                + lrbrb.getRemark1() + lrbrb.getRemark2()
+                                + lrbrb.getRemark3() + lrbrb.getResultCode();
+                        if (antistate == 1)
+                        {
+                            dataStr = md5.getMD5Info(dataStr);
+                        }
+                        // System.out.println(dataStr);
+                        // 签名
+                        boolean verifySignature = rsa.verifySignature(lrbrb.getSignInfo(),
+                                dataStr,
+                                publickey);
+                        this.verifySignature = Boolean.toString(verifySignature);
+                        System.out.println(this.verifySignature);
+                    }
+                }
+                return null;
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

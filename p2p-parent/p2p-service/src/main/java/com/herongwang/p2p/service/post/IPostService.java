@@ -9,6 +9,7 @@ import com.herongwang.p2p.entity.tl.TLBillEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.model.order.OrderModel;
 import com.herongwang.p2p.model.order.ResultsModel;
+import com.herongwang.p2p.model.post.RegisterModel;
 import com.sxj.util.exception.ServiceException;
 
 public interface IPostService
@@ -69,4 +70,8 @@ public interface IPostService
     public void updateAccount(BigDecimal account, AccountEntity entity,
             String orderId, int incomeStatus) throws Exception;
     
+    /**
+     * 开户
+     */
+    public String register(RegisterModel rg);
 }
