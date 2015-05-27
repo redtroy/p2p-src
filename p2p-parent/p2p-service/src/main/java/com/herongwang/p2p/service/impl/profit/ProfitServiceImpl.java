@@ -98,7 +98,7 @@ public class ProfitServiceImpl implements IProfitService
                 ProfitListEntity pm = new ProfitListEntity();
                 pm.setMonthAmount(monthMoney.subtract(fee).setScale(2,
                         BigDecimal.ROUND_HALF_UP));//月总额
-                pm.setMonthProfit(subtract.setScale(2, BigDecimal.ROUND_HALF_UP));//月利息
+                pm.setMonthProfit(profit.setScale(2, BigDecimal.ROUND_HALF_UP));//月利息
                 pm.setMonthCapital(monthMoney.subtract(subtract)
                         .subtract(fee)
                         .setScale(2, BigDecimal.ROUND_HALF_UP));//本金
@@ -144,7 +144,7 @@ public class ProfitServiceImpl implements IProfitService
                 {
                     mp.setMonthAmount(subtract.setScale(2,
                             BigDecimal.ROUND_HALF_UP));
-                    mp.setMonthProfit(subtract.setScale(2,
+                    mp.setMonthProfit(profit.setScale(2,
                             BigDecimal.ROUND_HALF_UP));
                     mp.setMonthCapital(new BigDecimal(0));
                 }
@@ -152,7 +152,7 @@ public class ProfitServiceImpl implements IProfitService
                 {
                     mp.setMonthAmount(subtract.add(money).setScale(2,
                             BigDecimal.ROUND_HALF_UP));
-                    mp.setMonthProfit(subtract.setScale(2,
+                    mp.setMonthProfit(profit.setScale(2,
                             BigDecimal.ROUND_HALF_UP));
                     mp.setMonthCapital(money.setScale(2,
                             BigDecimal.ROUND_HALF_UP));
