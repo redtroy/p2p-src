@@ -82,6 +82,7 @@ public class FundDetailServiceImpl implements IFundDetailService
             QueryCondition<FundDetailEntity> condition = new QueryCondition<FundDetailEntity>();
             condition.addCondition("customerId", query.getCustomerId());//会员id
             condition.addCondition("type", query.getType());//会员id
+            condition.addCondition("orderId", query.getOrderId());//会员id
             condition.setPage(query);
             contractList = fundDetailDao.queryFundDetail(condition);
             query.setPage(condition);
