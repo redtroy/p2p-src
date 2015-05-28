@@ -20,6 +20,8 @@ public class LoanModel
     
     private String message;//返回信息
     
+    private String batchNo;//网贷平台标号
+    
     private String orderNo;//订单号
     
     private String platformMoneymoremore;//平台标识
@@ -49,6 +51,43 @@ public class LoanModel
     private Double feeRate;//上浮费率
     
     private Double feeSplitting;//平台分润
+    
+    /*---------------------查询------------------*/
+    private String action;//查询类型  空.转账  1.充值  2.提现 
+    
+    private String beginTime;//开始时间
+    
+    private String endTime;//结束时间
+    
+    public String getBeginTime()
+    {
+        return beginTime;
+    }
+    
+    public void setBeginTime(String beginTime)
+    {
+        this.beginTime = beginTime;
+    }
+    
+    public String getEndTime()
+    {
+        return endTime;
+    }
+    
+    public void setEndTime(String endTime)
+    {
+        this.endTime = endTime;
+    }
+    
+    public String getAction()
+    {
+        return action;
+    }
+    
+    public void setAction(String action)
+    {
+        this.action = action;
+    }
     
     public Double getAmount()
     {
@@ -288,6 +327,16 @@ public class LoanModel
     public void setWithdrawMoneymoremore(String withdrawMoneymoremore)
     {
         this.withdrawMoneymoremore = withdrawMoneymoremore;
+    }
+    
+    public String getBatchNo()
+    {
+        return batchNo;
+    }
+    
+    public void setBatchNo(String batchNo)
+    {
+        this.batchNo = batchNo;
     }
     
 }

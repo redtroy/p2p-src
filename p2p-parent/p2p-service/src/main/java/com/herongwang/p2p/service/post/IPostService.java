@@ -1,14 +1,19 @@
 package com.herongwang.p2p.service.post;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.ui.ModelMap;
 
 import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.tl.TLBillEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
+import com.herongwang.p2p.model.loan.LoanOrderQueryBean;
+import com.herongwang.p2p.model.loan.LoanRechargeOrderQueryBean;
+import com.herongwang.p2p.model.loan.LoanWithdrawsOrderQueryBean;
 import com.herongwang.p2p.model.order.OrderModel;
 import com.herongwang.p2p.model.order.ResultsModel;
+import com.herongwang.p2p.model.post.LoanModel;
 import com.herongwang.p2p.model.post.LoanReleaseModel;
 import com.herongwang.p2p.model.post.RegisterModel;
 import com.herongwang.p2p.model.post.TransferModel;
@@ -86,4 +91,31 @@ public interface IPostService
      * 资金释放
      */
     public String loanRelease(LoanReleaseModel lr);
+    
+    /**
+     * 转账对账
+     * @param loan
+     * @param 流水号、订单号、标号、时间必须填一个，不能同时为空。
+     * @return list
+     */
+    public List<LoanOrderQueryBean> orderQuery(LoanModel loan,
+            String submitURLPrefix) throws Exception;
+    
+    /**
+     * 充值对账
+     * @param loan
+     * @param 流水号、订单号、标号、时间必须填一个，不能同时为空。
+     * @return list
+     */
+    public List<LoanRechargeOrderQueryBean> rechargeOrderQuery(LoanModel loan,
+            String submitURLPrefix) throws Exception;
+    
+    /**
+     * 提现对账
+     * @param loan
+     * @param 流水号、订单号、标号、时间必须填一个，不能同时为空。
+     * @return list
+     */
+    public List<LoanWithdrawsOrderQueryBean> withdrawsOrderQuery(
+            LoanModel loan, String submitURLPrefix) throws Exception;
 }

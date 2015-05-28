@@ -21,9 +21,7 @@ import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.model.order.OrderModel;
 import com.herongwang.p2p.model.post.LoanModel;
 import com.herongwang.p2p.service.account.IAccountService;
-import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
-import com.herongwang.p2p.service.investorder.IInvestOrderService;
 import com.herongwang.p2p.service.orders.IOrdersService;
 import com.herongwang.p2p.service.post.IPostService;
 import com.herongwang.p2p.service.users.IUserService;
@@ -62,13 +60,7 @@ public class LoanController extends BaseController
     IAccountService accountService;
     
     @Autowired
-    IInvestOrderService investOrderService;
-    
-    @Autowired
     IFundDetailService fundDetailService;
-    
-    @Autowired
-    private IDebtService debtService;
     
     @Autowired
     private IUserService userService;
@@ -310,25 +302,26 @@ public class LoanController extends BaseController
         if (verifySignature)
         {
             OrdersEntity order = ordersService.getOrdersEntityByNo(result.getOrderNo());
-            if (null != order)
+            if (null != order && order.getStatus() == 0)
             {
                 order.setStatus(1);
                 ordersService.updateOrders(order);
+                FundDetailEntity query = new FundDetailEntity();
+                query.setOrderId(order.getOrderId());
+                query.setType(2);
+                List<FundDetailEntity> list = fundDetailService.queryFundDetail(query);
+                if (null != list && list.size() > 0)
+                {
+                    FundDetailEntity deal = list.get(0);
+                    deal.setStatus(1);
+                    deal.setRemark("提现" + result.getAmount() + "元成功！");
+                    fundDetailService.updateFundDetail(deal);
+                }
+                account.setBalance(account.getBalance()
+                        .subtract(this.multiply(new BigDecimal(
+                                result.getAmount()))));
+                accountService.updateAccount(account);
             }
-            FundDetailEntity query = new FundDetailEntity();
-            query.setOrderId(order.getOrderId());
-            query.setType(2);
-            List<FundDetailEntity> list = fundDetailService.queryFundDetail(query);
-            if (null != list && list.size() > 0)
-            {
-                FundDetailEntity deal = list.get(0);
-                deal.setStatus(1);
-                deal.setRemark("提现" + result.getAmount() + "元成功！");
-                fundDetailService.updateFundDetail(deal);
-            }
-            account.setBalance(account.getBalance()
-                    .subtract(this.multiply(new BigDecimal(result.getAmount()))));
-            accountService.updateAccount(account);
         }
         map.put("title", "账户提现");
         map.put("orderNo", result.getOrderNo());
@@ -343,7 +336,51 @@ public class LoanController extends BaseController
     @RequestMapping("/withdrawNotifyURL")
     public void withdrawNotifyURL(LoanModel result) throws Exception
     {
-        System.out.println(result.getMessage());
+        
+        UsersEntity user = this.getUsersEntity();
+        if (user == null)
+        {
+            return;
+        }
+        //获取账户信息
+        AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
+        RsaHelper rsa = RsaHelper.getInstance();
+        String dataStr = result.getWithdrawMoneymoremore()
+                + result.getPlatformMoneymoremore() + result.getLoanNo()
+                + result.getOrderNo() + result.getAmount() + result.getFeeMax()
+                + result.getFeeWithdraws() + result.getFeePercent()
+                + result.getFee() + result.getFreeLimit() + result.getFeeRate()
+                + result.getFeeSplitting() + result.getRandomTimeStamp()
+                + result.getRemark1() + result.getRemark2()
+                + result.getRemark3() + result.getResultCode();
+        boolean verifySignature = rsa.verifySignature(result.getSignInfo(),
+                dataStr,
+                publicKey);
+        if (verifySignature)
+        {
+            OrdersEntity order = ordersService.getOrdersEntityByNo(result.getOrderNo());
+            if (null != order && order.getStatus() == 0)
+            {
+                order.setStatus(1);
+                ordersService.updateOrders(order);
+                FundDetailEntity query = new FundDetailEntity();
+                query.setOrderId(order.getOrderId());
+                query.setType(2);
+                List<FundDetailEntity> list = fundDetailService.queryFundDetail(query);
+                if (null != list && list.size() > 0)
+                {
+                    FundDetailEntity deal = list.get(0);
+                    deal.setStatus(1);
+                    deal.setRemark("提现" + result.getAmount() + "元成功！");
+                    fundDetailService.updateFundDetail(deal);
+                }
+                account.setBalance(account.getBalance()
+                        .subtract(this.multiply(new BigDecimal(
+                                result.getAmount()))));
+                accountService.updateAccount(account);
+            }
+            
+        }
     }
     
     /**
