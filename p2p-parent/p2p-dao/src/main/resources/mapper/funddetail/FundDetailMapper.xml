@@ -30,6 +30,9 @@
 		<if test="condition.customerId != null and condition.customerId != ''">
 			<![CDATA[AND D.customerId =#{condition.customerId}]]>
 		</if>
+		<if test="condition.orderId != null and condition.orderId != ''">
+			<![CDATA[AND D.orderId =#{condition.orderId}]]>
+		</if>
 		<!-- 查询类型 -->
 		<if test="condition.type != null">
 			<![CDATA[AND D.type = #{condition.type}]]>
