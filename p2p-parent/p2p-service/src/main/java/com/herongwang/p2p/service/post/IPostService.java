@@ -9,7 +9,9 @@ import com.herongwang.p2p.entity.tl.TLBillEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.model.order.OrderModel;
 import com.herongwang.p2p.model.order.ResultsModel;
+import com.herongwang.p2p.model.post.LoanReleaseModel;
 import com.herongwang.p2p.model.post.RegisterModel;
+import com.herongwang.p2p.model.post.TransferModel;
 import com.sxj.util.exception.ServiceException;
 
 public interface IPostService
@@ -74,4 +76,14 @@ public interface IPostService
      * 开户
      */
     public String register(RegisterModel rg);
+    
+    /**
+     * 转账
+     */
+    public String transfer(TransferModel tf);
+    
+    /**
+     * 资金释放
+     */
+    public String loanRelease(LoanReleaseModel lr);
 }
