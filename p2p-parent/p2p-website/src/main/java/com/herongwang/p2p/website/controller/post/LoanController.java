@@ -18,8 +18,10 @@ import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.herongwang.p2p.entity.orders.OrdersEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
+import com.herongwang.p2p.loan.util.Common;
 import com.herongwang.p2p.model.order.OrderModel;
 import com.herongwang.p2p.model.post.LoanModel;
+import com.herongwang.p2p.model.post.RegisterModel;
 import com.herongwang.p2p.service.account.IAccountService;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
 import com.herongwang.p2p.service.orders.IOrdersService;
@@ -411,5 +413,53 @@ public class LoanController extends BaseController
         }
         BigDecimal b2 = new BigDecimal(100);
         return m.multiply(b2);
+    }
+    
+    @RequestMapping("register")
+    public String register() throws WebException
+    {
+        return "site/test/register";
+    }
+    
+    @RequestMapping("saveregister")
+    public String saveregister(RegisterModel rg) throws WebException
+    {
+        try
+        {
+            rg.setReturnURL("http://127.0.0.1:8080/p2p-website/loan/test.htm");
+            rg.setNotifyURL("http://127.0.0.1:8080/p2p-website/loan/test2.htm");
+            String privatekey = Common.privateKeyPKCS8;
+            String dataStr = rg.getRegisterType() + rg.getAccountType()
+                    + rg.getMobile() + rg.getEmail() + rg.getRealName()
+                    + rg.getIdentificationNo() + rg.getImage1()
+                    + rg.getImage2() + rg.getLoanPlatformAccount()
+                    + rg.getPlatformMoneymoremore() + rg.getRandomTimeStamp()
+                    + rg.getRemark1() + rg.getRemark2() + rg.getRemark3()
+                    + rg.getReturnURL() + rg.getNotifyURL();
+            // 签名
+            RsaHelper rsa = RsaHelper.getInstance();
+            String SignInfo = rsa.signData(dataStr, privatekey);
+            rg.setSignInfo(SignInfo);
+            postService.register(rg);
+        }
+        catch (Exception e)
+        {
+            // TODO: handle exception
+        }
+        return "site/test/jump";
+    }
+    
+    @RequestMapping("test")
+    public String test()
+    {
+        System.out.println("ok");
+        return "site/test/jump";
+    }
+    
+    @RequestMapping("test2")
+    public @ResponseBody String test2()
+    {
+        System.out.println("ok");
+        return "";
     }
 }

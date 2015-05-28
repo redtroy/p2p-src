@@ -542,7 +542,6 @@ public class PostServiceImpl implements IPostService
                 if (StringUtils.isNotBlank(resultarr[1])
                         && resultarr[1].startsWith("{"))
                 {
-                    // 转账
                     LoanRegisterBindReturnBean lrbrb = (LoanRegisterBindReturnBean) Common.JSONDecode(resultarr[1],
                             LoanRegisterBindReturnBean.class);
                     if (lrbrb != null)
