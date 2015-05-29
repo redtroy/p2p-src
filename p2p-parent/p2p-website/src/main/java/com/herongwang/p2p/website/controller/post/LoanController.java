@@ -3,7 +3,9 @@ package com.herongwang.p2p.website.controller.post;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -32,9 +34,7 @@ import com.herongwang.p2p.model.post.LoanTransferAuditModel;
 import com.herongwang.p2p.model.post.RegisterModel;
 import com.herongwang.p2p.model.post.TransferModel;
 import com.herongwang.p2p.service.account.IAccountService;
-import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
-import com.herongwang.p2p.service.investorder.IInvestOrderService;
 import com.herongwang.p2p.service.orders.IOrdersService;
 import com.herongwang.p2p.service.post.IPostService;
 import com.herongwang.p2p.service.users.IUserService;
@@ -73,13 +73,7 @@ public class LoanController extends BaseController
     IAccountService accountService;
     
     @Autowired
-    IInvestOrderService investOrderService;
-    
-    @Autowired
     IFundDetailService fundDetailService;
-    
-    @Autowired
-    private IDebtService debtService;
     
     @Autowired
     private IUserService userService;
@@ -162,12 +156,24 @@ public class LoanController extends BaseController
         }
         //获取账户信息
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
-        
+        LoanModel loan = new LoanModel();
+        loan.setPlatformMoneymoremore("p1190");
+        loan.setAction("1");
+        loan.setLoanNo(result.getLoanNo());
+        String submitURLPrefix = "";
+        /*List<LoanRechargeOrderQueryBean> list = postService.rechargeOrderQuery(loan,
+                submitURLPrefix);
+        for (int i = 0; i < list.size(); i++)
+        {
+            LoanRechargeOrderQueryBean bean = list.get(i);
+            System.out.println("钱多多查询返回：" + bean.getOrderNo());
+        }
+        System.out.println("钱多多返回：" + result.getOrderNo());*/
         map.put("title", "账户充值");
         map.put("orderNo", result.getOrderNo());
         map.put("orderAmount", result.getAmount());
-        map.put("Fee", result.getFee());
-        map.put("payAmount", result.getAmount() - result.getFee());
+        map.put("Fee", result.getFee() == null ? 0 : result.getFee());
+        map.put("payAmount", result.getAmount());
         map.put("balance", this.divide(account.getBalance()));
         return "site/loan/results";
     }
@@ -321,25 +327,26 @@ public class LoanController extends BaseController
         if (verifySignature)
         {
             OrdersEntity order = ordersService.getOrdersEntityByNo(result.getOrderNo());
-            if (null != order)
+            if (null != order && order.getStatus() == 0)
             {
                 order.setStatus(1);
                 ordersService.updateOrders(order);
+                FundDetailEntity query = new FundDetailEntity();
+                query.setOrderId(order.getOrderId());
+                query.setType(2);
+                List<FundDetailEntity> list = fundDetailService.queryFundDetail(query);
+                if (null != list && list.size() > 0)
+                {
+                    FundDetailEntity deal = list.get(0);
+                    deal.setStatus(1);
+                    deal.setRemark("提现" + result.getAmount() + "元成功！");
+                    fundDetailService.updateFundDetail(deal);
+                }
+                account.setBalance(account.getBalance()
+                        .subtract(this.multiply(new BigDecimal(
+                                result.getAmount()))));
+                accountService.updateAccount(account);
             }
-            FundDetailEntity query = new FundDetailEntity();
-            query.setOrderId(order.getOrderId());
-            query.setType(2);
-            List<FundDetailEntity> list = fundDetailService.queryFundDetail(query);
-            if (null != list && list.size() > 0)
-            {
-                FundDetailEntity deal = list.get(0);
-                deal.setStatus(1);
-                deal.setRemark("提现" + result.getAmount() + "元成功！");
-                fundDetailService.updateFundDetail(deal);
-            }
-            account.setBalance(account.getBalance()
-                    .subtract(this.multiply(new BigDecimal(result.getAmount()))));
-            accountService.updateAccount(account);
         }
         map.put("title", "账户提现");
         map.put("orderNo", result.getOrderNo());
@@ -354,7 +361,153 @@ public class LoanController extends BaseController
     @RequestMapping("/withdrawNotifyURL")
     public void withdrawNotifyURL(LoanModel result) throws Exception
     {
-        System.out.println(result.getMessage());
+        
+        UsersEntity user = this.getUsersEntity();
+        if (user == null)
+        {
+            return;
+        }
+        //获取账户信息
+        AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
+        RsaHelper rsa = RsaHelper.getInstance();
+        String dataStr = result.getWithdrawMoneymoremore()
+                + result.getPlatformMoneymoremore() + result.getLoanNo()
+                + result.getOrderNo() + result.getAmount() + result.getFeeMax()
+                + result.getFeeWithdraws() + result.getFeePercent()
+                + result.getFee() + result.getFreeLimit() + result.getFeeRate()
+                + result.getFeeSplitting() + result.getRandomTimeStamp()
+                + result.getRemark1() + result.getRemark2()
+                + result.getRemark3() + result.getResultCode();
+        boolean verifySignature = rsa.verifySignature(result.getSignInfo(),
+                dataStr,
+                publicKey);
+        if (verifySignature)
+        {
+            OrdersEntity order = ordersService.getOrdersEntityByNo(result.getOrderNo());
+            if (null != order && order.getStatus() == 0)
+            {
+                order.setStatus(1);
+                ordersService.updateOrders(order);
+                FundDetailEntity query = new FundDetailEntity();
+                query.setOrderId(order.getOrderId());
+                query.setType(2);
+                List<FundDetailEntity> list = fundDetailService.queryFundDetail(query);
+                if (null != list && list.size() > 0)
+                {
+                    FundDetailEntity deal = list.get(0);
+                    deal.setStatus(1);
+                    deal.setRemark("提现" + result.getAmount() + "元成功！");
+                    fundDetailService.updateFundDetail(deal);
+                }
+                account.setBalance(account.getBalance()
+                        .subtract(this.multiply(new BigDecimal(
+                                result.getAmount()))));
+                accountService.updateAccount(account);
+            }
+            
+        }
+    }
+    
+    /*----------------------------------------------授权--------------------------------*/
+    @RequestMapping("/authorize")
+    public String authorize(HttpServletRequest request, ModelMap map)
+            throws WebException
+    {
+        UsersEntity user = this.getUsersEntity();
+        if (user == null)
+        {
+            return LOGIN;
+        }
+        String basePath = this.getBasePath(request);
+        //获取授权状态
+        String authorizeType1 = "0";
+        String authorizeType2 = "0";
+        String authorizeType3 = "1";
+        String ReturnURL = basePath + "loan/authorizeReturnURL.htm";
+        String NotifyURL = basePath + "loan/authorizeNotifyURL.htm";
+        String SubmitURL = "http://218.4.234.150:88/main/loan/toloanauthorize.action";
+        String MoneymoremoreId = "m31333";
+        String PlatformMoneymoremore = "p1190";
+        
+        map.put("authorizeType1", authorizeType1);
+        map.put("authorizeType2", authorizeType2);
+        map.put("authorizeType3", authorizeType3);
+        map.put("SubmitURL", SubmitURL);
+        map.put("MoneymoremoreId", MoneymoremoreId);
+        map.put("PlatformMoneymoremore", PlatformMoneymoremore);
+        map.put("ReturnURL", ReturnURL);
+        map.put("NotifyURL", NotifyURL);
+        return "site/loan/authorize";
+    }
+    
+    /**
+     * 生成授权签名
+     * @param session
+     * @param apply
+     * @return
+     * @throws WebException
+     */
+    @RequestMapping("authorizeList")
+    public @ResponseBody Map<String, String> saveApply(
+            HttpServletRequest request, String type) throws WebException
+    {
+        String basePath = this.getBasePath(request);
+        try
+        {
+            Map<String, String> map = new HashMap<String, String>();
+            String ReturnURL = basePath + "loan/authorizeReturnURL.htm";
+            String NotifyURL = basePath + "loan/authorizeNotifyURL.htm";
+            String MoneymoremoreId = "m31333";
+            String PlatformMoneymoremore = "p1190";
+            String AuthorizeTypeOpen = type.substring(2);
+            String dataStr = MoneymoremoreId + PlatformMoneymoremore
+                    + AuthorizeTypeOpen + "" + "" + "" + "" + "" + ReturnURL
+                    + NotifyURL;
+            // 签名
+            RsaHelper rsa = RsaHelper.getInstance();
+            String SignInfo = rsa.signData(dataStr, privateKeyPKCS8);
+            map.put("AuthorizeTypeOpen", AuthorizeTypeOpen);
+            map.put("SignInfo", SignInfo);
+            return map;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new WebException("生成授权签名失败", e);
+        }
+        
+    }
+    
+    @RequestMapping("/authorizeReturnURL")
+    public String authorizeReturnURL(ModelMap map, LoanModel result)
+            throws Exception
+    {
+        
+        UsersEntity user = this.getUsersEntity();
+        if (user == null)
+        {
+            return LOGIN;
+        }
+        //获取账户信息
+        map.put("title", result.getMessage());
+        map.put("orderNo", result.getOrderNo());
+        map.put("orderAmount", result.getAmount());
+        map.put("Fee", result.getFeeWithdraws());
+        map.put("payAmount", "");
+        return "site/loan/results";
+    }
+    
+    @ResponseBody
+    @RequestMapping("/authorizeNotifyURL")
+    public void authorizeNotifyURL(LoanModel result) throws Exception
+    {
+        
+        UsersEntity user = this.getUsersEntity();
+        if (user == null)
+        {
+            return;
+        }
     }
     
     /**

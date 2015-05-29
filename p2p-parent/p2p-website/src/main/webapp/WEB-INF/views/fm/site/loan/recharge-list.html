@@ -36,20 +36,20 @@
         <div class="heading fontYH f20"><span>账户充值</span></div>
         <div class="mainBox fontYH">
         <form name="form2" id="postForm" action="${SubmitURL}" method="post">
-		<input id="RechargeMoneymoremore"  name="RechargeMoneymoremore" value="${RechargeMoneymoremore}" type="text" />
-		<input id="PlatformMoneymoremore"  name="PlatformMoneymoremore" value="${PlatformMoneymoremore}" type="text" />
-		<input id="OrderNo" name="OrderNo" value="${OrderNo}" type="text" />
-		<input id="Amount" name="Amount"  value="${Amount}" type="text" />
-		<input id="RechargeType" name="RechargeType"  value="" type="text" />
-		<input id="FeeType" name="FeeType" value="" type="text" />
-		<input id="CardNo" name="CardNo" value="" type="text" />
-		<input id="RandomTimeStamp" name="RandomTimeStamp" value="" type="text" />
-		<input id="Remark1" name="Remark1" value="" type="text" />
-		<input id="Remark2" name="Remark2" value="" type="text" />
-		<input id="Remark3" name="Remark3" value="" type="text" />
-		<input id="ReturnURL" name="ReturnURL" value="${ReturnURL}" type="text" />
-		<input id="NotifyURL" name="NotifyURL" value="${NotifyURL}" type="text" />
-		<input id="SignInfo" name="SignInfo" value="${SignInfo}" type="text" />
+		<input id="RechargeMoneymoremore"  name="RechargeMoneymoremore" value="${RechargeMoneymoremore}" type="hidden" />
+		<input id="PlatformMoneymoremore"  name="PlatformMoneymoremore" value="${PlatformMoneymoremore}" type="hidden" />
+		<input id="OrderNo" name="OrderNo" value="${OrderNo}" type="hidden" />
+		<input id="Amount" name="Amount"  value="${Amount}" type="hidden" />
+		<input id="RechargeType" name="RechargeType"  value="" type="hidden" />
+		<input id="FeeType" name="FeeType" value="" type="hidden" />
+		<input id="CardNo" name="CardNo" value="" type="hidden" />
+		<input id="RandomTimeStamp" name="RandomTimeStamp" value="" type="hidden" />
+		<input id="Remark1" name="Remark1" value="" type="hidden" />
+		<input id="Remark2" name="Remark2" value="" type="hidden" />
+		<input id="Remark3" name="Remark3" value="" type="hidden" />
+		<input id="ReturnURL" name="ReturnURL" value="${ReturnURL}" type="hidden" />
+		<input id="NotifyURL" name="NotifyURL" value="${NotifyURL}" type="hidden" />
+		<input id="SignInfo" name="SignInfo" value="${SignInfo}" type="hidden" />
 	 </form>
 	 <form name="form1" id="form1" action="" method="post">
         
@@ -59,7 +59,7 @@
         <col width="80%" />
 	      <tr>
 	        <th>订单名称</th>
-	        <td>${orderNo}</td>
+	        <td>${OrderNo}</td>
 	      </tr>
 	      <tr>
 	        <th>订单金额</th>

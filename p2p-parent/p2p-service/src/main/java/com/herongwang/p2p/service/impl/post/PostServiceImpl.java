@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -33,11 +34,15 @@ import com.herongwang.p2p.loan.util.Common;
 import com.herongwang.p2p.loan.util.HttpClientUtil;
 import com.herongwang.p2p.loan.util.RsaHelper;
 import com.herongwang.p2p.model.loan.LoanInfoSecondaryBean;
+import com.herongwang.p2p.model.loan.LoanOrderQueryBean;
+import com.herongwang.p2p.model.loan.LoanRechargeOrderQueryBean;
 import com.herongwang.p2p.model.loan.LoanRegisterBindReturnBean;
 import com.herongwang.p2p.model.loan.LoanReturnInfoBean;
 import com.herongwang.p2p.model.loan.LoanTransferReturnBean;
+import com.herongwang.p2p.model.loan.LoanWithdrawsOrderQueryBean;
 import com.herongwang.p2p.model.order.OrderModel;
 import com.herongwang.p2p.model.order.ResultsModel;
+import com.herongwang.p2p.model.post.LoanModel;
 import com.herongwang.p2p.model.post.LoanReleaseModel;
 import com.herongwang.p2p.model.post.RegisterModel;
 import com.herongwang.p2p.model.post.TransferModel;
@@ -707,5 +712,166 @@ public class PostServiceImpl implements IPostService
     {
         // TODO Auto-generated method stub
         return null;
+    }
+    
+    @Override
+    public List<LoanOrderQueryBean> orderQuery(LoanModel loan,
+            String submitURLPrefix) throws Exception
+    {
+        List<LoanOrderQueryBean> list = new ArrayList<LoanOrderQueryBean>();
+        String SubmitURL = SubmitURLPrefix + "loan/loanorderquery.action";
+        
+        String privatekey = Common.privateKeyPKCS8;
+        String PlatformMoneymoremore = loan.getPlatformMoneymoremore();
+        String Action = loan.getAction();
+        String LoanNo = loan.getLoanNo();
+        String OrderNo = loan.getOrderNo();
+        String BatchNo = loan.getBatchNo();
+        String BeginTime = loan.getBeginTime();
+        String EndTime = loan.getEndTime();
+        String dataStr = PlatformMoneymoremore + Action + LoanNo + OrderNo
+                + BatchNo + BeginTime + EndTime;
+        RsaHelper rsa = RsaHelper.getInstance();
+        String SignInfo = rsa.signData(dataStr, privatekey);
+        
+        Map<String, String> req = new TreeMap<String, String>();
+        req.put("PlatformMoneymoremore", PlatformMoneymoremore);
+        req.put("Action", Action);
+        req.put("LoanNo", LoanNo);
+        req.put("OrderNo", OrderNo);
+        req.put("BatchNo", BatchNo);
+        req.put("BeginTime", BeginTime);
+        req.put("EndTime", EndTime);
+        req.put("SignInfo", SignInfo);
+        
+        String[] resultarr = HttpClientUtil.doPostQueryCmd(SubmitURL, req);
+        if (StringUtils.isNotBlank(resultarr[1])
+                && (resultarr[1].startsWith("[") || resultarr[1].startsWith("{")))
+        {
+            
+            list = new ArrayList<LoanOrderQueryBean>();
+            // 转账
+            List<Object> loanobjectlist = Common.JSONDecodeList(resultarr[1],
+                    LoanOrderQueryBean.class);
+            if (loanobjectlist != null && loanobjectlist.size() > 0)
+            {
+                for (int i = 0; i < loanobjectlist.size(); i++)
+                {
+                    if (loanobjectlist.get(i) instanceof LoanOrderQueryBean)
+                    {
+                        LoanOrderQueryBean loqb = (LoanOrderQueryBean) loanobjectlist.get(i);
+                        list.add(loqb);
+                    }
+                }
+            }
+        }
+        return list;
+    }
+    
+    @Override
+    public List<LoanRechargeOrderQueryBean> rechargeOrderQuery(LoanModel loan,
+            String submitURLPrefix) throws Exception
+    {
+        List<LoanRechargeOrderQueryBean> list = new ArrayList<LoanRechargeOrderQueryBean>();
+        String SubmitURL = SubmitURLPrefix + "loan/loanorderquery.action";
+        
+        String privatekey = Common.privateKeyPKCS8;
+        String PlatformMoneymoremore = loan.getPlatformMoneymoremore();
+        String Action = loan.getAction();
+        String LoanNo = loan.getLoanNo();
+        String OrderNo = loan.getOrderNo();
+        String BatchNo = loan.getBatchNo();
+        String BeginTime = loan.getBeginTime();
+        String EndTime = loan.getEndTime();
+        String dataStr = PlatformMoneymoremore + Action + LoanNo + OrderNo
+                + BatchNo + BeginTime + EndTime;
+        RsaHelper rsa = RsaHelper.getInstance();
+        String SignInfo = rsa.signData(dataStr, privatekey);
+        
+        Map<String, String> req = new TreeMap<String, String>();
+        req.put("PlatformMoneymoremore", PlatformMoneymoremore);
+        req.put("Action", Action);
+        req.put("LoanNo", LoanNo);
+        req.put("OrderNo", OrderNo);
+        req.put("BatchNo", BatchNo);
+        req.put("BeginTime", BeginTime);
+        req.put("EndTime", EndTime);
+        req.put("SignInfo", SignInfo);
+        
+        String[] resultarr = HttpClientUtil.doPostQueryCmd(SubmitURL, req);
+        if (StringUtils.isNotBlank(resultarr[1])
+                && (resultarr[1].startsWith("[") || resultarr[1].startsWith("{")))
+        {
+            // 充值
+            List<Object> loanobjectlist = Common.JSONDecodeList(resultarr[1],
+                    LoanRechargeOrderQueryBean.class);
+            if (loanobjectlist != null && loanobjectlist.size() > 0)
+            {
+                for (int i = 0; i < loanobjectlist.size(); i++)
+                {
+                    if (loanobjectlist.get(i) instanceof LoanRechargeOrderQueryBean)
+                    {
+                        LoanRechargeOrderQueryBean lroqb = (LoanRechargeOrderQueryBean) loanobjectlist.get(i);
+                        list.add(lroqb);
+                    }
+                }
+            }
+            
+        }
+        return list;
+    }
+    
+    @Override
+    public List<LoanWithdrawsOrderQueryBean> withdrawsOrderQuery(
+            LoanModel loan, String submitURLPrefix) throws Exception
+    {
+        List<LoanWithdrawsOrderQueryBean> list = new ArrayList<LoanWithdrawsOrderQueryBean>();
+        String SubmitURL = SubmitURLPrefix + "loan/loanorderquery.action";
+        
+        String privatekey = Common.privateKeyPKCS8;
+        String PlatformMoneymoremore = loan.getPlatformMoneymoremore();
+        String Action = loan.getAction();
+        String LoanNo = loan.getLoanNo();
+        String OrderNo = loan.getOrderNo();
+        String BatchNo = loan.getBatchNo();
+        String BeginTime = loan.getBeginTime();
+        String EndTime = loan.getEndTime();
+        String dataStr = PlatformMoneymoremore + Action + LoanNo + OrderNo
+                + BatchNo + BeginTime + EndTime;
+        RsaHelper rsa = RsaHelper.getInstance();
+        String SignInfo = rsa.signData(dataStr, privatekey);
+        
+        Map<String, String> req = new TreeMap<String, String>();
+        req.put("PlatformMoneymoremore", PlatformMoneymoremore);
+        req.put("Action", Action);
+        req.put("LoanNo", LoanNo);
+        req.put("OrderNo", OrderNo);
+        req.put("BatchNo", BatchNo);
+        req.put("BeginTime", BeginTime);
+        req.put("EndTime", EndTime);
+        req.put("SignInfo", SignInfo);
+        
+        String[] resultarr = HttpClientUtil.doPostQueryCmd(SubmitURL, req);
+        if (StringUtils.isNotBlank(resultarr[1])
+                && (resultarr[1].startsWith("[") || resultarr[1].startsWith("{")))
+        {
+            
+            // 提现
+            List<Object> loanobjectlist = Common.JSONDecodeList(resultarr[1],
+                    LoanWithdrawsOrderQueryBean.class);
+            if (loanobjectlist != null && loanobjectlist.size() > 0)
+            {
+                for (int i = 0; i < loanobjectlist.size(); i++)
+                {
+                    if (loanobjectlist.get(i) instanceof LoanWithdrawsOrderQueryBean)
+                    {
+                        LoanWithdrawsOrderQueryBean lwoqb = (LoanWithdrawsOrderQueryBean) loanobjectlist.get(i);
+                        list.add(lwoqb);
+                    }
+                }
+            }
+            
+        }
+        return list;
     }
 }
