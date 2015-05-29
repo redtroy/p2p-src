@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>和融网-账户提现</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="${b.staticPath}style/member.css" rel="stylesheet" type="text/css" />
+<script src="${b.staticPath}js/jquery.js"></script>
+<@b.validate/> <@b.dialog/>
+<script>
+function postInfo() {
+	var type = "0";
+	if ($('#authorizeType1').is(':checked')) {
+		type+=",1";
+		} 
+	if ($('#authorizeType2').is(':checked')) {
+		type+=",2";
+		} 
+	if ($('#authorizeType3').is(':checked')) {
+		type+=",3";
+		} 
+	if(type.length==1){
+		var success = dialog({
+			title : '消息',
+			content : '请选择开启授权类型！',
+			cancel : false,
+			ok : function() {
+			}
+		});
+		return;
+	}
+	$.post("authorizeList.htm", {type : type}, function(
+			data) {
+		if (data.AuthorizeTypeOpen != "") {
+			$('#AuthorizeTypeOpen').val(data.AuthorizeTypeOpen);
+		} 
+		if (data.SignInfo != "") {
+			$('#SignInfo').val(data.SignInfo);
+		} 
+	})
+	return;
+	$("#postForm").submit();
+}
+</script>
+</head>
+
+<body>
+ <@b.header />
+<div class="fence-wide memCenter">
+  <div class="yard-1100 memCont ly-clearFix">
+    <@b.leftMenu />
+    <div class="yard-900 ly-left">
+      <div class="rightSide">
+        <div class="heading fontYH f20"><span>账户授权</span></div>
+        <div class="mainBox fontYH">
+        <form action="${SubmitURL}" id="postForm" method="post">
+        	<input id="MoneymoremoreId" name="MoneymoremoreId" value="${MoneymoremoreId}" type="text" />
+			<input id="PlatformMoneymoremore" name="PlatformMoneymoremore" value="${PlatformMoneymoremore}" type="text" />
+			<input id="AuthorizeTypeOpen" name="AuthorizeTypeOpen" value="${AuthorizeTypeOpen}" type="text" />
+			<input id="ReturnURL" name="ReturnURL" value="${ReturnURL}" type="text" />
+			<input id="NotifyURL" name="NotifyURL" value="${NotifyURL}" type="text" />
+			<input id="SignInfo" name="SignInfo" value="${SignInfo}" type="text" />
+        </form>
+        <table border="0" cellpadding="0" cellspacing="0" class="table tabList mb20">
+    <col width="20%" />
+        <col width="80%" />
+        <tr>
+      <th>还款转账授权</th>
+      <td><#if authorizeType2==1>
+      		已开启
+      	<#else>
+      		<input type="checkbox" value="未开启" id="authorizeType2"/>
+      </#if>
+      </td>
+    </tr>
+       <th>投标转账授权</th>
+      <td><#if authorizeType1==1>
+      		已开启
+      	<#else>
+      		<input type="checkbox" value="未开启" id="authorizeType1"/>
+      </#if>
+      </td>
+    </tr><th>二次分配审核授权</th>
+      <td><#if authorizeType3==1>
+      		已开启
+      	<#else>
+      		<input type="checkbox" value="未开启" id="authorizeType3"/>
+      </#if>
+      </td>
+    </tr>
+  </table>
+        <div class="tc"> <a class="button button-orange" href="javascript:void(0)" onclick="postInfo();">授权</a>&nbsp;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="fence-wide bgBlack">
+  <div id="footer" class="yard-1100 f14 fontYH ly-clearFix">
+    <div class="menuCont tc">
+      <ul class="ly-clearFix f18">
+        <li><a href="about-us.html">关于我们</a></li>
+        <li><a href="products.html">产品优势</a></li>
+        <li><a href="contact-us.html" class="borderNone">联系我们</a></li>
+      </ul>
+      <p class="f12"><span>&copy;&nbsp;2015&nbsp;和融网&nbsp;版权所有</span><span>www.herongwangnt.com</span>苏ICP备14047993号-2</p>
+      <p class="f12">地址：江苏省南京市栖霞区马群街道仙林大道18号</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

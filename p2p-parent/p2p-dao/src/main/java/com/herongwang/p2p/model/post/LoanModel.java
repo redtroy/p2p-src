@@ -59,6 +59,43 @@ public class LoanModel
     
     private String endTime;//结束时间
     
+    /*---------------------授权------------------*/
+    private String authorizeTypeOpen;//开启授权类型
+    
+    private String authorizeTypeClose;//关闭授权类型
+    
+    private String authorizeType;//当前授权类型
+    
+    public String getAuthorizeTypeOpen()
+    {
+        return authorizeTypeOpen;
+    }
+    
+    public void setAuthorizeTypeOpen(String authorizeTypeOpen)
+    {
+        this.authorizeTypeOpen = authorizeTypeOpen;
+    }
+    
+    public String getAuthorizeTypeClose()
+    {
+        return authorizeTypeClose;
+    }
+    
+    public void setAuthorizeTypeClose(String authorizeTypeClose)
+    {
+        this.authorizeTypeClose = authorizeTypeClose;
+    }
+    
+    public String getAuthorizeType()
+    {
+        return authorizeType;
+    }
+    
+    public void setAuthorizeType(String authorizeType)
+    {
+        this.authorizeType = authorizeType;
+    }
+    
     public String getBeginTime()
     {
         return beginTime;
