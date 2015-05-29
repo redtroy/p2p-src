@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<title>网贷转账测试 - 乾多多</title>
+<script type="text/javascript">
+	  window.onload=function(){document.form1.submit();}
+</script>
+</head>
+<body>
+	<form id="form1" name="form1" action="http://218.4.234.150:88/main/loan/loan.action" method="post">
+		<input id="LoanJsonList" name="LoanJsonList" value="${model.loanJsonList}" type="hidden" />
+		<br/>
+		<input id="PlatformMoneymoremore" name="PlatformMoneymoremore" value="${model.platformMoneymoremore}" type="hidden" />
+		<br/>
+		<input id="TransferAction" name="TransferAction" value="${model.transferAction}" type="hidden" />
+		<br/>
+		<input id="Action" name="Action" value="${model.action}" type="hidden" />
+		<br/>
+		<input id="TransferType" name="TransferType" value="${model.transferType}" type="hidden" />
+		<br/>
+		<input id="NeedAudit" name="NeedAudit" value="${model.needAudit}" type="hidden" />
+		<br/>
+		<input id="RandomTimeStamp" name="RandomTimeStamp" value="${model.randomTimeStamp}" type="hidden" />
+		<br/>
+		<input id="Remark1" name="Remark1" value="${model.remark1}" type="hidden" />
+		<br/>
+		<input id="Remark2" name="Remark2" value="${model.remark2}" type="hidden" />
+		<br/>
+		<input id="Remark3" name="Remark3" value="${model.remark3}" type="hidden" />
+		<br/>
+		<input id="ReturnURL" name="ReturnURL" value="${model.returnURL}" type="hidden" />
+		<br/>
+		<input id="NotifyURL" name="NotifyURL" value="${model.notifyURL}" type="hidden" />
+		<br/>
+		<input id="SignInfo" name="SignInfo" value="${model.signInfo}" type="hidden" />
+	</form>
+</body>
+</html>

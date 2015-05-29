@@ -1,6 +1,7 @@
 package com.herongwang.p2p.website.controller.post;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,9 +20,17 @@ import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.herongwang.p2p.entity.orders.OrdersEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.loan.util.Common;
+import com.herongwang.p2p.model.loan.LoanInfoBean;
+import com.herongwang.p2p.model.loan.LoanRegisterBindReturnBean;
+import com.herongwang.p2p.model.loan.LoanTransferReturnBean;
+import com.herongwang.p2p.model.loan.ReleaseBean;
+import com.herongwang.p2p.model.loan.transferauditreturnBean;
 import com.herongwang.p2p.model.order.OrderModel;
 import com.herongwang.p2p.model.post.LoanModel;
+import com.herongwang.p2p.model.post.LoanReleaseModel;
+import com.herongwang.p2p.model.post.LoanTransferAuditModel;
 import com.herongwang.p2p.model.post.RegisterModel;
+import com.herongwang.p2p.model.post.TransferModel;
 import com.herongwang.p2p.service.account.IAccountService;
 import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
@@ -378,20 +387,33 @@ public class LoanController extends BaseController
         return m.multiply(b2);
     }
     
+    /**
+     * 开户页面
+     * @return
+     * @throws WebException
+     */
     @RequestMapping("register")
     public String register() throws WebException
     {
         return "site/test/register";
     }
     
+    /**
+     * 开户
+     * @param rg
+     * @param map
+     * @return
+     * @throws WebException
+     */
     @RequestMapping("saveregister")
-    public String saveregister(RegisterModel rg) throws WebException
+    public String saveregister(RegisterModel rg, ModelMap map)
+            throws WebException
     {
         try
         {
-            rg.setReturnURL("http://127.0.0.1:8080/p2p-website/loan/test.htm");
+            rg.setReturnURL("http://127.0.0.1:8080/p2p-website/loan/registerbindreturn.htm");
             rg.setNotifyURL("http://127.0.0.1:8080/p2p-website/loan/test2.htm");
-            String privatekey = Common.privateKeyPKCS8;
+            String privatekey = privateKeyPKCS8;
             String dataStr = rg.getRegisterType() + rg.getAccountType()
                     + rg.getMobile() + rg.getEmail() + rg.getRealName()
                     + rg.getIdentificationNo() + rg.getImage1()
@@ -403,7 +425,15 @@ public class LoanController extends BaseController
             RsaHelper rsa = RsaHelper.getInstance();
             String SignInfo = rsa.signData(dataStr, privatekey);
             rg.setSignInfo(SignInfo);
-            postService.register(rg);
+            if (rg.getRegisterType().equals("1"))
+            {
+                postService.register(rg);
+            }
+            else
+            {
+                map.put("model", rg);
+                return "site/test/loanregister";
+            }
         }
         catch (Exception e)
         {
@@ -412,17 +442,248 @@ public class LoanController extends BaseController
         return "site/test/jump";
     }
     
-    @RequestMapping("test")
-    public String test()
+    /**
+     * 开户成功返回页面
+     * @param lb
+     * @param map
+     * @return
+     */
+    @RequestMapping("registerbindreturn")
+    public String registerbindreturn(LoanRegisterBindReturnBean lb, ModelMap map)
     {
-        System.out.println("ok");
-        return "site/test/jump";
+        map.put("model", lb);
+        return "site/test/registerbindreturn";
     }
     
+    /**
+     * 开户成功通知后台操作
+     * @return
+     */
     @RequestMapping("test2")
     public @ResponseBody String test2()
     {
-        System.out.println("ok");
+        System.out.println("ok===========================================");
+        return "";
+    }
+    
+    /**
+     * 转账
+     */
+    @RequestMapping("transfer")
+    public String transfer(ModelMap map) throws WebException
+    {
+        try
+        {
+            String privatekey = privateKeyPKCS8;
+            List<LoanInfoBean> listmlib = new ArrayList<LoanInfoBean>();
+            LoanInfoBean mlib = new LoanInfoBean();
+            mlib.setLoanOutMoneymoremore("m31333");//付款人
+            mlib.setLoanInMoneymoremore("m37679");//收款人
+            mlib.setOrderNo(Common.getRandomNum(10));//订单号
+            mlib.setBatchNo(Common.getRandomNum(10));//标号
+            mlib.setAmount("10");
+            mlib.setFullAmount("20");
+            mlib.setTransferName("手续费");
+            mlib.setRemark("测试");
+            mlib.setSecondaryJsonList("");
+            listmlib.add(mlib);
+            String LoanJsonList = Common.JSONEncode(listmlib);
+            
+            TransferModel tf = new TransferModel();
+            tf.setPlatformMoneymoremore("p1190");
+            tf.setTransferAction("1");
+            tf.setAction("1");
+            tf.setTransferType("2");
+            tf.setReturnURL("http://127.0.0.1:8080/p2p-website/loan/transferReturn.htm");
+            tf.setNotifyURL("http://127.0.0.1:8080/p2p-website/loan/transferNotify.htm");
+            String dataStr = LoanJsonList + tf.getPlatformMoneymoremore()
+                    + tf.getTransferAction() + tf.getAction()
+                    + tf.getTransferType() + tf.getNeedAudit()
+                    + tf.getRandomTimeStamp() + tf.getRemark1()
+                    + tf.getRemark2() + tf.getRemark3() + tf.getReturnURL()
+                    + tf.getNotifyURL();
+            RsaHelper rsa = RsaHelper.getInstance();
+            String SignInfo = rsa.signData(dataStr, privatekey);
+            LoanJsonList = Common.UrlEncoder(LoanJsonList, "utf-8");
+            tf.setLoanJsonList(LoanJsonList);
+            tf.setSignInfo(SignInfo);
+            map.put("model", tf);
+            
+        }
+        catch (Exception e)
+        {
+            // TODO: handle exception
+        }
+        return "site/test/loantransfer";
+    }
+    
+    /**
+     * 转账返回页面
+     */
+    @RequestMapping("transferReturn")
+    public String transferReturn(LoanTransferReturnBean lr, ModelMap map)
+            throws WebException
+    {
+        try
+        {
+            map.put("model", lr);
+        }
+        catch (Exception e)
+        {
+            // TODO: handle exception
+        }
+        return "site/test/transferreturn";
+    }
+    
+    /**
+     * 转账后台通知
+     */
+    @RequestMapping("transferNotify")
+    public @ResponseBody String transferNotify() throws WebException
+    {
+        try
+        {
+            
+        }
+        catch (Exception e)
+        {
+            // TODO: handle exception
+        }
+        return "";
+    }
+    
+    /**
+     * 资金释放
+     */
+    @RequestMapping("loanRelease")
+    public String loanRelease(ModelMap map) throws WebException
+    {
+        try
+        {
+            LoanReleaseModel lr = new LoanReleaseModel();
+            lr.setAmount("100");
+            lr.setMoneymoremoreId("m31333");
+            lr.setPlatformMoneymoremore("p1190");
+            lr.setReturnURL("http://127.0.0.1:8080/p2p-website/loan/loanReleaseReturn.htm");
+            lr.setNotifyURL("http://127.0.0.1:8080/p2p-website/loan/loanReleaseNotif.htm");
+            String dataStr = lr.getMoneymoremoreId()
+                    + lr.getPlatformMoneymoremore() + lr.getOrderNo()
+                    + lr.getAmount() + lr.getRandomTimeStamp()
+                    + lr.getRemark1() + lr.getRemark2() + lr.getRemark3()
+                    + lr.getReturnURL() + lr.getNotifyURL();
+            String privatekey = privateKeyPKCS8;
+            RsaHelper rsa = RsaHelper.getInstance();
+            String SignInfo = rsa.signData(dataStr, privatekey);
+            lr.setSignInfo(SignInfo);
+            map.put("model", lr);
+        }
+        catch (Exception e)
+        {
+            // TODO: handle exception
+        }
+        return "site/test/loanrelease";
+    }
+    
+    /**
+     * 资金释放返回页面
+     */
+    @RequestMapping("loanReleaseReturn")
+    public String loanReleaseReturn(ReleaseBean rb, ModelMap map)
+            throws WebException
+    {
+        try
+        {
+            map.put("model", rb);
+        }
+        catch (Exception e)
+        {
+            // TODO: handle exception
+        }
+        return "site/test/releasereturn";
+    }
+    
+    /**
+     * 资金释放后台接收
+     */
+    @RequestMapping("loanReleaseNotif")
+    public @ResponseBody String loanReleaseNotif(ReleaseBean rb)
+            throws WebException
+    {
+        try
+        {
+            
+        }
+        catch (Exception e)
+        {
+            // TODO: handle exception
+        }
+        return "";
+    }
+    
+    /**
+     * 审核
+     */
+    @RequestMapping("loanTransferAudit")
+    public String loanTransferAuditModel(ModelMap map) throws WebException
+    {
+        try
+        {
+            LoanTransferAuditModel ltsa = new LoanTransferAuditModel();
+            ltsa.setPlatformMoneymoremore("p1190");
+            ltsa.setAuditType("1");
+            String privatekey = privateKeyPKCS8;
+            ltsa.setReturnURL("http://127.0.0.1:8080/p2p-website/loan/loanTransferAuditModelReturn.htm");
+            ltsa.setNotifyURL("http://127.0.0.1:8080/p2p-website/loan/loanTransferAuditModelNotify.htm");
+            String dataStr = ltsa.getLoanNoList()
+                    + ltsa.getPlatformMoneymoremore() + ltsa.getAuditType()
+                    + ltsa.getRandomTimeStamp() + ltsa.getRemark1()
+                    + ltsa.getRemark2() + ltsa.getRemark3()
+                    + ltsa.getReturnURL() + ltsa.getNotifyURL();
+            RsaHelper rsa = RsaHelper.getInstance();
+            String SignInfo = rsa.signData(dataStr, privatekey);
+            ltsa.setSignInfo(SignInfo);
+            map.put("model", ltsa);
+        }
+        catch (Exception e)
+        {
+            // TODO: handle exception
+        }
+        return "site/test/loantransferaudit";
+    }
+    
+    /**
+     * 审核页面返回信息
+     */
+    @RequestMapping("loanTransferAuditModelReturn")
+    public String loanTransferAuditModelReturn(transferauditreturnBean tfb,
+            ModelMap map) throws WebException
+    {
+        try
+        {
+            map.put("model", tfb);
+        }
+        catch (Exception e)
+        {
+            // TODO: handle exception
+        }
+        return "site/test/transferauditreturn";
+    }
+    
+    /**
+     * 审核后台通知信息
+     */
+    @RequestMapping("loanTransferAuditModelNotify")
+    public @ResponseBody String loanTransferAuditModelNotify(
+            transferauditreturnBean tfb) throws WebException
+    {
+        try
+        {
+            
+        }
+        catch (Exception e)
+        {
+            // TODO: handle exception
+        }
         return "";
     }
 }

@@ -2,25 +2,37 @@ package com.herongwang.p2p.model.post;
 
 public class LoanReleaseModel
 {
-    private String MoneymoremoreId;
+    private String MoneymoremoreId = "";
     
-    private String PlatformMoneymoremore;
+    private String PlatformMoneymoremore = "";
     
-    private String OrderNo;
+    private String OrderNo = "";
     
-    private String Amount;
+    private String Amount = "";
     
-    private String RandomTimeStamp;
+    private String RandomTimeStamp = "";
     
-    private String Remark1;
+    private String Remark1 = "";
     
-    private String Remark2;
+    private String Remark2 = "";
     
-    private String Remark3;
+    private String Remark3 = "";
     
-    private String ReturnURL;
+    private String ReturnURL = "";
     
-    private String NotifyURL;
+    private String NotifyURL = "";
+    
+    private String SignInfo = "";
+    
+    public String getSignInfo()
+    {
+        return SignInfo;
+    }
+    
+    public void setSignInfo(String signInfo)
+    {
+        SignInfo = signInfo;
+    }
     
     public String getMoneymoremoreId()
     {
