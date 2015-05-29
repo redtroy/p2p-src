@@ -2,19 +2,25 @@ package com.herongwang.p2p.model.post;
 
 public class LoanModel
 {
-    private String amount;//金额
+    private Double amount;//金额
     
     private String cardNoList;//当前绑定的银行卡号列表
     
-    private String fee;//手续费
+    private String withdrawMoneymoremore;//提现人乾多多标识
+    
+    private Double fee;//手续费
     
     private String feePlatform;
     
     private String feeType;//手续费类型1.自付 2.代付 3.分开付)
     
+    private Double feeMax;//用户承担的最高手续费
+    
     private String loanNo;//钱多多流水号
     
     private String message;//返回信息
+    
+    private String batchNo;//网贷平台标号
     
     private String orderNo;//订单号
     
@@ -36,12 +42,96 @@ public class LoanModel
     
     private String signInfo;//签名信息
     
-    public String getAmount()
+    private Double feeWithdraws;//用户实际承担的手续费金额
+    
+    private Double feePercent;//平台承担的手续费比例
+    
+    private Double freeLimit;//平台扣除的免费提现额
+    
+    private Double feeRate;//上浮费率
+    
+    private Double feeSplitting;//平台分润
+    
+    /*---------------------查询------------------*/
+    private String action;//查询类型  空.转账  1.充值  2.提现 
+    
+    private String beginTime;//开始时间
+    
+    private String endTime;//结束时间
+    
+    /*---------------------授权------------------*/
+    private String authorizeTypeOpen;//开启授权类型
+    
+    private String authorizeTypeClose;//关闭授权类型
+    
+    private String authorizeType;//当前授权类型
+    
+    public String getAuthorizeTypeOpen()
+    {
+        return authorizeTypeOpen;
+    }
+    
+    public void setAuthorizeTypeOpen(String authorizeTypeOpen)
+    {
+        this.authorizeTypeOpen = authorizeTypeOpen;
+    }
+    
+    public String getAuthorizeTypeClose()
+    {
+        return authorizeTypeClose;
+    }
+    
+    public void setAuthorizeTypeClose(String authorizeTypeClose)
+    {
+        this.authorizeTypeClose = authorizeTypeClose;
+    }
+    
+    public String getAuthorizeType()
+    {
+        return authorizeType;
+    }
+    
+    public void setAuthorizeType(String authorizeType)
+    {
+        this.authorizeType = authorizeType;
+    }
+    
+    public String getBeginTime()
+    {
+        return beginTime;
+    }
+    
+    public void setBeginTime(String beginTime)
+    {
+        this.beginTime = beginTime;
+    }
+    
+    public String getEndTime()
+    {
+        return endTime;
+    }
+    
+    public void setEndTime(String endTime)
+    {
+        this.endTime = endTime;
+    }
+    
+    public String getAction()
+    {
+        return action;
+    }
+    
+    public void setAction(String action)
+    {
+        this.action = action;
+    }
+    
+    public Double getAmount()
     {
         return amount;
     }
     
-    public void setAmount(String amount)
+    public void setAmount(Double amount)
     {
         this.amount = amount;
     }
@@ -56,12 +146,12 @@ public class LoanModel
         this.cardNoList = cardNoList;
     }
     
-    public String getFee()
+    public Double getFee()
     {
         return fee;
     }
     
-    public void setFee(String fee)
+    public void setFee(Double fee)
     {
         this.fee = fee;
     }
@@ -204,6 +294,86 @@ public class LoanModel
     public void setSignInfo(String signInfo)
     {
         this.signInfo = signInfo;
+    }
+    
+    public Double getFeeMax()
+    {
+        return feeMax;
+    }
+    
+    public void setFeeMax(Double feeMax)
+    {
+        this.feeMax = feeMax;
+    }
+    
+    public Double getFeeWithdraws()
+    {
+        return feeWithdraws;
+    }
+    
+    public void setFeeWithdraws(Double feeWithdraws)
+    {
+        this.feeWithdraws = feeWithdraws;
+    }
+    
+    public Double getFeePercent()
+    {
+        return feePercent;
+    }
+    
+    public void setFeePercent(Double feePercent)
+    {
+        this.feePercent = feePercent;
+    }
+    
+    public Double getFreeLimit()
+    {
+        return freeLimit;
+    }
+    
+    public void setFreeLimit(Double freeLimit)
+    {
+        this.freeLimit = freeLimit;
+    }
+    
+    public Double getFeeRate()
+    {
+        return feeRate;
+    }
+    
+    public void setFeeRate(Double feeRate)
+    {
+        this.feeRate = feeRate;
+    }
+    
+    public Double getFeeSplitting()
+    {
+        return feeSplitting;
+    }
+    
+    public void setFeeSplitting(Double feeSplitting)
+    {
+        this.feeSplitting = feeSplitting;
+    }
+    
+    public String getWithdrawMoneymoremore()
+    {
+        return withdrawMoneymoremore;
+    }
+    
+    public void setWithdrawMoneymoremore(String withdrawMoneymoremore)
+    {
+        this.withdrawMoneymoremore = withdrawMoneymoremore;
+    }
+    
+    public String getBatchNo()
+    {
+        return batchNo;
+    }
+    
+    public void setBatchNo(String batchNo)
+    {
+        this.batchNo = batchNo;
     }
     
 }

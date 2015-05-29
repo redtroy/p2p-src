@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>和融网-账户充值</title>
+<title>和融网-账户提现</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="${b.staticPath}style/member.css" rel="stylesheet" type="text/css" />
 <script src="${b.staticPath}js/jquery.js"></script>
@@ -15,14 +15,6 @@
 		//alert($("#postForm")[0].action);
 		$("#postForm").submit();
 	}
-	function postTest() {
-		/* alert("inputCharset=1&pickupUrl=${pickupUrl}&receiveUrl=${receiveUrl}&version=v1.0&"
-				+"language=1&signType=1&merchantId=${merchantId}&orderNo=${orderNo}&"
-				+"orderAmount=${orderAmount}&orderCurrency=0&orderDatetime=${orderDatetime}&"
-				+"orderExpireDatetime=${orderExpireDatetime}&productName=充值&payType=${payType}==${signMsg}"); */
-		//alert($("#postForm")[0].action);
-		$("#form1").submit();
-	}
 </script>
 </head>
 
@@ -33,26 +25,29 @@
     <@b.leftMenu />
     <div class="yard-900 ly-left">
       <div class="rightSide">
-        <div class="heading fontYH f20"><span>账户充值</span></div>
+        <div class="heading fontYH f20"><span>账户提现</span></div>
         <div class="mainBox fontYH">
         <form name="form2" id="postForm" action="${SubmitURL}" method="post">
-		<input id="RechargeMoneymoremore"  name="RechargeMoneymoremore" value="${RechargeMoneymoremore}" type="hidden" />
-		<input id="PlatformMoneymoremore"  name="PlatformMoneymoremore" value="${PlatformMoneymoremore}" type="hidden" />
+		<input id="WithdrawMoneymoremore" name="WithdrawMoneymoremore" value="${WithdrawMoneymoremore}" type="hidden" />
+		<input id="PlatformMoneymoremore" name="PlatformMoneymoremore" value="${PlatformMoneymoremore}" type="hidden" />
 		<input id="OrderNo" name="OrderNo" value="${OrderNo}" type="hidden" />
-		<input id="Amount" name="Amount"  value="${Amount}" type="hidden" />
-		<input id="RechargeType" name="RechargeType"  value="" type="hidden" />
-		<input id="FeeType" name="FeeType" value="" type="hidden" />
-		<input id="CardNo" name="CardNo" value="" type="hidden" />
-		<input id="RandomTimeStamp" name="RandomTimeStamp" value="" type="hidden" />
-		<input id="Remark1" name="Remark1" value="" type="hidden" />
-		<input id="Remark2" name="Remark2" value="" type="hidden" />
-		<input id="Remark3" name="Remark3" value="" type="hidden" />
+		<input id="FeePercent" name="FeePercent" value="${FeePercent}" type="hidden" />
+		<input id="FeeMax" name="FeeMax" value="${FeeMax}" type="hidden" />
+		<input id="FeeRate" name="FeeRate" value="${FeeRate}" type="hidden" />
+		<input id="Amount" name="Amount" value="${Amount}" type="hidden" />
+		<input id="CardNo" name="CardNo" value="${CardNo}" type="hidden" />
+		<input id="CardType" name="CardType" value="${CardType}" type="hidden" />
+		<input id="BankCode" name="BankCode" value="${BankCode}" type="hidden" />
+		<input id="BranchBankName" name="BranchBankName" value="${BranchBankName}" type="hidden" />
+		<input id="Province" name="Province" value="${Province}" type="hidden" />
+		<input id="City" name="City" value="${City}" type="hidden" />
+		<input id="RandomTimeStamp" name="RandomTimeStamp" value="${RandomTimeStamp}" type="hidden" />
+		<input id="Remark1" name="Remark1" value="${Remark1}" type="hidden" />
+		<input id="Remark2" name="Remark2" value="${Remark2}" type="hidden" />
+		<input id="Remark3" name="Remark3" value="${Remark3}" type="hidden" />
 		<input id="ReturnURL" name="ReturnURL" value="${ReturnURL}" type="hidden" />
 		<input id="NotifyURL" name="NotifyURL" value="${NotifyURL}" type="hidden" />
 		<input id="SignInfo" name="SignInfo" value="${SignInfo}" type="hidden" />
-	 </form>
-	 <form name="form1" id="form1" action="" method="post">
-        
 	 </form>
         <table border="0" cellpadding="0" cellspacing="0" class="table tabList mb20">
         <col width="20%" />
@@ -66,15 +61,13 @@
 	        <td class=" money color-purple">${Amount}元</td>
 	      </tr>
 	      <tr>
-	      <th>订单手续费</th>
-	      <td class="color-blue">0元</td>
 	    </tr>
 	      <tr>
 	        <th>账户余额</th>
 	        <td class="color-red">${balance}元</td>
 	      </tr>
 	  </table>
-        <div class="tc"> <a href="javascript:postInfo();" class="button button-orange">确认充值</a></div>
+        <div class="tc"> <a href="javascript:postInfo();" class="button button-orange">确认提现</a></div>
         </div>
       </div>
     </div>

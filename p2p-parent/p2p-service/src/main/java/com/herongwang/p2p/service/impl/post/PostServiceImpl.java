@@ -4,14 +4,17 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,8 +30,22 @@ import com.herongwang.p2p.entity.orders.OrdersEntity;
 import com.herongwang.p2p.entity.parameters.ParametersEntity;
 import com.herongwang.p2p.entity.tl.TLBillEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
+import com.herongwang.p2p.loan.util.Common;
+import com.herongwang.p2p.loan.util.HttpClientUtil;
+import com.herongwang.p2p.loan.util.RsaHelper;
+import com.herongwang.p2p.model.loan.LoanInfoSecondaryBean;
+import com.herongwang.p2p.model.loan.LoanOrderQueryBean;
+import com.herongwang.p2p.model.loan.LoanRechargeOrderQueryBean;
+import com.herongwang.p2p.model.loan.LoanRegisterBindReturnBean;
+import com.herongwang.p2p.model.loan.LoanReturnInfoBean;
+import com.herongwang.p2p.model.loan.LoanTransferReturnBean;
+import com.herongwang.p2p.model.loan.LoanWithdrawsOrderQueryBean;
 import com.herongwang.p2p.model.order.OrderModel;
 import com.herongwang.p2p.model.order.ResultsModel;
+import com.herongwang.p2p.model.post.LoanModel;
+import com.herongwang.p2p.model.post.LoanReleaseModel;
+import com.herongwang.p2p.model.post.RegisterModel;
+import com.herongwang.p2p.model.post.TransferModel;
 import com.herongwang.p2p.service.account.IAccountService;
 import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
@@ -37,6 +54,7 @@ import com.herongwang.p2p.service.orders.IOrdersService;
 import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.post.IPostService;
 import com.herongwang.p2p.service.tl.ITLBillService;
+import com.sxj.util.common.ISxjHttpClient;
 
 @Service
 public class PostServiceImpl implements IPostService
@@ -61,6 +79,11 @@ public class PostServiceImpl implements IPostService
     
     @Autowired
     IInvestOrderService investOrderService;
+    
+    @Autowired
+    private ISxjHttpClient cl;
+    
+    private final String SubmitURLPrefix = "http://218.4.234.150:88/main/";
     
     @Override
     public String getSignMsg(OrderModel orderModel) throws Exception
@@ -467,5 +490,388 @@ public class PostServiceImpl implements IPostService
         {
             return;
         }
+    }
+    
+    @Override
+    public String register(RegisterModel rg)
+    {
+        try
+        {
+            
+            String SubmitURL = SubmitURLPrefix
+                    + "loan/toloanregisterbind.action";
+            
+            String privatekey = Common.privateKeyPKCS8;
+            
+            String dataStr = rg.getRegisterType() + rg.getAccountType()
+                    + rg.getMobile() + rg.getEmail() + rg.getRealName()
+                    + rg.getIdentificationNo() + rg.getImage1()
+                    + rg.getImage2() + rg.getLoanPlatformAccount()
+                    + rg.getPlatformMoneymoremore() + rg.getRandomTimeStamp()
+                    + rg.getRemark1() + rg.getRemark2() + rg.getRemark3()
+                    + rg.getReturnURL() + rg.getNotifyURL();
+            // 签名
+            RsaHelper rsa = RsaHelper.getInstance();
+            String SignInfo = rsa.signData(dataStr, privatekey);
+            
+            if (rg.getRegisterType().equals("1"))
+            {
+                Map<String, String> req = new TreeMap<String, String>();
+                req.put("RegisterType", rg.getRegisterType());
+                req.put("AccountType", rg.getAccountType());
+                req.put("Mobile", rg.getMobile());
+                req.put("Email", rg.getEmail());
+                req.put("RealName", rg.getRealName());
+                req.put("IdentificationNo", rg.getIdentificationNo());
+                req.put("Image1", rg.getImage1());
+                req.put("Image2", rg.getImage2());
+                req.put("LoanPlatformAccount", rg.getLoanPlatformAccount());
+                req.put("PlatformMoneymoremore", rg.getPlatformMoneymoremore());
+                req.put("RandomTimeStamp", rg.getRandomTimeStamp());
+                req.put("Remark1", rg.getRemark1());
+                req.put("Remark2", rg.getRemark2());
+                req.put("Remark3", rg.getRemark3());
+                req.put("ReturnURL", rg.getReturnURL());
+                req.put("NotifyURL", rg.getNotifyURL());
+                req.put("SignInfo", SignInfo);
+                
+                String[] resultarr = HttpClientUtil.doPostQueryCmd(SubmitURL,
+                        req);
+                System.out.println(resultarr[1]);
+                
+                if (StringUtils.isNotBlank(resultarr[1])
+                        && resultarr[1].startsWith("{"))
+                {
+                    LoanRegisterBindReturnBean lrbrb = (LoanRegisterBindReturnBean) Common.JSONDecode(resultarr[1],
+                            LoanRegisterBindReturnBean.class);
+                    if (lrbrb != null)
+                    {
+                        String publickey = Common.publicKey;
+                        
+                        dataStr = lrbrb.getAccountType()
+                                + lrbrb.getAccountNumber() + lrbrb.getMobile()
+                                + lrbrb.getEmail() + lrbrb.getRealName()
+                                + lrbrb.getIdentificationNo()
+                                + lrbrb.getLoanPlatformAccount()
+                                + lrbrb.getMoneymoremoreId()
+                                + lrbrb.getPlatformMoneymoremore()
+                                + lrbrb.getRandomTimeStamp()
+                                + lrbrb.getRemark1() + lrbrb.getRemark2()
+                                + lrbrb.getRemark3() + lrbrb.getResultCode();
+                        // System.out.println(dataStr);
+                        // 签名
+                        boolean verifySignature = rsa.verifySignature(lrbrb.getSignInfo(),
+                                dataStr,
+                                publickey);
+                        System.out.println(verifySignature);
+                    }
+                }
+                return null;
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    @Override
+    public String transfer(TransferModel tf)
+    {
+        try
+        {
+            
+            String SubmitURL = SubmitURLPrefix + "loan/loan.action";
+            
+            String privatekey = Common.privateKeyPKCS8;
+            
+            String dataStr = tf.getLoanJsonList()
+                    + tf.getPlatformMoneymoremore() + tf.getTransferAction()
+                    + tf.getAction() + tf.getTransferType() + tf.getNeedAudit()
+                    + tf.getRandomTimeStamp() + tf.getRemark1()
+                    + tf.getRemark2() + tf.getRemark3() + tf.getReturnURL()
+                    + tf.getNotifyURL();
+            // 签名
+            
+            RsaHelper rsa = RsaHelper.getInstance();
+            
+            String SignInfo = rsa.signData(dataStr, privatekey);
+            
+            if (tf.getAction().equals("2"))
+            {
+                Map<String, String> req = new TreeMap<String, String>();
+                req.put("LoanJsonList", tf.getLoanJsonList());
+                req.put("PlatformMoneymoremore", tf.getPlatformMoneymoremore());
+                req.put("TransferAction", tf.getTransferAction());
+                req.put("Action", tf.getAction());
+                req.put("TransferType", tf.getTransferType());
+                req.put("NeedAudit", tf.getNeedAudit());
+                req.put("RandomTimeStamp", tf.getRandomTimeStamp());
+                req.put("Remark1", tf.getRemark1());
+                req.put("Remark2", tf.getRemark2());
+                req.put("Remark3", tf.getRemark3());
+                req.put("ReturnURL", tf.getReturnURL());
+                req.put("NotifyURL", tf.getNotifyURL());
+                req.put("SignInfo", SignInfo);
+                
+                String[] resultarr = HttpClientUtil.doPostQueryCmd(SubmitURL,
+                        req);
+                System.out.println(resultarr[1]);
+                
+                if (StringUtils.isNotBlank(resultarr[1])
+                        && (resultarr[1].startsWith("[") || resultarr[1].startsWith("{")))
+                {
+                    // 转账
+                    List<Object> loanobjectlist = Common.JSONDecodeList(resultarr[1],
+                            LoanTransferReturnBean.class);
+                    if (loanobjectlist != null && loanobjectlist.size() > 0)
+                    {
+                        for (int i = 0; i < loanobjectlist.size(); i++)
+                        {
+                            if (loanobjectlist.get(i) instanceof LoanTransferReturnBean)
+                            {
+                                LoanTransferReturnBean ltrb = (LoanTransferReturnBean) loanobjectlist.get(i);
+                                System.out.println(ltrb);
+                                
+                                ltrb.setLoanJsonList(Common.UrlDecoder(ltrb.getLoanJsonList(),
+                                        "utf-8"));
+                                
+                                String publickey = Common.publicKey;
+                                
+                                dataStr = ltrb.getLoanJsonList()
+                                        + ltrb.getPlatformMoneymoremore()
+                                        + ltrb.getAction()
+                                        + ltrb.getRandomTimeStamp()
+                                        + ltrb.getRemark1() + ltrb.getRemark2()
+                                        + ltrb.getRemark3()
+                                        + ltrb.getResultCode();
+                                
+                                // 签名
+                                boolean verifySignature = rsa.verifySignature(ltrb.getSignInfo(),
+                                        dataStr,
+                                        publickey);
+                                System.out.println(verifySignature);
+                                
+                                if (verifySignature)
+                                {
+                                    // 转账列表
+                                    if (StringUtils.isNotBlank(ltrb.getLoanJsonList()))
+                                    {
+                                        List<Object> loaninfolist = Common.JSONDecodeList(ltrb.getLoanJsonList(),
+                                                LoanReturnInfoBean.class);
+                                        if (loaninfolist != null
+                                                && loaninfolist.size() > 0)
+                                        {
+                                            for (int j = 0; j < loaninfolist.size(); j++)
+                                            {
+                                                if (loaninfolist.get(j) instanceof LoanReturnInfoBean)
+                                                {
+                                                    LoanReturnInfoBean lrib = (LoanReturnInfoBean) loaninfolist.get(j);
+                                                    System.out.println(lrib);
+                                                    
+                                                    // 二次分配列表
+                                                    if (StringUtils.isNotBlank(lrib.getSecondaryJsonList()))
+                                                    {
+                                                        List<Object> loansecondarylist = Common.JSONDecodeList(lrib.getSecondaryJsonList(),
+                                                                LoanInfoSecondaryBean.class);
+                                                        if (loansecondarylist != null
+                                                                && loansecondarylist.size() > 0)
+                                                        {
+                                                            for (int k = 0; k < loansecondarylist.size(); k++)
+                                                            {
+                                                                if (loansecondarylist.get(k) instanceof LoanInfoSecondaryBean)
+                                                                {
+                                                                    LoanInfoSecondaryBean lisb = (LoanInfoSecondaryBean) loansecondarylist.get(k);
+                                                                    System.out.println(lisb);
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return null;
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    @Override
+    public String loanRelease(LoanReleaseModel lr)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+    @Override
+    public List<LoanOrderQueryBean> orderQuery(LoanModel loan,
+            String submitURLPrefix) throws Exception
+    {
+        List<LoanOrderQueryBean> list = new ArrayList<LoanOrderQueryBean>();
+        String SubmitURL = SubmitURLPrefix + "loan/loanorderquery.action";
+        
+        String privatekey = Common.privateKeyPKCS8;
+        String PlatformMoneymoremore = loan.getPlatformMoneymoremore();
+        String Action = loan.getAction();
+        String LoanNo = loan.getLoanNo();
+        String OrderNo = loan.getOrderNo();
+        String BatchNo = loan.getBatchNo();
+        String BeginTime = loan.getBeginTime();
+        String EndTime = loan.getEndTime();
+        String dataStr = PlatformMoneymoremore + Action + LoanNo + OrderNo
+                + BatchNo + BeginTime + EndTime;
+        RsaHelper rsa = RsaHelper.getInstance();
+        String SignInfo = rsa.signData(dataStr, privatekey);
+        
+        Map<String, String> req = new TreeMap<String, String>();
+        req.put("PlatformMoneymoremore", PlatformMoneymoremore);
+        req.put("Action", Action);
+        req.put("LoanNo", LoanNo);
+        req.put("OrderNo", OrderNo);
+        req.put("BatchNo", BatchNo);
+        req.put("BeginTime", BeginTime);
+        req.put("EndTime", EndTime);
+        req.put("SignInfo", SignInfo);
+        
+        String[] resultarr = HttpClientUtil.doPostQueryCmd(SubmitURL, req);
+        if (StringUtils.isNotBlank(resultarr[1])
+                && (resultarr[1].startsWith("[") || resultarr[1].startsWith("{")))
+        {
+            
+            list = new ArrayList<LoanOrderQueryBean>();
+            // 转账
+            List<Object> loanobjectlist = Common.JSONDecodeList(resultarr[1],
+                    LoanOrderQueryBean.class);
+            if (loanobjectlist != null && loanobjectlist.size() > 0)
+            {
+                for (int i = 0; i < loanobjectlist.size(); i++)
+                {
+                    if (loanobjectlist.get(i) instanceof LoanOrderQueryBean)
+                    {
+                        LoanOrderQueryBean loqb = (LoanOrderQueryBean) loanobjectlist.get(i);
+                        list.add(loqb);
+                    }
+                }
+            }
+        }
+        return list;
+    }
+    
+    @Override
+    public List<LoanRechargeOrderQueryBean> rechargeOrderQuery(LoanModel loan,
+            String submitURLPrefix) throws Exception
+    {
+        List<LoanRechargeOrderQueryBean> list = new ArrayList<LoanRechargeOrderQueryBean>();
+        String SubmitURL = SubmitURLPrefix + "loan/loanorderquery.action";
+        
+        String privatekey = Common.privateKeyPKCS8;
+        String PlatformMoneymoremore = loan.getPlatformMoneymoremore();
+        String Action = loan.getAction();
+        String LoanNo = loan.getLoanNo();
+        String OrderNo = loan.getOrderNo();
+        String BatchNo = loan.getBatchNo();
+        String BeginTime = loan.getBeginTime();
+        String EndTime = loan.getEndTime();
+        String dataStr = PlatformMoneymoremore + Action + LoanNo + OrderNo
+                + BatchNo + BeginTime + EndTime;
+        RsaHelper rsa = RsaHelper.getInstance();
+        String SignInfo = rsa.signData(dataStr, privatekey);
+        
+        Map<String, String> req = new TreeMap<String, String>();
+        req.put("PlatformMoneymoremore", PlatformMoneymoremore);
+        req.put("Action", Action);
+        req.put("LoanNo", LoanNo);
+        req.put("OrderNo", OrderNo);
+        req.put("BatchNo", BatchNo);
+        req.put("BeginTime", BeginTime);
+        req.put("EndTime", EndTime);
+        req.put("SignInfo", SignInfo);
+        
+        String[] resultarr = HttpClientUtil.doPostQueryCmd(SubmitURL, req);
+        if (StringUtils.isNotBlank(resultarr[1])
+                && (resultarr[1].startsWith("[") || resultarr[1].startsWith("{")))
+        {
+            // 充值
+            List<Object> loanobjectlist = Common.JSONDecodeList(resultarr[1],
+                    LoanRechargeOrderQueryBean.class);
+            if (loanobjectlist != null && loanobjectlist.size() > 0)
+            {
+                for (int i = 0; i < loanobjectlist.size(); i++)
+                {
+                    if (loanobjectlist.get(i) instanceof LoanRechargeOrderQueryBean)
+                    {
+                        LoanRechargeOrderQueryBean lroqb = (LoanRechargeOrderQueryBean) loanobjectlist.get(i);
+                        list.add(lroqb);
+                    }
+                }
+            }
+            
+        }
+        return list;
+    }
+    
+    @Override
+    public List<LoanWithdrawsOrderQueryBean> withdrawsOrderQuery(
+            LoanModel loan, String submitURLPrefix) throws Exception
+    {
+        List<LoanWithdrawsOrderQueryBean> list = new ArrayList<LoanWithdrawsOrderQueryBean>();
+        String SubmitURL = SubmitURLPrefix + "loan/loanorderquery.action";
+        
+        String privatekey = Common.privateKeyPKCS8;
+        String PlatformMoneymoremore = loan.getPlatformMoneymoremore();
+        String Action = loan.getAction();
+        String LoanNo = loan.getLoanNo();
+        String OrderNo = loan.getOrderNo();
+        String BatchNo = loan.getBatchNo();
+        String BeginTime = loan.getBeginTime();
+        String EndTime = loan.getEndTime();
+        String dataStr = PlatformMoneymoremore + Action + LoanNo + OrderNo
+                + BatchNo + BeginTime + EndTime;
+        RsaHelper rsa = RsaHelper.getInstance();
+        String SignInfo = rsa.signData(dataStr, privatekey);
+        
+        Map<String, String> req = new TreeMap<String, String>();
+        req.put("PlatformMoneymoremore", PlatformMoneymoremore);
+        req.put("Action", Action);
+        req.put("LoanNo", LoanNo);
+        req.put("OrderNo", OrderNo);
+        req.put("BatchNo", BatchNo);
+        req.put("BeginTime", BeginTime);
+        req.put("EndTime", EndTime);
+        req.put("SignInfo", SignInfo);
+        
+        String[] resultarr = HttpClientUtil.doPostQueryCmd(SubmitURL, req);
+        if (StringUtils.isNotBlank(resultarr[1])
+                && (resultarr[1].startsWith("[") || resultarr[1].startsWith("{")))
+        {
+            
+            // 提现
+            List<Object> loanobjectlist = Common.JSONDecodeList(resultarr[1],
+                    LoanWithdrawsOrderQueryBean.class);
+            if (loanobjectlist != null && loanobjectlist.size() > 0)
+            {
+                for (int i = 0; i < loanobjectlist.size(); i++)
+                {
+                    if (loanobjectlist.get(i) instanceof LoanWithdrawsOrderQueryBean)
+                    {
+                        LoanWithdrawsOrderQueryBean lwoqb = (LoanWithdrawsOrderQueryBean) loanobjectlist.get(i);
+                        list.add(lwoqb);
+                    }
+                }
+            }
+            
+        }
+        return list;
     }
 }
