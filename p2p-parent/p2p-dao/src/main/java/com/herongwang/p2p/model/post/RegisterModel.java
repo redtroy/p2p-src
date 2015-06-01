@@ -2,39 +2,39 @@ package com.herongwang.p2p.model.post;
 
 public class RegisterModel
 {
-    private String RegisterType;
+    private String RegisterType = "";
     
-    private String AccountType;
+    private String AccountType = "";
     
-    private String Mobile;
+    private String Mobile = "";
     
-    private String Email;
+    private String Email = "";
     
-    private String RealName;
+    private String RealName = "";
     
-    private String IdentificationNo;
+    private String IdentificationNo = "";
     
-    private String Image1;
+    private String Image1 = "";
     
-    private String Image2;
+    private String Image2 = "";
     
-    private String LoanPlatformAccount;
+    private String LoanPlatformAccount = "";
     
-    private String PlatformMoneymoremore;
+    private String PlatformMoneymoremore = "";
     
-    private String RandomTimeStamp;
+    private String RandomTimeStamp = "";
     
-    private String Remark1;
+    private String Remark1 = "";
     
-    private String Remark2;
+    private String Remark2 = "";
     
-    private String Remark3;
+    private String Remark3 = "";
     
-    private String ReturnURL;
+    private String ReturnURL = "";
     
-    private String NotifyURL;
+    private String NotifyURL = "";
     
-    private String SignInfo;
+    private String SignInfo = "";
     
     public String getRegisterType()
     {
