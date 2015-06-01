@@ -116,12 +116,6 @@ public class UsersEntity extends Pagable implements Serializable
     private String moneymoremoreId;
     
     /**
-     * 姓名匹配手续费
-     */
-    @Column(name = "authFee")
-    private Double authFee;
-    
-    /**
      * 实名认证状态
      * 1.未实名认证
        2.快捷支付认证
@@ -129,6 +123,16 @@ public class UsersEntity extends Pagable implements Serializable
      */
     @Column(name = "authState")
     private Integer authState;
+    
+    public Integer getAuthState()
+    {
+        return authState;
+    }
+    
+    public void setAuthState(Integer authState)
+    {
+        this.authState = authState;
+    }
     
     public String getAccountNumber()
     {
@@ -148,26 +152,6 @@ public class UsersEntity extends Pagable implements Serializable
     public void setMoneymoremoreId(String moneymoremoreId)
     {
         this.moneymoremoreId = moneymoremoreId;
-    }
-    
-    public Double getAuthFee()
-    {
-        return authFee;
-    }
-    
-    public void setAuthFee(Double authFee)
-    {
-        authFee = authFee;
-    }
-    
-    public Integer getAuthState()
-    {
-        return authState;
-    }
-    
-    public void setAuthState(Integer authState)
-    {
-        authState = authState;
     }
     
     public String getCustomerId()
