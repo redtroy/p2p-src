@@ -1,6 +1,7 @@
 package com.herongwang.p2p.website.controller.post;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -28,6 +30,7 @@ import com.herongwang.p2p.model.loan.LoanTransferReturnBean;
 import com.herongwang.p2p.model.loan.ReleaseBean;
 import com.herongwang.p2p.model.loan.transferauditreturnBean;
 import com.herongwang.p2p.model.order.OrderModel;
+import com.herongwang.p2p.model.post.Loan;
 import com.herongwang.p2p.model.post.LoanModel;
 import com.herongwang.p2p.model.post.LoanReleaseModel;
 import com.herongwang.p2p.model.post.LoanTransferAuditModel;
@@ -36,6 +39,7 @@ import com.herongwang.p2p.model.post.TransferModel;
 import com.herongwang.p2p.service.account.IAccountService;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
 import com.herongwang.p2p.service.orders.IOrdersService;
+import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.post.IPostService;
 import com.herongwang.p2p.service.users.IUserService;
 import com.herongwang.p2p.website.controller.BaseController;
@@ -78,6 +82,9 @@ public class LoanController extends BaseController
     @Autowired
     private IUserService userService;
     
+    @Autowired
+    IParametersService parametersService;
+    
     /*----------------------------------------------充值--------------------------------*/
     @RequestMapping("/recharge")
     public String recharge(ModelMap map) throws WebException
@@ -96,16 +103,28 @@ public class LoanController extends BaseController
             return LOGIN;
         }
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
+        Loan loan = parametersService.getLoan();
         try
         {
             String basePath = this.getBasePath(request);
-            ModelMap map1 = postService.Post(m, user);
-            String SubmitURL = "http://218.4.234.150:88/main/loan/toloanrecharge.action";
+            
+            //生成充值订单
+            OrdersEntity orders = new OrdersEntity();
+            orders.setCustomerId(user.getCustomerId());
+            orders.setAmount(m);
+            orders.setCreateTime(new Date());
+            orders.setStatus(0);
+            orders.setOrderType(1);
+            ordersService.addOrders(orders);
+            
+            //生成签名
+            String SubmitURL = loan.getSubmitURL()
+                    + "loan/toloanrecharge.action";
             String ReturnURL = basePath + "loan/returnURL.htm";
             String NotifyURL = "http://61.132.53.150:7001/p2p-website/loan/notifyURL.htm";
-            String RechargeMoneymoremore = "m31333";
-            String PlatformMoneymoremore = "p1190";
-            String OrderNo = map1.get("orderNo").toString();
+            String RechargeMoneymoremore = "m31333";//用户钱多多标志
+            String PlatformMoneymoremore = loan.getMoremoreId();
+            String OrderNo = orders.getOrdersNo();
             String Amount = order.getOrderAmount();
             String RechargeType = "";
             String FeeType = "";
@@ -117,7 +136,6 @@ public class LoanController extends BaseController
             map.put("SubmitURL", SubmitURL);
             map.put("ReturnURL", ReturnURL);
             map.put("NotifyURL", NotifyURL);
-            map.put("merchantId", map1.get("merchantId"));
             map.put("OrderNo", OrderNo);
             map.put("Amount", Amount);
             map.put("RandomTimeStamp", RandomTimeStamp);
@@ -128,7 +146,7 @@ public class LoanController extends BaseController
                     + OrderNo + Amount + RechargeType + FeeType + CardNo
                     + RandomTimeStamp + Remark1 + Remark2 + Remark3 + ReturnURL
                     + NotifyURL;
-            String SignInfo = rsa.signData(dataStr, privateKeyPKCS8);
+            String SignInfo = rsa.signData(dataStr, loan.getPrivatekey());
             map.put("SignInfo", SignInfo);
             
             map.put("amount", order.getOrderAmount());
@@ -148,7 +166,7 @@ public class LoanController extends BaseController
     @RequestMapping("/returnURL")
     public String returnURL(ModelMap map, LoanModel result) throws Exception
     {
-        
+        DecimalFormat df = new DecimalFormat("######0.00");
         UsersEntity user = this.getUsersEntity();
         if (user == null)
         {
@@ -156,19 +174,54 @@ public class LoanController extends BaseController
         }
         //获取账户信息
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
-        LoanModel loan = new LoanModel();
-        loan.setPlatformMoneymoremore("p1190");
-        loan.setAction("1");
-        loan.setLoanNo(result.getLoanNo());
-        String submitURLPrefix = "";
-        /*List<LoanRechargeOrderQueryBean> list = postService.rechargeOrderQuery(loan,
-                submitURLPrefix);
-        for (int i = 0; i < list.size(); i++)
+        //获取双乾参数
+        Loan loan = parametersService.getLoan();
+        String fee = result.getFee() == null ? "" : result.getFee().toString();
+        String amount = df.format(result.getAmount());
+        //生成返回签名
+        String dataStr = result.getRechargeMoneymoremore()
+                + result.getPlatformMoneymoremore() + result.getLoanNo()
+                + result.getOrderNo() + amount + fee + result.getRechargeType()
+                + result.getFeeType() + result.getCardNoList()
+                + result.getRandomTimeStamp() + result.getRemark1()
+                + result.getRemark2() + result.getRemark3()
+                + result.getResultCode();
+        // 验证签名签名
+        RsaHelper rsa = RsaHelper.getInstance();
+        boolean verifySignature = rsa.verifySignature(result.getSignInfo(),
+                dataStr,
+                loan.getPublickey());
+        if (verifySignature)
         {
-            LoanRechargeOrderQueryBean bean = list.get(i);
-            System.out.println("钱多多查询返回：" + bean.getOrderNo());
+            OrdersEntity orders = ordersService.getOrdersEntityByNo(result.getOrderNo());
+            if (orders.getStatus() != 1)
+            {
+                //更新订单支付成功！
+                orders.setStatus(1);
+                orders.setLoanNo(result.getLoanNo());
+                orders.setArriveTime(new Date());
+                ordersService.updateOrders(orders);
+                
+                //添加资金明细
+                FundDetailEntity deal = new FundDetailEntity();
+                deal.setCustomerId(user.getCustomerId());
+                deal.setAccountId(account.getAccountId());
+                deal.setOrderId(orders.getOrderId());
+                deal.setType(1);
+                deal.setCreateTime(new Date());
+                deal.setStatus(1);
+                deal.setAmount(orders.getAmount());
+                deal.setBalance(account.getBalance());
+                deal.setDueAmount(account.getDueAmount());
+                deal.setFrozenAmount(account.getFozenAmount());
+                deal.setRemark("充值" + amount + "元成功！");
+                fundDetailService.addFundDetail(deal);
+                
+                //更新账户金额
+                account.setBalance(account.getBalance().add(orders.getAmount()));
+                accountService.updateAccount(account);
+            }
         }
-        System.out.println("钱多多返回：" + result.getOrderNo());*/
         map.put("title", "账户充值");
         map.put("orderNo", result.getOrderNo());
         map.put("orderAmount", result.getAmount());
@@ -182,7 +235,54 @@ public class LoanController extends BaseController
     @RequestMapping("/notifyURL")
     public void notifyURL(ModelMap map, LoanModel result) throws Exception
     {
-        System.out.println(result.getMessage());
+        //获取双乾参数
+        Loan loan = parametersService.getLoan();
+        //生成返回签名
+        String dataStr = result.getRechargeMoneymoremore()
+                + result.getPlatformMoneymoremore() + result.getLoanNo()
+                + result.getOrderNo() + result.getAmount() + result.getFee()
+                + result.getRechargeType() + result.getFeeType()
+                + result.getCardNoList() + result.getRandomTimeStamp()
+                + result.getRemark1() + result.getRemark2()
+                + result.getRemark3() + result.getResultCode();
+        // 验证签名签名
+        RsaHelper rsa = RsaHelper.getInstance();
+        boolean verifySignature = rsa.verifySignature(result.getSignInfo(),
+                dataStr,
+                loan.getPublickey());
+        if (verifySignature)
+        {
+            OrdersEntity orders = ordersService.getOrdersEntityByNo(result.getOrderNo());
+            //获取账户信息
+            AccountEntity account = accountService.getAccountByCustomerId(orders.getCustomerId());
+            if (orders.getStatus() != 1)
+            {
+                //更新订单未支付成功！
+                orders.setStatus(1);
+                orders.setLoanNo(result.getLoanNo());
+                orders.setArriveTime(new Date());
+                ordersService.updateOrders(orders);
+                
+                //添加资金明细
+                FundDetailEntity deal = new FundDetailEntity();
+                deal.setCustomerId(orders.getCustomerId());
+                deal.setAccountId(account.getAccountId());
+                deal.setOrderId(orders.getOrderId());
+                deal.setType(1);
+                deal.setCreateTime(new Date());
+                deal.setStatus(1);
+                deal.setAmount(orders.getAmount());
+                deal.setBalance(account.getBalance());
+                deal.setDueAmount(account.getDueAmount());
+                deal.setFrozenAmount(account.getFozenAmount());
+                deal.setRemark("充值" + result.getAmount() + "元成功！");
+                fundDetailService.addFundDetail(deal);
+                
+                //更新账户金额
+                account.setBalance(account.getBalance().add(orders.getAmount()));
+                accountService.updateAccount(account);
+            }
+        }
     }
     
     /*----------------------------------------------提现--------------------------------*/
@@ -510,6 +610,120 @@ public class LoanController extends BaseController
         }
     }
     
+    /*----------------------------------------------余额查询--------------------------------*/
+    /**
+     * 余额查询
+     * @param session
+     * @param apply
+     * @return
+     * @throws WebException
+     */
+    @RequestMapping("balanceQuery")
+    public @ResponseBody Map<String, String> balanceQuery(
+            HttpServletRequest request, String type) throws WebException
+    {
+        try
+        {
+            Map<String, String> map = new HashMap<String, String>();
+            String PlatformId = "m31333";
+            String platformType = "1";//1.托管账户 2.自有账户
+            
+            String[] result = postService.balanceQuery(PlatformId, platformType);
+            String[] balance = result[1].split("\\|");
+            map.put("balance1", balance[0]);
+            map.put("balance2", balance[1]);
+            map.put("balance3", balance[2]);
+            return map;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new WebException("生成查询余额失败", e);
+        }
+        
+    }
+    
+    /*-------------------------认证、提现银行卡绑定、代扣授权三合一接口--------------------------------*/
+    @RequestMapping("/fastPay")
+    public String fastPay(HttpServletRequest request, ModelMap map)
+            throws WebException
+    {
+        UsersEntity user = this.getUsersEntity();
+        if (user == null)
+        {
+            return LOGIN;
+        }
+        String basePath = this.getBasePath(request);
+        String SubmitURL = "http://218.4.234.150:88/main/loan/toloanauthorize.action";
+        String ReturnURL = basePath + "loan/fastPayReturnURL.htm";
+        String NotifyURL = basePath + "loan/fastPayNotifyURL.htm";
+        
+        String privatekey = privateKeyPKCS8;
+        String publickey = publicKey;
+        String MoneymoremoreId = "m31333";
+        String PlatformMoneymoremore = "p1190";
+        String Action = "2";
+        String CardNo = "6222024301056658220";
+        String WithholdBeginDate = "";
+        String WithholdEndDate = "";
+        String SingleWithholdLimit = "";
+        String TotalWithholdLimit = "";
+        String RandomTimeStamp = "";
+        String Remark1 = "";
+        String Remark2 = "";
+        String Remark3 = "";
+        String dataStr = MoneymoremoreId + PlatformMoneymoremore + Action
+                + CardNo + WithholdBeginDate + WithholdEndDate
+                + SingleWithholdLimit + TotalWithholdLimit + RandomTimeStamp
+                + Remark1 + Remark2 + Remark3 + ReturnURL + NotifyURL;
+        // 签名
+        RsaHelper rsa = RsaHelper.getInstance();
+        String SignInfo = rsa.signData(dataStr, privatekey);
+        
+        if (StringUtils.isNotBlank(CardNo))
+        {
+            CardNo = rsa.encryptData(CardNo, publickey);
+        }
+        
+        map.put("SubmitURL", SubmitURL);
+        map.put("MoneymoremoreId", MoneymoremoreId);
+        map.put("PlatformMoneymoremore", PlatformMoneymoremore);
+        map.put("Action", Action);
+        map.put("CardNo", CardNo);
+        map.put("WithholdBeginDate", WithholdBeginDate);
+        map.put("WithholdEndDate", WithholdEndDate);
+        map.put("SingleWithholdLimit", SingleWithholdLimit);
+        map.put("TotalWithholdLimit", TotalWithholdLimit);
+        map.put("RandomTimeStamp", RandomTimeStamp);
+        map.put("Remark1", Remark1);
+        map.put("Remark2", Remark2);
+        map.put("Remark3", Remark3);
+        map.put("ReturnURL", ReturnURL);
+        map.put("NotifyURL", NotifyURL);
+        map.put("SignInfo", SignInfo);
+        return "site/loan/fastpay";
+    }
+    
+    @RequestMapping("/fastPayReturnURL")
+    public String fastPayReturnURL(ModelMap map, LoanModel result)
+            throws Exception
+    {
+        
+        UsersEntity user = this.getUsersEntity();
+        if (user == null)
+        {
+            return LOGIN;
+        }
+        map.put("title", "代扣");
+        map.put("orderNo", "0");
+        map.put("orderAmount", "0");
+        map.put("Fee", "0");
+        map.put("payAmount", "0");
+        map.put("balance", "0");
+        return "site/loan/results";
+    }
+    
     /**
      * 除100
      * @param m
@@ -564,6 +778,14 @@ public class LoanController extends BaseController
     {
         try
         {
+            UsersEntity user = getUsersEntity();
+            rg.setRegisterType("2");
+            rg.setMobile(user.getCellphone());
+            rg.setEmail(user.getEmail());
+            rg.setRealName(user.getName());
+            rg.setIdentificationNo(user.getCardNum());
+            rg.setLoanPlatformAccount(user.getCustomerNo());
+            rg.setPlatformMoneymoremore("p1190");
             rg.setReturnURL("http://127.0.0.1:8080/p2p-website/loan/registerbindreturn.htm");
             rg.setNotifyURL("http://127.0.0.1:8080/p2p-website/loan/test2.htm");
             String privatekey = privateKeyPKCS8;
@@ -590,9 +812,10 @@ public class LoanController extends BaseController
         }
         catch (Exception e)
         {
-            // TODO: handle exception
+            SxjLogger.error("注册失败", this.getClass());
+            throw new WebException("注册会员失败！", e);
         }
-        return "site/test/jump";
+        return "site/member/member-center";
     }
     
     /**
@@ -717,6 +940,7 @@ public class LoanController extends BaseController
             lr.setAmount("100");
             lr.setMoneymoremoreId("m31333");
             lr.setPlatformMoneymoremore("p1190");
+            lr.setOrderNo("D2015060110048102");
             lr.setReturnURL("http://127.0.0.1:8080/p2p-website/loan/loanReleaseReturn.htm");
             lr.setNotifyURL("http://127.0.0.1:8080/p2p-website/loan/loanReleaseNotif.htm");
             String dataStr = lr.getMoneymoremoreId()
@@ -784,6 +1008,7 @@ public class LoanController extends BaseController
             LoanTransferAuditModel ltsa = new LoanTransferAuditModel();
             ltsa.setPlatformMoneymoremore("p1190");
             ltsa.setAuditType("1");
+            ltsa.setLoanNoList("LN11372141506011010551770858");
             String privatekey = privateKeyPKCS8;
             ltsa.setReturnURL("http://127.0.0.1:8080/p2p-website/loan/loanTransferAuditModelReturn.htm");
             ltsa.setNotifyURL("http://127.0.0.1:8080/p2p-website/loan/loanTransferAuditModelNotify.htm");

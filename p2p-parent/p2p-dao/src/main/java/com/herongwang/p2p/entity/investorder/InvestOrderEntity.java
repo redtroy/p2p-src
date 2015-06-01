@@ -48,6 +48,12 @@ public class InvestOrderEntity extends Pagable implements Serializable
     private String debtId;
     
     /**
+     * 流水号
+     */
+    @Column(name = "loanNo")
+    private String loanNo;
+    
+    /**
      * 订单金额
      */
     @Column(name = "amount")
@@ -128,6 +134,16 @@ public class InvestOrderEntity extends Pagable implements Serializable
     private String name;//会员名称
     
     private String title;//标的名称
+    
+    public String getLoanNo()
+    {
+        return loanNo;
+    }
+    
+    public void setLoanNo(String loanNo)
+    {
+        this.loanNo = loanNo;
+    }
     
     public String getTitle()
     {

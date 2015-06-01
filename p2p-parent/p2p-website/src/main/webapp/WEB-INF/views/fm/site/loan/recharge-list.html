@@ -8,20 +8,7 @@
 <@b.validate/> <@b.dialog/>
 <script>
 	function postInfo() {
-		/* alert("inputCharset=1&pickupUrl=${pickupUrl}&receiveUrl=${receiveUrl}&version=v1.0&"
-				+"language=1&signType=1&merchantId=${merchantId}&orderNo=${orderNo}&"
-				+"orderAmount=${orderAmount}&orderCurrency=0&orderDatetime=${orderDatetime}&"
-				+"orderExpireDatetime=${orderExpireDatetime}&productName=充值&payType=${payType}==${signMsg}"); */
-		//alert($("#postForm")[0].action);
 		$("#postForm").submit();
-	}
-	function postTest() {
-		/* alert("inputCharset=1&pickupUrl=${pickupUrl}&receiveUrl=${receiveUrl}&version=v1.0&"
-				+"language=1&signType=1&merchantId=${merchantId}&orderNo=${orderNo}&"
-				+"orderAmount=${orderAmount}&orderCurrency=0&orderDatetime=${orderDatetime}&"
-				+"orderExpireDatetime=${orderExpireDatetime}&productName=充值&payType=${payType}==${signMsg}"); */
-		//alert($("#postForm")[0].action);
-		$("#form1").submit();
 	}
 </script>
 </head>
@@ -65,10 +52,6 @@
 	        <th>订单金额</th>
 	        <td class=" money color-purple">${Amount}元</td>
 	      </tr>
-	      <tr>
-	      <th>订单手续费</th>
-	      <td class="color-blue">0元</td>
-	    </tr>
 	      <tr>
 	        <th>账户余额</th>
 	        <td class="color-red">${balance}元</td>

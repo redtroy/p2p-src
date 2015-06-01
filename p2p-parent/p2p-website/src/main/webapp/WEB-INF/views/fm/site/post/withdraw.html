@@ -118,7 +118,7 @@
       <td>
       <#if type = 0>
       <input type="text" id="amount" name="orderAmount" class="input input-w140h30" value="" datatype="amount" nullmsg="请输入提现金额！"  /> 元
-	<#else if = 999>
+	<#elseif type = 999>
 	您已有一条提现记录，请等待管理员审核后再申请。
 	<#else>
 	您未绑定提现银行卡，请绑定提现银行卡。

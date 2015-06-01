@@ -172,6 +172,32 @@ public class BasicController extends BaseController
         return getUsersEntity().getName();
     }
     
+    /**
+     * 开户检查
+     * @param request
+     * @param map
+     * @return
+     * @throws WebException
+     */
+    @RequestMapping("checkopen")
+    public @ResponseBody String checkOpen()
+    {
+        if (getUsersEntity() == null)
+        {
+            return "erro";
+        }
+        UsersEntity user = getUsersEntity();
+        if (!"".equals(user.getName()) && user.getName() != null
+                && !"".equals(user.getCardNum()) && user.getCardNum() != null)
+        {
+            return "ok";
+        }
+        else
+        {
+            return "erro";
+        }
+    }
+    
     @RequestMapping("index")
     public String ToIndex(HttpServletRequest request, ModelMap map)
             throws WebException
