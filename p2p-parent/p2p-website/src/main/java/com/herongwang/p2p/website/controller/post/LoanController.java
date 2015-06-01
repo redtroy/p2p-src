@@ -560,16 +560,16 @@ public class LoanController extends BaseController
         String ReturnURL = basePath + "loan/fastPayReturnURL.htm";
         String NotifyURL = basePath + "loan/fastPayNotifyURL.htm";
         
-        String privatekey = Common.privateKeyPKCS8;
-        String publickey = Common.publicKey;
+        String privatekey = privateKeyPKCS8;
+        String publickey = publicKey;
         String MoneymoremoreId = "m31333";
         String PlatformMoneymoremore = "p1190";
-        String Action = "3";
+        String Action = "2";
         String CardNo = "6222024301056658220";
-        String WithholdBeginDate = "20140101";
-        String WithholdEndDate = "20160101";
-        String SingleWithholdLimit = "10000";
-        String TotalWithholdLimit = "10000000";
+        String WithholdBeginDate = "";
+        String WithholdEndDate = "";
+        String SingleWithholdLimit = "";
+        String TotalWithholdLimit = "";
         String RandomTimeStamp = "";
         String Remark1 = "";
         String Remark2 = "";
@@ -590,8 +590,19 @@ public class LoanController extends BaseController
         map.put("SubmitURL", SubmitURL);
         map.put("MoneymoremoreId", MoneymoremoreId);
         map.put("PlatformMoneymoremore", PlatformMoneymoremore);
+        map.put("Action", Action);
+        map.put("CardNo", CardNo);
+        map.put("WithholdBeginDate", WithholdBeginDate);
+        map.put("WithholdEndDate", WithholdEndDate);
+        map.put("SingleWithholdLimit", SingleWithholdLimit);
+        map.put("TotalWithholdLimit", TotalWithholdLimit);
+        map.put("RandomTimeStamp", RandomTimeStamp);
+        map.put("Remark1", Remark1);
+        map.put("Remark2", Remark2);
+        map.put("Remark3", Remark3);
         map.put("ReturnURL", ReturnURL);
         map.put("NotifyURL", NotifyURL);
+        map.put("SignInfo", SignInfo);
         return "site/loan/fastpay";
     }
     
