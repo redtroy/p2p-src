@@ -102,6 +102,12 @@ public class OrdersEntity extends Pagable implements Serializable
     private String channel;
     
     /**
+     * 乾多多流水号
+     */
+    @Column(name = "loanNo")
+    private String loanNo;
+    
+    /**
      * 订单签名
      */
     @Column(name = "strSignMsg")
@@ -180,6 +186,16 @@ public class OrdersEntity extends Pagable implements Serializable
     public void setName(String name)
     {
         this.name = name;
+    }
+    
+    public String getLoanNo()
+    {
+        return loanNo;
+    }
+    
+    public void setLoanNo(String loanNo)
+    {
+        this.loanNo = loanNo;
     }
     
     public String getOrderId()

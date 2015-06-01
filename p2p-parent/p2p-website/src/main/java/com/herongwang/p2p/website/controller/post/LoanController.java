@@ -29,6 +29,7 @@ import com.herongwang.p2p.model.loan.LoanTransferReturnBean;
 import com.herongwang.p2p.model.loan.ReleaseBean;
 import com.herongwang.p2p.model.loan.transferauditreturnBean;
 import com.herongwang.p2p.model.order.OrderModel;
+import com.herongwang.p2p.model.post.Loan;
 import com.herongwang.p2p.model.post.LoanModel;
 import com.herongwang.p2p.model.post.LoanReleaseModel;
 import com.herongwang.p2p.model.post.LoanTransferAuditModel;
@@ -37,6 +38,7 @@ import com.herongwang.p2p.model.post.TransferModel;
 import com.herongwang.p2p.service.account.IAccountService;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
 import com.herongwang.p2p.service.orders.IOrdersService;
+import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.post.IPostService;
 import com.herongwang.p2p.service.users.IUserService;
 import com.herongwang.p2p.website.controller.BaseController;
@@ -79,6 +81,9 @@ public class LoanController extends BaseController
     @Autowired
     private IUserService userService;
     
+    @Autowired
+    IParametersService parametersService;
+    
     /*----------------------------------------------充值--------------------------------*/
     @RequestMapping("/recharge")
     public String recharge(ModelMap map) throws WebException
@@ -97,16 +102,28 @@ public class LoanController extends BaseController
             return LOGIN;
         }
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
+        Loan loan = parametersService.getLoan();
         try
         {
             String basePath = this.getBasePath(request);
-            ModelMap map1 = postService.Post(m, user);
-            String SubmitURL = "http://218.4.234.150:88/main/loan/toloanrecharge.action";
+            
+            //生成充值订单
+            OrdersEntity orders = new OrdersEntity();
+            orders.setCustomerId(user.getCustomerId());
+            orders.setAmount(m);
+            orders.setCreateTime(new Date());
+            orders.setStatus(0);
+            orders.setOrderType(1);
+            ordersService.addOrders(orders);
+            
+            //生成签名
+            String SubmitURL = loan.getSubmitURL()
+                    + "loan/toloanrecharge.action";
             String ReturnURL = basePath + "loan/returnURL.htm";
             String NotifyURL = "http://61.132.53.150:7001/p2p-website/loan/notifyURL.htm";
-            String RechargeMoneymoremore = "m31333";
-            String PlatformMoneymoremore = "p1190";
-            String OrderNo = map1.get("orderNo").toString();
+            String RechargeMoneymoremore = "m31333";//用户钱多多标志
+            String PlatformMoneymoremore = loan.getMoremoreId();
+            String OrderNo = orders.getOrdersNo();
             String Amount = order.getOrderAmount();
             String RechargeType = "";
             String FeeType = "";
@@ -118,7 +135,6 @@ public class LoanController extends BaseController
             map.put("SubmitURL", SubmitURL);
             map.put("ReturnURL", ReturnURL);
             map.put("NotifyURL", NotifyURL);
-            map.put("merchantId", map1.get("merchantId"));
             map.put("OrderNo", OrderNo);
             map.put("Amount", Amount);
             map.put("RandomTimeStamp", RandomTimeStamp);
@@ -129,7 +145,7 @@ public class LoanController extends BaseController
                     + OrderNo + Amount + RechargeType + FeeType + CardNo
                     + RandomTimeStamp + Remark1 + Remark2 + Remark3 + ReturnURL
                     + NotifyURL;
-            String SignInfo = rsa.signData(dataStr, privateKeyPKCS8);
+            String SignInfo = rsa.signData(dataStr, loan.getPrivatekey());
             map.put("SignInfo", SignInfo);
             
             map.put("amount", order.getOrderAmount());
@@ -157,19 +173,52 @@ public class LoanController extends BaseController
         }
         //获取账户信息
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
-        LoanModel loan = new LoanModel();
-        loan.setPlatformMoneymoremore("p1190");
-        loan.setAction("1");
-        loan.setLoanNo(result.getLoanNo());
-        String submitURLPrefix = "";
-        /*List<LoanRechargeOrderQueryBean> list = postService.rechargeOrderQuery(loan,
-                submitURLPrefix);
-        for (int i = 0; i < list.size(); i++)
+        //获取双乾参数
+        Loan loan = parametersService.getLoan();
+        String fee = result.getFee() == null ? "" : result.getFee().toString();
+        //生成返回签名
+        String dataStr = result.getRechargeMoneymoremore()
+                + result.getPlatformMoneymoremore() + result.getLoanNo()
+                + result.getOrderNo() + result.getAmount() + fee
+                + result.getRechargeType() + result.getFeeType()
+                + result.getCardNoList() + result.getRandomTimeStamp()
+                + result.getRemark1() + result.getRemark2()
+                + result.getRemark3() + result.getResultCode();
+        // 验证签名签名
+        RsaHelper rsa = RsaHelper.getInstance();
+        boolean verifySignature = rsa.verifySignature(result.getSignInfo(),
+                dataStr,
+                loan.getPublickey());
+        if (verifySignature)
         {
-            LoanRechargeOrderQueryBean bean = list.get(i);
-            System.out.println("钱多多查询返回：" + bean.getOrderNo());
+            OrdersEntity orders = ordersService.getOrdersEntityByNo(result.getOrderNo());
+            if (orders.getStatus() != 1)
+            {
+                //更新订单支付成功！
+                orders.setStatus(1);
+                orders.setLoanNo(result.getLoanNo());
+                orders.setArriveTime(new Date());
+                ordersService.updateOrders(orders);
+                
+                //添加资金明细
+                FundDetailEntity deal = new FundDetailEntity();
+                deal.setCustomerId(user.getCustomerId());
+                deal.setAccountId(account.getAccountId());
+                deal.setOrderId(orders.getOrderId());
+                deal.setType(1);
+                deal.setCreateTime(new Date());
+                deal.setStatus(1);
+                deal.setBalance(account.getBalance());
+                deal.setDueAmount(account.getDueAmount());
+                deal.setFrozenAmount(account.getFozenAmount());
+                deal.setRemark("充值" + result.getAmount() + "元成功！");
+                fundDetailService.addFundDetail(deal);
+                
+                //更新账户金额
+                account.setBalance(account.getBalance().add(orders.getAmount()));
+                accountService.updateAccount(account);
+            }
         }
-        System.out.println("钱多多返回：" + result.getOrderNo());*/
         map.put("title", "账户充值");
         map.put("orderNo", result.getOrderNo());
         map.put("orderAmount", result.getAmount());
@@ -183,7 +232,53 @@ public class LoanController extends BaseController
     @RequestMapping("/notifyURL")
     public void notifyURL(ModelMap map, LoanModel result) throws Exception
     {
-        System.out.println(result.getMessage());
+        //获取双乾参数
+        Loan loan = parametersService.getLoan();
+        //生成返回签名
+        String dataStr = result.getRechargeMoneymoremore()
+                + result.getPlatformMoneymoremore() + result.getLoanNo()
+                + result.getOrderNo() + result.getAmount() + result.getFee()
+                + result.getRechargeType() + result.getFeeType()
+                + result.getCardNoList() + result.getRandomTimeStamp()
+                + result.getRemark1() + result.getRemark2()
+                + result.getRemark3() + result.getResultCode();
+        // 验证签名签名
+        RsaHelper rsa = RsaHelper.getInstance();
+        boolean verifySignature = rsa.verifySignature(result.getSignInfo(),
+                dataStr,
+                loan.getPublickey());
+        if (verifySignature)
+        {
+            OrdersEntity orders = ordersService.getOrdersEntityByNo(result.getOrderNo());
+            //获取账户信息
+            AccountEntity account = accountService.getAccountByCustomerId(orders.getCustomerId());
+            if (orders.getStatus() != 1)
+            {
+                //更新订单未支付成功！
+                orders.setStatus(1);
+                orders.setLoanNo(result.getLoanNo());
+                orders.setArriveTime(new Date());
+                ordersService.updateOrders(orders);
+                
+                //添加资金明细
+                FundDetailEntity deal = new FundDetailEntity();
+                deal.setCustomerId(orders.getCustomerId());
+                deal.setAccountId(account.getAccountId());
+                deal.setOrderId(orders.getOrderId());
+                deal.setType(1);
+                deal.setCreateTime(new Date());
+                deal.setStatus(1);
+                deal.setBalance(account.getBalance());
+                deal.setDueAmount(account.getDueAmount());
+                deal.setFrozenAmount(account.getFozenAmount());
+                deal.setRemark("充值" + result.getAmount() + "元成功！");
+                fundDetailService.addFundDetail(deal);
+                
+                //更新账户金额
+                account.setBalance(account.getBalance().add(orders.getAmount()));
+                accountService.updateAccount(account);
+            }
+        }
     }
     
     /*----------------------------------------------提现--------------------------------*/
