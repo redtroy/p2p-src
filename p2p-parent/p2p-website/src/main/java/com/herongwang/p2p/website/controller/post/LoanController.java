@@ -235,12 +235,14 @@ public class LoanController extends BaseController
     @RequestMapping("/notifyURL")
     public void notifyURL(ModelMap map, LoanModel result) throws Exception
     {
+        DecimalFormat df = new DecimalFormat("######0.00");
         //获取双乾参数
         Loan loan = parametersService.getLoan();
+        String amount = df.format(result.getAmount());
         //生成返回签名
         String dataStr = result.getRechargeMoneymoremore()
                 + result.getPlatformMoneymoremore() + result.getLoanNo()
-                + result.getOrderNo() + result.getAmount() + result.getFee()
+                + result.getOrderNo() + amount + result.getFee()
                 + result.getRechargeType() + result.getFeeType()
                 + result.getCardNoList() + result.getRandomTimeStamp()
                 + result.getRemark1() + result.getRemark2()
@@ -294,6 +296,7 @@ public class LoanController extends BaseController
         {
             return LOGIN;
         }
+        
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
         map.put("balance", this.divide(account.getBalance()));
         return "site/loan/withdraw";
@@ -303,12 +306,15 @@ public class LoanController extends BaseController
     public String withdrawList(HttpServletRequest request, ModelMap map,
             OrderModel order) throws WebException
     {
+        UsersEntity users = this.getUsersEntity();
         String basePath = this.getBasePath(request);
+        
         try
         {
+            //获取双乾参数
+            Loan loan = parametersService.getLoan();
             BigDecimal m = this.multiply(new BigDecimal(order.getOrderAmount()));
-            UsersEntity user = userService.getUserById(this.getUsersEntity()
-                    .getCustomerId());
+            UsersEntity user = userService.getUserById(users.getCustomerId());
             AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
             
             //生成提现订单
@@ -320,32 +326,22 @@ public class LoanController extends BaseController
             orders.setOrderType(2);
             ordersService.addOrders(orders);
             
-            //生成资金明细
-            FundDetailEntity deal = new FundDetailEntity();
-            deal.setCustomerId(user.getCustomerId());
-            deal.setAccountId(account.getAccountId());
-            deal.setOrderId(orders.getOrderId());
-            deal.setType(2);
-            deal.setCreateTime(new Date());
-            deal.setStatus(0);
-            deal.setAmount(m);
-            deal.setBalance(account.getBalance());
-            deal.setDueAmount(account.getDueAmount());
-            deal.setFrozenAmount(account.getFozenAmount());
-            deal.setRemark("提现" + order.getOrderAmount() + "元失败！");
-            fundDetailService.addFundDetail(deal);
-            
             //双乾信息
-            String SubmitURL = "http://218.4.234.150:88/main/loan/toloanwithdraws.action";
+            //生成签名
+            String SubmitURL = loan.getSubmitURL()
+                    + "loan/toloanwithdraws.action";
             String ReturnURL = basePath + "loan/withdrawReturnURL.htm";
-            String NotifyURL = basePath + "loan/withdrawNotifyURL.htm";
+            String NotifyURL = "http://61.132.53.150:7001/p2p-website/loan/withdrawNotifyURL.htm";
             String WithdrawMoneymoremore = "m31333";
-            String PlatformMoneymoremore = "p1190";
+            String PlatformMoneymoremore = loan.getMoremoreId();
             String OrderNo = orders.getOrdersNo();//平台的提现订单号
             String Amount = order.getOrderAmount();//金额
-            String FeePercent = "0";//平台承担的手续费比例
-            String FeeMax = "5";//用户承担的最高手续费
-            String FeeRate = "";//上浮费率
+            String FeePercent = loan.getFeePercent() == null ? ""
+                    : loan.getFeePercent().toString();//平台承担的手续费比例
+            String FeeMax = loan.getFeeMax() == null ? "" : loan.getFeeMax()
+                    .toString();//用户承担的最高手续费
+            String FeeRate = loan.getFeeRate() == null ? "" : loan.getFeeRate()
+                    .toString();//上浮费率
             String CardNo = user.getCardNo();//银行卡号
             String CardType = "0";//银行卡类型
             String BankCode = "1";//银行代码
@@ -364,9 +360,9 @@ public class LoanController extends BaseController
                     + NotifyURL;
             // 签名
             RsaHelper rsa = RsaHelper.getInstance();
-            String SignInfo = rsa.signData(dataStr, privateKeyPKCS8);
+            String SignInfo = rsa.signData(dataStr, loan.getPrivatekey());
             
-            CardNo = rsa.encryptData(CardNo, publicKey);
+            CardNo = rsa.encryptData(CardNo, loan.getPublickey());
             map.put("SubmitURL", SubmitURL);
             map.put("WithdrawMoneymoremore", WithdrawMoneymoremore);
             map.put("PlatformMoneymoremore", PlatformMoneymoremore);
@@ -404,7 +400,7 @@ public class LoanController extends BaseController
     public String withdrawReturnURL(ModelMap map, LoanModel result)
             throws Exception
     {
-        
+        DecimalFormat df = new DecimalFormat("######0.00");
         UsersEntity user = this.getUsersEntity();
         if (user == null)
         {
@@ -412,18 +408,29 @@ public class LoanController extends BaseController
         }
         //获取账户信息
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
+        //获取双乾参数
+        Loan loan = parametersService.getLoan();
         RsaHelper rsa = RsaHelper.getInstance();
+        
+        String amount = df.format(result.getAmount());
+        String feeSplitting = result.getFeeSplitting() == null ? ""
+                : result.getFeeSplitting().toString();//平台承担的手续费比例
+        String feeMax = result.getFeeMax() == null ? "" : result.getFeeMax()
+                .toString();//用户承担的最高手续费
+        String feeRate = result.getFeeRate() == null ? "" : result.getFeeRate()
+                .toString();//上浮费率
         String dataStr = result.getWithdrawMoneymoremore()
                 + result.getPlatformMoneymoremore() + result.getLoanNo()
-                + result.getOrderNo() + result.getAmount() + result.getFeeMax()
-                + result.getFeeWithdraws() + result.getFeePercent()
-                + result.getFee() + result.getFreeLimit() + result.getFeeRate()
-                + result.getFeeSplitting() + result.getRandomTimeStamp()
+                + result.getOrderNo() + amount + feeMax
+                + df.format(result.getFeeWithdraws())
+                + df.format(result.getFeePercent())
+                + df.format(result.getFee()) + df.format(result.getFreeLimit())
+                + feeRate + feeSplitting + result.getRandomTimeStamp()
                 + result.getRemark1() + result.getRemark2()
                 + result.getRemark3() + result.getResultCode();
         boolean verifySignature = rsa.verifySignature(result.getSignInfo(),
                 dataStr,
-                publicKey);
+                loan.getPublickey());
         if (verifySignature)
         {
             OrdersEntity order = ordersService.getOrdersEntityByNo(result.getOrderNo());
@@ -431,17 +438,22 @@ public class LoanController extends BaseController
             {
                 order.setStatus(1);
                 ordersService.updateOrders(order);
-                FundDetailEntity query = new FundDetailEntity();
-                query.setOrderId(order.getOrderId());
-                query.setType(2);
-                List<FundDetailEntity> list = fundDetailService.queryFundDetail(query);
-                if (null != list && list.size() > 0)
-                {
-                    FundDetailEntity deal = list.get(0);
-                    deal.setStatus(1);
-                    deal.setRemark("提现" + result.getAmount() + "元成功！");
-                    fundDetailService.updateFundDetail(deal);
-                }
+                
+                //添加资金明细
+                FundDetailEntity deal = new FundDetailEntity();
+                deal.setCustomerId(order.getCustomerId());
+                deal.setAccountId(account.getAccountId());
+                deal.setOrderId(order.getOrderId());
+                deal.setType(1);
+                deal.setCreateTime(new Date());
+                deal.setStatus(1);
+                deal.setAmount(order.getAmount());
+                deal.setBalance(account.getBalance());
+                deal.setDueAmount(account.getDueAmount());
+                deal.setFrozenAmount(account.getFozenAmount());
+                deal.setRemark("提现" + result.getAmount() + "元成功！");
+                fundDetailService.addFundDetail(deal);
+                
                 account.setBalance(account.getBalance()
                         .subtract(this.multiply(new BigDecimal(
                                 result.getAmount()))));
@@ -461,7 +473,7 @@ public class LoanController extends BaseController
     @RequestMapping("/withdrawNotifyURL")
     public void withdrawNotifyURL(LoanModel result) throws Exception
     {
-        
+        DecimalFormat df = new DecimalFormat("######0.00");
         UsersEntity user = this.getUsersEntity();
         if (user == null)
         {
@@ -470,6 +482,7 @@ public class LoanController extends BaseController
         //获取账户信息
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
         RsaHelper rsa = RsaHelper.getInstance();
+        
         String dataStr = result.getWithdrawMoneymoremore()
                 + result.getPlatformMoneymoremore() + result.getLoanNo()
                 + result.getOrderNo() + result.getAmount() + result.getFeeMax()

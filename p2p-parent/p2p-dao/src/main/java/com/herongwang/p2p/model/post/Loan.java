@@ -15,6 +15,12 @@ public class Loan
     
     private String submitURL;//双乾地址
     
+    private Double feePercent;//平台承担的手续费比例
+    
+    private Double feeMax;//用户承担的最高手续费
+    
+    private Double feeRate;//上浮费率
+    
     public String getPrivatekey()
     {
         return privatekey;
@@ -53,6 +59,36 @@ public class Loan
     public void setSubmitURL(String submitURL)
     {
         this.submitURL = submitURL;
+    }
+    
+    public Double getFeePercent()
+    {
+        return feePercent;
+    }
+    
+    public void setFeePercent(Double feePercent)
+    {
+        this.feePercent = feePercent;
+    }
+    
+    public Double getFeeMax()
+    {
+        return feeMax;
+    }
+    
+    public void setFeeMax(Double feeMax)
+    {
+        this.feeMax = feeMax;
+    }
+    
+    public Double getFeeRate()
+    {
+        return feeRate;
+    }
+    
+    public void setFeeRate(Double feeRate)
+    {
+        this.feeRate = feeRate;
     }
     
 }

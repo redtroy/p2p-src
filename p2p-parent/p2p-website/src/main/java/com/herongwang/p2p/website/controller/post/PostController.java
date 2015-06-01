@@ -62,12 +62,6 @@ public class PostController extends BaseController
     @Autowired
     private IUserService userService;
     
-    @RequestMapping("/recharge")
-    public String recharge(ModelMap map) throws WebException
-    {
-        return "site/post/recharge";
-    }
-    
     @RequestMapping("/withdraw")
     public String withdraw(ModelMap map) throws WebException
     {
@@ -90,49 +84,6 @@ public class PostController extends BaseController
         map.put("type", num);
         map.put("balance", this.divide(account.getBalance()));
         return "site/post/withdraw";
-    }
-    
-    @RequestMapping("/rechargeList")
-    public String rechargeList(HttpServletRequest request, ModelMap map,
-            OrderModel order) throws WebException
-    {
-        BigDecimal m = this.multiply(new BigDecimal(order.getOrderAmount()));
-        UsersEntity user = this.getUsersEntity();
-        if (user == null)
-        {
-            return LOGIN;
-        }
-        AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
-        try
-        {
-            ModelMap map1 = postService.Post(m, user);
-            String basePath = this.getBasePath(request);
-            map.put("serverip", map1.get("serverip"));
-            /* map.put("pickupUrl", map1.get("pickupUrl"));
-             map.put("receiveUrl", map1.get("receiveUrl"));*/
-            map.put("pickupUrl", basePath + "post/pickup.htm");
-            map.put("receiveUrl", basePath + "post/receive.htm");
-            map.put("merchantId", map1.get("merchantId"));
-            map.put("orderNo", map1.get("orderNo"));
-            map.put("orderAmount", map1.get("orderAmount"));
-            map.put("orderDatetime", map1.get("orderDatetime"));
-            map.put("orderExpireDatetime", map1.get("orderExpireDatetime"));
-            map.put("productName", map1.get("productName"));
-            map.put("payType", map1.get("payType"));
-            map.put("signMsg", map1.get("strSignMsg"));
-            
-            map.put("amount", order.getOrderAmount());
-            map.put("orderName", "充值");
-            map.put("balance", this.divide(account.getBalance()));
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            SxjLogger.error(e.getMessage(), e, this.getClass());
-            throw new WebException("生成充值订单失败", e);
-        }
-        
-        return "site/post/recharge-list";
     }
     
     @RequestMapping("/withdrawList")
@@ -200,90 +151,6 @@ public class PostController extends BaseController
         }
         
         return map;
-    }
-    
-    @RequestMapping("/pickup")
-    public String pickup(ModelMap map, ResultsModel result) throws Exception
-    {
-        
-        UsersEntity user = this.getUsersEntity();
-        if (user == null)
-        {
-            return LOGIN;
-        }
-        //获取账户信息
-        AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
-        double orderAmount = 0;
-        double payAmount = 0;
-        try
-        {
-            orderAmount = Double.valueOf(result.getOrderAmount()) / 100;
-            payAmount = Double.valueOf(result.getPayAmount()) / 100;
-            TLBillEntity tl = postService.QueryTLBill(result);
-            
-            OrdersEntity orders = ordersService.getOrdersEntityByNo(result.getOrderNo());
-            //支付成功更新支付订单状态
-            if (result.getPayResult().equals("1") && tl.getStarus() == 1
-                    && orders.getStatus() != 1)
-            {
-                
-                orders.setStatus(1);
-                orders.setArriveTime(tl.getFinishTime());
-                ordersService.updateOrders(orders);
-                
-                //插入资金明细表
-                postService.updateAccount(tl.getActualMoney(),
-                        account,
-                        orders.getOrderId(),
-                        1);
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            map.put("isOK", "充值失败！");
-            SxjLogger.error(e.getMessage(), e, this.getClass());
-            throw new WebException("充值失败", e);
-        }
-        map.put("orderNo", result.getOrderNo());
-        map.put("orderAmount", orderAmount);
-        map.put("payAmount", payAmount);
-        map.put("balance", this.divide(account.getBalance()));
-        return "site/post/results";
-    }
-    
-    @ResponseBody
-    @RequestMapping("/receive")
-    public void receive(ModelMap map, ResultsModel result) throws Exception
-    {
-        try
-        {
-            TLBillEntity tl = postService.QueryTLBill(result);
-            OrdersEntity orders = ordersService.getOrdersEntityByNo(result.getOrderNo());
-            //获取账户信息
-            AccountEntity account = accountService.getAccountByCustomerId(orders.getCustomerId());
-            //支付成功更新支付订单状态
-            if (result.getPayResult().equals("1") && tl.getStarus() == 1
-                    && orders.getStatus() != 1)
-            {
-                
-                orders.setStatus(1);
-                orders.setArriveTime(tl.getFinishTime());
-                ordersService.updateOrders(orders);
-                
-                //插入资金明细表
-                postService.updateAccount(tl.getActualMoney(),
-                        account,
-                        orders.getOrderId(),
-                        1);
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            SxjLogger.error(e.getMessage(), e, this.getClass());
-        }
-        
     }
     
     @SuppressWarnings("finally")
