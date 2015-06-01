@@ -117,10 +117,11 @@ function shenhe(id){
 			show.showModal();
 			$.post("${basePath}tender/audit.htm",{debtId:id},function(data) {
 				if (data == 'ok') {
-					show.close().remove();
+					/* show.close().remove();
 					success.content('审核成功！');
 					success.showModal();
-					query();
+					query(); */
+					location.href="${basePath}tender/loanTransferAudit.htm?debtId="+id;
 				} else {
 					show.close().remove();
 					success.content('审核失败！');

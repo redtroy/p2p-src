@@ -774,6 +774,14 @@ public class LoanController extends BaseController
     {
         try
         {
+            UsersEntity user = getUsersEntity();
+            rg.setRegisterType("2");
+            rg.setMobile(user.getCellphone());
+            rg.setEmail(user.getEmail());
+            rg.setRealName(user.getName());
+            rg.setIdentificationNo(user.getCardNum());
+            rg.setLoanPlatformAccount(user.getCustomerNo());
+            rg.setPlatformMoneymoremore("p1190");
             rg.setReturnURL("http://127.0.0.1:8080/p2p-website/loan/registerbindreturn.htm");
             rg.setNotifyURL("http://127.0.0.1:8080/p2p-website/loan/test2.htm");
             String privatekey = privateKeyPKCS8;
@@ -800,9 +808,10 @@ public class LoanController extends BaseController
         }
         catch (Exception e)
         {
-            // TODO: handle exception
+            SxjLogger.error("注册失败", this.getClass());
+            throw new WebException("注册会员失败！", e);
         }
-        return "site/test/jump";
+        return "site/member/member-center";
     }
     
     /**
@@ -927,6 +936,7 @@ public class LoanController extends BaseController
             lr.setAmount("100");
             lr.setMoneymoremoreId("m31333");
             lr.setPlatformMoneymoremore("p1190");
+            lr.setOrderNo("D2015060110048102");
             lr.setReturnURL("http://127.0.0.1:8080/p2p-website/loan/loanReleaseReturn.htm");
             lr.setNotifyURL("http://127.0.0.1:8080/p2p-website/loan/loanReleaseNotif.htm");
             String dataStr = lr.getMoneymoremoreId()
@@ -994,6 +1004,7 @@ public class LoanController extends BaseController
             LoanTransferAuditModel ltsa = new LoanTransferAuditModel();
             ltsa.setPlatformMoneymoremore("p1190");
             ltsa.setAuditType("1");
+            ltsa.setLoanNoList("LN11372141506011010551770858");
             String privatekey = privateKeyPKCS8;
             ltsa.setReturnURL("http://127.0.0.1:8080/p2p-website/loan/loanTransferAuditModelReturn.htm");
             ltsa.setNotifyURL("http://127.0.0.1:8080/p2p-website/loan/loanTransferAuditModelNotify.htm");
