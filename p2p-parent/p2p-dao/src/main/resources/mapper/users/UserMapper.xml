@@ -17,6 +17,12 @@
 		<result property="status" column="status" jdbcType="INTEGER" />
 		<result property="updateTime" column="updateTime" jdbcType="TIMESTAMP" />
 		<result property="levelId" column="levelId" jdbcType="VARCHAR" />
+		
+		<result property="accountNumber" column="accountNumber" jdbcType="VARCHAR" />
+		<result property="moneymoremoreId" column="moneymoremoreId" jdbcType="VARCHAR" />
+		<result property="authFee" column="authFee" jdbcType="DOUBLE" />
+		<result property="authState" column="authState" jdbcType="INTEGER" />
+		
 	</resultMap>
 	
 	<select id="getUserByAccount" resultMap="UserResultMap"

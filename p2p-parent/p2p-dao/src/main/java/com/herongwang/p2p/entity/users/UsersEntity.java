@@ -103,6 +103,73 @@ public class UsersEntity extends Pagable implements Serializable
     @Column(name = "levelId")
     private String levelId;
     
+    /**
+     * 多多号
+     */
+    @Column(name = "accountNumber")
+    private String accountNumber;
+    
+    /**
+     * 用户的乾多多标识
+     */
+    @Column(name = "moneymoremoreId")
+    private String moneymoremoreId;
+    
+    /**
+     * 姓名匹配手续费
+     */
+    @Column(name = "authFee")
+    private Double authFee;
+    
+    /**
+     * 实名认证状态
+     * 1.未实名认证
+       2.快捷支付认证
+       3.其他认证
+     */
+    @Column(name = "authState")
+    private Integer authState;
+    
+    public String getAccountNumber()
+    {
+        return accountNumber;
+    }
+    
+    public void setAccountNumber(String accountNumber)
+    {
+        this.accountNumber = accountNumber;
+    }
+    
+    public String getMoneymoremoreId()
+    {
+        return moneymoremoreId;
+    }
+    
+    public void setMoneymoremoreId(String moneymoremoreId)
+    {
+        this.moneymoremoreId = moneymoremoreId;
+    }
+    
+    public Double getAuthFee()
+    {
+        return authFee;
+    }
+    
+    public void setAuthFee(Double authFee)
+    {
+        authFee = authFee;
+    }
+    
+    public Integer getAuthState()
+    {
+        return authState;
+    }
+    
+    public void setAuthState(Integer authState)
+    {
+        authState = authState;
+    }
+    
     public String getCustomerId()
     {
         return customerId;

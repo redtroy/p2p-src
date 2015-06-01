@@ -22,6 +22,7 @@ import com.alibaba.druid.util.StringUtils;
 import com.herongwang.p2p.entity.apply.DebtApplicationEntity;
 import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
+import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.entity.parameters.ParametersEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.loan.util.Common;
@@ -32,6 +33,7 @@ import com.herongwang.p2p.model.post.LoanTransferAuditModel;
 import com.herongwang.p2p.service.apply.IDebtApplicationService;
 import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.financing.IFinancingOrdersService;
+import com.herongwang.p2p.service.investorder.IInvestOrderService;
 import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.users.IUserService;
 import com.sxj.util.exception.WebException;
@@ -50,6 +52,9 @@ public class DebtController extends BaseController
     
     @Autowired
     private IUserService userService;
+    
+    @Autowired
+    private IInvestOrderService investOderService;
     
     @Autowired
     private IFinancingOrdersService financingOrdersService;
@@ -276,7 +281,7 @@ public class DebtController extends BaseController
         }
         catch (Exception e)
         {
-            SxjLogger.error("审核失败", e.getClass());
+            SxjLogger.error("满标审核失败", e.getClass());
             throw new WebException(e);
         }
     }
@@ -290,26 +295,37 @@ public class DebtController extends BaseController
     {
         try
         {
-            LoanTransferAuditModel ltsa = new LoanTransferAuditModel();
-            ltsa.setPlatformMoneymoremore("p1190");
-            ltsa.setAuditType("1");
-            ltsa.setLoanNoList("LN11372141506011010551770858");
-            String privatekey = Common.privateKeyPKCS8;
-            ltsa.setReturnURL("http://127.0.0.1:8080/p2p-website/loan/loanTransferAuditModelReturn.htm");
-            ltsa.setNotifyURL("http://127.0.0.1:8080/p2p-website/loan/loanTransferAuditModelNotify.htm");
-            String dataStr = ltsa.getLoanNoList()
-                    + ltsa.getPlatformMoneymoremore() + ltsa.getAuditType()
-                    + ltsa.getRandomTimeStamp() + ltsa.getRemark1()
-                    + ltsa.getRemark2() + ltsa.getRemark3()
-                    + ltsa.getReturnURL() + ltsa.getNotifyURL();
-            RsaHelper rsa = RsaHelper.getInstance();
-            String SignInfo = rsa.signData(dataStr, privatekey);
-            ltsa.setSignInfo(SignInfo);
-            map.put("model", ltsa);
+            List<InvestOrderEntity> list = investOderService.queryListInvest(debtId);
+            if (list.size() > 0)
+            {
+                String loanNoList = "";
+                for (InvestOrderEntity investOrder : list)
+                {
+                    loanNoList = loanNoList + investOrder.getLoanNo() + ",";
+                }
+                loanNoList = loanNoList.substring(0, loanNoList.length() - 1);
+                LoanTransferAuditModel ltsa = new LoanTransferAuditModel();
+                ltsa.setPlatformMoneymoremore("p1190");
+                ltsa.setAuditType("1");
+                ltsa.setLoanNoList(loanNoList);
+                String privatekey = Common.privateKeyPKCS8;
+                ltsa.setReturnURL("http://127.0.0.1:8080/p2p-website/loan/loanTransferAuditModelReturn.htm");
+                ltsa.setNotifyURL("http://127.0.0.1:8080/p2p-website/loan/loanTransferAuditModelNotify.htm");
+                String dataStr = ltsa.getLoanNoList()
+                        + ltsa.getPlatformMoneymoremore() + ltsa.getAuditType()
+                        + ltsa.getRandomTimeStamp() + ltsa.getRemark1()
+                        + ltsa.getRemark2() + ltsa.getRemark3()
+                        + ltsa.getReturnURL() + ltsa.getNotifyURL();
+                RsaHelper rsa = RsaHelper.getInstance();
+                String SignInfo = rsa.signData(dataStr, privatekey);
+                ltsa.setSignInfo(SignInfo);
+                map.put("model", ltsa);
+            }
         }
         catch (Exception e)
         {
-            // TODO: handle exception
+            SxjLogger.error("审核失败", e.getClass());
+            throw new WebException(e);
         }
         return "site/test/loantransferaudit";
     }
@@ -323,13 +339,13 @@ public class DebtController extends BaseController
     {
         try
         {
-            map.put("model", tfb);
+            //  map.put("model", tfb);
         }
         catch (Exception e)
         {
             // TODO: handle exception
         }
-        return "site/test/transferauditreturn";
+        return "redirect:/tender/tenderList";
     }
     
     /**
