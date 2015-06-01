@@ -1,6 +1,7 @@
 package com.herongwang.p2p.website.controller.post;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -165,7 +166,7 @@ public class LoanController extends BaseController
     @RequestMapping("/returnURL")
     public String returnURL(ModelMap map, LoanModel result) throws Exception
     {
-        
+        DecimalFormat df = new DecimalFormat("######0.00");
         UsersEntity user = this.getUsersEntity();
         if (user == null)
         {
@@ -176,14 +177,15 @@ public class LoanController extends BaseController
         //获取双乾参数
         Loan loan = parametersService.getLoan();
         String fee = result.getFee() == null ? "" : result.getFee().toString();
+        String amount = df.format(result.getAmount());
         //生成返回签名
         String dataStr = result.getRechargeMoneymoremore()
                 + result.getPlatformMoneymoremore() + result.getLoanNo()
-                + result.getOrderNo() + result.getAmount() + fee
-                + result.getRechargeType() + result.getFeeType()
-                + result.getCardNoList() + result.getRandomTimeStamp()
-                + result.getRemark1() + result.getRemark2()
-                + result.getRemark3() + result.getResultCode();
+                + result.getOrderNo() + amount + fee + result.getRechargeType()
+                + result.getFeeType() + result.getCardNoList()
+                + result.getRandomTimeStamp() + result.getRemark1()
+                + result.getRemark2() + result.getRemark3()
+                + result.getResultCode();
         // 验证签名签名
         RsaHelper rsa = RsaHelper.getInstance();
         boolean verifySignature = rsa.verifySignature(result.getSignInfo(),
@@ -208,10 +210,11 @@ public class LoanController extends BaseController
                 deal.setType(1);
                 deal.setCreateTime(new Date());
                 deal.setStatus(1);
+                deal.setAmount(orders.getAmount());
                 deal.setBalance(account.getBalance());
                 deal.setDueAmount(account.getDueAmount());
                 deal.setFrozenAmount(account.getFozenAmount());
-                deal.setRemark("充值" + result.getAmount() + "元成功！");
+                deal.setRemark("充值" + amount + "元成功！");
                 fundDetailService.addFundDetail(deal);
                 
                 //更新账户金额
@@ -268,6 +271,7 @@ public class LoanController extends BaseController
                 deal.setType(1);
                 deal.setCreateTime(new Date());
                 deal.setStatus(1);
+                deal.setAmount(orders.getAmount());
                 deal.setBalance(account.getBalance());
                 deal.setDueAmount(account.getDueAmount());
                 deal.setFrozenAmount(account.getFozenAmount());
