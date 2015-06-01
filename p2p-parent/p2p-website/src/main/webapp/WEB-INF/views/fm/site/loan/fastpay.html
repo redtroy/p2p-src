@@ -1,44 +1,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>和融网-账户提现</title>
+<title>和融网-账户代扣授权</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="${b.staticPath}style/member.css" rel="stylesheet" type="text/css" />
 <script src="${b.staticPath}js/jquery.js"></script>
 <@b.validate/> <@b.dialog/>
 <script>
 function postInfo() {
-	var type = "0";
-	if ($('#authorizeType1').is(':checked')) {
-		type+=",1";
-		} 
-	if ($('#authorizeType2').is(':checked')) {
-		type+=",2";
-		} 
-	if ($('#authorizeType3').is(':checked')) {
-		type+=",3";
-		} 
-	if(type.length==1){
-		var success = dialog({
-			title : '消息',
-			content : '请选择开启授权类型！',
-			cancel : false,
-			ok : function() {
-			}
-		});
-		success.showModal();
-		return;
-	}
-	$.post("authorizeList.htm", {type : type}, function(
-			data) {
-		if (data.AuthorizeTypeOpen != "") {
-			$('#AuthorizeTypeOpen').val(data.AuthorizeTypeOpen);
-		} 
-		if (data.SignInfo != "") {
-			$('#SignInfo').val(data.SignInfo);
-		} 
 		$("#postForm").submit();
-	})
 }
 </script>
 </head>
@@ -50,41 +20,39 @@ function postInfo() {
     <@b.leftMenu />
     <div class="yard-900 ly-left">
       <div class="rightSide">
-        <div class="heading fontYH f20"><span>账户授权</span></div>
+        <div class="heading fontYH f20"><span>账户授权测试</span></div>
         <div class="mainBox fontYH">
         <form action="${SubmitURL}" id="postForm" method="post">
         	<input id="MoneymoremoreId" name="MoneymoremoreId" value="${MoneymoremoreId}" type="hidden" />
-			<input id="PlatformMoneymoremore" name="PlatformMoneymoremore" value="${PlatformMoneymoremore}" type="hidden" />
-			<input id="AuthorizeTypeOpen" name="AuthorizeTypeOpen" value="${AuthorizeTypeOpen}" type="hidden" />
-			<input id="ReturnURL" name="ReturnURL" value="${ReturnURL}" type="hidden" />
-			<input id="NotifyURL" name="NotifyURL" value="${NotifyURL}" type="hidden" />
-			<input id="SignInfo" name="SignInfo" value="${SignInfo}" type="hidden" />
+		<input id="PlatformMoneymoremore" name="PlatformMoneymoremore" value="${PlatformMoneymoremore}" type="hidden" />
+		<input id="Action" name="Action" value="${Action}" type="hidden" />
+		<input id="CardNo" name="CardNo" value="${CardNo}" type="hidden" />
+		<input id="WithholdBeginDate" name="WithholdBeginDate" value="${WithholdBeginDate}" type="hidden" />
+		<input id="WithholdEndDate" name="WithholdEndDate" value="${WithholdEndDate}" type="hidden" />
+		<input id="SingleWithholdLimit" name="SingleWithholdLimit" value="${SingleWithholdLimit}" type="hidden" />
+		<input id="TotalWithholdLimit" name="TotalWithholdLimit" value="${TotalWithholdLimit}" type="hidden" />
+		<input id="RandomTimeStamp" name="RandomTimeStamp" value="${RandomTimeStamp}" type="hidden" />
+		<input id="Remark1" name="Remark1" value="${Remark1}" type="hidden" />
+		<input id="Remark2" name="Remark2" value="${Remark2}" type="hidden" />
+		<input id="Remark3" name="Remark3" value="${Remark3}" type="hidden" />
+		<input id="ReturnURL" name="ReturnURL" value="${ReturnURL}" type="hidden" />
+		<input id="NotifyURL" name="NotifyURL" value="${NotifyURL}" type="hidden" />
+		<input id="SignInfo" name="SignInfo" value="${SignInfo}" type="hidden" />
         </form>
         <table border="0" cellpadding="0" cellspacing="0" class="table tabList mb20">
     <col width="20%" />
         <col width="80%" />
         <tr>
       <th>还款转账授权</th>
-      <td><#if authorizeType2==1>
-      		已开启
-      	<#else>
-      		<input type="checkbox" value="未开启" id="authorizeType2"/>
-      </#if>
-      </td>
+      <td><input id="CardNo" name="CardNo" value="${CardNo}" type="text" /></td>
     </tr>
+    <tr>
        <th>投标转账授权</th>
-      <td><#if authorizeType1==1>
-      		已开启
-      	<#else>
-      		<input type="checkbox" value="未开启" id="authorizeType1"/>
-      </#if>
-      </td>
-    </tr><th>二次分配审核授权</th>
-      <td><#if authorizeType3==1>
-      		已开启
-      	<#else>
-      		<input type="checkbox" value="未开启" id="authorizeType3"/>
-      </#if>
+      <td><input id="SignInfo" name="SignInfo" value="${SignInfo}" type="text" /> </td>
+    </tr>
+    <tr>
+    <th>二次分配审核授权</th>
+      <td><input id="MoneymoremoreId" name="MoneymoremoreId" value="${MoneymoremoreId}" type="text" />
       </td>
     </tr>
   </table>

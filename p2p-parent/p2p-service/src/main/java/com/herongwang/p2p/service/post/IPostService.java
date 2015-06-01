@@ -118,4 +118,14 @@ public interface IPostService
      */
     public List<LoanWithdrawsOrderQueryBean> withdrawsOrderQuery(
             LoanModel loan, String submitURLPrefix) throws Exception;
+    
+    /**
+     * 查询余额
+     * @param PlatformId  批量查询将所有标识用英文逗号(,)连成一个字符串
+     * @param platformType
+     * @return String[] 单个查询格式为“网贷平台子账户可用余额|总可用余额(子账户可用余额+公共账户可用余额)|子账户冻结余额”（例:100.00|200.00|10.00）， 批量查询格式为“查询账户的乾多多标识|网贷平台子账户可用余额|总可用余额(子账户可用余额+公共账户可用余额)|子账户冻结余额”，多个账户之间用英文逗号(,)分隔（例:m1|100.00|200.00|10.00,m2|325.00|458.00|22.00）
+     * @throws Exception
+     */
+    public String[] balanceQuery(String PlatformId, String platformType)
+            throws Exception;
 }

@@ -66,6 +66,139 @@ public class LoanModel
     
     private String authorizeType;//当前授权类型
     
+    /*---------------------三合一接口------------------*/
+    private String moneymoremoreId;//用户乾多多标识
+    
+    private String withholdBeginDate;//代扣开始日期
+    
+    private String withholdEndDate;//代扣结束日期
+    
+    private String singleWithholdLimit;//单笔代扣限额
+    
+    private String totalWithholdLimit;//代扣总限额
+    
+    private String cardType;//银行卡类型
+    
+    private String city;//开户行城市
+    
+    private String bankCode;//银行代码
+    
+    private String cardNo;//银行卡号
+    
+    private String branchBankName;//开户行支行名称
+    
+    private String province;//开户行省份
+    
+    public String getMoneymoremoreId()
+    {
+        return moneymoremoreId;
+    }
+    
+    public void setMoneymoremoreId(String moneymoremoreId)
+    {
+        this.moneymoremoreId = moneymoremoreId;
+    }
+    
+    public String getWithholdBeginDate()
+    {
+        return withholdBeginDate;
+    }
+    
+    public void setWithholdBeginDate(String withholdBeginDate)
+    {
+        this.withholdBeginDate = withholdBeginDate;
+    }
+    
+    public String getWithholdEndDate()
+    {
+        return withholdEndDate;
+    }
+    
+    public void setWithholdEndDate(String withholdEndDate)
+    {
+        this.withholdEndDate = withholdEndDate;
+    }
+    
+    public String getSingleWithholdLimit()
+    {
+        return singleWithholdLimit;
+    }
+    
+    public void setSingleWithholdLimit(String singleWithholdLimit)
+    {
+        this.singleWithholdLimit = singleWithholdLimit;
+    }
+    
+    public String getTotalWithholdLimit()
+    {
+        return totalWithholdLimit;
+    }
+    
+    public void setTotalWithholdLimit(String totalWithholdLimit)
+    {
+        this.totalWithholdLimit = totalWithholdLimit;
+    }
+    
+    public String getCardType()
+    {
+        return cardType;
+    }
+    
+    public void setCardType(String cardType)
+    {
+        this.cardType = cardType;
+    }
+    
+    public String getCity()
+    {
+        return city;
+    }
+    
+    public void setCity(String city)
+    {
+        this.city = city;
+    }
+    
+    public String getBankCode()
+    {
+        return bankCode;
+    }
+    
+    public void setBankCode(String bankCode)
+    {
+        this.bankCode = bankCode;
+    }
+    
+    public String getCardNo()
+    {
+        return cardNo;
+    }
+    
+    public void setCardNo(String cardNo)
+    {
+        this.cardNo = cardNo;
+    }
+    
+    public String getBranchBankName()
+    {
+        return branchBankName;
+    }
+    
+    public void setBranchBankName(String branchBankName)
+    {
+        this.branchBankName = branchBankName;
+    }
+    
+    public String getProvince()
+    {
+        return province;
+    }
+    
+    public void setProvince(String province)
+    {
+        this.province = province;
+    }
+    
     public String getAuthorizeTypeOpen()
     {
         return authorizeTypeOpen;
