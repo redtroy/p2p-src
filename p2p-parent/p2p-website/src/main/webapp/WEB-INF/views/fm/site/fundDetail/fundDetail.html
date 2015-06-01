@@ -23,6 +23,13 @@
 			loadPage(currentPage, totalPage, query);
 		});
 	}
+	function balance() {
+		$.post("${basePath}loan/balanceQuery.htm", {}, function(data) {
+			if (data.balance1 != "") {
+				alert(data.balance1);
+			} 
+		});
+	}
 </script>
 </head>
 
@@ -48,6 +55,8 @@
 									<span><a href="${basePath}post/recharge.htm" class="button button-orange">充值</a></span>
 									<span><a href="${basePath}post/withdraw.htm" class="button button-green">提现</a></span>
 									<span><a href="${basePath}loan/authorize.htm" class="button button-green">授权</a></span>
+									<span><a href="javascript:void(0)" onclick="balance();" class="button button-green">对账</a></span>
+									<span><a href="${basePath}loan/fastPay.htm" class="button button-green">转账授权</a></span>
 							</div>
 						</div>
 					</div>

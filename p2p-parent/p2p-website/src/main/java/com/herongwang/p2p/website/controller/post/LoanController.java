@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -508,6 +509,120 @@ public class LoanController extends BaseController
         {
             return;
         }
+    }
+    
+    /*----------------------------------------------余额查询--------------------------------*/
+    /**
+     * 余额查询
+     * @param session
+     * @param apply
+     * @return
+     * @throws WebException
+     */
+    @RequestMapping("balanceQuery")
+    public @ResponseBody Map<String, String> balanceQuery(
+            HttpServletRequest request, String type) throws WebException
+    {
+        try
+        {
+            Map<String, String> map = new HashMap<String, String>();
+            String PlatformId = "m31333";
+            String platformType = "1";//1.托管账户 2.自有账户
+            
+            String[] result = postService.balanceQuery(PlatformId, platformType);
+            String[] balance = result[1].split("\\|");
+            map.put("balance1", balance[0]);
+            map.put("balance2", balance[1]);
+            map.put("balance3", balance[2]);
+            return map;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new WebException("生成查询余额失败", e);
+        }
+        
+    }
+    
+    /*-------------------------认证、提现银行卡绑定、代扣授权三合一接口--------------------------------*/
+    @RequestMapping("/fastPay")
+    public String fastPay(HttpServletRequest request, ModelMap map)
+            throws WebException
+    {
+        UsersEntity user = this.getUsersEntity();
+        if (user == null)
+        {
+            return LOGIN;
+        }
+        String basePath = this.getBasePath(request);
+        String SubmitURL = "http://218.4.234.150:88/main/loan/toloanauthorize.action";
+        String ReturnURL = basePath + "loan/fastPayReturnURL.htm";
+        String NotifyURL = basePath + "loan/fastPayNotifyURL.htm";
+        
+        String privatekey = privateKeyPKCS8;
+        String publickey = publicKey;
+        String MoneymoremoreId = "m31333";
+        String PlatformMoneymoremore = "p1190";
+        String Action = "2";
+        String CardNo = "6222024301056658220";
+        String WithholdBeginDate = "";
+        String WithholdEndDate = "";
+        String SingleWithholdLimit = "";
+        String TotalWithholdLimit = "";
+        String RandomTimeStamp = "";
+        String Remark1 = "";
+        String Remark2 = "";
+        String Remark3 = "";
+        String dataStr = MoneymoremoreId + PlatformMoneymoremore + Action
+                + CardNo + WithholdBeginDate + WithholdEndDate
+                + SingleWithholdLimit + TotalWithholdLimit + RandomTimeStamp
+                + Remark1 + Remark2 + Remark3 + ReturnURL + NotifyURL;
+        // 签名
+        RsaHelper rsa = RsaHelper.getInstance();
+        String SignInfo = rsa.signData(dataStr, privatekey);
+        
+        if (StringUtils.isNotBlank(CardNo))
+        {
+            CardNo = rsa.encryptData(CardNo, publickey);
+        }
+        
+        map.put("SubmitURL", SubmitURL);
+        map.put("MoneymoremoreId", MoneymoremoreId);
+        map.put("PlatformMoneymoremore", PlatformMoneymoremore);
+        map.put("Action", Action);
+        map.put("CardNo", CardNo);
+        map.put("WithholdBeginDate", WithholdBeginDate);
+        map.put("WithholdEndDate", WithholdEndDate);
+        map.put("SingleWithholdLimit", SingleWithholdLimit);
+        map.put("TotalWithholdLimit", TotalWithholdLimit);
+        map.put("RandomTimeStamp", RandomTimeStamp);
+        map.put("Remark1", Remark1);
+        map.put("Remark2", Remark2);
+        map.put("Remark3", Remark3);
+        map.put("ReturnURL", ReturnURL);
+        map.put("NotifyURL", NotifyURL);
+        map.put("SignInfo", SignInfo);
+        return "site/loan/fastpay";
+    }
+    
+    @RequestMapping("/fastPayReturnURL")
+    public String fastPayReturnURL(ModelMap map, LoanModel result)
+            throws Exception
+    {
+        
+        UsersEntity user = this.getUsersEntity();
+        if (user == null)
+        {
+            return LOGIN;
+        }
+        map.put("title", "代扣");
+        map.put("orderNo", "0");
+        map.put("orderAmount", "0");
+        map.put("Fee", "0");
+        map.put("payAmount", "0");
+        map.put("balance", "0");
+        return "site/loan/results";
     }
     
     /**

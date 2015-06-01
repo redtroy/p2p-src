@@ -874,4 +874,28 @@ public class PostServiceImpl implements IPostService
         }
         return list;
     }
+    
+    @Override
+    public String[] balanceQuery(String PlatformId, String platformType)
+            throws Exception
+    {
+        String[] resultarr = null;
+        String SubmitURL = SubmitURLPrefix + "loan/balancequery.action";
+        String PlatformMoneymoremore = "p1190";
+        String privatekey = Common.privateKeyPKCS8;
+        
+        String dataStr = PlatformId + platformType + PlatformMoneymoremore;
+        // 签名
+        RsaHelper rsa = RsaHelper.getInstance();
+        String SignInfo = rsa.signData(dataStr, privatekey);
+        
+        Map<String, String> req = new TreeMap<String, String>();
+        req.put("PlatformId", PlatformId);
+        req.put("PlatformType", platformType);
+        req.put("PlatformMoneymoremore", PlatformMoneymoremore);
+        req.put("SignInfo", SignInfo);
+        
+        resultarr = HttpClientUtil.doPostQueryCmd(SubmitURL, req);
+        return resultarr;
+    }
 }
