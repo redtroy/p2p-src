@@ -1,18 +1,12 @@
 package com.herongwang.p2p.model.post;
 
-public class TransferModel
+public class LoanTransferAuditModel
 {
-    private String LoanJsonList = "";
+    private String LoanNoList = "";
     
     private String PlatformMoneymoremore = "";
     
-    private String TransferAction = "";
-    
-    private String Action = "";
-    
-    private String TransferType = "";
-    
-    private String NeedAudit = "";
+    private String AuditType = "";
     
     private String RandomTimeStamp = "";
     
@@ -28,14 +22,14 @@ public class TransferModel
     
     private String SignInfo = "";
     
-    public String getLoanJsonList()
+    public String getLoanNoList()
     {
-        return LoanJsonList;
+        return LoanNoList;
     }
     
-    public void setLoanJsonList(String loanJsonList)
+    public void setLoanNoList(String loanNoList)
     {
-        LoanJsonList = loanJsonList;
+        LoanNoList = loanNoList;
     }
     
     public String getPlatformMoneymoremore()
@@ -48,44 +42,14 @@ public class TransferModel
         PlatformMoneymoremore = platformMoneymoremore;
     }
     
-    public String getTransferAction()
+    public String getAuditType()
     {
-        return TransferAction;
+        return AuditType;
     }
     
-    public void setTransferAction(String transferAction)
+    public void setAuditType(String auditType)
     {
-        TransferAction = transferAction;
-    }
-    
-    public String getAction()
-    {
-        return Action;
-    }
-    
-    public void setAction(String action)
-    {
-        Action = action;
-    }
-    
-    public String getTransferType()
-    {
-        return TransferType;
-    }
-    
-    public void setTransferType(String transferType)
-    {
-        TransferType = transferType;
-    }
-    
-    public String getNeedAudit()
-    {
-        return NeedAudit;
-    }
-    
-    public void setNeedAudit(String needAudit)
-    {
-        NeedAudit = needAudit;
+        AuditType = auditType;
     }
     
     public String getRandomTimeStamp()
