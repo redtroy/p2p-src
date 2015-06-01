@@ -135,6 +135,16 @@ public class InvestOrderEntity extends Pagable implements Serializable
     
     private String title;//标的名称
     
+    public String getLoanNo()
+    {
+        return loanNo;
+    }
+    
+    public void setLoanNo(String loanNo)
+    {
+        this.loanNo = loanNo;
+    }
+    
     public String getTitle()
     {
         return title;
