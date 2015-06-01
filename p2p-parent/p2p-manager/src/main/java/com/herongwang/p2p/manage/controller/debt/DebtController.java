@@ -24,7 +24,11 @@ import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
 import com.herongwang.p2p.entity.parameters.ParametersEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
+import com.herongwang.p2p.loan.util.Common;
+import com.herongwang.p2p.loan.util.RsaHelper;
 import com.herongwang.p2p.manage.controller.BaseController;
+import com.herongwang.p2p.model.loan.transferauditreturnBean;
+import com.herongwang.p2p.model.post.LoanTransferAuditModel;
 import com.herongwang.p2p.service.apply.IDebtApplicationService;
 import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.financing.IFinancingOrdersService;
@@ -275,6 +279,75 @@ public class DebtController extends BaseController
             SxjLogger.error("审核失败", e.getClass());
             throw new WebException(e);
         }
+    }
+    
+    /**
+     * 审核
+     */
+    @RequestMapping("loanTransferAudit")
+    public String loanTransferAuditModel(String debtId, ModelMap map)
+            throws WebException
+    {
+        try
+        {
+            LoanTransferAuditModel ltsa = new LoanTransferAuditModel();
+            ltsa.setPlatformMoneymoremore("p1190");
+            ltsa.setAuditType("1");
+            ltsa.setLoanNoList("LN11372141506011010551770858");
+            String privatekey = Common.privateKeyPKCS8;
+            ltsa.setReturnURL("http://127.0.0.1:8080/p2p-website/loan/loanTransferAuditModelReturn.htm");
+            ltsa.setNotifyURL("http://127.0.0.1:8080/p2p-website/loan/loanTransferAuditModelNotify.htm");
+            String dataStr = ltsa.getLoanNoList()
+                    + ltsa.getPlatformMoneymoremore() + ltsa.getAuditType()
+                    + ltsa.getRandomTimeStamp() + ltsa.getRemark1()
+                    + ltsa.getRemark2() + ltsa.getRemark3()
+                    + ltsa.getReturnURL() + ltsa.getNotifyURL();
+            RsaHelper rsa = RsaHelper.getInstance();
+            String SignInfo = rsa.signData(dataStr, privatekey);
+            ltsa.setSignInfo(SignInfo);
+            map.put("model", ltsa);
+        }
+        catch (Exception e)
+        {
+            // TODO: handle exception
+        }
+        return "site/test/loantransferaudit";
+    }
+    
+    /**
+     * 审核页面返回信息
+     */
+    @RequestMapping("loanTransferAuditModelReturn")
+    public String loanTransferAuditModelReturn(transferauditreturnBean tfb,
+            ModelMap map) throws WebException
+    {
+        try
+        {
+            map.put("model", tfb);
+        }
+        catch (Exception e)
+        {
+            // TODO: handle exception
+        }
+        return "site/test/transferauditreturn";
+    }
+    
+    /**
+     * 审核后台通知信息
+     */
+    @RequestMapping("loanTransferAuditModelNotify")
+    public @ResponseBody String loanTransferAuditModelNotify(
+            transferauditreturnBean tfb) throws WebException
+    {
+        try
+        {
+            
+        }
+        catch (Exception e)
+        {
+            // TODO: handle exception
+        }
+        return "";
     }
     
     /**

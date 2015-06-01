@@ -7,45 +7,44 @@
 <meta http-equiv="Expires" content="0" /> 
 <title>网贷注册绑定测试 - 乾多多</title>
 <script type="text/javascript">
-	/* window.onload=function(){document.form1.submit();} */
+	  window.onload=function(){document.form1.submit();}  
 </script>
 </head>
 <body>
 	<form id="form1" name="form1" action="http://218.4.234.150:88/main/loan/toloanregisterbind.action" method="post">
-		<input id="RegisterType" name="RegisterType" value="${model.registerType}" type="text" />
+		<input id="RegisterType" name="RegisterType" value="${model.registerType}" type="hidden" />
 		<br/>
-		<input id="AccountType" name="AccountType" value="${model.accountType}" type="text" />
+		<input id="AccountType" name="AccountType" value="${model.accountType}" type="hidden" />
 		<br/>
-		<input id="Mobile" name="Mobile" value="${model.mobile}" type="text" />
+		<input id="Mobile" name="Mobile" value="${model.mobile}" type="hidden" />
 		<br/>
-		<input id="Email" name="Email" value="${model.getEmail()}" type="text" />
+		<input id="Email" name="Email" value="${model.getEmail()}" type="hidden" />
 		<br/>
-		<input id="RealName" name="RealName" value="${model.realName}" type="text" />
+		<input id="RealName" name="RealName" value="${model.realName}" type="hidden" />
 		<br/>
-		<input id="IdentificationNo" name="IdentificationNo" value="${model.identificationNo}" type="text" />
+		<input id="IdentificationNo" name="IdentificationNo" value="${model.identificationNo}" type="hidden" />
 		<br/>
-		<input id="Image1" name="Image1" value="${model.image1}" type="text" />
+		<input id="Image1" name="Image1" value="${model.image1}" type="hidden" />
 		<br/>
-		<input id="Image2" name="Image2" value="${model.image2}" type="text" />
+		<input id="Image2" name="Image2" value="${model.image2}" type="hidden" />
 		<br/>
-		<input id="LoanPlatformAccount" name="LoanPlatformAccount" value="${model.loanPlatformAccount}" type="text" />
+		<input id="LoanPlatformAccount" name="LoanPlatformAccount" value="${model.loanPlatformAccount}" type="hidden" />
 		<br/>
-		<input id="PlatformMoneymoremore" name="PlatformMoneymoremore" value="${model.platformMoneymoremore}" type="text" />
+		<input id="PlatformMoneymoremore" name="PlatformMoneymoremore" value="${model.platformMoneymoremore}" type="hidden" />
 		<br/>
-		<input id="RandomTimeStamp" name="RandomTimeStamp" value="${model.randomTimeStamp}" type="text" />
+		<input id="RandomTimeStamp" name="RandomTimeStamp" value="${model.randomTimeStamp}" type="hidden" />
 		<br/>
-		<input id="Remark1" name="Remark1" value="${model.remark1}" type="text" />
+		<input id="Remark1" name="Remark1" value="${model.remark1}" type="hidden" />
 		<br/>
-		<input id="Remark2" name="Remark2" value="${model.remark2}" type="text" />
+		<input id="Remark2" name="Remark2" value="${model.remark2}" type="hidden" />
 		<br/>
-		<input id="Remark3" name="Remark3" value="${model.remark3}" type="text" />
+		<input id="Remark3" name="Remark3" value="${model.remark3}" type="hidden" />
 		<br/>
-		<input id="ReturnURL" name="ReturnURL" value="${model.returnURL}" type="text" />
+		<input id="ReturnURL" name="ReturnURL" value="${model.returnURL}" type="hidden" />
 		<br/>
-		<input id="NotifyURL" name="NotifyURL" value="${model.notifyURL}" type="text" />
+		<input id="NotifyURL" name="NotifyURL" value="${model.notifyURL}" type="hidden" />
 		<br/>
-		<input id="SignInfo" name="SignInfo" value="${model.signInfo}" type="text" />
-		<input type="submit" value="提交" />
+		<input id="SignInfo" name="SignInfo" value="${model.signInfo}" type="hidden" />
 	</form>
 </body>
 </html>
