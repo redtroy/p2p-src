@@ -133,10 +133,14 @@ function openaccount(){
       <th>注册时间</th>
       <td><#if (user.registerTime??)> ${user.registerTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
     </tr>
+    <tr>
+      <th>开户信息</th>
+      <td><#if (user.moneymoremoreId??)><span class="color-green">已开户（多多号：${user.moneymoremoreId}） </span><#else><span class="color-red">未开户</span></#if></td>
+    </tr>
   </tbody>
   </table>
   </form>
-<div class="tc"> <a href="javascript:sub();" class="button button-orange">确认个人资料</a>&nbsp;<a href="javascript:editPassWord('${user.customerId}');" class="button button-orange">修改密码</a>&nbsp;<a href="javascript:openaccount();" class="button button-orange">开通帐号</a></div>
+<div class="tc"> <a href="javascript:sub();" class="button button-orange">确认个人资料</a>&nbsp;<a href="javascript:editPassWord('${user.customerId}');" class="button button-orange">修改密码</a>&nbsp;<#if (user.moneymoremoreId??)><#else><a href="javascript:openaccount();" class="button button-orange">开户</a></#if></div>
 
 
           <div class="ly-clearFix">

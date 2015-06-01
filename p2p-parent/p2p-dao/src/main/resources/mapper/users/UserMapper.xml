@@ -20,7 +20,6 @@
 		
 		<result property="accountNumber" column="accountNumber" jdbcType="VARCHAR" />
 		<result property="moneymoremoreId" column="moneymoremoreId" jdbcType="VARCHAR" />
-		<result property="authFee" column="authFee" jdbcType="DOUBLE" />
 		<result property="authState" column="authState" jdbcType="INTEGER" />
 		
 	</resultMap>
