@@ -93,6 +93,18 @@ public class LoanRegisterBindReturnBean
      */
     private Integer authState;
     
+    private Double authFee;
+    
+    public Double getAuthFee()
+    {
+        return authFee;
+    }
+    
+    public void setAuthFee(Double authFee)
+    {
+        this.authFee = authFee;
+    }
+    
     public Integer getAuthState()
     {
         return authState;

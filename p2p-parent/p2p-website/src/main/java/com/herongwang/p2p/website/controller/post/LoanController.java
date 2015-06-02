@@ -827,12 +827,25 @@ public class LoanController extends BaseController
     @RequestMapping("registerbindreturn")
     public String registerbindreturn(LoanRegisterBindReturnBean lb, ModelMap map)
     {
-        map.put("model", lb);
-        UsersEntity user = getUsersEntity();
-        user.setAccountNumber(lb.getAccountNumber());
-        user.setMoneymoremoreId(lb.getMoneymoremoreId());
-        user.setAuthState(lb.getAuthState());
-        userService.updateUser(user);
+        if ("88".equals(lb.getResultCode()))
+        {
+            map.put("model", lb);
+            UsersEntity user = getUsersEntity();
+            user.setAccountNumber(lb.getAccountNumber());
+            user.setMoneymoremoreId(lb.getMoneymoremoreId());
+            user.setAuthState(lb.getAuthState());
+            userService.updateUser(user);
+            FundDetailEntity fd = new FundDetailEntity();
+            fd.setCustomerId(user.getCustomerId());
+            fd.setAmount(new BigDecimal(lb.getAuthFee()));
+            fd.setType(0);
+            fundDetailService.updateFundDetail(fd);
+            
+        }
+        else
+        {
+            return "redirect:/user/memberInfo.htm?message=" + lb.getMessage();
+        }
         return "redirect:/user/memberInfo.htm";
     }
     

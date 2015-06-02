@@ -51,7 +51,7 @@ public class UserController extends BaseController
     }
     
     @RequestMapping("memberInfo")
-    public String memberInfo(ModelMap map) throws WebException
+    public String memberInfo(ModelMap map, String message) throws WebException
     {
         try
         {
@@ -62,6 +62,7 @@ public class UserController extends BaseController
             UsersEntity user = getUsersEntity();
             user = userService.getUserById(user.getCustomerId());
             map.put("user", user);
+            map.put("message", message);
         }
         catch (Exception e)
         {
