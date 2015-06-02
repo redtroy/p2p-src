@@ -65,4 +65,9 @@ public interface IInvestOrderService
      */
     public int queryAllAmount();
     
+    /**
+     * 根据debtId获取投资列表
+     */
+    public List<InvestOrderEntity> queryListInvest(String debtId);
+    
 }

@@ -800,7 +800,7 @@ public class LoanController extends BaseController
             rg.setLoanPlatformAccount(user.getCustomerNo());
             rg.setPlatformMoneymoremore("p1190");
             rg.setReturnURL("http://127.0.0.1:8080/p2p-website/loan/registerbindreturn.htm");
-            rg.setNotifyURL("http://127.0.0.1:8080/p2p-website/loan/test2.htm");
+            rg.setNotifyURL("http://127.0.0.1:8080/p2p-website/loan/registerbindInform.htm");
             String privatekey = privateKeyPKCS8;
             String dataStr = rg.getRegisterType() + rg.getAccountType()
                     + rg.getMobile() + rg.getEmail() + rg.getRealName()
@@ -841,15 +841,20 @@ public class LoanController extends BaseController
     public String registerbindreturn(LoanRegisterBindReturnBean lb, ModelMap map)
     {
         map.put("model", lb);
-        return "site/test/registerbindreturn";
+        UsersEntity user = getUsersEntity();
+        user.setAccountNumber(lb.getAccountNumber());
+        user.setMoneymoremoreId(lb.getMoneymoremoreId());
+        user.setAuthState(lb.getAuthState());
+        userService.updateUser(user);
+        return "redirect:/user/memberInfo.htm";
     }
     
     /**
      * 开户成功通知后台操作
      * @return
      */
-    @RequestMapping("test2")
-    public @ResponseBody String test2()
+    @RequestMapping("registerbindInform")
+    public @ResponseBody String registerbindInform()
     {
         System.out.println("ok===========================================");
         return "";

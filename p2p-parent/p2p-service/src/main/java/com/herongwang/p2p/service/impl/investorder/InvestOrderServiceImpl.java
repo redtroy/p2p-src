@@ -279,4 +279,10 @@ public class InvestOrderServiceImpl implements IInvestOrderService
         }
     }
     
+    @Override
+    public List<InvestOrderEntity> queryListInvest(String debtId)
+    {
+        return investOrderDao.queryInvestorderList(debtId);
+    }
+    
 }
