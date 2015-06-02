@@ -2,7 +2,6 @@ package com.herongwang.p2p.website.controller.post;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +20,7 @@ import util.RsaHelper;
 
 import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
+import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.entity.orders.OrdersEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.loan.util.Common;
@@ -38,6 +38,7 @@ import com.herongwang.p2p.model.post.RegisterModel;
 import com.herongwang.p2p.model.post.TransferModel;
 import com.herongwang.p2p.service.account.IAccountService;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
+import com.herongwang.p2p.service.investorder.IInvestOrderService;
 import com.herongwang.p2p.service.orders.IOrdersService;
 import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.post.IPostService;
@@ -85,10 +86,14 @@ public class LoanController extends BaseController
     @Autowired
     IParametersService parametersService;
     
+    @Autowired
+    IInvestOrderService investOrderService;
+    
     /*----------------------------------------------充值--------------------------------*/
     @RequestMapping("/recharge")
     public String recharge(ModelMap map) throws WebException
     {
+        map.put("title", "账户充值");
         return "site/loan/recharge";
     }
     
@@ -122,7 +127,7 @@ public class LoanController extends BaseController
                     + "loan/toloanrecharge.action";
             String ReturnURL = basePath + "loan/returnURL.htm";
             String NotifyURL = "http://61.132.53.150:7001/p2p-website/loan/notifyURL.htm";
-            String RechargeMoneymoremore = "m31333";//用户钱多多标志
+            String RechargeMoneymoremore = user.getMoneymoremoreId();//用户钱多多标志
             String PlatformMoneymoremore = loan.getMoremoreId();
             String OrderNo = orders.getOrdersNo();
             String Amount = order.getOrderAmount();
@@ -531,16 +536,18 @@ public class LoanController extends BaseController
         {
             return LOGIN;
         }
+        //获取双乾参数
+        Loan loan = parametersService.getLoan();
         String basePath = this.getBasePath(request);
         //获取授权状态
         String authorizeType1 = "0";
         String authorizeType2 = "0";
-        String authorizeType3 = "1";
+        String authorizeType3 = "0";
         String ReturnURL = basePath + "loan/authorizeReturnURL.htm";
         String NotifyURL = basePath + "loan/authorizeNotifyURL.htm";
-        String SubmitURL = "http://218.4.234.150:88/main/loan/toloanauthorize.action";
-        String MoneymoremoreId = "m31333";
-        String PlatformMoneymoremore = "p1190";
+        String SubmitURL = loan.getSubmitURL() + "loan/toloanauthorize.action";
+        String MoneymoremoreId = user.getMoneymoremoreId();
+        String PlatformMoneymoremore = loan.getMoremoreId();
         
         map.put("authorizeType1", authorizeType1);
         map.put("authorizeType2", authorizeType2);
@@ -565,20 +572,23 @@ public class LoanController extends BaseController
             HttpServletRequest request, String type) throws WebException
     {
         String basePath = this.getBasePath(request);
+        UsersEntity user = this.getUsersEntity();
         try
         {
+            //获取双乾参数
+            Loan loan = parametersService.getLoan();
             Map<String, String> map = new HashMap<String, String>();
             String ReturnURL = basePath + "loan/authorizeReturnURL.htm";
             String NotifyURL = basePath + "loan/authorizeNotifyURL.htm";
-            String MoneymoremoreId = "m31333";
-            String PlatformMoneymoremore = "p1190";
+            String MoneymoremoreId = user.getMoneymoremoreId();
+            String PlatformMoneymoremore = loan.getMoremoreId();
             String AuthorizeTypeOpen = type.substring(2);
             String dataStr = MoneymoremoreId + PlatformMoneymoremore
                     + AuthorizeTypeOpen + "" + "" + "" + "" + "" + ReturnURL
                     + NotifyURL;
             // 签名
             RsaHelper rsa = RsaHelper.getInstance();
-            String SignInfo = rsa.signData(dataStr, privateKeyPKCS8);
+            String SignInfo = rsa.signData(dataStr, loan.getPrivatekey());
             map.put("AuthorizeTypeOpen", AuthorizeTypeOpen);
             map.put("SignInfo", SignInfo);
             return map;
@@ -638,7 +648,9 @@ public class LoanController extends BaseController
         try
         {
             Map<String, String> map = new HashMap<String, String>();
-            String PlatformId = "m31333";
+            UsersEntity user = this.getUsersEntity();
+            AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
+            String PlatformId = user.getMoneymoremoreId();
             String platformType = "1";//1.托管账户 2.自有账户
             
             String[] result = postService.balanceQuery(PlatformId, platformType);
@@ -646,6 +658,9 @@ public class LoanController extends BaseController
             map.put("balance1", balance[0]);
             map.put("balance2", balance[1]);
             map.put("balance3", balance[2]);
+            account.setBalance(multiply(new BigDecimal(balance[0])));
+            account.setFozenAmount(multiply(new BigDecimal(balance[2])));
+            accountService.updateAccount(account);
             return map;
         }
         catch (Exception e)
@@ -864,12 +879,13 @@ public class LoanController extends BaseController
      * 转账
      */
     @RequestMapping("transfer")
-    public String transfer(ModelMap map) throws WebException
+    public String transfer(ModelMap map, String LoanJsonList)
+            throws WebException
     {
         try
         {
             String privatekey = privateKeyPKCS8;
-            List<LoanInfoBean> listmlib = new ArrayList<LoanInfoBean>();
+            /*List<LoanInfoBean> listmlib = new ArrayList<LoanInfoBean>();
             LoanInfoBean mlib = new LoanInfoBean();
             mlib.setLoanOutMoneymoremore("m31333");//付款人
             mlib.setLoanInMoneymoremore("m37679");//收款人
@@ -881,7 +897,7 @@ public class LoanController extends BaseController
             mlib.setRemark("测试");
             mlib.setSecondaryJsonList("");
             listmlib.add(mlib);
-            String LoanJsonList = Common.JSONEncode(listmlib);
+            LoanJsonList = Common.JSONEncode(listmlib);*/
             
             TransferModel tf = new TransferModel();
             tf.setPlatformMoneymoremore("p1190");
@@ -906,7 +922,9 @@ public class LoanController extends BaseController
         }
         catch (Exception e)
         {
-            // TODO: handle exception
+            e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new WebException("投资转账失败", e);
         }
         return "site/test/loantransfer";
     }
@@ -918,30 +936,68 @@ public class LoanController extends BaseController
     public String transferReturn(LoanTransferReturnBean lr, ModelMap map)
             throws WebException
     {
+        UsersEntity user = getUsersEntity();
         try
         {
-            map.put("model", lr);
+            String json = Common.UrlDecoder(lr.getLoanJsonList(), "utf-8");
+            List<Object> list = Common.JSONDecodeList(json, LoanInfoBean.class);
+            if (list.size() == 1)
+            {
+                LoanInfoBean loan = (LoanInfoBean) list.get(0);
+                InvestOrderEntity order = investOrderService.getInvestOrderEntityByOrderNo(loan.getOrderNo());
+                accountService.updateAccountBalance(user.getCustomerId(),
+                        multiply(new BigDecimal(loan.getAmount())),
+                        order.getOrderId(),
+                        loan.getLoanNo());
+                
+                AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
+                map.put("title", "投资成功");
+                map.put("orderNo", loan.getOrderNo());
+                map.put("orderAmount", loan.getAmount());
+                map.put("Fee", "0");
+                map.put("payAmount", "0");
+                map.put("balance", this.divide(account.getBalance()));
+            }
+            
         }
+        
         catch (Exception e)
         {
-            // TODO: handle exception
+            e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new WebException("投资返回信息失败", e);
         }
-        return "site/test/transferreturn";
+        return "site/loan/results";
     }
     
     /**
      * 转账后台通知
      */
     @RequestMapping("transferNotify")
-    public @ResponseBody String transferNotify() throws WebException
+    public @ResponseBody String transferNotify(LoanTransferReturnBean lr)
+            throws WebException
     {
+        UsersEntity user = getUsersEntity();
         try
         {
+            String json = Common.UrlDecoder(lr.getLoanJsonList(), "utf-8");
+            List<Object> list = Common.JSONDecodeList(json, LoanInfoBean.class);
+            if (list.size() == 1)
+            {
+                LoanInfoBean loan = (LoanInfoBean) list.get(0);
+                InvestOrderEntity order = investOrderService.getInvestOrderEntityByOrderNo(loan.getOrderNo());
+                accountService.updateAccountBalance(user.getCustomerId(),
+                        multiply(new BigDecimal(loan.getAmount())),
+                        order.getOrderId(),
+                        loan.getLoanNo());
+            }
             
         }
         catch (Exception e)
         {
-            // TODO: handle exception
+            e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new WebException("投资返回信息失败", e);
         }
         return "";
     }

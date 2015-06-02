@@ -484,7 +484,8 @@ public class PostServiceImpl implements IPostService
             
             accountService.updateAccountBalance(entity.getCustomerId(),
                     amount,
-                    orderId);
+                    orderId,
+                    "");
         }
         else
         {

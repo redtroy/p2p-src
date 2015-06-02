@@ -27,6 +27,6 @@ public interface IAccountService
      * @param account
      */
     public int updateAccountBalance(String customerId, BigDecimal balance,
-            String orderId);
+            String orderId, String loanNo);
     
 }

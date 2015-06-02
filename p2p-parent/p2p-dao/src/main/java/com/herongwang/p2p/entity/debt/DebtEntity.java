@@ -10,6 +10,7 @@ import com.sxj.mybatis.orm.annotations.Entity;
 import com.sxj.mybatis.orm.annotations.GeneratedValue;
 import com.sxj.mybatis.orm.annotations.GenerationType;
 import com.sxj.mybatis.orm.annotations.Id;
+import com.sxj.mybatis.orm.annotations.Sn;
 import com.sxj.mybatis.orm.annotations.Table;
 import com.sxj.mybatis.orm.annotations.Version;
 import com.sxj.mybatis.pagination.Pagable;
@@ -35,6 +36,13 @@ public class DebtEntity extends Pagable implements Serializable
     @Id(column = "debtId")
     @GeneratedValue(strategy = GenerationType.UUID)
     private String debtId;
+    
+    /**
+     * 标的号
+     */
+    @Column(name = "debtNo")
+    @Sn(pattern = "000000", step = 1, table = "T_SN", stub = "F_SN_NAME", sn = "F_SN_NUMBER", stubValue = "D")
+    private String debtNo;
     
     /**
     * 客户ID
@@ -385,6 +393,16 @@ public class DebtEntity extends Pagable implements Serializable
     public void setDescriptionProject(String descriptionProject)
     {
         this.descriptionProject = descriptionProject;
+    }
+    
+    public String getDebtNo()
+    {
+        return debtNo;
+    }
+    
+    public void setDebtNo(String debtNo)
+    {
+        this.debtNo = debtNo;
     }
     
     public String getCapitalUses()

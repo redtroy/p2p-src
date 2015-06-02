@@ -78,4 +78,9 @@ public interface IInvestOrderDao
     public InvestOrderEntity getInvestOrderByCustIdAndDebtId(String debtId,
             String custId);
     
+    /**
+     * 根据订单号查询订单
+     */
+    public InvestOrderEntity getInvestOrderByOrderNO(String orderNo);
+    
 }

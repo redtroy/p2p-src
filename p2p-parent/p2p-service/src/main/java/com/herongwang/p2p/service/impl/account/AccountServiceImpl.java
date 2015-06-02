@@ -72,7 +72,7 @@ public class AccountServiceImpl implements IAccountService
     @Override
     @Transactional
     public int updateAccountBalance(String customerId, BigDecimal amount,
-            String orderId)
+            String orderId, String loanNo)
     {
         QueryCondition<AccountEntity> condition = new QueryCondition<AccountEntity>();
         condition.addCondition("customerId", customerId);
@@ -86,6 +86,7 @@ public class AccountServiceImpl implements IAccountService
             io.setAmount(amount);
             io.setStatus(num);
             io.setChannel(1);
+            io.setLoanNo(loanNo);
             io.setCreateTime(new Date());
             io.setArriveTime(new Date());
             investOrderService.finishOrder(io);
