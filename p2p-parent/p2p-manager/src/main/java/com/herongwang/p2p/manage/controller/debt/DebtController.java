@@ -68,7 +68,7 @@ public class DebtController extends BaseController
      * @return
      */
     @RequestMapping("/tenderList")
-    public String rechargeList(DebtEntity entity, ModelMap map)
+    public String rechargeList(DebtEntity entity, ModelMap map, String message)
             throws WebException
     {
         try
@@ -89,6 +89,7 @@ public class DebtController extends BaseController
             }
             map.put("list", list);
             map.put("query", entity);
+            map.put("message", message);
             return "manage/tender/tender-list";
         }
         catch (Exception e)
@@ -271,13 +272,13 @@ public class DebtController extends BaseController
      * @return
      */
     @RequestMapping("audit")
-    public @ResponseBody String audit(String debtId) throws WebException
+    public String audit(String debtId) throws WebException
     {
         try
         {
             System.out.println(debtId);
             String flag = debtService.audit(debtId);
-            return flag;
+            return "redirect:/tender/tenderList.htm?message=" + flag;
         }
         catch (Exception e)
         {
@@ -308,6 +309,7 @@ public class DebtController extends BaseController
                 ltsa.setPlatformMoneymoremore("p1190");
                 ltsa.setAuditType("1");
                 ltsa.setLoanNoList(loanNoList);
+                ltsa.setRemark3(debtId);//存放DebtId
                 String privatekey = Common.privateKeyPKCS8;
                 ltsa.setReturnURL("http://127.0.0.1:8080/p2p-website/loan/loanTransferAuditModelReturn.htm");
                 ltsa.setNotifyURL("http://127.0.0.1:8080/p2p-website/loan/loanTransferAuditModelNotify.htm");
@@ -327,7 +329,7 @@ public class DebtController extends BaseController
             SxjLogger.error("审核失败", e.getClass());
             throw new WebException(e);
         }
-        return "site/test/loantransferaudit";
+        return "manage/debt/loantransferaudit";
     }
     
     /**
@@ -339,13 +341,17 @@ public class DebtController extends BaseController
     {
         try
         {
-            //  map.put("model", tfb);
+            if ("88".equals(tfb.getResultCode()))
+            {
+                return "redirect:/tender/audit.htm?debtId=" + tfb.getRemark3();
+            }
+            map.put("model", tfb);
         }
         catch (Exception e)
         {
             // TODO: handle exception
         }
-        return "redirect:/tender/tenderList";
+        return "manage/debt/transferauditreturn.htm";
     }
     
     /**
@@ -363,7 +369,7 @@ public class DebtController extends BaseController
         {
             // TODO: handle exception
         }
-        return "";
+        return "SUCCESS";
     }
     
     /**
