@@ -124,6 +124,24 @@ public class UsersEntity extends Pagable implements Serializable
     @Column(name = "authState")
     private Integer authState;
     
+    /**
+     * 投标授权状态，1，已授权
+     */
+    @Column(name = "tenderStatus")
+    private Integer tenderStatus;
+    
+    /**
+     * 还款授权状态，1，已授权
+     */
+    @Column(name = "repaymentStatus")
+    private Integer repaymentStatus;
+    
+    /**
+     * 二次分配授权状态，1，已授权
+     */
+    @Column(name = "allocationStatus")
+    private Integer allocationStatus;
+    
     public Integer getAuthState()
     {
         return authState;
@@ -282,6 +300,36 @@ public class UsersEntity extends Pagable implements Serializable
     public void setLevelId(String levelId)
     {
         this.levelId = levelId;
+    }
+    
+    public Integer getTenderStatus()
+    {
+        return tenderStatus;
+    }
+    
+    public void setTenderStatus(Integer tenderStatus)
+    {
+        this.tenderStatus = tenderStatus;
+    }
+    
+    public Integer getRepaymentStatus()
+    {
+        return repaymentStatus;
+    }
+    
+    public void setRepaymentStatus(Integer repaymentStatus)
+    {
+        this.repaymentStatus = repaymentStatus;
+    }
+    
+    public Integer getAllocationStatus()
+    {
+        return allocationStatus;
+    }
+    
+    public void setAllocationStatus(Integer allocationStatus)
+    {
+        this.allocationStatus = allocationStatus;
     }
     
 }

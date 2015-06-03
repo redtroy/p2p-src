@@ -93,7 +93,20 @@ public class LoanController extends BaseController
     @RequestMapping("/recharge")
     public String recharge(ModelMap map) throws WebException
     {
+        UsersEntity user = this.getUsersEntity();
+        if (user == null)
+        {
+            return LOGIN;
+        }
         map.put("title", "账户充值");
+        if (StringUtils.isEmpty(user.getMoneymoremoreId()))
+        {
+            map.put("moneyType", 0);
+        }
+        else
+        {
+            map.put("moneyType", 1);
+        }
         return "site/loan/recharge";
     }
     
@@ -304,6 +317,14 @@ public class LoanController extends BaseController
         
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
         map.put("balance", this.divide(account.getBalance()));
+        if (StringUtils.isEmpty(user.getMoneymoremoreId()))
+        {
+            map.put("moneyType", 0);
+        }
+        else
+        {
+            map.put("moneyType", 1);
+        }
         return "site/loan/withdraw";
     }
     
@@ -540,9 +561,9 @@ public class LoanController extends BaseController
         Loan loan = parametersService.getLoan();
         String basePath = this.getBasePath(request);
         //获取授权状态
-        String authorizeType1 = "0";
-        String authorizeType2 = "0";
-        String authorizeType3 = "0";
+        String authorizeType1 = user.getTenderStatus().toString();
+        String authorizeType2 = user.getRepaymentStatus().toString();
+        String authorizeType3 = user.getAllocationStatus().toString();
         String ReturnURL = basePath + "loan/authorizeReturnURL.htm";
         String NotifyURL = basePath + "loan/authorizeNotifyURL.htm";
         String SubmitURL = loan.getSubmitURL() + "loan/toloanauthorize.action";
@@ -557,6 +578,14 @@ public class LoanController extends BaseController
         map.put("PlatformMoneymoremore", PlatformMoneymoremore);
         map.put("ReturnURL", ReturnURL);
         map.put("NotifyURL", NotifyURL);
+        if (StringUtils.isEmpty(user.getMoneymoremoreId()))
+        {
+            map.put("moneyType", 0);
+        }
+        else
+        {
+            map.put("moneyType", 1);
+        }
         return "site/loan/authorize";
     }
     
@@ -649,15 +678,39 @@ public class LoanController extends BaseController
         {
             Map<String, String> map = new HashMap<String, String>();
             UsersEntity user = this.getUsersEntity();
+            if (StringUtils.isEmpty(user.getMoneymoremoreId()))
+            {
+                map.put("moneyType", "0");
+                return map;
+            }
+            else
+            {
+                map.put("moneyType", "1");
+            }
             AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
             String PlatformId = user.getMoneymoremoreId();
             String platformType = "1";//1.托管账户 2.自有账户
             
             String[] result = postService.balanceQuery(PlatformId, platformType);
             String[] balance = result[1].split("\\|");
+            
             map.put("balance1", balance[0]);
             map.put("balance2", balance[1]);
             map.put("balance3", balance[2]);
+            //添加资金明细
+            FundDetailEntity deal = new FundDetailEntity();
+            deal.setCustomerId(user.getCustomerId());
+            deal.setAccountId(account.getAccountId());
+            deal.setType(1);
+            deal.setCreateTime(new Date());
+            deal.setStatus(1);
+            deal.setAmount((account.getBalance().subtract(multiply(new BigDecimal(
+                    balance[0])))).abs());
+            deal.setBalance(account.getBalance());
+            deal.setDueAmount(account.getDueAmount());
+            deal.setFrozenAmount(account.getFozenAmount());
+            deal.setRemark("对账，资金以托管账户金额为准！");
+            fundDetailService.addFundDetail(deal);
             account.setBalance(multiply(new BigDecimal(balance[0])));
             account.setFozenAmount(multiply(new BigDecimal(balance[2])));
             accountService.updateAccount(account);

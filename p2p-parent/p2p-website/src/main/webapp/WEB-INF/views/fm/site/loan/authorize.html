@@ -1,13 +1,25 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>和融网-账户提现</title>
+<title>和融网-账户授权</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="${b.staticPath}style/member.css" rel="stylesheet" type="text/css" />
 <script src="${b.staticPath}js/jquery.js"></script>
 <@b.validate/> <@b.dialog/>
 <script>
 function postInfo() {
+	if($('#moneyType').val()==0){
+		var success = dialog({
+			title : '消息',
+			content : '您未开户，请开户！',
+			cancel : false,
+			ok : function() {
+				window.location.href = "${basePath}user/memberInfo.htm";
+			}
+		});
+		success.showModal();
+		return;
+	}
 	var type = "0";
 	if ($('#authorizeType1').is(':checked')) {
 		type+=",1";
@@ -52,6 +64,8 @@ function postInfo() {
       <div class="rightSide">
         <div class="heading fontYH f20"><span>账户授权</span></div>
         <div class="mainBox fontYH">
+        
+			<input id="moneyType" name="moneyType" value="${moneyType}" type="hidden" />
         <form action="${SubmitURL}" id="postForm" method="post">
         	<input id="MoneymoremoreId" name="MoneymoremoreId" value="${MoneymoremoreId}" type="hidden" />
 			<input id="PlatformMoneymoremore" name="PlatformMoneymoremore" value="${PlatformMoneymoremore}" type="hidden" />
