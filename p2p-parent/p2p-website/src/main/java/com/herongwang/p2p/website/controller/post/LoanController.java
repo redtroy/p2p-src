@@ -954,7 +954,7 @@ public class LoanController extends BaseController
         {
             String json = Common.UrlDecoder(lr.getLoanJsonList(), "utf-8");
             List<Object> list = Common.JSONDecodeList(json, LoanInfoBean.class);
-            if (list.size() == 1)
+            if (list.size() == 1 && "88".equals(lr.getResultCode()))
             {
                 LoanInfoBean loan = (LoanInfoBean) list.get(0);
                 InvestOrderEntity order = investOrderService.getInvestOrderEntityByOrderNo(loan.getOrderNo());
@@ -967,6 +967,16 @@ public class LoanController extends BaseController
                 map.put("title", "投资成功");
                 map.put("orderNo", loan.getOrderNo());
                 map.put("orderAmount", loan.getAmount());
+                map.put("Fee", "0");
+                map.put("payAmount", "0");
+                map.put("balance", this.divide(account.getBalance()));
+            }
+            else
+            {
+                AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
+                map.put("title", "投资失败");
+                map.put("orderNo", "无");
+                map.put("orderAmount", "0");
                 map.put("Fee", "0");
                 map.put("payAmount", "0");
                 map.put("balance", this.divide(account.getBalance()));
@@ -995,7 +1005,7 @@ public class LoanController extends BaseController
         {
             String json = Common.UrlDecoder(lr.getLoanJsonList(), "utf-8");
             List<Object> list = Common.JSONDecodeList(json, LoanInfoBean.class);
-            if (list.size() == 1)
+            if (list.size() == 1 && "88".equals(lr.getResultCode()))
             {
                 LoanInfoBean loan = (LoanInfoBean) list.get(0);
                 InvestOrderEntity order = investOrderService.getInvestOrderEntityByOrderNo(loan.getOrderNo());
@@ -1003,6 +1013,7 @@ public class LoanController extends BaseController
                         multiply(new BigDecimal(loan.getAmount())),
                         order.getOrderId(),
                         loan.getLoanNo());
+                
             }
             
         }
