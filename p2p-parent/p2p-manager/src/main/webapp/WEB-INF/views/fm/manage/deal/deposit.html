@@ -92,7 +92,6 @@ function delTender(orderId){
               <th>手续费</th>
               <th>实际到账时间</th>
               <th>实际到帐金额</th>
-              <th>操作</th>
             </tr>
             <#list list as deal>
             <tr>
@@ -104,10 +103,6 @@ function delTender(orderId){
               <td><#if (deal.manageFee>0)>${deal.manageFee/100}<#else>0</#if></td>
               <td><#if (deal.withdrawTime??)> ${deal.withdrawTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
               <td><#if (deal.actuaFee>0)>${deal.actuaFee/100}<#else>0</#if>元</td>
-              <td>
-              <#if (deal.status==0)>
-              <button class="button btn-examine" onclick="delTender('${deal.orderId}');" >审核</button>
-              <#else>已提现</#if></td>
             </tr>
 			</#list>
           </table>

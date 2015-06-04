@@ -6,7 +6,7 @@
 <link href="${b.staticPath}style/member.css" rel="stylesheet"
 	type="text/css" />
 <script src="${b.staticPath}js/jquery1.8.js"></script>
-<@b.pageScript/>
+<@b.pageScript/><@b.dialog/>
 <script>
 	function query(page) {
 		var params = "";
@@ -25,9 +25,21 @@
 	}
 	function balance() {
 		$.post("${basePath}loan/balanceQuery.htm", {}, function(data) {
-			if (data.balance1 != "") {
-				alert(data.balance1);
-			} 
+			
+			if (data.moneyType != "1") {
+				var success = dialog({
+					title : '消息',
+					content : '您未开户，请开户！',
+					cancel : false,
+					ok : function() {
+						window.location.href = "${basePath}user/memberInfo.htm";
+					}
+				});
+				success.showModal();
+				return;
+			}else{
+				location.reload();
+			}
 		});
 	}
 </script>
@@ -53,10 +65,9 @@
 									class="color-blue">待收金额：<#if
 									account.dueAmount??>${account.dueAmount/100}<#else>0</#if>元</span>
 									<span><a href="${basePath}loan/recharge.htm" class="button button-orange">充值</a></span>
-									<span><a href="${basePath}post/withdraw.htm" class="button button-green">提现</a></span>
+									<span><a href="${basePath}loan/withdraw.htm" class="button button-green">提现</a></span>
 									<span><a href="${basePath}loan/authorize.htm" class="button button-green">授权</a></span>
 									<span><a href="javascript:void(0)" onclick="balance();" class="button button-green">对账</a></span>
-									<span><a href="${basePath}loan/fastPay.htm" class="button button-green">转账授权</a></span>
 							</div>
 						</div>
 					</div>
@@ -82,7 +93,7 @@
 						fund>
 						<!-- 
 						1.	充值 2.	提现 3.	投资冻结 4.	投资解冻 5.	借款入账 6.	借款管理费 7.	偿还本金 8.	偿还利息 9.	投资本金
-						10.	投资收益 11.	投资收益管理费12提现手续费
+						10.	投资收益 11.	投资收益管理费12提现手续费 13 .对账
 							-->
 						<tr>
 							<td>${fund.createTime?string("yyyy-MM-dd HH:mm:ss")}</td>
@@ -92,7 +103,8 @@
 								<#elseif fund.type==7 > 偿还本金 <#elseif fund.type==8 > 偿还利息
 								<#elseif fund.type==9 > 投资本金 <#elseif fund.type==10 > 投资收益
 								<#elseif fund.type==11 > 投资收益管理费 
-								<#else>提现手续费</#if></td> <#if fund.status==0>
+								<#elseif fund.type==12 > 提现手续费
+								<#else>对账</#if></td> <#if fund.status==0>
 							<td class="color-red">-${fund.amount/100}</td><#else>
 							<td class="color-green">${fund.amount/100}</td> </#if>
 							<td>${fund.balance/100}</td>

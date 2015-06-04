@@ -285,4 +285,11 @@ public class InvestOrderServiceImpl implements IInvestOrderService
         return investOrderDao.queryInvestorderList(debtId);
     }
     
+    @Override
+    public InvestOrderEntity getInvestOrderEntityByOrderNo(String id)
+            throws ServiceException
+    {
+        return investOrderDao.getInvestOrderByOrderNO(id);
+    }
+    
 }

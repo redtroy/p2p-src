@@ -10,6 +10,7 @@ import com.sxj.mybatis.orm.annotations.Entity;
 import com.sxj.mybatis.orm.annotations.GeneratedValue;
 import com.sxj.mybatis.orm.annotations.GenerationType;
 import com.sxj.mybatis.orm.annotations.Id;
+import com.sxj.mybatis.orm.annotations.Sn;
 import com.sxj.mybatis.orm.annotations.Table;
 import com.sxj.mybatis.pagination.Pagable;
 
@@ -34,6 +35,13 @@ public class InvestOrderEntity extends Pagable implements Serializable
     @Id(column = "orderId")
     @GeneratedValue(strategy = GenerationType.UUID)
     private String orderId;
+    
+    /**
+     * 订单号
+     */
+    @Column(name = "orderNo")
+    @Sn(pattern = "000000", step = 1, table = "T_SN", stub = "F_SN_NAME", sn = "F_SN_NUMBER", stubValue = "O")
+    private String orderNo;
     
     /**
     * 客户ID
@@ -138,6 +146,16 @@ public class InvestOrderEntity extends Pagable implements Serializable
     public String getLoanNo()
     {
         return loanNo;
+    }
+    
+    public String getOrderNo()
+    {
+        return orderNo;
+    }
+    
+    public void setOrderNo(String orderNo)
+    {
+        this.orderNo = orderNo;
     }
     
     public void setLoanNo(String loanNo)

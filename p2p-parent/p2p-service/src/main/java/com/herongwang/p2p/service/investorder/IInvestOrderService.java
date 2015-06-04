@@ -33,6 +33,15 @@ public interface IInvestOrderService
             throws ServiceException;
     
     /**
+     * 根据订单号获取投标订单信息
+     * 
+     * @param orderNo
+     * @return
+     */
+    public InvestOrderEntity getInvestOrderEntityByOrderNo(String id)
+            throws ServiceException;
+    
+    /**
      * 获取投标订单列表
      * 
      * @param query

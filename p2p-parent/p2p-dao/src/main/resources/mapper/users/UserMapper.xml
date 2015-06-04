@@ -22,6 +22,10 @@
 		<result property="moneymoremoreId" column="moneymoremoreId" jdbcType="VARCHAR" />
 		<result property="authState" column="authState" jdbcType="INTEGER" />
 		
+		<result property="tenderStatus" column="tenderStatus" jdbcType="INTEGER" />
+		<result property="repaymentStatus" column="repaymentStatus" jdbcType="INTEGER" />
+		<result property="allocationStatus" column="allocationStatus" jdbcType="INTEGER" />
+		
 	</resultMap>
 	
 	<select id="getUserByAccount" resultMap="UserResultMap"

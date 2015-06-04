@@ -5,6 +5,7 @@
 <mapper namespace="com.herongwang.p2p.dao.debt.IDebtDao">
 	<resultMap id="DebtEntity" type="com.herongwang.p2p.entity.debt.DebtEntity">
 		<id property="debtId" column="debtId" jdbcType="VARCHAR" />
+		<result property="debtNo" column="debtNo" jdbcType="VARCHAR" />
 		<result property="customerId" column="customerId" jdbcType="VARCHAR" />
 		<result property="title" column="title" jdbcType="VARCHAR" />
 		<result property="repayType" column="repayType" jdbcType="INTEGER" />

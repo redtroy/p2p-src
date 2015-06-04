@@ -7,6 +7,7 @@
 		<id property="orderId" column="orderId" jdbcType="VARCHAR" />
 		<result property="debtId" column="debtId" jdbcType="VARCHAR" />
 		<result property="loanNo" column="loanNo" jdbcType="VARCHAR" />
+		<result property="orderNo" column="orderNo" jdbcType="VARCHAR" />
 		<result property="customerId" column="customerId" jdbcType="VARCHAR" />
 		<result property="amount" column="amount" jdbcType="INTEGER"/>
 		<result property="createTime" column="createTime" jdbcType="TIMESTAMP" />
@@ -65,5 +66,9 @@
 	<select id="getInvestOrderByCustIdAndDebtId" resultMap="InvestorderResultMap"
 		parameterType="String">
 		<![CDATA[SELECT * FROM InvestOrder where  customerId=#{custId} and debtId=#{debtId}]]>
+	</select>
+	<select id="getInvestOrderByOrderNO" resultMap="InvestorderResultMap"
+		parameterType="String">
+		<![CDATA[SELECT * FROM InvestOrder where  orderNo=#{orderNo}]]>
 	</select>
 </mapper>

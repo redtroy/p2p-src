@@ -135,7 +135,7 @@ function openaccount(){
     </tr>
     <tr>
       <th>开户信息</th>
-      <td><#if (user.moneymoremoreId??)><span class="color-green">已开户（多多号：${user.moneymoremoreId}） </span><#else><span class="color-red">未开户</span></#if></td>
+      <td><#if (user.moneymoremoreId??)><span class="color-green">已开户 </span><#elseif (message??)><span class="color-red">${message}</span><#else><span class="color-red">未开户</span></#if></td>
     </tr>
   </tbody>
   </table>
