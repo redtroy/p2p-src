@@ -214,10 +214,12 @@ public class LoanController extends BaseController
             OrdersEntity orders = ordersService.getOrdersEntityByNo(result.getOrderNo());
             if (orders.getStatus() != 1)
             {
-                //更新订单支付成功！
+                //更新订单未支付成功！
                 orders.setStatus(1);
                 orders.setLoanNo(result.getLoanNo());
                 orders.setArriveTime(new Date());
+                orders.setFeeWithdraws(multiply(new BigDecimal(
+                        result.getFeeWithdraws())));
                 ordersService.updateOrders(orders);
                 
                 //添加资金明细
@@ -281,6 +283,8 @@ public class LoanController extends BaseController
                 orders.setStatus(1);
                 orders.setLoanNo(result.getLoanNo());
                 orders.setArriveTime(new Date());
+                orders.setFeeWithdraws(multiply(new BigDecimal(
+                        result.getFeeWithdraws())));
                 ordersService.updateOrders(orders);
                 
                 //添加资金明细
@@ -462,7 +466,13 @@ public class LoanController extends BaseController
             OrdersEntity order = ordersService.getOrdersEntityByNo(result.getOrderNo());
             if (null != order && order.getStatus() == 0)
             {
+                //更新订单未支付成功！
                 order.setStatus(1);
+                order.setLoanNo(result.getLoanNo());
+                order.setArriveTime(new Date());
+                
+                order.setFeeWithdraws(multiply(new BigDecimal(
+                        result.getFeeWithdraws())));
                 ordersService.updateOrders(order);
                 
                 //添加资金明细
@@ -526,7 +536,12 @@ public class LoanController extends BaseController
             if (null != order && order.getStatus() == 0)
             {
                 order.setStatus(1);
+                order.setLoanNo(result.getLoanNo());
+                order.setArriveTime(new Date());
+                order.setFeeWithdraws(multiply(new BigDecimal(
+                        result.getFeeWithdraws())));
                 ordersService.updateOrders(order);
+                
                 FundDetailEntity query = new FundDetailEntity();
                 query.setOrderId(order.getOrderId());
                 query.setType(2);
@@ -641,12 +656,55 @@ public class LoanController extends BaseController
         {
             return LOGIN;
         }
+        //获取双乾参数
+        Loan loan = parametersService.getLoan();
+        String dataStr = result.getMoneymoremoreId()
+                + result.getPlatformMoneymoremore()
+                + result.getAuthorizeTypeOpen()
+                + result.getAuthorizeTypeClose() + result.getAuthorizeType()
+                + result.getRandomTimeStamp() + result.getRemark1()
+                + result.getRemark2() + result.getRemark3()
+                + result.getResultCode();
+        RsaHelper rsa = RsaHelper.getInstance();
+        // 签名
+        boolean verifySignature = rsa.verifySignature(result.getSignInfo(),
+                dataStr,
+                loan.getPublickey());
+        if (verifySignature)
+        {
+            int tenderStatus = 0;
+            int repaymentStatus = 0;
+            int allocationStatus = 0;
+            
+            String[] status = result.getAuthorizeTypeOpen().split(".");
+            for (int i = 0; i < status.length; i++)
+            {
+                if ("1".equals(status[i]))
+                {
+                    tenderStatus = 1;
+                }
+                if ("2".equals(status[i]))
+                {
+                    repaymentStatus = 1;
+                }
+                if ("3".equals(status[i]))
+                {
+                    allocationStatus = 1;
+                }
+            }
+            //更新用户授权状态
+            UsersEntity u = userService.getUserById(user.getCustomerId());
+            u.setTenderStatus(tenderStatus);
+            u.setRepaymentStatus(repaymentStatus);
+            u.setAllocationStatus(allocationStatus);
+            userService.updateUser(u);
+        }
         //获取账户信息
-        map.put("title", result.getMessage());
-        map.put("orderNo", result.getOrderNo());
-        map.put("orderAmount", result.getAmount());
-        map.put("Fee", result.getFeeWithdraws());
-        map.put("payAmount", "");
+        map.put("title", "授权：" + result.getMessage());
+        map.put("orderNo", "无");
+        map.put("orderAmount", 0);
+        map.put("Fee", 0);
+        map.put("payAmount", 0);
         return "site/loan/results";
     }
     
@@ -659,6 +717,49 @@ public class LoanController extends BaseController
         if (user == null)
         {
             return;
+        }
+        //获取双乾参数
+        Loan loan = parametersService.getLoan();
+        String dataStr = result.getMoneymoremoreId()
+                + result.getPlatformMoneymoremore()
+                + result.getAuthorizeTypeOpen()
+                + result.getAuthorizeTypeClose() + result.getAuthorizeType()
+                + result.getRandomTimeStamp() + result.getRemark1()
+                + result.getRemark2() + result.getRemark3()
+                + result.getResultCode();
+        RsaHelper rsa = RsaHelper.getInstance();
+        // 签名
+        boolean verifySignature = rsa.verifySignature(result.getSignInfo(),
+                dataStr,
+                loan.getPublickey());
+        if (verifySignature)
+        {
+            int tenderStatus = 0;
+            int repaymentStatus = 0;
+            int allocationStatus = 0;
+            
+            String[] status = result.getAuthorizeTypeOpen().split(".");
+            for (int i = 0; i < status.length; i++)
+            {
+                if ("1".equals(status[i]))
+                {
+                    tenderStatus = 1;
+                }
+                if ("2".equals(status[i]))
+                {
+                    repaymentStatus = 1;
+                }
+                if ("3".equals(status[i]))
+                {
+                    allocationStatus = 1;
+                }
+            }
+            //更新用户授权状态
+            UsersEntity u = userService.getUserById(user.getCustomerId());
+            u.setTenderStatus(tenderStatus);
+            u.setRepaymentStatus(repaymentStatus);
+            u.setAllocationStatus(allocationStatus);
+            userService.updateUser(u);
         }
     }
     

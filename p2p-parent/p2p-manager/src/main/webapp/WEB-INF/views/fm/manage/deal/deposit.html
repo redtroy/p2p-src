@@ -74,35 +74,37 @@ function delTender(orderId){
         <div class="heading fontYH f20">提现管理</div>
         <div class="mainBox">
           <table border="0" cellspacing="0" cellpadding="0" class="tabList">
-            <col width="8%" />
-            <col width="12%" />
+            <col width="10%" />
+            <col width="15%" />
             <col width="13%" />
-            <!-- <col width="20%" /> -->
+            <col width="12%" />
             <col width="10%" />
             <col width="7%" />
-            <col width="12%" />
+            <col width="15%" />
             <col width="10%" />
             <col width="8%" />
             <tr>
               <th>会员名称</th>
               <th>提现时间</th>
               <th>订单号 </th>
-              <!-- <th>通联支付单号</th> -->
+              <th>乾多多流水号</th> 
               <th>提现金额</th>
               <th>手续费</th>
               <th>实际到账时间</th>
               <th>实际到帐金额</th>
+              <th>状态</th>
             </tr>
             <#list list as deal>
             <tr>
-	        <td>${deal.name}</td>
+              <td>${deal.name}</td>
               <td><#if (deal.createTime??)> ${deal.createTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
               <td>${deal.ordersNo}</td>
-              <!-- <td>${deal.tlNo}</td> -->
+              <td>${deal.loanNo}</td>
               <td><#if (deal.amount>0)>${deal.amount/100}<#else>0</#if>元</td>
-              <td><#if (deal.manageFee>0)>${deal.manageFee/100}<#else>0</#if></td>
-              <td><#if (deal.withdrawTime??)> ${deal.withdrawTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
-              <td><#if (deal.actuaFee>0)>${deal.actuaFee/100}<#else>0</#if>元</td>
+              <td><#if (deal.feeWithdraws>0)>${deal.feeWithdraws/100}<#else>0</#if></td>
+              <td><#if (deal.arriveTime??)> ${deal.arriveTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
+              <td><#if (deal.status>0)>${deal.actualAmount/100}<#else>0</#if>元</td>
+              <td>${deal.statusText}</td>
             </tr>
 			</#list>
           </table>
