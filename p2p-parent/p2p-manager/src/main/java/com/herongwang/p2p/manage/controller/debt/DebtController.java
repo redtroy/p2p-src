@@ -119,8 +119,12 @@ public class DebtController extends BaseController
                 DebtApplicationEntity entity = debtApplicationService.getApplyForEntity(applicationId);
                 if (!StringUtils.isEmpty(entity.getCustomerId()))
                 {
-                    map.put("applyId", entity.getCustomerId());
-                    map.put("name", entity.getName());
+                    UsersEntity user = userService.getUserById(entity.getCustomerId());
+                    if (user.getRepaymentStatus() == 1)
+                    {
+                        map.put("applyId", user.getCustomerId());
+                        map.put("name", user.getName());
+                    }
                 }
                 map.put("applicationId", applicationId);
                 map.put("amount", entity.getAmount());
@@ -398,7 +402,7 @@ public class DebtController extends BaseController
         if (keyword != "" && keyword != null)
         {
             user.setName(keyword);
-            ;
+            user.setRepaymentStatus(1);
         }
         List<UsersEntity> list = userService.queryUsers(user);
         List<String> strlist = new ArrayList<String>();

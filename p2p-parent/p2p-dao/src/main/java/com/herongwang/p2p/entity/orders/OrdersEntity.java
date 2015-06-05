@@ -108,6 +108,12 @@ public class OrdersEntity extends Pagable implements Serializable
     private String loanNo;
     
     /**
+     * 用户实际承担的手续费金额
+     */
+    @Column(name = "feeWithdraws")
+    private BigDecimal feeWithdraws;
+    
+    /**
      * 订单签名
      */
     @Column(name = "strSignMsg")
@@ -124,29 +130,7 @@ public class OrdersEntity extends Pagable implements Serializable
     
     private String tlNo;//通联订单号
     
-    private String manageFee;//手续费
-    
-    private String actuaFee;//手续费
-    
-    public String getActuaFee()
-    {
-        return actuaFee;
-    }
-    
-    public void setActuaFee(String actuaFee)
-    {
-        this.actuaFee = actuaFee;
-    }
-    
-    public String getManageFee()
-    {
-        return manageFee;
-    }
-    
-    public void setManageFee(String manageFee)
-    {
-        this.manageFee = manageFee;
-    }
+    private BigDecimal actualAmount;//实际到账金额
     
     public String getStatusText()
     {
@@ -306,6 +290,26 @@ public class OrdersEntity extends Pagable implements Serializable
     public void setStrSignMsg(String strSignMsg)
     {
         this.strSignMsg = strSignMsg;
+    }
+    
+    public BigDecimal getFeeWithdraws()
+    {
+        return feeWithdraws;
+    }
+    
+    public void setFeeWithdraws(BigDecimal feeWithdraws)
+    {
+        this.feeWithdraws = feeWithdraws;
+    }
+    
+    public BigDecimal getActualAmount()
+    {
+        return actualAmount;
+    }
+    
+    public void setActualAmount(BigDecimal actualAmount)
+    {
+        this.actualAmount = actualAmount;
     }
     
 }

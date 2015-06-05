@@ -62,6 +62,11 @@ public class DealDetailController extends BaseController
             entity.setOrderType(1);
             //查询充值记录
             List<OrdersEntity> list = ordersService.queryOrdersList(entity);
+            for (int i = 0; i < list.size(); i++)
+            {
+                OrdersEntity o = list.get(i);
+                o.setActualAmount(o.getAmount().subtract(o.getFeeWithdraws()));
+            }
             map.put("list", list);
             map.put("query", entity);
             return "manage/deal/recharge";
@@ -92,6 +97,11 @@ public class DealDetailController extends BaseController
             entity.setOrderType(2);
             //查询提现记录
             List<OrdersEntity> list = ordersService.queryOrdersList(entity);
+            for (int i = 0; i < list.size(); i++)
+            {
+                OrdersEntity o = list.get(i);
+                o.setActualAmount(o.getAmount().subtract(o.getFeeWithdraws()));
+            }
             map.put("list", list);
             map.put("query", entity);
             return "manage/deal/deposit";

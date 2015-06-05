@@ -93,7 +93,20 @@ public class LoanController extends BaseController
     @RequestMapping("/recharge")
     public String recharge(ModelMap map) throws WebException
     {
+        UsersEntity user = this.getUsersEntity();
+        if (user == null)
+        {
+            return LOGIN;
+        }
         map.put("title", "账户充值");
+        if (StringUtils.isEmpty(user.getMoneymoremoreId()))
+        {
+            map.put("moneyType", 0);
+        }
+        else
+        {
+            map.put("moneyType", 1);
+        }
         return "site/loan/recharge";
     }
     
@@ -201,10 +214,12 @@ public class LoanController extends BaseController
             OrdersEntity orders = ordersService.getOrdersEntityByNo(result.getOrderNo());
             if (orders.getStatus() != 1)
             {
-                //更新订单支付成功！
+                //更新订单未支付成功！
                 orders.setStatus(1);
                 orders.setLoanNo(result.getLoanNo());
                 orders.setArriveTime(new Date());
+                orders.setFeeWithdraws(multiply(new BigDecimal(
+                        result.getFeeWithdraws())));
                 ordersService.updateOrders(orders);
                 
                 //添加资金明细
@@ -268,6 +283,8 @@ public class LoanController extends BaseController
                 orders.setStatus(1);
                 orders.setLoanNo(result.getLoanNo());
                 orders.setArriveTime(new Date());
+                orders.setFeeWithdraws(multiply(new BigDecimal(
+                        result.getFeeWithdraws())));
                 ordersService.updateOrders(orders);
                 
                 //添加资金明细
@@ -304,6 +321,14 @@ public class LoanController extends BaseController
         
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
         map.put("balance", this.divide(account.getBalance()));
+        if (StringUtils.isEmpty(user.getMoneymoremoreId()))
+        {
+            map.put("moneyType", 0);
+        }
+        else
+        {
+            map.put("moneyType", 1);
+        }
         return "site/loan/withdraw";
     }
     
@@ -441,7 +466,13 @@ public class LoanController extends BaseController
             OrdersEntity order = ordersService.getOrdersEntityByNo(result.getOrderNo());
             if (null != order && order.getStatus() == 0)
             {
+                //更新订单未支付成功！
                 order.setStatus(1);
+                order.setLoanNo(result.getLoanNo());
+                order.setArriveTime(new Date());
+                
+                order.setFeeWithdraws(multiply(new BigDecimal(
+                        result.getFeeWithdraws())));
                 ordersService.updateOrders(order);
                 
                 //添加资金明细
@@ -505,7 +536,12 @@ public class LoanController extends BaseController
             if (null != order && order.getStatus() == 0)
             {
                 order.setStatus(1);
+                order.setLoanNo(result.getLoanNo());
+                order.setArriveTime(new Date());
+                order.setFeeWithdraws(multiply(new BigDecimal(
+                        result.getFeeWithdraws())));
                 ordersService.updateOrders(order);
+                
                 FundDetailEntity query = new FundDetailEntity();
                 query.setOrderId(order.getOrderId());
                 query.setType(2);
@@ -540,9 +576,9 @@ public class LoanController extends BaseController
         Loan loan = parametersService.getLoan();
         String basePath = this.getBasePath(request);
         //获取授权状态
-        String authorizeType1 = "0";
-        String authorizeType2 = "0";
-        String authorizeType3 = "0";
+        String authorizeType1 = user.getTenderStatus().toString();
+        String authorizeType2 = user.getRepaymentStatus().toString();
+        String authorizeType3 = user.getAllocationStatus().toString();
         String ReturnURL = basePath + "loan/authorizeReturnURL.htm";
         String NotifyURL = basePath + "loan/authorizeNotifyURL.htm";
         String SubmitURL = loan.getSubmitURL() + "loan/toloanauthorize.action";
@@ -557,6 +593,14 @@ public class LoanController extends BaseController
         map.put("PlatformMoneymoremore", PlatformMoneymoremore);
         map.put("ReturnURL", ReturnURL);
         map.put("NotifyURL", NotifyURL);
+        if (StringUtils.isEmpty(user.getMoneymoremoreId()))
+        {
+            map.put("moneyType", 0);
+        }
+        else
+        {
+            map.put("moneyType", 1);
+        }
         return "site/loan/authorize";
     }
     
@@ -612,12 +656,55 @@ public class LoanController extends BaseController
         {
             return LOGIN;
         }
+        //获取双乾参数
+        Loan loan = parametersService.getLoan();
+        String dataStr = result.getMoneymoremoreId()
+                + result.getPlatformMoneymoremore()
+                + result.getAuthorizeTypeOpen()
+                + result.getAuthorizeTypeClose() + result.getAuthorizeType()
+                + result.getRandomTimeStamp() + result.getRemark1()
+                + result.getRemark2() + result.getRemark3()
+                + result.getResultCode();
+        RsaHelper rsa = RsaHelper.getInstance();
+        // 签名
+        boolean verifySignature = rsa.verifySignature(result.getSignInfo(),
+                dataStr,
+                loan.getPublickey());
+        if (verifySignature)
+        {
+            int tenderStatus = 0;
+            int repaymentStatus = 0;
+            int allocationStatus = 0;
+            
+            String[] status = result.getAuthorizeTypeOpen().split(".");
+            for (int i = 0; i < status.length; i++)
+            {
+                if ("1".equals(status[i]))
+                {
+                    tenderStatus = 1;
+                }
+                if ("2".equals(status[i]))
+                {
+                    repaymentStatus = 1;
+                }
+                if ("3".equals(status[i]))
+                {
+                    allocationStatus = 1;
+                }
+            }
+            //更新用户授权状态
+            UsersEntity u = userService.getUserById(user.getCustomerId());
+            u.setTenderStatus(tenderStatus);
+            u.setRepaymentStatus(repaymentStatus);
+            u.setAllocationStatus(allocationStatus);
+            userService.updateUser(u);
+        }
         //获取账户信息
-        map.put("title", result.getMessage());
-        map.put("orderNo", result.getOrderNo());
-        map.put("orderAmount", result.getAmount());
-        map.put("Fee", result.getFeeWithdraws());
-        map.put("payAmount", "");
+        map.put("title", "授权：" + result.getMessage());
+        map.put("orderNo", "无");
+        map.put("orderAmount", 0);
+        map.put("Fee", 0);
+        map.put("payAmount", 0);
         return "site/loan/results";
     }
     
@@ -630,6 +717,49 @@ public class LoanController extends BaseController
         if (user == null)
         {
             return;
+        }
+        //获取双乾参数
+        Loan loan = parametersService.getLoan();
+        String dataStr = result.getMoneymoremoreId()
+                + result.getPlatformMoneymoremore()
+                + result.getAuthorizeTypeOpen()
+                + result.getAuthorizeTypeClose() + result.getAuthorizeType()
+                + result.getRandomTimeStamp() + result.getRemark1()
+                + result.getRemark2() + result.getRemark3()
+                + result.getResultCode();
+        RsaHelper rsa = RsaHelper.getInstance();
+        // 签名
+        boolean verifySignature = rsa.verifySignature(result.getSignInfo(),
+                dataStr,
+                loan.getPublickey());
+        if (verifySignature)
+        {
+            int tenderStatus = 0;
+            int repaymentStatus = 0;
+            int allocationStatus = 0;
+            
+            String[] status = result.getAuthorizeTypeOpen().split(".");
+            for (int i = 0; i < status.length; i++)
+            {
+                if ("1".equals(status[i]))
+                {
+                    tenderStatus = 1;
+                }
+                if ("2".equals(status[i]))
+                {
+                    repaymentStatus = 1;
+                }
+                if ("3".equals(status[i]))
+                {
+                    allocationStatus = 1;
+                }
+            }
+            //更新用户授权状态
+            UsersEntity u = userService.getUserById(user.getCustomerId());
+            u.setTenderStatus(tenderStatus);
+            u.setRepaymentStatus(repaymentStatus);
+            u.setAllocationStatus(allocationStatus);
+            userService.updateUser(u);
         }
     }
     
@@ -649,15 +779,39 @@ public class LoanController extends BaseController
         {
             Map<String, String> map = new HashMap<String, String>();
             UsersEntity user = this.getUsersEntity();
+            if (StringUtils.isEmpty(user.getMoneymoremoreId()))
+            {
+                map.put("moneyType", "0");
+                return map;
+            }
+            else
+            {
+                map.put("moneyType", "1");
+            }
             AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
             String PlatformId = user.getMoneymoremoreId();
             String platformType = "1";//1.托管账户 2.自有账户
             
             String[] result = postService.balanceQuery(PlatformId, platformType);
             String[] balance = result[1].split("\\|");
+            
             map.put("balance1", balance[0]);
             map.put("balance2", balance[1]);
             map.put("balance3", balance[2]);
+            //添加资金明细
+            FundDetailEntity deal = new FundDetailEntity();
+            deal.setCustomerId(user.getCustomerId());
+            deal.setAccountId(account.getAccountId());
+            deal.setType(1);
+            deal.setCreateTime(new Date());
+            deal.setStatus(1);
+            deal.setAmount((account.getBalance().subtract(multiply(new BigDecimal(
+                    balance[0])))).abs());
+            deal.setBalance(account.getBalance());
+            deal.setDueAmount(account.getDueAmount());
+            deal.setFrozenAmount(account.getFozenAmount());
+            deal.setRemark("对账，资金以托管账户金额为准！");
+            fundDetailService.addFundDetail(deal);
             account.setBalance(multiply(new BigDecimal(balance[0])));
             account.setFozenAmount(multiply(new BigDecimal(balance[2])));
             accountService.updateAccount(account);
@@ -954,7 +1108,7 @@ public class LoanController extends BaseController
         {
             String json = Common.UrlDecoder(lr.getLoanJsonList(), "utf-8");
             List<Object> list = Common.JSONDecodeList(json, LoanInfoBean.class);
-            if (list.size() == 1)
+            if (list.size() == 1 && "88".equals(lr.getResultCode()))
             {
                 LoanInfoBean loan = (LoanInfoBean) list.get(0);
                 InvestOrderEntity order = investOrderService.getInvestOrderEntityByOrderNo(loan.getOrderNo());
@@ -967,6 +1121,16 @@ public class LoanController extends BaseController
                 map.put("title", "投资成功");
                 map.put("orderNo", loan.getOrderNo());
                 map.put("orderAmount", loan.getAmount());
+                map.put("Fee", "0");
+                map.put("payAmount", "0");
+                map.put("balance", this.divide(account.getBalance()));
+            }
+            else
+            {
+                AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
+                map.put("title", "投资失败");
+                map.put("orderNo", "无");
+                map.put("orderAmount", "0");
                 map.put("Fee", "0");
                 map.put("payAmount", "0");
                 map.put("balance", this.divide(account.getBalance()));
@@ -995,7 +1159,7 @@ public class LoanController extends BaseController
         {
             String json = Common.UrlDecoder(lr.getLoanJsonList(), "utf-8");
             List<Object> list = Common.JSONDecodeList(json, LoanInfoBean.class);
-            if (list.size() == 1)
+            if (list.size() == 1 && "88".equals(lr.getResultCode()))
             {
                 LoanInfoBean loan = (LoanInfoBean) list.get(0);
                 InvestOrderEntity order = investOrderService.getInvestOrderEntityByOrderNo(loan.getOrderNo());
@@ -1003,6 +1167,7 @@ public class LoanController extends BaseController
                         multiply(new BigDecimal(loan.getAmount())),
                         order.getOrderId(),
                         loan.getLoanNo());
+                
             }
             
         }

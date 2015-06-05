@@ -22,6 +22,10 @@
 		<result property="moneymoremoreId" column="moneymoremoreId" jdbcType="VARCHAR" />
 		<result property="authState" column="authState" jdbcType="INTEGER" />
 		
+		<result property="tenderStatus" column="tenderStatus" jdbcType="INTEGER" />
+		<result property="repaymentStatus" column="repaymentStatus" jdbcType="INTEGER" />
+		<result property="allocationStatus" column="allocationStatus" jdbcType="INTEGER" />
+		
 	</resultMap>
 	
 	<select id="getUserByAccount" resultMap="UserResultMap"
@@ -39,6 +43,9 @@
 		<![CDATA[select * from Users where 1=1]]>
 		<if test="condition.name != null and condition.name != ''">
 		 <![CDATA[AND name LIKE CONCAT('%',#{condition.name},'%')]]>
+		 </if>
+		<if test="condition.repaymentStatus != null">
+		 <![CDATA[AND repaymentStatus =#{condition.name}]]>
 		 </if>
 	</select>
     

@@ -724,7 +724,7 @@ public class PostServiceImpl implements IPostService
         
         String privatekey = Common.privateKeyPKCS8;
         String PlatformMoneymoremore = loan.getPlatformMoneymoremore();
-        String Action = loan.getAction();
+        String Action = "";
         String LoanNo = loan.getLoanNo();
         String OrderNo = loan.getOrderNo();
         String BatchNo = loan.getBatchNo();
@@ -778,7 +778,7 @@ public class PostServiceImpl implements IPostService
         
         String privatekey = Common.privateKeyPKCS8;
         String PlatformMoneymoremore = loan.getPlatformMoneymoremore();
-        String Action = loan.getAction();
+        String Action = "1";
         String LoanNo = loan.getLoanNo();
         String OrderNo = loan.getOrderNo();
         String BatchNo = loan.getBatchNo();
@@ -831,7 +831,7 @@ public class PostServiceImpl implements IPostService
         
         String privatekey = Common.privateKeyPKCS8;
         String PlatformMoneymoremore = loan.getPlatformMoneymoremore();
-        String Action = loan.getAction();
+        String Action = "2";
         String LoanNo = loan.getLoanNo();
         String OrderNo = loan.getOrderNo();
         String BatchNo = loan.getBatchNo();

@@ -28,6 +28,18 @@
 	});
 
 	function postInfo() {
+		if($('#moneyType').val()==0){
+			var success = dialog({
+				title : '消息',
+				content : '您未开户，请开户！',
+				cancel : false,
+				ok : function() {
+					window.location.href = "${basePath}user/memberInfo.htm";
+				}
+			});
+			success.showModal();
+			return;
+		}
 		if (!validform.check()) {
 			return false;
 		}
@@ -58,6 +70,7 @@
       <div class="rightSide">
         <div class="heading fontYH f20"><span>账户提现</span></div>
         <div class="mainBox fontYH">
+        <input id="moneyType" name="moneyType" value="${moneyType}" type="hidden" />
         <form action="withdrawList.htm" id="postForm">
         <input type="hidden" id="signMsg" name = "signMsg" />
         <table border="0" cellpadding="0" cellspacing="0" class="table tabList mb20">
