@@ -44,6 +44,9 @@
 		<if test="condition.name != null and condition.name != ''">
 		 <![CDATA[AND name LIKE CONCAT('%',#{condition.name},'%')]]>
 		 </if>
+		<if test="condition.repaymentStatus != null">
+		 <![CDATA[AND repaymentStatus =#{condition.name}]]>
+		 </if>
 	</select>
     
 	<!-- 条件查询会员 

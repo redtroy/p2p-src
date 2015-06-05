@@ -49,6 +49,7 @@ public class UserServiceImpl implements IUserService
             }
             condition.setPage(user);
             condition.addCondition("name", user.getName());
+            condition.addCondition("repaymentStatus", user.getRepaymentStatus());
             userList = userDao.queryUserList(condition);
             user.setPage(condition);
             return userList;

@@ -23,6 +23,7 @@
 		<result property="manageFee" column="manageFee" jdbcType="VARCHAR" />
 		<result property="actuaFee" column="actuaFee" jdbcType="VARCHAR" />
 		<result property="loanNo" column="loanNo" jdbcType="VARCHAR" />
+		<result property="feeWithdraws" column="feeWithdraws" jdbcType="INTEGER" />
 	</resultMap>
 	<select id="getOrdersByNo" resultMap="OrdersEntity" parameterType="String">
 		<![CDATA[SELECT * FROM Orders WHERE ordersNo=#{ordersNo}]]>
@@ -30,13 +31,10 @@
 	<!-- 条件查询 -->
 	<select id="query" resultMap="OrdersEntity"
 		parameterType="com.sxj.util.persistent.QueryCondition">
-		<![CDATA[select o.*,u.`name` ]]>
-		<![CDATA[,p.TEXT as statusText,p1.TEXT as typeText,t.TL_BILL_NO as tlNo]]>
-		<![CDATA[,t.ACTUAL_MONEY as actuaFee,(t.ACTUAL_MONEY-t.BILL_MONEY) as manageFee from Orders o ]]>
+		<![CDATA[select o.*,u.`name`,p.TEXT as statusText,p1.TEXT as typeText from Orders o ]]>
 		<![CDATA[LEFT JOIN Users u on u.customerId = o.customerId ]]>
 		<![CDATA[LEFT JOIN PARAMETERS p on p.TYPE='status' and p.`VALUE` = o.`status` ]]>
-		<![CDATA[LEFT JOIN PARAMETERS p1 ON p1.TYPE='orderType' and p1.`VALUE` = o.orderType ]]>
-		<![CDATA[LEFT JOIN TL_BILL t on t.MERCHANT_BILL_NO = o.ordersNo where 1=1 ]]>
+		<![CDATA[LEFT JOIN PARAMETERS p1 ON p1.TYPE='orderType' and p1.`VALUE` = o.orderType where 1=1 ]]>
 		 <if test="condition.customerId != null and condition.customerId != ''">
 		 	<![CDATA[AND o.customerId =#{condition.customerId}]]>
 		 </if>
@@ -49,6 +47,6 @@
 		 <if test="condition.status != null">
 		 	<![CDATA[AND o.status =#{condition.status}]]>
 		 </if>
-		 <![CDATA[ order by status,createTime desc ]]>
+		 <![CDATA[ order by createTime desc ]]>
 	</select>
 </mapper>
