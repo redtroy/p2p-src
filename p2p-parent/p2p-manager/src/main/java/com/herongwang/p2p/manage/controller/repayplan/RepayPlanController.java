@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -17,6 +19,7 @@ import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
 import com.herongwang.p2p.entity.repayPlan.RepayPlanEntity;
 import com.herongwang.p2p.loan.util.Common;
 import com.herongwang.p2p.loan.util.RsaHelper;
+import com.herongwang.p2p.manage.controller.BaseController;
 import com.herongwang.p2p.model.loan.LoanInfoBean;
 import com.herongwang.p2p.model.loan.LoanTransferReturnBean;
 import com.herongwang.p2p.model.post.TransferModel;
@@ -27,7 +30,7 @@ import com.sxj.util.logger.SxjLogger;
 
 @Controller
 @RequestMapping("/repayPlan")
-public class RepayPlanController
+public class RepayPlanController extends BaseController
 {
     
     @Autowired
@@ -132,7 +135,8 @@ public class RepayPlanController
      */
     @RequestMapping("transfer")
     public String transfer(ModelMap map, String ids, String orderId,
-            String debtId, String payManId) throws WebException
+            String debtId, String payManId, HttpServletRequest request)
+            throws WebException
     {
         try
         {
@@ -162,8 +166,10 @@ public class RepayPlanController
             tf.setAction("1");
             tf.setTransferType("2");
             tf.setNeedAudit("1");
-            tf.setReturnURL("http://127.0.0.1:8080/p2p-manager/repayPlan/transferReturn.htm");
-            tf.setNotifyURL("http://127.0.0.1:8080/p2p-manager/repayPlan/transferNotify.htm");
+            tf.setReturnURL(getBasePath(request)
+                    + "repayPlan/transferReturn.htm");
+            tf.setNotifyURL(getBasePath(request)
+                    + "repayPlan/transferNotify.htm");
             tf.setRemark1(Common.UrlEncoder(ids, "utf-8"));//还款单的ID
             tf.setRemark2(orderId);//投资订单号
             tf.setRemark3(debtId);//标的ID

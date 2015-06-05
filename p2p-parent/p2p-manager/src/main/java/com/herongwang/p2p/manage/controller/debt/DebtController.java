@@ -295,8 +295,8 @@ public class DebtController extends BaseController
      * 审核
      */
     @RequestMapping("loanTransferAudit")
-    public String loanTransferAuditModel(String debtId, ModelMap map)
-            throws WebException
+    public String loanTransferAuditModel(String debtId, ModelMap map,
+            HttpServletRequest request) throws WebException
     {
         try
         {
@@ -323,8 +323,10 @@ public class DebtController extends BaseController
                 ltsa.setLoanNoList(loanNoList);
                 ltsa.setRemark3(debtId);//存放DebtId
                 String privatekey = Common.privateKeyPKCS8;
-                ltsa.setReturnURL("http://127.0.0.1:8080/p2p-manager/tender/loanTransferAuditModelReturn.htm");
-                ltsa.setNotifyURL("http://127.0.0.1:8080/p2p-manager/tender/loanTransferAuditModelNotify.htm");
+                ltsa.setReturnURL(getBasePath(request)
+                        + "tender/loanTransferAuditModelReturn.htm");
+                ltsa.setNotifyURL(getBasePath(request)
+                        + "tender/loanTransferAuditModelNotify.htm");
                 String dataStr = ltsa.getLoanNoList()
                         + ltsa.getPlatformMoneymoremore() + ltsa.getAuditType()
                         + ltsa.getRandomTimeStamp() + ltsa.getRemark1()
