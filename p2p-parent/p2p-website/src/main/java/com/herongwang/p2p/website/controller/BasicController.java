@@ -141,6 +141,13 @@ public class BasicController extends BaseController
         }
     }
     
+    //验证用户是否授权
+    public @ResponseBody String checkAudit()
+    {
+        UsersEntity user = getUsersEntity();
+        return null;
+    }
+    
     private String stringDate()
     {
         Calendar cal = Calendar.getInstance();

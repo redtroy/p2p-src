@@ -3,7 +3,9 @@ package com.herongwang.p2p.service.impl.repayplan;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import com.herongwang.p2p.dao.financing.IFinancingOrdersDao;
 import com.herongwang.p2p.dao.investorder.IInvestOrderDao;
 import com.herongwang.p2p.dao.profitlist.IProfitListDao;
 import com.herongwang.p2p.dao.repayPlan.IRepayPlanDao;
+import com.herongwang.p2p.dao.users.IUsersDao;
 import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
@@ -53,6 +56,9 @@ public class RepayPlanServiceImpl implements IRepayPlanService
     
     @Autowired
     IDebtDao debtDao;
+    
+    @Autowired
+    private IUsersDao userDao;
     
     @Override
     public void addRepayPlan(RepayPlanEntity plan) throws ServiceException
@@ -179,49 +185,51 @@ public class RepayPlanServiceImpl implements IRepayPlanService
             BigDecimal blance = new BigDecimal(0);
             for (RepayPlanEntity repayPlanEntity : planlist)
             {
-                AccountEntity account = accountDao.getAccountByOrderId(orderId);//账户余额
+                /*  AccountEntity account = accountDao.getAccountByOrderId(orderId);//账户余额
                 blance = account.getBalance();
                 int flag = account.getBalance()
                         .compareTo(repayPlanEntity.getMonthAmount());//0 相等 1大于  -1 小于
-                if (flag >= 0)
-                {
-                    //扣除款项
-                    BigDecimal b = account.getBalance()
-                            .subtract(repayPlanEntity.getMonthAmount());
-                    account.setBalance(b);//减去余额
-                    accountDao.updateAccount(account);//更新账户余额
-                    repayPlanEntity.setStatus(1);//
-                    repayPlanDao.updateRepayPlan(repayPlanEntity);//更新状态
-                    Integer num = repayPlanDao.getRepayPlanCount(orderId);
-                    if (num == 0)
-                    {
-                        DebtEntity db = new DebtEntity();
-                        db.setDebtId(debtId);
-                        db.setStatus(5);
-                        debtDao.updateDebt(db);
-                    }
-                }
-                else
-                {
-                    //账户余额不足以还款计划
-                    account.setDebtAmount(account.getDebtAmount()
-                            .add(repayPlanEntity.getMonthAmount()));//负债总额
-                    accountDao.updateAccount(account);//更新账户余额
-                    repayPlanEntity.setStatus(1);//
-                    repayPlanEntity.setPrepaidStatus(1);//0:为垫付1:垫付
-                    repayPlanDao.updateRepayPlan(repayPlanEntity);//更新状态
-                    Integer num = repayPlanDao.getRepayPlanCount(orderId);
-                    if (num == 0)
-                    {
-                        DebtEntity db = new DebtEntity();
-                        db.setDebtId(debtId);
-                        db.setStatus(5);
-                        debtDao.updateDebt(db);
-                    }
-                }
+                                if (flag >= 0)
+                                {
+                                    //扣除款项
+                //                    BigDecimal b = account.getBalance()
+                //                            .subtract(repayPlanEntity.getMonthAmount());
+                //                    account.setBalance(b);//减去余额
+                //                    accountDao.updateAccount(account);//更新账户余额
+                                    repayPlanEntity.setStatus(1);//
+                                    repayPlanDao.updateRepayPlan(repayPlanEntity);//更新状态
+                                    Integer num = repayPlanDao.getRepayPlanCount(orderId);
+                                    if (num == 0)
+                                    {
+                                        DebtEntity db = new DebtEntity();
+                                        db.setDebtId(debtId);
+                                        db.setStatus(5);
+                                        debtDao.updateDebt(db);
+                                    }
+                                }
+                                else
+                                {
+                                    //账户余额不足以还款计划
+                                    account.setDebtAmount(account.getDebtAmount()
+                                            .add(repayPlanEntity.getMonthAmount()));//负债总额
+                                    accountDao.updateAccount(account);//更新账户余额
+                                    repayPlanEntity.setStatus(1);//
+                                    repayPlanEntity.setPrepaidStatus(1);//0:为垫付1:垫付
+                                    repayPlanDao.updateRepayPlan(repayPlanEntity);//更新状态
+                                    Integer num = repayPlanDao.getRepayPlanCount(orderId);
+                                    if (num == 0)
+                                    {
+                                        DebtEntity db = new DebtEntity();
+                                        db.setDebtId(debtId);
+                                        db.setStatus(5);
+                                        debtDao.updateDebt(db);
+                                    }
+                                }*/
+                repayPlanEntity.setStatus(1);//
+                repayPlanDao.updateRepayPlan(repayPlanEntity);//更新状态
                 xhlist.add(repayPlanEntity.getSequence());
             }
-            fundDetailService.repayPlanFundDetail(planlist, blance);//还款资金明细
+            //  fundDetailService.repayPlanFundDetail(planlist, blance);//还款资金明细
             //投资方收款
             investGetMoney(debtId, xhlist);
             return "ok";
@@ -313,5 +321,51 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                 accountDao.updateAccount(account);
             }
         }
+    }
+    
+    @Override
+    public List<Map<String, String>> getTransferList(String ids,
+            String orderId, String debtId) throws ServiceException
+    {
+        List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+        try
+        {
+            String[] rids = ids.split(",");
+            List<RepayPlanEntity> planlist = repayPlanDao.getRepayPlanList(rids);
+            List<InvestOrderEntity> orderList = investOrderDao.queryInvestorderList(debtId);//根据标的ID获取投资订单详情
+            String debtNo = debtDao.getDebtFor(debtId).getDebtNo();
+            for (InvestOrderEntity order : orderList)
+            {
+                if (order.getStatus() == 0)
+                {
+                    continue;
+                }
+                
+                String moneymoremoreId = userDao.getUserById(order.getCustomerId())
+                        .getMoneymoremoreId();
+                for (RepayPlanEntity rp : planlist)
+                {
+                    Map<String, String> map = new HashMap<String, String>();
+                    ProfitListEntity entity = profitListDao.getEntityBySeAndOrderId(rp.getSequence()
+                            .toString(),
+                            order.getOrderId());//通过订单ID和序号获取投资收益
+                    map.put("moneymoremoreId", moneymoremoreId);
+                    map.put("amount",
+                            (entity.getMonthAmount().divide(new BigDecimal(100))).toString());
+                    map.put("orderNo", entity.getProfitId());
+                    map.put("debtNo", debtNo);
+                    list.add(map);
+                    
+                }
+                
+            }
+            
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error("查询用户乾多多平台标识和返还金额出错", e.getClass());
+            throw new ServiceException(e.getMessage());
+        }
+        return list;
     }
 }
