@@ -40,8 +40,15 @@ var min=${model.minInvest};
 				   alert("投资金额不能超过最大可投金额");
 				   return false;
 			   }
-			      $("#invest_amount").val(je);
-			      $("#invest_form").submit();				    			
+			   $.post("${basePath}checkAudit.htm",function(data1){
+				   if (data1=="ok"){
+					   $("#invest_amount").val(je);
+					   $("#invest_form").submit();	
+				   }else{
+					   alert("该账户还没授权，请进行授权操作！");
+					   return false;
+				   }
+			   })
 		  }else{
 			  location.href="${basePath}login.htm";
 		  }

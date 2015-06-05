@@ -295,8 +295,8 @@ public class DebtController extends BaseController
      * 审核
      */
     @RequestMapping("loanTransferAudit")
-    public String loanTransferAuditModel(String debtId, ModelMap map)
-            throws WebException
+    public String loanTransferAuditModel(String debtId, ModelMap map,
+            HttpServletRequest request) throws WebException
     {
         try
         {
@@ -306,17 +306,27 @@ public class DebtController extends BaseController
                 String loanNoList = "";
                 for (InvestOrderEntity investOrder : list)
                 {
-                    loanNoList = loanNoList + investOrder.getLoanNo() + ",";
+                    if (!"".equals(investOrder.getLoanNo())
+                            && investOrder.getLoanNo() != null)
+                    {
+                        loanNoList = loanNoList + investOrder.getLoanNo() + ",";
+                    }
                 }
-                loanNoList = loanNoList.substring(0, loanNoList.length() - 1);
+                if (!"".equals(loanNoList))
+                {
+                    loanNoList = loanNoList.substring(0,
+                            loanNoList.length() - 1);
+                }
                 LoanTransferAuditModel ltsa = new LoanTransferAuditModel();
                 ltsa.setPlatformMoneymoremore("p1190");
                 ltsa.setAuditType("1");
                 ltsa.setLoanNoList(loanNoList);
                 ltsa.setRemark3(debtId);//存放DebtId
                 String privatekey = Common.privateKeyPKCS8;
-                ltsa.setReturnURL("http://127.0.0.1:8080/p2p-website/loan/loanTransferAuditModelReturn.htm");
-                ltsa.setNotifyURL("http://127.0.0.1:8080/p2p-website/loan/loanTransferAuditModelNotify.htm");
+                ltsa.setReturnURL(getBasePath(request)
+                        + "tender/loanTransferAuditModelReturn.htm");
+                ltsa.setNotifyURL(getBasePath(request)
+                        + "tender/loanTransferAuditModelNotify.htm");
                 String dataStr = ltsa.getLoanNoList()
                         + ltsa.getPlatformMoneymoremore() + ltsa.getAuditType()
                         + ltsa.getRandomTimeStamp() + ltsa.getRemark1()
@@ -355,7 +365,7 @@ public class DebtController extends BaseController
         {
             // TODO: handle exception
         }
-        return "manage/debt/transferauditreturn.htm";
+        return "manage/debt/transferauditreturn";
     }
     
     /**

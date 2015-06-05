@@ -2,6 +2,7 @@ package com.herongwang.p2p.service.repayplan;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
 import com.herongwang.p2p.entity.repayPlan.RepayPlanEntity;
@@ -46,13 +47,15 @@ public interface IRepayPlanService
      * @param id
      */
     public void delRepayPlan(String id) throws ServiceException;
-
+    
     /**
      * 还款
      * @param ids
      * @throws ServiceException
      */
-    String saveRepayPlan(String[] ids, String orderId,String debtId) throws ServiceException;
+    String saveRepayPlan(String[] ids, String orderId, String debtId)
+            throws ServiceException;
+    
     /**
      * 验证余额
      * @param ids
@@ -60,5 +63,12 @@ public interface IRepayPlanService
      * @return
      * @throws ServiceException
      */
-    String getBalance(String[] ids, String orderId,String debtId) throws ServiceException;
+    String getBalance(String[] ids, String orderId, String debtId)
+            throws ServiceException;
+    
+    /**
+     * 获取转账会员的 乾多多平台号 和 金额
+     */
+    public List<Map<String, String>> getTransferList(String ids,
+            String orderId, String debtId);
 }

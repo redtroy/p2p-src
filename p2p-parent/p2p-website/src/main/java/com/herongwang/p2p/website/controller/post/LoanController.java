@@ -955,8 +955,8 @@ public class LoanController extends BaseController
      * @throws WebException
      */
     @RequestMapping("saveregister")
-    public String saveregister(RegisterModel rg, ModelMap map)
-            throws WebException
+    public String saveregister(RegisterModel rg, ModelMap map,
+            HttpServletRequest request) throws WebException
     {
         try
         {
@@ -968,8 +968,10 @@ public class LoanController extends BaseController
             rg.setIdentificationNo(user.getCardNum());
             rg.setLoanPlatformAccount(user.getCustomerNo());
             rg.setPlatformMoneymoremore("p1190");
-            rg.setReturnURL("http://127.0.0.1:8080/p2p-website/loan/registerbindreturn.htm");
-            rg.setNotifyURL("http://127.0.0.1:8080/p2p-website/loan/registerbindInform.htm");
+            rg.setReturnURL(getBasePath(request)
+                    + "loan/registerbindreturn.htm");
+            rg.setNotifyURL(getBasePath(request)
+                    + "loan/registerbindInform.htm");
             String privatekey = privateKeyPKCS8;
             String dataStr = rg.getRegisterType() + rg.getAccountType()
                     + rg.getMobile() + rg.getEmail() + rg.getRealName()
@@ -1046,8 +1048,8 @@ public class LoanController extends BaseController
      * 转账
      */
     @RequestMapping("transfer")
-    public String transfer(ModelMap map, String LoanJsonList)
-            throws WebException
+    public String transfer(ModelMap map, String LoanJsonList,
+            HttpServletRequest request) throws WebException
     {
         try
         {
@@ -1071,8 +1073,8 @@ public class LoanController extends BaseController
             tf.setTransferAction("1");
             tf.setAction("1");
             tf.setTransferType("2");
-            tf.setReturnURL("http://127.0.0.1:8080/p2p-website/loan/transferReturn.htm");
-            tf.setNotifyURL("http://127.0.0.1:8080/p2p-website/loan/transferNotify.htm");
+            tf.setReturnURL(getBasePath(request) + "loan/transferReturn.htm");
+            tf.setNotifyURL(getBasePath(request) + "loan/transferNotify.htm");
             String dataStr = LoanJsonList + tf.getPlatformMoneymoremore()
                     + tf.getTransferAction() + tf.getAction()
                     + tf.getTransferType() + tf.getNeedAudit()
@@ -1184,7 +1186,8 @@ public class LoanController extends BaseController
      * 资金释放
      */
     @RequestMapping("loanRelease")
-    public String loanRelease(ModelMap map) throws WebException
+    public String loanRelease(ModelMap map, HttpServletRequest request)
+            throws WebException
     {
         try
         {
@@ -1193,8 +1196,8 @@ public class LoanController extends BaseController
             lr.setMoneymoremoreId("m31333");
             lr.setPlatformMoneymoremore("p1190");
             lr.setOrderNo("D2015060110048102");
-            lr.setReturnURL("http://127.0.0.1:8080/p2p-website/loan/loanReleaseReturn.htm");
-            lr.setNotifyURL("http://127.0.0.1:8080/p2p-website/loan/loanReleaseNotif.htm");
+            lr.setReturnURL(getBasePath(request) + "loan/loanReleaseReturn.htm");
+            lr.setNotifyURL(getBasePath(request) + "loan/loanReleaseNotif.htm");
             String dataStr = lr.getMoneymoremoreId()
                     + lr.getPlatformMoneymoremore() + lr.getOrderNo()
                     + lr.getAmount() + lr.getRandomTimeStamp()
