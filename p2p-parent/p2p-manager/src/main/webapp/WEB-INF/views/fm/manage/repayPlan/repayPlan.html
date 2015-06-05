@@ -60,7 +60,6 @@
 					orderId : orderId,
 					debtId:debtId
 				}, function(data) {
-					data.flag='no';
 					if (data.flag == 'ok') {
 						//还款
 						success.content('还款成功！');
