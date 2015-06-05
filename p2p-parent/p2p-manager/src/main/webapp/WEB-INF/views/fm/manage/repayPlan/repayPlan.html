@@ -32,6 +32,7 @@
 			ok : function() {
 			}
 		});
+		
 		var arrChk = $("input.chk_list:checked");
 		if (arrChk.length == 0) {
 			show.content('请选择还款计划！');
@@ -42,7 +43,7 @@
 		var debtId = $("#debtId").val();
 		var d = dialog({
 			title : '消息',
-			content : '请输入还款人乾多多号：<input autofocus id="ddh" value=""/>',
+			content : '请确实是否进行还款！',
 			okValue : '确 定',
 			ok : function() {
 				var arrId="";
@@ -53,27 +54,27 @@
 					arrId= arrId+","+$(this).val();
 					}
 				});
-				var ddh=$("#ddh").val();console.log(ddh);
-				if (ddh==""){
-					show.content('请输入还款人乾多多号');
-					show.showModal();
-					d.close();
-					return false;
-				}
-				location.href="${basePath}repayPlan/transfer.htm?ids="+arrId+"&orderId="+orderId+"&debtId="+debtId+"&payManId="+ddh;
-				/* $.post("getBalance.htm", {
+				
+			  $.post("getBalance.htm", {
 					ids : arrId,
 					orderId : orderId,
 					debtId:debtId
 				}, function(data) {
+					data.flag='no';
 					if (data.flag == 'ok') {
 						//还款
 						success.content('还款成功！');
 						success.showModal();
-					} else if (data.flag == 'no') {
+					} else if (data.flag == 'qdd')
+					{
+						show.content('还款失败!');
+						show.showModal();
+						d.close();
+						return false;
+					}else if (data.flag == 'no') {
 						dialog({
 							title : '提示',
-							content : '用户余额不足已支付当前选择的还款计划!',
+							content : '用户余额不足是否使用第三方账户进行还款!',
 							button : [ {
 								value : '取消',
 								callback : function() {
@@ -81,7 +82,7 @@
 							}, {
 								value : '继续还款',
 								callback : function() {
-									$.post("saveRepayPlan.htm", {
+								/* 	$.post("saveRepayPlan.htm", {
 										ids : arrId,
 										orderId : orderId,
 										debtId:debtId
@@ -94,7 +95,24 @@
 											success.content('还款失败！');
 											success.showModal();
 										}
-									});
+									}); */
+									var showInput=
+										dialog({
+											title : '消息',
+											content:'请输入还款人乾多多号：<input autofocus id="ddh" value=""/>',
+											cancel : false,
+											ok : function() {
+												var ddh=$("#ddh").val();
+												if (ddh==""){
+													show.content('请输入还款人乾多多号');
+													show.showModal();
+													d.close();
+												}else{
+													location.href="${basePath}repayPlan/transfer.htm?ids="+arrId+"&orderId="+orderId+"&debtId="+debtId+"&payManId="+ddh;
+												}
+											}
+										});
+									showInput.showModal();
 								}
 							}, {
 								value : '去充值',
@@ -106,7 +124,7 @@
 							} ]
 						}).showModal();
 					}
-				}) */
+				}) 
 			},
 			cancelValue : '取消',
 			cancel : function() {

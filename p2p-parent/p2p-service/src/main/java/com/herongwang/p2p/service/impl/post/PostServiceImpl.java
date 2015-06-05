@@ -54,7 +54,6 @@ import com.herongwang.p2p.service.orders.IOrdersService;
 import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.post.IPostService;
 import com.herongwang.p2p.service.tl.ITLBillService;
-import com.sxj.util.common.ISxjHttpClient;
 
 @Service
 public class PostServiceImpl implements IPostService
@@ -79,9 +78,6 @@ public class PostServiceImpl implements IPostService
     
     @Autowired
     IInvestOrderService investOrderService;
-    
-    @Autowired
-    private ISxjHttpClient cl;
     
     private final String SubmitURLPrefix = "http://218.4.234.150:88/main/";
     
@@ -585,19 +581,12 @@ public class PostServiceImpl implements IPostService
             
             String SubmitURL = SubmitURLPrefix + "loan/loan.action";
             
-            String privatekey = Common.privateKeyPKCS8;
-            
-            String dataStr = tf.getLoanJsonList()
-                    + tf.getPlatformMoneymoremore() + tf.getTransferAction()
-                    + tf.getAction() + tf.getTransferType() + tf.getNeedAudit()
-                    + tf.getRandomTimeStamp() + tf.getRemark1()
-                    + tf.getRemark2() + tf.getRemark3() + tf.getReturnURL()
-                    + tf.getNotifyURL();
+            String dataStr = "";
             // 签名
             
             RsaHelper rsa = RsaHelper.getInstance();
             
-            String SignInfo = rsa.signData(dataStr, privatekey);
+            String SignInfo = tf.getSignInfo();
             
             if (tf.getAction().equals("2"))
             {
@@ -639,7 +628,10 @@ public class PostServiceImpl implements IPostService
                                         "utf-8"));
                                 
                                 String publickey = Common.publicKey;
-                                
+                                if (!"88".equals(ltrb.getResultCode()))
+                                {
+                                    return "false";
+                                }
                                 dataStr = ltrb.getLoanJsonList()
                                         + ltrb.getPlatformMoneymoremore()
                                         + ltrb.getAction()
@@ -698,14 +690,14 @@ public class PostServiceImpl implements IPostService
                         }
                     }
                 }
-                return null;
+                return "ok";
             }
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
-        return null;
+        return "false";
     }
     
     @Override

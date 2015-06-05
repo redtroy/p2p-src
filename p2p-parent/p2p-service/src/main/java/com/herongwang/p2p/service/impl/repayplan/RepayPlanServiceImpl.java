@@ -25,7 +25,13 @@ import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.entity.profitlist.ProfitListEntity;
 import com.herongwang.p2p.entity.repayPlan.RepayPlanEntity;
+import com.herongwang.p2p.entity.users.UsersEntity;
+import com.herongwang.p2p.loan.util.Common;
+import com.herongwang.p2p.loan.util.RsaHelper;
+import com.herongwang.p2p.model.loan.LoanInfoBean;
+import com.herongwang.p2p.model.post.TransferModel;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
+import com.herongwang.p2p.service.impl.post.PostServiceImpl;
 import com.herongwang.p2p.service.repayplan.IRepayPlanService;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.logger.SxjLogger;
@@ -59,6 +65,9 @@ public class RepayPlanServiceImpl implements IRepayPlanService
     
     @Autowired
     private IUsersDao userDao;
+    
+    @Autowired
+    private PostServiceImpl postService;
     
     @Override
     public void addRepayPlan(RepayPlanEntity plan) throws ServiceException
@@ -118,13 +127,13 @@ public class RepayPlanServiceImpl implements IRepayPlanService
      */
     @Override
     @Transactional
-    public String getBalance(String[] ids, String orderId, String debtId)
-            throws ServiceException
+    public String getBalance(String ids, String orderId, String debtId,
+            String url) throws ServiceException
     {
         try
         {
             //获取到还款计划
-            List<RepayPlanEntity> planlist = repayPlanDao.getRepayPlanList(ids);
+            List<RepayPlanEntity> planlist = repayPlanDao.getRepayPlanList(ids.split(","));
             BigDecimal monthAmount = new BigDecimal(0);
             List<Integer> xhlist = new ArrayList<Integer>();//获取还款序号
             //统计所有还款总价格
@@ -134,8 +143,14 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                 xhlist.add(repayPlanEntity.getSequence());
             }
             AccountEntity account = accountDao.getAccountByOrderId(orderId);
+            UsersEntity user = userDao.getUserById(account.getCustomerId());
+            String[] qddBalance = postService.balanceQuery(user.getMoneymoremoreId(),
+                    "1");
+            String[] qddBalance1 = qddBalance[1].split("\\|");
+            BigDecimal qb = BigDecimal.valueOf(Double.valueOf(qddBalance1[0]))
+                    .multiply(new BigDecimal(100));
             BigDecimal blance = account.getBalance();
-            int flag = account.getBalance().compareTo(monthAmount);
+            int flag = qb.compareTo(monthAmount);
             
             if (flag == -1)
             {
@@ -144,6 +159,55 @@ public class RepayPlanServiceImpl implements IRepayPlanService
             else
             {
                 //余额足够直接还款
+                //乾多多平台操作
+                String privatekey = Common.privateKeyPKCS8;
+                List<Map<String, String>> list = getTransferList(ids,
+                        orderId,
+                        debtId);
+                List<LoanInfoBean> listmlib = new ArrayList<LoanInfoBean>();
+                if (list.size() > 0)
+                {
+                    for (Map<String, String> maplist : list)
+                    {
+                        LoanInfoBean mlib = new LoanInfoBean();
+                        mlib.setLoanOutMoneymoremore(user.getMoneymoremoreId());//付款人
+                        mlib.setLoanInMoneymoremore(maplist.get("moneymoremoreId"));//收款人
+                        mlib.setOrderNo(maplist.get("orderNo"));//订单号,投资人收益明细的ID
+                        mlib.setBatchNo(maplist.get("debtNo"));//标号
+                        mlib.setAmount(maplist.get("amount"));
+                        mlib.setTransferName("还款");
+                        listmlib.add(mlib);
+                    }
+                }
+                String LoanJsonList = Common.JSONEncode(listmlib);
+                TransferModel tf = new TransferModel();
+                tf.setPlatformMoneymoremore("p1190");
+                tf.setTransferAction("2");
+                tf.setAction("2");
+                tf.setTransferType("2");
+                tf.setNeedAudit("1");
+                tf.setReturnURL(url + "repayPlan/transferReturn.htm");
+                tf.setNotifyURL(url + "repayPlan/transferNotify.htm");
+                tf.setRemark1(Common.UrlEncoder(ids, "utf-8"));//还款单的ID
+                tf.setRemark2(orderId);//投资订单号
+                tf.setRemark3(debtId);//标的ID
+                String dataStr = LoanJsonList + tf.getPlatformMoneymoremore()
+                        + tf.getTransferAction() + tf.getAction()
+                        + tf.getTransferType() + tf.getNeedAudit()
+                        + tf.getRandomTimeStamp() + tf.getRemark1()
+                        + tf.getRemark2() + tf.getRemark3() + tf.getReturnURL()
+                        + tf.getNotifyURL();
+                RsaHelper rsa = RsaHelper.getInstance();
+                String SignInfo = rsa.signData(dataStr, privatekey);
+                LoanJsonList = Common.UrlEncoder(LoanJsonList, "utf-8");
+                tf.setLoanJsonList(LoanJsonList);
+                tf.setSignInfo(SignInfo);
+                String bsflag = postService.transfer(tf);
+                //=================================================================平台操作
+                if (!"ok".equals(bsflag))
+                {
+                    return "qdd";
+                }
                 account.setBalance(account.getBalance().subtract(monthAmount));//减去余额
                 accountDao.updateAccount(account);
                 repayPlanDao.updateRepayPlanStatus(ids);//还款状态

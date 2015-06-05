@@ -63,7 +63,7 @@ public interface IRepayPlanService
      * @return
      * @throws ServiceException
      */
-    String getBalance(String[] ids, String orderId, String debtId)
+    String getBalance(String ids, String orderId, String debtId, String Url)
             throws ServiceException;
     
     /**

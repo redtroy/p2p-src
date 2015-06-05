@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -24,6 +23,7 @@ import com.herongwang.p2p.model.loan.LoanInfoBean;
 import com.herongwang.p2p.model.loan.LoanTransferReturnBean;
 import com.herongwang.p2p.model.post.TransferModel;
 import com.herongwang.p2p.service.financing.IFinancingOrdersService;
+import com.herongwang.p2p.service.impl.post.PostServiceImpl;
 import com.herongwang.p2p.service.repayplan.IRepayPlanService;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
@@ -38,6 +38,9 @@ public class RepayPlanController extends BaseController
     
     @Autowired
     IFinancingOrdersService financingOrdersService;
+    
+    @Autowired
+    private PostServiceImpl postService;
     
     /**
      * 还款计划
@@ -74,14 +77,17 @@ public class RepayPlanController extends BaseController
      * @throws WebException
      */
     @RequestMapping("getBalance")
-    public @ResponseBody Map<String, Object> getBalance(
-            @RequestParam("ids[]") String[] ids, String orderId, String debtId)
+    public @ResponseBody Map<String, Object> getBalance(String ids,
+            String orderId, String debtId, HttpServletRequest request)
             throws WebException
     {
         try
         {
             Map<String, Object> map = new HashMap<String, Object>();
-            String flag = repayPlanService.getBalance(ids, orderId, debtId);
+            String flag = repayPlanService.getBalance(ids,
+                    orderId,
+                    debtId,
+                    getBasePath(request));
             map.put("flag", flag);
             return map;
         }
