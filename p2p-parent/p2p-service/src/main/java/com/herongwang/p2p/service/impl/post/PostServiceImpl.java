@@ -54,7 +54,6 @@ import com.herongwang.p2p.service.orders.IOrdersService;
 import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.post.IPostService;
 import com.herongwang.p2p.service.tl.ITLBillService;
-import com.sxj.util.common.ISxjHttpClient;
 
 @Service
 public class PostServiceImpl implements IPostService
@@ -79,9 +78,6 @@ public class PostServiceImpl implements IPostService
     
     @Autowired
     IInvestOrderService investOrderService;
-    
-    @Autowired
-    private ISxjHttpClient cl;
     
     private final String SubmitURLPrefix = "http://218.4.234.150:88/main/";
     
