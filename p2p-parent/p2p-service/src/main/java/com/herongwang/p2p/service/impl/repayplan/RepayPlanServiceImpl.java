@@ -291,6 +291,14 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                                 }*/
                 repayPlanEntity.setStatus(1);//
                 repayPlanDao.updateRepayPlan(repayPlanEntity);//更新状态
+                Integer num = repayPlanDao.getRepayPlanCount(orderId);
+                if (num == 0)
+                {
+                    DebtEntity db = new DebtEntity();
+                    db.setDebtId(debtId);
+                    db.setStatus(5);
+                    debtDao.updateDebt(db);
+                }
                 xhlist.add(repayPlanEntity.getSequence());
             }
             //  fundDetailService.repayPlanFundDetail(planlist, blance);//还款资金明细
