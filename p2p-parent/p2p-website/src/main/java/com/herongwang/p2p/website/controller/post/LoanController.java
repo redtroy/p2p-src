@@ -676,7 +676,7 @@ public class LoanController extends BaseController
             int repaymentStatus = 0;
             int allocationStatus = 0;
             
-            String[] status = result.getAuthorizeTypeOpen().split(".");
+            String[] status = result.getAuthorizeType().split(",");
             for (int i = 0; i < status.length; i++)
             {
                 if ("1".equals(status[i]))
@@ -802,7 +802,7 @@ public class LoanController extends BaseController
             FundDetailEntity deal = new FundDetailEntity();
             deal.setCustomerId(user.getCustomerId());
             deal.setAccountId(account.getAccountId());
-            deal.setType(1);
+            deal.setType(13);
             deal.setCreateTime(new Date());
             deal.setStatus(1);
             deal.setAmount((account.getBalance().subtract(multiply(new BigDecimal(

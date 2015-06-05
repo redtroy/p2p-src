@@ -10,7 +10,6 @@
 		<property name="triggers">
 			<list>
 				<ref bean="alJobTrigger" />      <!-- 铝采集 -->
-				<ref bean="windDoorJobTrigger" />   <!-- 门窗采集 -->
 			</list>
 		</property>
 		<property name="configLocation" value="classpath:spring/quartz.properties"></property>
@@ -25,16 +24,7 @@
 			<ref bean="alJob" />
 		</property>
 		<property name="cronExpression">
-			<value>0 0 0/1 * * ?</value>
-		</property>
-	</bean>
-	<bean id="windDoorJobTrigger"
-		class=" org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-		<property name="jobDetail">
-			<ref bean="windDoorJob" />
-		</property>
-		<property name="cronExpression">
-			<value>0 0 0/1 * * ?</value>
+			<value>0 0 17 20 * ?</value>
 		</property>
 	</bean>
 	<!-- 调度的配置结束 -->
@@ -43,21 +33,12 @@
 		class="com.sxj.spring.modules.quartz.BeanInvokingJobDetailFactoryBean">
 		<property name="targetBean" value="al"></property>
 		<property name="targetMethod">
-			<value>gather</value>
-		</property>
-		<property name="durable" value="true"/>
-	</bean>
-	<bean id="windDoorJob"
-		class="com.sxj.spring.modules.quartz.BeanInvokingJobDetailFactoryBean">
-		<property name="targetBean" value="windDoor"></property>
-		<property name="targetMethod">
-			<value>gather</value>
+			<value>execute</value>
 		</property>
 		<property name="durable" value="true"/>
 	</bean>
 	<!-- job的配置结束 -->
 	<!-- 工作的bean -->
-	<bean id="al" class="com.sxj.supervisor.website.quartz.AlGatherQuartz" />
-	<bean id="windDoor" class="com.sxj.supervisor.website.quartz.WindDoorQuartz" />
+	<bean id="al" class="com.herongwang.p2p.manage.auth.LoanJob" />
 
 </beans>  

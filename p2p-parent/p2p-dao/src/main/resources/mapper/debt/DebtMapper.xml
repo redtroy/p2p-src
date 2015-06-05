@@ -41,7 +41,7 @@
 		<![CDATA[SELECT d.*,u.name,P.TEXT AS statusText,P1.TEXT AS repaymenttext FROM Debt d
 LEFT JOIN Users u ON u.customerId = d.customerId
 LEFT JOIN PARAMETERS P ON P.TYPE = 'TENDERTYPE' AND P.`VALUE` = d.`STATUS`
-LEFT JOIN PARAMETERS P1 ON P1.TYPE = 'REPAYMENTTYPE' AND P1.`VALUE` = d.repayType WHERE 1=1 ]]>
+LEFT JOIN PARAMETERS P1 ON P1.TYPE = 'REPAYMENTTYPE' AND P1.`VALUE` = d.repayType WHERE u.name <> '' ]]>
 
 		<if test="condition.name != null and condition.name != ''">
 			<![CDATA[AND u.name LIKE CONCAT('%',#{condition.name},'%')]]>
