@@ -45,7 +45,7 @@
 		 <![CDATA[AND name LIKE CONCAT('%',#{condition.name},'%')]]>
 		 </if>
 		<if test="condition.repaymentStatus != null">
-		 <![CDATA[AND repaymentStatus =#{condition.name}]]>
+		 <![CDATA[AND repaymentStatus =#{condition.repaymentStatus}]]>
 		 </if>
 	</select>
     

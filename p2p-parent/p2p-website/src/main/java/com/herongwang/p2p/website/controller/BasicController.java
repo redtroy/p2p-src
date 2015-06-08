@@ -141,6 +141,21 @@ public class BasicController extends BaseController
         }
     }
     
+    //验证用户是否授权
+    @RequestMapping("checkAudit")
+    public @ResponseBody String checkAudit()
+    {
+        UsersEntity user = getUsersEntity();
+        if (user.getTenderStatus() == 1 && user.getAllocationStatus() == 1)
+        {
+            return "ok";
+        }
+        else
+        {
+            return "false";
+        }
+    }
+    
     private String stringDate()
     {
         Calendar cal = Calendar.getInstance();

@@ -56,4 +56,11 @@ public interface IFundDetailService
     
     void repayPlanFundDetail(List<RepayPlanEntity> planlist, BigDecimal blance)
             throws ServiceException;
+    
+    /**
+     * 根据订单信息，添加充值提现交易明细
+     * @param order
+     * @throws ServiceException
+     */
+    public void addFunds(OrdersEntity order) throws ServiceException;
 }

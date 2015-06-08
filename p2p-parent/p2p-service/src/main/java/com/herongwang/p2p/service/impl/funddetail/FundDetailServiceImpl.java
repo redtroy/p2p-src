@@ -199,7 +199,7 @@ public class FundDetailServiceImpl implements IFundDetailService
             }
             else if (order.getOrderType() == 2)
             {
-                fd.setType(2);//投标
+                fd.setType(2);//提现
                 fd.setStatus(1);//
                 fd.setRemark("提现"
                         + order.getAmount().divide(new BigDecimal(100),
@@ -410,5 +410,64 @@ public class FundDetailServiceImpl implements IFundDetailService
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new ServiceException("生成资金明细错误", e);
         }
+    }
+    
+    @Override
+    public void addFunds(OrdersEntity order) throws ServiceException
+    {
+        //获取账户信息
+        AccountEntity account = accountDao.getAcoountByCustomerId(order.getCustomerId());
+        //添加资金明细
+        FundDetailEntity deal = new FundDetailEntity();
+        deal.setCustomerId(order.getCustomerId());
+        deal.setAccountId(account.getAccountId());
+        deal.setOrderId(order.getOrderId());
+        deal.setCreateTime(new Date());
+        deal.setStatus(1);
+        deal.setAmount(order.getAmount());
+        deal.setBalance(account.getBalance());
+        deal.setDueAmount(account.getDueAmount());
+        deal.setFrozenAmount(account.getFozenAmount());
+        if (order.getOrderType() == 1)
+        {
+            deal.setType(1);
+            deal.setRemark("充值" + multiply(order.getAmount()) + "元成功！");
+            fundDetailDao.addFundDetail(deal);
+        }
+        else if (order.getOrderType() == 2)
+        {
+            deal.setType(2);
+            deal.setRemark("提现" + multiply(order.getAmount()) + "元成功！");
+            fundDetailDao.addFundDetail(deal);
+            deal = new FundDetailEntity();
+            deal.setCustomerId(order.getCustomerId());
+            deal.setAccountId(account.getAccountId());
+            deal.setOrderId(order.getOrderId());
+            deal.setCreateTime(new Date());
+            deal.setStatus(1);
+            deal.setAmount(order.getFeeWithdraws());
+            deal.setBalance(account.getBalance());
+            deal.setDueAmount(account.getDueAmount());
+            deal.setFrozenAmount(account.getFozenAmount());
+            deal.setType(12);
+            deal.setRemark("提现手续费" + multiply(order.getFeeWithdraws()) + "元");
+            fundDetailDao.addFundDetail(deal);
+        }
+        
+    }
+    
+    /**
+     * 乘100
+     * @param m
+     * @return
+     */
+    private BigDecimal multiply(BigDecimal m)
+    {
+        if (m == null)
+        {
+            return new BigDecimal(0);
+        }
+        BigDecimal b2 = new BigDecimal(100);
+        return m.multiply(b2);
     }
 }

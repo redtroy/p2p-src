@@ -118,6 +118,16 @@ public class BasicController extends BaseController
         }
     }
     
+    /**
+     * 检查用户乾多多账户的余额是否够还款
+     * @return
+     */
+    @RequestMapping("checkQddBlance")
+    public @ResponseBody String checkQddBlance()
+    {
+        return "";
+    }
+    
     @RequestMapping("filesort")
     public @ResponseBody List<String> fileSort(String fileId)
             throws IOException
