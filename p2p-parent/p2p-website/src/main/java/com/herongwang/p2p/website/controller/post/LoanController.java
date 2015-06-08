@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import util.RsaHelper;
 
@@ -1026,7 +1027,8 @@ public class LoanController extends BaseController
      * @return
      */
     @RequestMapping("registerbindreturn")
-    public String registerbindreturn(LoanRegisterBindReturnBean lb, ModelMap map)
+    public String registerbindreturn(LoanRegisterBindReturnBean lb,
+            ModelMap map, RedirectAttributes ra)
     {
         loanService.addOrder(Common.JSONEncode(lb),
                 "LoanRegisterBindReturnBean",
@@ -1048,7 +1050,8 @@ public class LoanController extends BaseController
         }
         else
         {
-            return "redirect:/user/memberInfo.htm?message=" + lb.getMessage();
+            ra.addAttribute("message",
+                    Common.UrlEncoder(lb.getMessage(), "utf-8"));
         }
         return "redirect:/user/memberInfo.htm";
     }
