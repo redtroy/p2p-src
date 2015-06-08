@@ -219,7 +219,7 @@ public class LoanController extends BaseController
                 orders.setLoanNo(result.getLoanNo());
                 orders.setArriveTime(new Date());
                 orders.setFeeWithdraws(multiply(new BigDecimal(
-                        result.getFeeWithdraws())));
+                        null == result.getFee() ? 0 : result.getFee())));
                 ordersService.updateOrders(orders);
                 
                 //添加资金明细
@@ -284,7 +284,8 @@ public class LoanController extends BaseController
                 orders.setLoanNo(result.getLoanNo());
                 orders.setArriveTime(new Date());
                 orders.setFeeWithdraws(multiply(new BigDecimal(
-                        result.getFeeWithdraws())));
+                        null == result.getFee() ? 0 : result.getFee())));
+                ordersService.updateOrders(orders);
                 ordersService.updateOrders(orders);
                 
                 //添加资金明细
@@ -1130,7 +1131,7 @@ public class LoanController extends BaseController
             else
             {
                 AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
-                map.put("title", "投资失败");
+                map.put("title", "投资失败:" + lr.getMessage());
                 map.put("orderNo", "无");
                 map.put("orderAmount", "0");
                 map.put("Fee", "0");

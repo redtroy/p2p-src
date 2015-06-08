@@ -158,6 +158,17 @@ function saveApply() {
 		img.showModal();
 		return false;
 	}
+	var customerId = $("#customerId").val();
+	if(customerId == ''){
+		var img = dialog({
+			title : '消息',
+			content : '请选择系统自动感应的用户！',
+			ok : function() {
+			}
+		});
+		img.showModal();
+		return false;
+	}
 	 var success = dialog({
 			title : '消息',
 			cancel : false,
@@ -209,6 +220,7 @@ $(function() {
 		},
 		beforeShow : function(data) {
 			var memberNameB = $("#name").val();
+			$("#customerId").val(data.result);
 
 		}
 	});
