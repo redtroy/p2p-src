@@ -40,20 +40,24 @@ import com.herongwang.p2p.model.loan.LoanRegisterBindReturnBean;
 import com.herongwang.p2p.model.loan.LoanReturnInfoBean;
 import com.herongwang.p2p.model.loan.LoanTransferReturnBean;
 import com.herongwang.p2p.model.loan.LoanWithdrawsOrderQueryBean;
+import com.herongwang.p2p.model.loan.transferauditreturnBean;
 import com.herongwang.p2p.model.order.OrderModel;
 import com.herongwang.p2p.model.order.ResultsModel;
 import com.herongwang.p2p.model.post.LoanModel;
 import com.herongwang.p2p.model.post.LoanReleaseModel;
+import com.herongwang.p2p.model.post.LoanTransferAuditModel;
 import com.herongwang.p2p.model.post.RegisterModel;
 import com.herongwang.p2p.model.post.TransferModel;
 import com.herongwang.p2p.service.account.IAccountService;
 import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
+import com.herongwang.p2p.service.loan.ILoanService;
 import com.herongwang.p2p.service.orders.IOrdersService;
 import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.post.IPostService;
 import com.herongwang.p2p.service.tl.ITLBillService;
+import com.sxj.util.exception.ServiceException;
 
 @Service
 public class PostServiceImpl implements IPostService
@@ -78,6 +82,9 @@ public class PostServiceImpl implements IPostService
     
     @Autowired
     IInvestOrderService investOrderService;
+    
+    @Autowired
+    private ILoanService loanService;
     
     private final String SubmitURLPrefix = "http://218.4.234.150:88/main/";
     
@@ -622,11 +629,11 @@ public class PostServiceImpl implements IPostService
                             if (loanobjectlist.get(i) instanceof LoanTransferReturnBean)
                             {
                                 LoanTransferReturnBean ltrb = (LoanTransferReturnBean) loanobjectlist.get(i);
-                                System.out.println(ltrb);
-                                
                                 ltrb.setLoanJsonList(Common.UrlDecoder(ltrb.getLoanJsonList(),
                                         "utf-8"));
-                                
+                                loanService.addOrder(Common.JSONEncode(ltrb),
+                                        "LoanTransferReturnBean",
+                                        "转账页面返回Model");
                                 String publickey = Common.publicKey;
                                 if (!"88".equals(ltrb.getResultCode()))
                                 {
@@ -890,5 +897,65 @@ public class PostServiceImpl implements IPostService
         
         resultarr = HttpClientUtil.doPostQueryCmd(SubmitURL, req);
         return resultarr;
+    }
+    
+    @Override
+    public String audit(LoanTransferAuditModel ltsa) throws ServiceException
+    {
+        try
+        {
+            Map<String, String> req = new TreeMap<String, String>();
+            req.put("LoanNoList", ltsa.getLoanNoList());
+            req.put("PlatformMoneymoremore", ltsa.getPlatformMoneymoremore());
+            req.put("AuditType", ltsa.getAuditType());
+            req.put("ReturnURL", ltsa.getReturnURL());
+            req.put("NotifyURL", ltsa.getNotifyURL());
+            req.put("SignInfo", ltsa.getSignInfo());
+            req.put("Remark3", ltsa.getRemark3());
+            String[] resultarr = HttpClientUtil.doPostQueryCmd(SubmitURLPrefix
+                    + "loan/toloantransferaudit.action", req);
+            if (StringUtils.isNotBlank(resultarr[1])
+                    && (resultarr[1].startsWith("[") || resultarr[1].startsWith("{")))
+            {
+                
+                /* List<Object> loanobjectlist = Common.JSONDecodeList(resultarr[1],
+                         transferauditreturnBean.class);
+                 if (loanobjectlist != null && loanobjectlist.size() > 0)
+                 {
+                     for (int i = 0; i < loanobjectlist.size(); i++)
+                     {
+                         if (loanobjectlist.get(i) instanceof transferauditreturnBean)
+                         {
+                             transferauditreturnBean tfb = (transferauditreturnBean) loanobjectlist.get(i);
+                             loanService.addOrder(Common.JSONEncode(tfb),
+                                     "transferauditreturnBean",
+                                     "审核页面返回Model");
+                             if ("88".equals(tfb.getResultCode()))
+                             {
+                                 String flag = debtService.audit(tfb.getRemark3());
+                                 return flag;
+                             }
+                         }
+                     }
+                 }*/
+                transferauditreturnBean tfb = (transferauditreturnBean) Common.JSONDecode(resultarr[1],
+                        transferauditreturnBean.class);
+                loanService.addOrder(Common.JSONEncode(tfb),
+                        "transferauditreturnBean",
+                        "审核页面返回Model");
+                if ("88".equals(tfb.getResultCode()))
+                {
+                    String flag = debtService.audit(tfb.getRemark3());
+                    return flag;
+                }
+                
+            }
+            
+        }
+        catch (Exception e)
+        {
+            // TODO: handle exception
+        }
+        return "false";
     }
 }

@@ -49,7 +49,7 @@ jQuery(document).ready(function($) {
 		$('.maskdivgen').fadeOut(100);
 		$('.memberList').slideUp(200);
 	})
-	if (message !="" ||message !=null){
+/* 	if (message !="" ||message !=null){
 		if (message=="ok"){
 			var success = dialog({
 				title : '消息',
@@ -62,7 +62,7 @@ jQuery(document).ready(function($) {
 			});
 			success.showModal();
 		}
-	}
+	} */
 })
 function query(page) {
 var params="";
@@ -118,7 +118,7 @@ function shenhe(id){
 		title : '消息',
 		cancel : false,
 		okValue:'确定',
-		width:300,
+		width:100,
 		ok : function() {
 			
 		}
@@ -130,21 +130,20 @@ function shenhe(id){
 		okValue : '确 定',
 		ok : function() {
 			var that = this;
-			/* show.showModal();
-        	$.post("${basePath}tender/audit.htm",{debtId:id},function(data) {
+			show.showModal();
+        	$.post("${basePath}tender/loanTransferAuditPost.htm",{debtId:id},function(data) {
 				if (data == 'ok') {
 				    show.close().remove();
 					success.content('审核成功！');
 					success.showModal();
 					query(); 
-					location.href="${basePath}tender/loanTransferAudit.htm?debtId="+id;
 				} else {
 					show.close().remove();
 					success.content('审核失败！');
 					success.showModal();
 				}
-			})  */
-			location.href="${basePath}tender/loanTransferAudit.htm?debtId="+id;
+			}) 
+			//location.href="${basePath}tender/loanTransferAudit.htm?debtId="+id;
 		},
 		cancelValue : '取消',
 		cancel : function() {

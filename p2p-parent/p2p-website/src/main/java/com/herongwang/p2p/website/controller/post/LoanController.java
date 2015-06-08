@@ -1018,6 +1018,9 @@ public class LoanController extends BaseController
     @RequestMapping("registerbindreturn")
     public String registerbindreturn(LoanRegisterBindReturnBean lb, ModelMap map)
     {
+        loanService.addOrder(Common.JSONEncode(lb),
+                "LoanRegisterBindReturnBean",
+                "开户页面返回Model");
         if ("88".equals(lb.getResultCode()))
         {
             map.put("model", lb);

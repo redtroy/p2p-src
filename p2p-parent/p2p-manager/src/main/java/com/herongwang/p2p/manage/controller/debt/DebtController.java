@@ -34,7 +34,9 @@ import com.herongwang.p2p.service.apply.IDebtApplicationService;
 import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.financing.IFinancingOrdersService;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
+import com.herongwang.p2p.service.loan.ILoanService;
 import com.herongwang.p2p.service.parameters.IParametersService;
+import com.herongwang.p2p.service.post.IPostService;
 import com.herongwang.p2p.service.users.IUserService;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
@@ -61,6 +63,12 @@ public class DebtController extends BaseController
     
     @Autowired
     private IDebtApplicationService debtApplicationService;
+    
+    @Autowired
+    private ILoanService loanService;
+    
+    @Autowired
+    private IPostService postService;
     
     /**
      * 借款标列表
@@ -347,6 +355,61 @@ public class DebtController extends BaseController
     }
     
     /**
+     * 审核POST 
+     */
+    @RequestMapping("loanTransferAuditPost")
+    public @ResponseBody String loanTransferAuditModelPost(String debtId,
+            ModelMap map, HttpServletRequest request) throws WebException
+    {
+        try
+        {
+            List<InvestOrderEntity> list = investOderService.queryListInvest(debtId);
+            if (list.size() > 0)
+            {
+                String loanNoList = "";
+                for (InvestOrderEntity investOrder : list)
+                {
+                    if (!"".equals(investOrder.getLoanNo())
+                            && investOrder.getLoanNo() != null)
+                    {
+                        loanNoList = loanNoList + investOrder.getLoanNo() + ",";
+                    }
+                }
+                if (!"".equals(loanNoList))
+                {
+                    loanNoList = loanNoList.substring(0,
+                            loanNoList.length() - 1);
+                }
+                LoanTransferAuditModel ltsa = new LoanTransferAuditModel();
+                ltsa.setPlatformMoneymoremore("p1190");
+                ltsa.setAuditType("1");
+                ltsa.setLoanNoList(loanNoList);
+                ltsa.setRemark3(debtId);//存放DebtId
+                String privatekey = Common.privateKeyPKCS8;
+                ltsa.setReturnURL(getBasePath(request)
+                        + "tender/loanTransferAuditModelReturn.htm");
+                ltsa.setNotifyURL(getBasePath(request)
+                        + "tender/loanTransferAuditModelNotify.htm");
+                String dataStr = ltsa.getLoanNoList()
+                        + ltsa.getPlatformMoneymoremore() + ltsa.getAuditType()
+                        + ltsa.getRandomTimeStamp() + ltsa.getRemark1()
+                        + ltsa.getRemark2() + ltsa.getRemark3()
+                        + ltsa.getReturnURL() + ltsa.getNotifyURL();
+                RsaHelper rsa = RsaHelper.getInstance();
+                String SignInfo = rsa.signData(dataStr, privatekey);
+                ltsa.setSignInfo(SignInfo);
+                return postService.audit(ltsa);
+            }
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error("审核失败", e.getClass());
+            throw new WebException(e);
+        }
+        return "false";
+    }
+    
+    /**
      * 审核页面返回信息
      */
     @RequestMapping("loanTransferAuditModelReturn")
@@ -355,6 +418,9 @@ public class DebtController extends BaseController
     {
         try
         {
+            loanService.addOrder(Common.JSONEncode(tfb),
+                    "transferauditreturnBean",
+                    "审核页面返回Model");
             if ("88".equals(tfb.getResultCode()))
             {
                 return "redirect:/tender/audit.htm?debtId=" + tfb.getRemark3();

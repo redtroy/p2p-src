@@ -210,7 +210,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                 }
                 account.setBalance(account.getBalance().subtract(monthAmount));//减去余额
                 accountDao.updateAccount(account);
-                repayPlanDao.updateRepayPlanStatus(ids);//还款状态
+                repayPlanDao.updateRepayPlanStatus(ids.split(","));//还款状态
                 Integer num = repayPlanDao.getRepayPlanCount(orderId);
                 if (num == 0)
                 {

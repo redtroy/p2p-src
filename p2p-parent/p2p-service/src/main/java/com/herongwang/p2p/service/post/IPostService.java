@@ -15,6 +15,7 @@ import com.herongwang.p2p.model.order.OrderModel;
 import com.herongwang.p2p.model.order.ResultsModel;
 import com.herongwang.p2p.model.post.LoanModel;
 import com.herongwang.p2p.model.post.LoanReleaseModel;
+import com.herongwang.p2p.model.post.LoanTransferAuditModel;
 import com.herongwang.p2p.model.post.RegisterModel;
 import com.herongwang.p2p.model.post.TransferModel;
 import com.sxj.util.exception.ServiceException;
@@ -91,6 +92,11 @@ public interface IPostService
      * 资金释放
      */
     public String loanRelease(LoanReleaseModel lr);
+    
+    /**
+     * 审核
+     */
+    public String audit(LoanTransferAuditModel ltsa);
     
     /**
      * 转账对账
