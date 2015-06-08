@@ -60,6 +60,8 @@ public class LoanJob
         try
         {
             updateAccount();
+            updateOrderQuery();
+            updateRecharge();
         }
         catch (Exception e)
         {

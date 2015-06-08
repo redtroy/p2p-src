@@ -39,6 +39,7 @@ import com.herongwang.p2p.model.post.TransferModel;
 import com.herongwang.p2p.service.account.IAccountService;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
+import com.herongwang.p2p.service.loan.ILoanService;
 import com.herongwang.p2p.service.orders.IOrdersService;
 import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.post.IPostService;
@@ -88,6 +89,9 @@ public class LoanController extends BaseController
     
     @Autowired
     IInvestOrderService investOrderService;
+    
+    @Autowired
+    ILoanService loanService;
     
     /*----------------------------------------------充值--------------------------------*/
     @RequestMapping("/recharge")
@@ -794,6 +798,8 @@ public class LoanController extends BaseController
             String platformType = "1";//1.托管账户 2.自有账户
             
             String[] result = postService.balanceQuery(PlatformId, platformType);
+            String message = Common.JSONEncode(result);
+            loanService.addOrder(message, "String[]", "余额查询对账处理。");
             String[] balance = result[1].split("\\|");
             
             map.put("balance1", balance[0]);
