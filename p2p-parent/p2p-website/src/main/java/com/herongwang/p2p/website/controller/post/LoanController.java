@@ -188,6 +188,8 @@ public class LoanController extends BaseController
     @RequestMapping("/returnURL")
     public String returnURL(ModelMap map, LoanModel result) throws Exception
     {
+        String message = Common.JSONEncode(result);
+        loanService.addOrder(message, "LoanModel", "充值跳转页面返回报文");
         DecimalFormat df = new DecimalFormat("######0.00");
         UsersEntity user = this.getUsersEntity();
         if (user == null)
@@ -259,6 +261,8 @@ public class LoanController extends BaseController
     @RequestMapping("/notifyURL")
     public void notifyURL(ModelMap map, LoanModel result) throws Exception
     {
+        String message = Common.JSONEncode(result);
+        loanService.addOrder(message, "LoanModel", "充值后台返回报文");
         DecimalFormat df = new DecimalFormat("######0.00");
         //获取双乾参数
         Loan loan = parametersService.getLoan();
@@ -435,6 +439,8 @@ public class LoanController extends BaseController
     public String withdrawReturnURL(ModelMap map, LoanModel result)
             throws Exception
     {
+        String message = Common.JSONEncode(result);
+        loanService.addOrder(message, "LoanModel", "提现跳转页面返回报文");
         DecimalFormat df = new DecimalFormat("######0.00");
         UsersEntity user = this.getUsersEntity();
         if (user == null)
@@ -514,6 +520,8 @@ public class LoanController extends BaseController
     @RequestMapping("/withdrawNotifyURL")
     public void withdrawNotifyURL(LoanModel result) throws Exception
     {
+        String message = Common.JSONEncode(result);
+        loanService.addOrder(message, "LoanModel", "提现后台返回报文");
         DecimalFormat df = new DecimalFormat("######0.00");
         UsersEntity user = this.getUsersEntity();
         if (user == null)
@@ -655,7 +663,8 @@ public class LoanController extends BaseController
     public String authorizeReturnURL(ModelMap map, LoanModel result)
             throws Exception
     {
-        
+        String message = Common.JSONEncode(result);
+        loanService.addOrder(message, "LoanModel", "授权跳转页面返回报文");
         UsersEntity user = this.getUsersEntity();
         if (user == null)
         {
@@ -717,7 +726,8 @@ public class LoanController extends BaseController
     @RequestMapping("/authorizeNotifyURL")
     public void authorizeNotifyURL(LoanModel result) throws Exception
     {
-        
+        String message = Common.JSONEncode(result);
+        loanService.addOrder(message, "LoanModel", "授权后台返回报文");
         UsersEntity user = this.getUsersEntity();
         if (user == null)
         {
@@ -1118,6 +1128,10 @@ public class LoanController extends BaseController
         UsersEntity user = getUsersEntity();
         try
         {
+            String message = Common.JSONEncode(lr);
+            loanService.addOrder(message,
+                    "LoanTransferReturnBean",
+                    "转账跳转页面返回报文");
             String json = Common.UrlDecoder(lr.getLoanJsonList(), "utf-8");
             List<Object> list = Common.JSONDecodeList(json, LoanInfoBean.class);
             if (list.size() == 1 && "88".equals(lr.getResultCode()))
@@ -1169,6 +1183,8 @@ public class LoanController extends BaseController
         UsersEntity user = getUsersEntity();
         try
         {
+            String message = Common.JSONEncode(lr);
+            loanService.addOrder(message, "LoanTransferReturnBean", "转账后台返回报文");
             String json = Common.UrlDecoder(lr.getLoanJsonList(), "utf-8");
             List<Object> list = Common.JSONDecodeList(json, LoanInfoBean.class);
             if (list.size() == 1 && "88".equals(lr.getResultCode()))
