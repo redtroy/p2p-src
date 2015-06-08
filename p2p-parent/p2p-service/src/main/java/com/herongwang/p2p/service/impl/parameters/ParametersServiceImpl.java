@@ -24,14 +24,14 @@ public class ParametersServiceImpl implements IParametersService
     @Override
     public void addParameters(ParametersEntity p) throws ServiceException
     {
-        // TODO Auto-generated method stub
+        parametersDao.addParameters(p);
         
     }
     
     @Override
     public void updateParameters(ParametersEntity p) throws ServiceException
     {
-        // TODO Auto-generated method stub
+        parametersDao.updateParameters(p);
         
     }
     
@@ -39,8 +39,7 @@ public class ParametersServiceImpl implements IParametersService
     public ParametersEntity getParametersEntity(String id)
             throws ServiceException
     {
-        // TODO Auto-generated method stub
-        return null;
+        return parametersDao.getParameters(id);
     }
     
     @Override
@@ -57,7 +56,7 @@ public class ParametersServiceImpl implements IParametersService
     @Override
     public void delParameters(String id) throws ServiceException
     {
-        // TODO Auto-generated method stub
+        parametersDao.delParameters(id);
         
     }
     
