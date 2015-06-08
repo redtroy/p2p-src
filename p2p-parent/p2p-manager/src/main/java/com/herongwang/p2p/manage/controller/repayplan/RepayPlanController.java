@@ -24,6 +24,7 @@ import com.herongwang.p2p.model.loan.LoanTransferReturnBean;
 import com.herongwang.p2p.model.post.TransferModel;
 import com.herongwang.p2p.service.financing.IFinancingOrdersService;
 import com.herongwang.p2p.service.impl.post.PostServiceImpl;
+import com.herongwang.p2p.service.loan.ILoanService;
 import com.herongwang.p2p.service.repayplan.IRepayPlanService;
 import com.sxj.util.exception.WebException;
 import com.sxj.util.logger.SxjLogger;
@@ -41,6 +42,9 @@ public class RepayPlanController extends BaseController
     
     @Autowired
     private PostServiceImpl postService;
+    
+    @Autowired
+    private ILoanService loanService;
     
     /**
      * 还款计划
@@ -211,6 +215,9 @@ public class RepayPlanController extends BaseController
     {
         try
         {
+            loanService.addOrder(Common.JSONEncode(lr),
+                    "LoanTransferReturnBean",
+                    "转账页面返回Model");
             if ("88".equals(lr.getResultCode()))
             {
                 ra.addAttribute("ids", lr.getRemark1());
