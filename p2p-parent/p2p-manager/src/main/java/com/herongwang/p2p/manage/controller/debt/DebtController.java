@@ -120,7 +120,7 @@ public class DebtController extends BaseController
                 if (!StringUtils.isEmpty(entity.getCustomerId()))
                 {
                     UsersEntity user = userService.getUserById(entity.getCustomerId());
-                    if (user.getRepaymentStatus() == 1)
+                    if (null != user && user.getRepaymentStatus() == 1)
                     {
                         map.put("applyId", user.getCustomerId());
                         map.put("name", user.getName());
