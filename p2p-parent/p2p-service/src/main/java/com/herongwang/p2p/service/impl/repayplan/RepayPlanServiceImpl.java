@@ -188,9 +188,9 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                 tf.setNeedAudit("1");
                 tf.setReturnURL(url + "repayPlan/transferReturn.htm");
                 tf.setNotifyURL(url + "repayPlan/transferNotify.htm");
-                tf.setRemark1(Common.UrlEncoder(ids, "utf-8"));//还款单的ID
-                tf.setRemark2(orderId);//投资订单号
-                tf.setRemark3(debtId);//标的ID
+                //                tf.setRemark1(Common.UrlEncoder(ids, "utf-8"));//还款单的ID
+                //                tf.setRemark2(orderId);//投资订单号
+                //                tf.setRemark3(debtId);//标的ID
                 String dataStr = LoanJsonList + tf.getPlatformMoneymoremore()
                         + tf.getTransferAction() + tf.getAction()
                         + tf.getTransferType() + tf.getNeedAudit()

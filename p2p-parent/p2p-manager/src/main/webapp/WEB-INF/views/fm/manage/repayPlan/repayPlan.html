@@ -47,11 +47,14 @@
 			okValue : '确 定',
 			ok : function() {
 				var arrId="";
+				var xh="";
 				$(arrChk).each(function(index) {
 					if (arrId==""){
 						arrId=	$(this).val();
+						xh=$(this).attr("xh");
 					}else{
 					arrId= arrId+","+$(this).val();
+					xh=xh+","+$(this).attr("xh");
 					}
 				});
 				
@@ -107,7 +110,7 @@
 													show.showModal();
 													d.close();
 												}else{
-													location.href="${basePath}repayPlan/transfer.htm?ids="+arrId+"&orderId="+orderId+"&debtId="+debtId+"&payManId="+ddh;
+													location.href="${basePath}repayPlan/transfer.htm?ids="+xh+"&orderId="+orderId+"&debtId="+debtId+"&payManId="+ddh;
 												}
 											}
 										});
@@ -173,7 +176,7 @@
 							plan>
 							<tr>
 								<td><#if plan.status==0><input type="checkbox"
-									name="chk_list" class="chk_list" value="${plan.planId}" /></#if>
+									name="chk_list" class="chk_list" value="${plan.planId}" xh="${plan.sequence}"/></#if>
 								</td>
 								<td>${plan.sequence}</td>
 								<td>${plan.monthCapital/100}元</td>

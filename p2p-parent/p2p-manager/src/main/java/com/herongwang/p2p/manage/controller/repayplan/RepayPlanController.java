@@ -126,7 +126,26 @@ public class RepayPlanController extends BaseController
             }*/
             ids = Common.UrlDecoder(ids, "utf-8");
             String[] rids = ids.split(",");
-            String flag = repayPlanService.saveRepayPlan(rids, orderId, debtId);
+            FinancingOrdersEntity fo = new FinancingOrdersEntity();
+            fo.setDebtId(debtId);
+            fo.setOrderId(orderId);
+            List<RepayPlanEntity> list = repayPlanService.queryRepayPlan(fo);
+            String[] listIds = new String[rids.length];
+            int i = 0;
+            for (RepayPlanEntity rp : list)
+            {
+                for (String xh : rids)
+                {
+                    if (xh.equals(rp.getSequence()))
+                    {
+                        listIds[i] = rp.getPlanId();
+                        i++;
+                    }
+                }
+            }
+            String flag = repayPlanService.saveRepayPlan(listIds,
+                    orderId,
+                    debtId);
             map.put("flag", flag);
             ra.addAttribute("orderId", orderId);
             ra.addAttribute("debtId", debtId);
