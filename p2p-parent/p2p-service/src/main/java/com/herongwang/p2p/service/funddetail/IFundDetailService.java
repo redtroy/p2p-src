@@ -63,4 +63,10 @@ public interface IFundDetailService
      * @throws ServiceException
      */
     public void addFunds(OrdersEntity order) throws ServiceException;
+    
+    /**
+     * 第三方支付还款明细
+     * @param planlist
+     */
+    public void repayPlanFundDetailAdvance(List<RepayPlanEntity> planlist);
 }

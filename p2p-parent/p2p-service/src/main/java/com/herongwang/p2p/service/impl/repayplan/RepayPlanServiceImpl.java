@@ -301,7 +301,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                 }
                 xhlist.add(repayPlanEntity.getSequence());
             }
-            //  fundDetailService.repayPlanFundDetail(planlist, blance);//还款资金明细
+            fundDetailService.repayPlanFundDetailAdvance(planlist);//还款资金明细
             //投资方收款
             investGetMoney(debtId, xhlist);
             return "ok";

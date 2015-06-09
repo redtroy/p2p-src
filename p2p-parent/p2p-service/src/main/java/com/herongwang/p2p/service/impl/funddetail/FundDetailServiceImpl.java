@@ -255,6 +255,63 @@ public class FundDetailServiceImpl implements IFundDetailService
     
     @Override
     @Transactional
+    public void repayPlanFundDetailAdvance(List<RepayPlanEntity> planlist)
+            throws ServiceException
+    {
+        try
+        {
+            List<FundDetailEntity> list = new ArrayList<FundDetailEntity>();
+            for (RepayPlanEntity repayPlan : planlist)
+            {
+                //生成还款资金明细
+                FundDetailEntity fd = new FundDetailEntity();
+                //获取融资用户信息
+                DebtEntity debt = debtService.getDebtEntity(repayPlan.getDebtId());
+                AccountEntity account = accountDao.getAcoountByCustomerId(debt.getCustomerId());
+                fd.setCustomerId(debt.getCustomerId());//用户ID
+                fd.setAccountId(account.getAccountId());
+                fd.setOrderId(repayPlan.getOrderId());
+                fd.setAmount(repayPlan.getMonthCapital());//月本金
+                fd.setBalance(account.getBalance());
+                fd.setFrozenAmount(account.getFozenAmount());
+                fd.setDueAmount(account.getDueAmount());
+                fd.setCreateTime(new Date());
+                fd.setStatus(0);//
+                fd.setType(7);//偿还本金.
+                fd.setRemark("偿还" + debt.getTitle() + "融资第"
+                        + repayPlan.getSequence() + "期本金");
+                list.add(fd);//融资本金
+                FundDetailEntity fd2 = new FundDetailEntity();
+                //融资利息
+                fd2.setCustomerId(debt.getCustomerId());//用户ID
+                fd2.setAccountId(account.getAccountId());
+                fd2.setOrderId(repayPlan.getOrderId());
+                fd2.setAmount(repayPlan.getMonthProfit());//月利息
+                fd2.setBalance(account.getBalance());
+                fd2.setFrozenAmount(account.getFozenAmount());
+                fd2.setDueAmount(account.getDueAmount());
+                fd2.setCreateTime(new Date());
+                fd2.setStatus(0);//
+                fd2.setType(8);//偿还利息
+                fd2.setRemark("偿还" + debt.getTitle() + "融资第"
+                        + repayPlan.getSequence() + "期利息");
+                list.add(fd2);//融资利息
+                
+            }
+            fundDetailDao.addFundDetailList(list);//插入总金额明细
+        }
+        catch (ServiceException e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException(e.getMessage());
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            throw new ServiceException("生成资金明细错误", e);
+        }
+    }
+    
     public void repayPlanFundDetail(List<RepayPlanEntity> planlist,
             BigDecimal blance) throws ServiceException
     {
