@@ -10,6 +10,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.herongwang.p2p.entity.debt.DebtEntity;
+import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.website.controller.BaseController;
 
@@ -29,9 +30,13 @@ public class DebtController extends BaseController
     @RequestMapping("queryDebt")
     public String queryDebt(HttpSession session, ModelMap map, DebtEntity query)
     {
-        
+        UsersEntity user = getUsersEntity();
+        if (user == null)
+        {
+            return LOGIN;
+        }
         //获取会员信息
-        query.setCustomerId(getUsersEntity().getCustomerId());
+        query.setCustomerId(user.getCustomerId());
         query.setPagable(true);
         List<DebtEntity> debtList = debtService.queryDebtList(query);
         map.put("debtList", debtList);
