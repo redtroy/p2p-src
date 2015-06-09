@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.herongwang.p2p.entity.profitlist.ProfitListEntity;
 import com.sxj.mybatis.orm.annotations.BatchInsert;
+import com.sxj.mybatis.orm.annotations.Insert;
 import com.sxj.mybatis.orm.annotations.Update;
 import com.sxj.util.persistent.QueryCondition;
 
@@ -17,6 +18,13 @@ public interface IProfitListDao
      */
     @BatchInsert
     public void addProfitList(List<ProfitListEntity> list) throws SQLException;
+    
+    /**
+     * 添加单个明细
+     * @param profit
+     */
+    @Insert
+    public void addProfit(ProfitListEntity profit);
     
     /**
      * 查询收益
