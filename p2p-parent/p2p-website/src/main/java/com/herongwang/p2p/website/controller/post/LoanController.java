@@ -492,7 +492,7 @@ public class LoanController extends BaseController
                 deal.setCustomerId(order.getCustomerId());
                 deal.setAccountId(account.getAccountId());
                 deal.setOrderId(order.getOrderId());
-                deal.setType(1);
+                deal.setType(2);
                 deal.setCreateTime(new Date());
                 deal.setStatus(1);
                 deal.setAmount(order.getAmount());
