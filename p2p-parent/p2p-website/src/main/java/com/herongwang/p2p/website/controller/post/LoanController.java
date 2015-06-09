@@ -372,7 +372,7 @@ public class LoanController extends BaseController
                     + "loan/toloanwithdraws.action";
             String ReturnURL = basePath + "loan/withdrawReturnURL.htm";
             String NotifyURL = "http://61.132.53.150:7001/p2p-website/loan/withdrawNotifyURL.htm";
-            String WithdrawMoneymoremore = "m31333";
+            String WithdrawMoneymoremore = user.getMoneymoremoreId();
             String PlatformMoneymoremore = loan.getMoremoreId();
             String OrderNo = orders.getOrdersNo();//平台的提现订单号
             String Amount = order.getOrderAmount();//金额
