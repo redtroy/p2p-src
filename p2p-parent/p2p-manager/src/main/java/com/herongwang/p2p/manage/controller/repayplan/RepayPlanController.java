@@ -97,6 +97,7 @@ public class RepayPlanController extends BaseController
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new WebException("验证余额错误", e);
         }

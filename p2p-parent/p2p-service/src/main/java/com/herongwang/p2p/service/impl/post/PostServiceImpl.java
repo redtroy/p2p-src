@@ -58,6 +58,7 @@ import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.post.IPostService;
 import com.herongwang.p2p.service.tl.ITLBillService;
 import com.sxj.util.exception.ServiceException;
+import com.sxj.util.logger.SxjLogger;
 
 @Service
 public class PostServiceImpl implements IPostService
@@ -150,6 +151,7 @@ public class PostServiceImpl implements IPostService
         }
         catch (Exception e)
         {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
             e.printStackTrace();
         }
         return strSignMsg;
@@ -575,6 +577,7 @@ public class PostServiceImpl implements IPostService
         }
         catch (Exception e)
         {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
             e.printStackTrace();
         }
         return null;
@@ -703,6 +706,7 @@ public class PostServiceImpl implements IPostService
         catch (Exception e)
         {
             e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
         }
         return "false";
     }
@@ -954,7 +958,8 @@ public class PostServiceImpl implements IPostService
         }
         catch (Exception e)
         {
-            // TODO: handle exception
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            e.printStackTrace();
         }
         return "false";
     }

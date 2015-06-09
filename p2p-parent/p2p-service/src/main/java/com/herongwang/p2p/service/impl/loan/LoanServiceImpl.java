@@ -10,6 +10,7 @@ import com.herongwang.p2p.dao.loan.ILoanDao;
 import com.herongwang.p2p.entity.loan.LoanEntity;
 import com.herongwang.p2p.service.loan.ILoanService;
 import com.sxj.util.exception.ServiceException;
+import com.sxj.util.logger.SxjLogger;
 
 @Service
 @Transactional
@@ -27,7 +28,15 @@ public class LoanServiceImpl implements ILoanService
         loan.setClassName(className);
         loan.setCreateTime(new Date());
         loan.setRemark(remark);
-        loanDao.addInvestOrder(loan);
+        try
+        {
+            loanDao.addInvestOrder(loan);
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            e.printStackTrace();
+        }
     }
     
 }

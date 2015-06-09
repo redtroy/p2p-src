@@ -27,6 +27,7 @@ import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.post.IPostService;
 import com.herongwang.p2p.service.users.IUserService;
 import com.sxj.util.common.StringUtils;
+import com.sxj.util.logger.SxjLogger;
 
 /**
  * 定时处理本地客户数据和双乾数据，并更新数据
@@ -67,7 +68,9 @@ public class LoanJob
         }
         catch (Exception e)
         {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
             e.printStackTrace();
+            
         }
     }
     

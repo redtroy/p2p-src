@@ -168,6 +168,7 @@ public class DebtController extends BaseController
         }
         catch (Exception e)
         {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
             e.printStackTrace();
         }
         return "manage/tender/tender-list";
@@ -254,6 +255,7 @@ public class DebtController extends BaseController
         }
         catch (Exception e)
         {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
             e.printStackTrace();
             throw new WebException(e);
         }
@@ -274,6 +276,7 @@ public class DebtController extends BaseController
         }
         catch (Exception e)
         {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
             e.printStackTrace();
             throw new WebException(e);
         }
@@ -429,7 +432,8 @@ public class DebtController extends BaseController
         }
         catch (Exception e)
         {
-            // TODO: handle exception
+            e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
         }
         return "manage/debt/transferauditreturn";
     }
@@ -447,7 +451,8 @@ public class DebtController extends BaseController
         }
         catch (Exception e)
         {
-            // TODO: handle exception
+            e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
         }
         return "SUCCESS";
     }

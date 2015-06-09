@@ -190,6 +190,7 @@ public class DealDetailController extends BaseController
             {
                 map.put("isOK", "提现失败，请联系管理员。");
                 e.printStackTrace();
+                SxjLogger.error(e.getMessage(), e, this.getClass());
                 throw new WebException(e);
             }
             finally
@@ -257,6 +258,7 @@ public class DealDetailController extends BaseController
             }
             catch (Exception e)
             {
+                SxjLogger.error(e.getMessage(), e, this.getClass());
                 map.put("isOK", "提现失败，请联系管理员。");
                 e.printStackTrace();
                 throw new WebException(e);

@@ -1240,7 +1240,8 @@ public class LoanController extends BaseController
         }
         catch (Exception e)
         {
-            // TODO: handle exception
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            e.printStackTrace();
         }
         return "site/test/loanrelease";
     }
@@ -1258,7 +1259,8 @@ public class LoanController extends BaseController
         }
         catch (Exception e)
         {
-            // TODO: handle exception
+            e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
         }
         return "site/test/releasereturn";
     }
@@ -1276,7 +1278,8 @@ public class LoanController extends BaseController
         }
         catch (Exception e)
         {
-            // TODO: handle exception
+            e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
         }
         return "";
     }
@@ -1308,7 +1311,8 @@ public class LoanController extends BaseController
         }
         catch (Exception e)
         {
-            // TODO: handle exception
+            e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
         }
         return "site/test/loantransferaudit";
     }
@@ -1326,7 +1330,8 @@ public class LoanController extends BaseController
         }
         catch (Exception e)
         {
-            // TODO: handle exception
+            e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
         }
         return "site/test/transferauditreturn";
     }
@@ -1344,7 +1349,8 @@ public class LoanController extends BaseController
         }
         catch (Exception e)
         {
-            // TODO: handle exception
+            e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
         }
         return "";
     }
