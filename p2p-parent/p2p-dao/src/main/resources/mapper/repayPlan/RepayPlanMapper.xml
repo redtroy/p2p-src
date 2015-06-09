@@ -49,6 +49,6 @@
 		</foreach>
 	</update>
 	<select id="getRepayPlanCount" parameterType="String" resultType="java.lang.Integer">
-	<![CDATA[ SELECT COUNT(r.debtId) FROM RepayPlan r  WHERE r.orderId=#{orderId} AND r.status=0 or r.prepaidStatus=0]]>
+	<![CDATA[ SELECT COUNT(r.debtId) FROM RepayPlan r  WHERE r.orderId=#{orderId} AND r.status=0 AND r.prepaidStatus=0]]>
 	</select>
 </mapper>
