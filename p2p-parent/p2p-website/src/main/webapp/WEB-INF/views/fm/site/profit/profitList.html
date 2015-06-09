@@ -42,11 +42,11 @@
 								<td>${profit.monthCapital/100}</td>
 								<td class="color-red">${profit.monthProfit/100}</td>
 								<td class="color-purple">${profit.monthAmount/100}</td>
-								<td class="color-green"></td>
+								<td class="color-green">${profit.monthCapital/100+profit.monthProfit/100-profit.monthAmount/100}</td>
 								<#if (profit.stauts==0)>
 								<td class="color-green">未结算</td>
 								<#else>
-								<td class="state verified">已结算</td>
+								<td class="verified state" style="background-color :#455ea0">已结算</td>
 								</#if>
 							</tr>
 							</#list>
