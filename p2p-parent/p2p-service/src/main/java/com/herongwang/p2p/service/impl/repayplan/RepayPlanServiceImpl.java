@@ -29,6 +29,7 @@ import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.loan.util.Common;
 import com.herongwang.p2p.loan.util.RsaHelper;
 import com.herongwang.p2p.model.loan.LoanInfoBean;
+import com.herongwang.p2p.model.loan.LoanInfoSecondaryBean;
 import com.herongwang.p2p.model.post.TransferModel;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
 import com.herongwang.p2p.service.impl.post.PostServiceImpl;
@@ -169,6 +170,14 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                 {
                     for (Map<String, String> maplist : list)
                     {
+                        List<LoanInfoSecondaryBean> listmlisb = new ArrayList<LoanInfoSecondaryBean>();
+                        LoanInfoSecondaryBean mlisb = new LoanInfoSecondaryBean();
+                        mlisb.setLoanInMoneymoremore("p1190");
+                        mlisb.setAmount(maplist.get("fee"));
+                        mlisb.setTransferName("平台手续费");
+                        listmlisb.add(mlisb);
+                        String SecondaryJsonList = Common.JSONEncode(listmlisb);
+                        
                         LoanInfoBean mlib = new LoanInfoBean();
                         mlib.setLoanOutMoneymoremore(user.getMoneymoremoreId());//付款人
                         mlib.setLoanInMoneymoremore(maplist.get("moneymoremoreId"));//收款人
@@ -176,6 +185,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                         mlib.setBatchNo(maplist.get("debtNo"));//标号
                         mlib.setAmount(maplist.get("amount"));
                         mlib.setTransferName("还款");
+                        mlib.setSecondaryJsonList(SecondaryJsonList);
                         listmlib.add(mlib);
                     }
                 }
@@ -186,7 +196,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                 tf.setAction("2");
                 tf.setTransferType("2");
                 tf.setNeedAudit("1");
-                tf.setReturnURL(url + "repayPlan/transferReturn.htm");
+                tf.setReturnURL("");
                 tf.setNotifyURL(url + "repayPlan/transferNotify.htm");
                 //                tf.setRemark1(Common.UrlEncoder(ids, "utf-8"));//还款单的ID
                 //                tf.setRemark2(orderId);//投资订单号
@@ -423,9 +433,14 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                             order.getOrderId());//通过订单ID和序号获取投资收益
                     map.put("moneymoremoreId", moneymoremoreId);
                     map.put("amount",
-                            (entity.getMonthAmount().divide(new BigDecimal(100))).toString());
+                            (entity.getMonthAmount().add(entity.getFee())).divide(new BigDecimal(
+                                    100))
+                                    .toString());
                     map.put("orderNo", entity.getProfitId());
                     map.put("debtNo", debtNo);
+                    map.put("fee", entity.getFee()
+                            .divide(new BigDecimal(100))
+                            .toString());
                     list.add(map);
                     
                 }

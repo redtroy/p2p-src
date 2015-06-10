@@ -20,6 +20,7 @@ import com.herongwang.p2p.loan.util.Common;
 import com.herongwang.p2p.loan.util.RsaHelper;
 import com.herongwang.p2p.manage.controller.BaseController;
 import com.herongwang.p2p.model.loan.LoanInfoBean;
+import com.herongwang.p2p.model.loan.LoanInfoSecondaryBean;
 import com.herongwang.p2p.model.loan.LoanTransferReturnBean;
 import com.herongwang.p2p.model.post.TransferModel;
 import com.herongwang.p2p.service.financing.IFinancingOrdersService;
@@ -179,6 +180,14 @@ public class RepayPlanController extends BaseController
             {
                 for (Map<String, String> maplist : list)
                 {
+                    List<LoanInfoSecondaryBean> listmlisb = new ArrayList<LoanInfoSecondaryBean>();
+                    LoanInfoSecondaryBean mlisb = new LoanInfoSecondaryBean();
+                    mlisb.setLoanInMoneymoremore("p1190");
+                    mlisb.setAmount(maplist.get("fee"));
+                    mlisb.setTransferName("平台手续费");
+                    listmlisb.add(mlisb);
+                    String SecondaryJsonList = Common.JSONEncode(listmlisb);
+                    
                     LoanInfoBean mlib = new LoanInfoBean();
                     mlib.setLoanOutMoneymoremore(payManId);//付款人
                     mlib.setLoanInMoneymoremore(maplist.get("moneymoremoreId"));//收款人
@@ -186,6 +195,7 @@ public class RepayPlanController extends BaseController
                     mlib.setBatchNo(maplist.get("debtNo"));//标号
                     mlib.setAmount(maplist.get("amount"));
                     mlib.setTransferName("还款");
+                    mlib.setSecondaryJsonList(SecondaryJsonList);
                     listmlib.add(mlib);
                 }
             }
