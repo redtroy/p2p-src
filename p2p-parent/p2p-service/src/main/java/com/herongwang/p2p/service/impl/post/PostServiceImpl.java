@@ -719,20 +719,20 @@ public class PostServiceImpl implements IPostService
     }
     
     @Override
-    public List<LoanOrderQueryBean> orderQuery(LoanModel loan,
-            String submitURLPrefix) throws Exception
+    public List<LoanOrderQueryBean> orderQuery(LoanModel loan, String privatekey)
+            throws Exception
     {
         List<LoanOrderQueryBean> list = new ArrayList<LoanOrderQueryBean>();
         String SubmitURL = SubmitURLPrefix + "loan/loanorderquery.action";
         
-        String privatekey = Common.privateKeyPKCS8;
         String PlatformMoneymoremore = loan.getPlatformMoneymoremore();
         String Action = "";
-        String LoanNo = loan.getLoanNo();
-        String OrderNo = loan.getOrderNo();
-        String BatchNo = loan.getBatchNo();
-        String BeginTime = loan.getBeginTime();
-        String EndTime = loan.getEndTime();
+        String LoanNo = null == loan.getLoanNo() ? "" : loan.getLoanNo();
+        String OrderNo = null == loan.getOrderNo() ? "" : loan.getOrderNo();
+        String BatchNo = null == loan.getBatchNo() ? "" : loan.getBatchNo();
+        String BeginTime = null == loan.getBeginTime() ? ""
+                : loan.getBeginTime();
+        String EndTime = null == loan.getEndTime() ? "" : loan.getEndTime();
         String dataStr = PlatformMoneymoremore + Action + LoanNo + OrderNo
                 + BatchNo + BeginTime + EndTime;
         RsaHelper rsa = RsaHelper.getInstance();
@@ -782,11 +782,12 @@ public class PostServiceImpl implements IPostService
         String privatekey = Common.privateKeyPKCS8;
         String PlatformMoneymoremore = loan.getPlatformMoneymoremore();
         String Action = "1";
-        String LoanNo = loan.getLoanNo();
-        String OrderNo = loan.getOrderNo();
-        String BatchNo = loan.getBatchNo();
-        String BeginTime = loan.getBeginTime();
-        String EndTime = loan.getEndTime();
+        String LoanNo = null == loan.getLoanNo() ? "" : loan.getLoanNo();
+        String OrderNo = null == loan.getOrderNo() ? "" : loan.getOrderNo();
+        String BatchNo = null == loan.getBatchNo() ? "" : loan.getBatchNo();
+        String BeginTime = null == loan.getBeginTime() ? ""
+                : loan.getBeginTime();
+        String EndTime = null == loan.getEndTime() ? "" : loan.getEndTime();
         String dataStr = PlatformMoneymoremore + Action + LoanNo + OrderNo
                 + BatchNo + BeginTime + EndTime;
         RsaHelper rsa = RsaHelper.getInstance();
@@ -835,11 +836,12 @@ public class PostServiceImpl implements IPostService
         String privatekey = Common.privateKeyPKCS8;
         String PlatformMoneymoremore = loan.getPlatformMoneymoremore();
         String Action = "2";
-        String LoanNo = loan.getLoanNo();
-        String OrderNo = loan.getOrderNo();
-        String BatchNo = loan.getBatchNo();
-        String BeginTime = loan.getBeginTime();
-        String EndTime = loan.getEndTime();
+        String LoanNo = null == loan.getLoanNo() ? "" : loan.getLoanNo();
+        String OrderNo = null == loan.getOrderNo() ? "" : loan.getOrderNo();
+        String BatchNo = null == loan.getBatchNo() ? "" : loan.getBatchNo();
+        String BeginTime = null == loan.getBeginTime() ? ""
+                : loan.getBeginTime();
+        String EndTime = null == loan.getEndTime() ? "" : loan.getEndTime();
         String dataStr = PlatformMoneymoremore + Action + LoanNo + OrderNo
                 + BatchNo + BeginTime + EndTime;
         RsaHelper rsa = RsaHelper.getInstance();

@@ -129,14 +129,14 @@ public class LoanJob
         p.setType("rechargeTime");//上次对账结束时间
         List<ParametersEntity> postList = parametersService.queryParameters(p);
         p = postList.get(0);
-        SimpleDateFormat sf = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss");
         String date = sf.format(new Date());
         UsersEntity u = new UsersEntity();
         List<UsersEntity> userList = userService.queryUsers(u);
         LoanModel loan = new LoanModel();
         loan.setPlatformMoneymoremore(l.getMoremoreId());
         loan.setBeginTime(p.getValue());
-        String endTime = date + "235959";
+        String endTime = date;
         loan.setEndTime(endTime);
         List<LoanRechargeOrderQueryBean> list = postService.rechargeOrderQuery(loan,
                 null);
@@ -235,32 +235,47 @@ public class LoanJob
         p.setType("loanOrderTime");//上次对账结束时间
         List<ParametersEntity> postList = parametersService.queryParameters(p);
         p = postList.get(0);
-        SimpleDateFormat sf = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss");
         String date = sf.format(new Date());
         UsersEntity u = new UsersEntity();
         List<UsersEntity> userList = userService.queryUsers(u);
         LoanModel loan = new LoanModel();
         loan.setPlatformMoneymoremore(l.getMoremoreId());
         loan.setBeginTime(p.getValue());
-        String endTime = date + "235959";
+        String endTime = date;
         loan.setEndTime(endTime);
-        List<LoanOrderQueryBean> list = postService.orderQuery(loan, null);
-        List<LoanOrderQueryBean> rList = new ArrayList<LoanOrderQueryBean>();
+        List<LoanOrderQueryBean> list = postService.orderQuery(loan,
+                l.getPrivatekey());
+        List<LoanOrderQueryBean> rList = new ArrayList<LoanOrderQueryBean>();//投标
+        List<LoanOrderQueryBean> outList = new ArrayList<LoanOrderQueryBean>();//还款人记录
+        List<LoanOrderQueryBean> inList = new ArrayList<LoanOrderQueryBean>();//收款人记录
         for (int i = 0; i < list.size(); i++)
         {
             LoanOrderQueryBean recharge = list.get(i);
             for (int j = 0; j < userList.size(); j++)
             {
                 UsersEntity user = userList.get(j);
-                if (recharge.getLoanInMoneymoremore()
+                if (recharge.getLoanOutMoneymoremore()
                         .equals(user.getMoneymoremoreId()))
                 {
-                    rList.add(recharge);
+                    if (recharge.getTransferAction().equals("1"))
+                    {//投标
+                        rList.add(recharge);
+                    }
+                    else if (recharge.getTransferAction().equals("2"))//还款付款人记录
+                    {
+                        outList.add(recharge);
+                    }
+                }
+                if (recharge.getLoanInMoneymoremore()//还款收款人记录
+                        .equals(user.getMoneymoremoreId()))
+                {
+                    inList.add(recharge);
                 }
             }
         }
         InvestOrderEntity entity = new InvestOrderEntity();
-        //查询充值记录
+        //查询投资记录
         List<InvestOrderEntity> oList = investOrderService.queryorderList(entity);
         
         //对比平台未接收到成功信息的投资记录并更新
@@ -280,11 +295,11 @@ public class LoanJob
                                 multiply(new BigDecimal(recharge.getAmount())),
                                 o.getOrderId(),
                                 recharge.getLoanNo());
-                        rList.remove(i);
                     }
                 }
             }
         }
+        
         //更新转账对账时间
         p.setValue(endTime);
         parametersService.updateParameters(p);
@@ -366,14 +381,14 @@ public class LoanJob
         p.setType("withdrawsTime");//上次对账结束时间
         List<ParametersEntity> postList = parametersService.queryParameters(p);
         p = postList.get(0);
-        SimpleDateFormat sf = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss");
         String date = sf.format(new Date());
         UsersEntity u = new UsersEntity();
         List<UsersEntity> userList = userService.queryUsers(u);
         LoanModel loan = new LoanModel();
         loan.setPlatformMoneymoremore(l.getMoremoreId());
         loan.setBeginTime(p.getValue());
-        String endTime = date + "235959";
+        String endTime = date;
         loan.setEndTime(endTime);
         List<LoanWithdrawsOrderQueryBean> list = postService.withdrawsOrderQuery(loan,
                 null);
