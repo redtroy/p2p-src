@@ -54,8 +54,8 @@
 	<![CDATA[ SELECT COUNT(r.debtId) FROM RepayPlan r  WHERE r.orderId=#{orderId} AND r.status=0 AND r.prepaidStatus=0]]>
 	</select>
 	<select id="getRepayAudit" parameterType="String" resultMap="RepayPlanEntity">
-	<![CDATA[ SELECT * FROM RepayPlan r WHERE  DATE_FORMAT(r.redate, '%Y%m%d')<DATE_FORMAT(CURDATE(), '%Y%m%d') AND r.status=1 AND r.auditStatus=0]]>
-	<if test="condition.debtId != null and condition.debtId != ''">
+	<![CDATA[ SELECT * FROM RepayPlan r WHERE  DATE_FORMAT(r.redate, '%Y%m%d')<=DATE_FORMAT(CURDATE(), '%Y%m%d') AND r.status=1 AND r.auditStatus=0]]>
+	<if test="debtId != null and debtId != ''">
 			<![CDATA[  AND r.debtId =#{debtId}]]>
 	</if>
 	</select>

@@ -3,6 +3,8 @@ package com.herongwang.p2p.dao.repayPlan;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.herongwang.p2p.entity.repayPlan.RepayPlanEntity;
 import com.sxj.mybatis.orm.annotations.BatchInsert;
 import com.sxj.mybatis.orm.annotations.Delete;
@@ -66,6 +68,6 @@ public interface IRepayPlanDao
     
     public Integer getRepayPlanCount(String orderId);
     
-    public List<RepayPlanEntity> getRepayAudit(String debtId)
+    public List<RepayPlanEntity> getRepayAudit(@Param("debtId") String debtId)
             throws SQLException;
 }

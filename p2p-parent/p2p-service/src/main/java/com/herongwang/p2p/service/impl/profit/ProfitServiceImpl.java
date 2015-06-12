@@ -357,4 +357,11 @@ public class ProfitServiceImpl implements IProfitService
         }
         
     }
+    
+    @Override
+    public ProfitListEntity getProfitListEntity(String profitId)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }
