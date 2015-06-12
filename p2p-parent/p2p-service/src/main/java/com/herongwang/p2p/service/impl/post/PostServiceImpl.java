@@ -24,10 +24,13 @@ import com.allinpay.ets.client.PaymentResult;
 import com.allinpay.ets.client.RequestOrder;
 import com.allinpay.ets.client.SecurityUtil;
 import com.allinpay.ets.client.StringUtil;
+import com.herongwang.p2p.dao.financing.IFinancingOrdersDao;
+import com.herongwang.p2p.dao.users.IUsersDao;
 import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.herongwang.p2p.entity.orders.OrdersEntity;
 import com.herongwang.p2p.entity.parameters.ParametersEntity;
+import com.herongwang.p2p.entity.profitlist.ProfitListEntity;
 import com.herongwang.p2p.entity.tl.TLBillEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.loan.util.Common;
@@ -56,6 +59,7 @@ import com.herongwang.p2p.service.loan.ILoanService;
 import com.herongwang.p2p.service.orders.IOrdersService;
 import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.post.IPostService;
+import com.herongwang.p2p.service.profit.IProfitService;
 import com.herongwang.p2p.service.tl.ITLBillService;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.logger.SxjLogger;
@@ -83,6 +87,15 @@ public class PostServiceImpl implements IPostService
     
     @Autowired
     IInvestOrderService investOrderService;
+    
+    @Autowired
+    private IFinancingOrdersDao financingOrder;
+    
+    @Autowired
+    private IUsersDao userDao;
+    
+    @Autowired
+    private IProfitService proftService;
     
     @Autowired
     private ILoanService loanService;
@@ -671,8 +684,10 @@ public class PostServiceImpl implements IPostService
                                                 if (loaninfolist.get(j) instanceof LoanReturnInfoBean)
                                                 {
                                                     LoanReturnInfoBean lrib = (LoanReturnInfoBean) loaninfolist.get(j);
-                                                    System.out.println(lrib);
-                                                    
+                                                    ProfitListEntity entity = new ProfitListEntity();
+                                                    entity.setProfitId(lrib.getOrderNo());
+                                                    entity.setLoanNo(lrib.getLoanNo());
+                                                    proftService.update(entity);
                                                     // 二次分配列表
                                                     if (StringUtils.isNotBlank(lrib.getSecondaryJsonList()))
                                                     {
@@ -699,8 +714,8 @@ public class PostServiceImpl implements IPostService
                             }
                         }
                     }
+                    return "ok";
                 }
-                return "ok";
             }
         }
         catch (Exception e)
@@ -922,26 +937,6 @@ public class PostServiceImpl implements IPostService
                     && (resultarr[1].startsWith("[") || resultarr[1].startsWith("{")))
             {
                 
-                /* List<Object> loanobjectlist = Common.JSONDecodeList(resultarr[1],
-                         transferauditreturnBean.class);
-                 if (loanobjectlist != null && loanobjectlist.size() > 0)
-                 {
-                     for (int i = 0; i < loanobjectlist.size(); i++)
-                     {
-                         if (loanobjectlist.get(i) instanceof transferauditreturnBean)
-                         {
-                             transferauditreturnBean tfb = (transferauditreturnBean) loanobjectlist.get(i);
-                             loanService.addOrder(Common.JSONEncode(tfb),
-                                     "transferauditreturnBean",
-                                     "审核页面返回Model");
-                             if ("88".equals(tfb.getResultCode()))
-                             {
-                                 String flag = debtService.audit(tfb.getRemark3());
-                                 return flag;
-                             }
-                         }
-                     }
-                 }*/
                 transferauditreturnBean tfb = (transferauditreturnBean) Common.JSONDecode(resultarr[1],
                         transferauditreturnBean.class);
                 loanService.addOrder(Common.JSONEncode(tfb),
@@ -949,8 +944,7 @@ public class PostServiceImpl implements IPostService
                         "审核页面返回Model");
                 if ("88".equals(tfb.getResultCode()))
                 {
-                    String flag = debtService.audit(tfb.getRemark3());
-                    return flag;
+                    return "ok";
                 }
                 
             }

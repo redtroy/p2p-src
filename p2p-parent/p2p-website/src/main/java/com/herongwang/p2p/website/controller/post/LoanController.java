@@ -1097,7 +1097,7 @@ public class LoanController extends BaseController
             tf.setAction("1");
             tf.setTransferType("2");
             tf.setReturnURL(getBasePath(request) + "loan/transferReturn.htm");
-            tf.setNotifyURL(getBasePath(request) + "loan/transferNotify.htm");
+            tf.setNotifyURL("http://61.132.53.150:7001/p2p-website/loan/transferNotify.htm");
             String dataStr = LoanJsonList + tf.getPlatformMoneymoremore()
                     + tf.getTransferAction() + tf.getAction()
                     + tf.getTransferType() + tf.getNeedAudit()

@@ -65,4 +65,7 @@ public interface IRepayPlanDao
     public void updateRepayPlanStatus(String... id);
     
     public Integer getRepayPlanCount(String orderId);
+    
+    public List<RepayPlanEntity> getRepayAudit(String debtId)
+            throws SQLException;
 }

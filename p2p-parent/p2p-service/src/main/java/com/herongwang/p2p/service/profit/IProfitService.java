@@ -30,4 +30,6 @@ public interface IProfitService
      */
     public RepayPlanModel FinancingProfit(String debtId, BigDecimal amount,
             String customerId);
+    
+    public void update(ProfitListEntity entity);
 }

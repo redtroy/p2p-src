@@ -91,6 +91,19 @@ public class RepayPlanEntity extends Pagable implements Serializable
     private Date createTime;
     
     /**
+     * 还款时间
+     */
+    @Column(name = "redate")
+    private Date redate;
+    
+    /**
+     * 审核状态
+     * 0代表未审核，1代表完成
+     */
+    @Column(name = "auditStatus")
+    private Integer auditStatus;
+    
+    /**
      * 更新时间
      */
     @Column(name = "updateTime")
@@ -102,6 +115,26 @@ public class RepayPlanEntity extends Pagable implements Serializable
      */
     @Column(name = "prepaidStatus")
     private Integer prepaidStatus;
+    
+    public Date getRedate()
+    {
+        return redate;
+    }
+    
+    public void setRedate(Date redate)
+    {
+        this.redate = redate;
+    }
+    
+    public Integer getAuditStatus()
+    {
+        return auditStatus;
+    }
+    
+    public void setAuditStatus(Integer auditStatus)
+    {
+        this.auditStatus = auditStatus;
+    }
     
     public String getDebtId()
     {

@@ -74,15 +74,21 @@
 						d.close();
 						return false;
 					}else if (data.flag == 'no') {
-						dialog({
+						show.content('用户余额不足,还款失败!');
+						show.showModal();
+						d.close();
+						return false;
+						/*dialog({
 							title : '提示',
 							content : '用户余额不足是否使用第三方账户进行还款!',
 							button : [ {
 								value : '取消',
 								callback : function() {
 								}
-							}, {
-								value : '继续还款',
+							}
+							, 
+							{
+								 value : '继续还款',
 								callback : function() {
 								/* 	$.post("saveRepayPlan.htm", {
 										ids : arrId,
@@ -97,8 +103,8 @@
 											success.content('还款失败！');
 											success.showModal();
 										}
-									}); */
-									var showInput=
+									});*/
+									/*var showInput=
 										dialog({
 											title : '消息',
 											content:'请输入还款人乾多多号：<input autofocus id="ddh" value=""/>',
@@ -110,13 +116,14 @@
 													show.showModal();
 													d.close();
 												}else{
-													location.href="${basePath}repayPlan/transfer.htm?ids="+xh+"&orderId="+orderId+"&debtId="+debtId+"&payManId="+ddh;
+													location.href="${basePath}repayPlan/transfer.htm?ids="+arrId+"&orderId="+orderId+"&debtId="+debtId+"&payManId="+ddh+"&xh="+xh;
 												}
 											}
 										});
 									showInput.showModal();
-								}
-							}, {
+								} 
+							}, 
+							{
 								value : '去充值',
 								callback : function() {
 									show.content('跳转充值页面！');
@@ -124,13 +131,14 @@
 								},
 								autofocus : true
 							} ]
-						}).showModal();
-					}
+						}).showModal();*/
+					} 
 				}) 
 			},
 			cancelValue : '取消',
 			cancel : function() {
 			}
+						
 		});
 		d.showModal();
 	}

@@ -96,6 +96,22 @@ public class ProfitListEntity extends Pagable implements Serializable
     @Column(name = "fee")
     private BigDecimal fee;
     
+    /**
+     * 订单ID
+     */
+    @Column(name = "loanNo")
+    private String loanNo;
+    
+    public String getLoanNo()
+    {
+        return loanNo;
+    }
+    
+    public void setLoanNo(String loanNo)
+    {
+        this.loanNo = loanNo;
+    }
+    
     public BigDecimal getFee()
     {
         return fee;

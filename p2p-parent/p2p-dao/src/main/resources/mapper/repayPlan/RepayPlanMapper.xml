@@ -17,6 +17,8 @@
 		<result property="createTime" column="createTime" jdbcType="TIMESTAMP" />
 		<result property="updateTime" column="updateTime" jdbcType="TIMESTAMP" />
 		<result property="prepaidStatus" column="prepaidStatus" jdbcType="INTEGER" />
+		<result property="redate" column="redate" jdbcType="TIMESTAMP" />
+		<result property="auditStatus" column="auditStatus" jdbcType="INTEGER" />
 	</resultMap>
 
 	<!-- 条件查询还款计划 -->
@@ -50,5 +52,11 @@
 	</update>
 	<select id="getRepayPlanCount" parameterType="String" resultType="java.lang.Integer">
 	<![CDATA[ SELECT COUNT(r.debtId) FROM RepayPlan r  WHERE r.orderId=#{orderId} AND r.status=0 AND r.prepaidStatus=0]]>
+	</select>
+	<select id="getRepayAudit" parameterType="String" resultMap="RepayPlanEntity">
+	<![CDATA[ SELECT * FROM RepayPlan r WHERE  DATE_FORMAT(r.redate, '%Y%m%d')<DATE_FORMAT(CURDATE(), '%Y%m%d') AND r.status=1 AND r.auditStatus=0]]>
+	<if test="condition.debtId != null and condition.debtId != ''">
+			<![CDATA[  AND r.debtId =#{debtId}]]>
+	</if>
 	</select>
 </mapper>

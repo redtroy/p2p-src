@@ -57,6 +57,15 @@ public interface IRepayPlanService
             throws ServiceException;
     
     /**
+     * 生成还款明细接口
+     * @param ids
+     * @param orderId
+     * @param debtId
+     * @return
+     */
+    public String repay(String ids, String orderId, String debtId);
+    
+    /**
      * 验证余额
      * @param ids
      * @param orderId
@@ -69,6 +78,13 @@ public interface IRepayPlanService
     /**
      * 获取转账会员的 乾多多平台号 和 金额
      */
-    public List<Map<String, String>> getTransferList(String ids,
+    public List<List<Map<String, String>>> getTransferList(String ids,
             String orderId, String debtId);
+    
+    /**
+     * 自动审核所有到时间的还款
+     * @param url
+     * @return
+     */
+    public String refundAudit(String url, String debtId);
 }

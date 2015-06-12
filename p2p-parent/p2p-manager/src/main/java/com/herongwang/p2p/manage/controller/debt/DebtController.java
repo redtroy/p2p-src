@@ -28,8 +28,10 @@ import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.loan.util.Common;
 import com.herongwang.p2p.loan.util.RsaHelper;
 import com.herongwang.p2p.manage.controller.BaseController;
+import com.herongwang.p2p.model.loan.LoanInfoBean;
 import com.herongwang.p2p.model.loan.transferauditreturnBean;
 import com.herongwang.p2p.model.post.LoanTransferAuditModel;
+import com.herongwang.p2p.model.post.TransferModel;
 import com.herongwang.p2p.service.apply.IDebtApplicationService;
 import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.financing.IFinancingOrdersService;
@@ -367,47 +369,109 @@ public class DebtController extends BaseController
         try
         {
             List<InvestOrderEntity> list = investOderService.queryListInvest(debtId);
+            String privatekey = Common.privateKeyPKCS8;
+            RsaHelper rsa = RsaHelper.getInstance();
             if (list.size() > 0)
             {
-                String loanNoList = "";
+                //String loanNoList = "";
+                //  String[] loanNoList = new String[(int) Math.ceil(list.size() / 200)];
+                List<String> loanNoList = new ArrayList<String>();
+                int k = 0;
+                String loan = "";
                 for (InvestOrderEntity investOrder : list)
                 {
                     if (!"".equals(investOrder.getLoanNo())
                             && investOrder.getLoanNo() != null)
                     {
-                        loanNoList = loanNoList + investOrder.getLoanNo() + ",";
+                        loan = loan + investOrder.getLoanNo() + ",";
+                        if (k == 199)
+                        {
+                            k = -1;
+                            loanNoList.add(loan);
+                            loan = "";
+                        }
+                        k++;
                     }
                 }
-                if (!"".equals(loanNoList))
+                loanNoList.add(loan);
+                for (String loanNo : loanNoList)
                 {
-                    loanNoList = loanNoList.substring(0,
-                            loanNoList.length() - 1);
+                    if (!"".equals(loanNo))
+                    {
+                        loanNo = loanNo.substring(0, loanNo.length() - 1);
+                    }
+                    
+                    LoanTransferAuditModel ltsa = new LoanTransferAuditModel();
+                    ltsa.setPlatformMoneymoremore("p1190");
+                    ltsa.setAuditType("1");
+                    ltsa.setLoanNoList(loanNo);
+                    ltsa.setRemark3(debtId);//存放DebtId
+                    ltsa.setReturnURL(getBasePath(request)
+                            + "tender/loanTransferAuditModelReturn.htm");
+                    ltsa.setNotifyURL("http://61.132.53.150:7001/p2p-manager/tender/loanTransferAuditModelNotify.htm");
+                    String dataStr = ltsa.getLoanNoList()
+                            + ltsa.getPlatformMoneymoremore()
+                            + ltsa.getAuditType() + ltsa.getRandomTimeStamp()
+                            + ltsa.getRemark1() + ltsa.getRemark2()
+                            + ltsa.getRemark3() + ltsa.getReturnURL()
+                            + ltsa.getNotifyURL();
+                    String SignInfo = rsa.signData(dataStr, privatekey);
+                    ltsa.setSignInfo(SignInfo);
+                    String flag = postService.audit(ltsa);
+                    if (!"ok".equals(flag))
+                    {
+                        return "false";
+                    }
                 }
-                LoanTransferAuditModel ltsa = new LoanTransferAuditModel();
-                ltsa.setPlatformMoneymoremore("p1190");
-                ltsa.setAuditType("1");
-                ltsa.setLoanNoList(loanNoList);
-                ltsa.setRemark3(debtId);//存放DebtId
-                String privatekey = Common.privateKeyPKCS8;
-                ltsa.setReturnURL(getBasePath(request)
-                        + "tender/loanTransferAuditModelReturn.htm");
-                ltsa.setNotifyURL(getBasePath(request)
-                        + "tender/loanTransferAuditModelNotify.htm");
-                String dataStr = ltsa.getLoanNoList()
-                        + ltsa.getPlatformMoneymoremore() + ltsa.getAuditType()
-                        + ltsa.getRandomTimeStamp() + ltsa.getRemark1()
-                        + ltsa.getRemark2() + ltsa.getRemark3()
-                        + ltsa.getReturnURL() + ltsa.getNotifyURL();
-                RsaHelper rsa = RsaHelper.getInstance();
+                List<LoanInfoBean> listmlib = new ArrayList<LoanInfoBean>();
+                FinancingOrdersEntity financeOrder = financingOrdersService.getOrderByDebtId(debtId);//查询订单
+                LoanInfoBean mlib = new LoanInfoBean();
+                mlib.setLoanOutMoneymoremore(userService.getUserById(financeOrder.getCustomerId())
+                        .getMoneymoremoreId());//付款人
+                mlib.setLoanInMoneymoremore("p1190");//收款人
+                mlib.setOrderNo(financeOrder.getOrderId());//订单号,投资人收益明细的ID
+                mlib.setBatchNo(debtId);//标号
+                mlib.setAmount((financeOrder.getAmount()
+                        .multiply(new BigDecimal(0.03)).divide(new BigDecimal(
+                        100))).toString());
+                mlib.setTransferName("平台管理费");
+                mlib.setSecondaryJsonList("");
+                listmlib.add(mlib);
+                String LoanJsonList = Common.JSONEncode(listmlib);
+                TransferModel tf = new TransferModel();
+                tf.setPlatformMoneymoremore("p1190");
+                tf.setTransferAction("3");
+                tf.setAction("2");
+                tf.setTransferType("2");
+                tf.setNeedAudit("1");
+                tf.setReturnURL("");
+                tf.setNotifyURL("http://61.132.53.150:7001/p2p-manager/repayPlan/transferNotify.htm");
+                //                tf.setRemark1(Common.UrlEncoder(ids, "utf-8"));//还款单的ID
+                //                tf.setRemark2(orderId);//投资订单号
+                //                tf.setRemark3(debtId);//标的ID
+                String dataStr = LoanJsonList + tf.getPlatformMoneymoremore()
+                        + tf.getTransferAction() + tf.getAction()
+                        + tf.getTransferType() + tf.getNeedAudit()
+                        + tf.getRandomTimeStamp() + tf.getRemark1()
+                        + tf.getRemark2() + tf.getRemark3() + tf.getReturnURL()
+                        + tf.getNotifyURL();
+                rsa = RsaHelper.getInstance();
                 String SignInfo = rsa.signData(dataStr, privatekey);
-                ltsa.setSignInfo(SignInfo);
-                return postService.audit(ltsa);
+                LoanJsonList = Common.UrlEncoder(LoanJsonList, "utf-8");
+                tf.setLoanJsonList(LoanJsonList);
+                tf.setSignInfo(SignInfo);
+                String bsflag = postService.transfer(tf);
+                if ("ok".equals(bsflag))
+                {
+                    return debtService.audit(debtId);
+                }
+                
             }
         }
         catch (Exception e)
         {
             SxjLogger.error("审核失败", e.getClass());
-            throw new WebException(e);
+            return "false";
         }
         return "false";
     }
