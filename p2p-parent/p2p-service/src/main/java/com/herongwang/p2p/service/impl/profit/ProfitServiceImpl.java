@@ -341,4 +341,10 @@ public class ProfitServiceImpl implements IProfitService
         }
         return profits;
     }
+    
+    @Override
+    public ProfitListEntity getProfitListEntity(String profitId)
+    {
+        return profitListDao.getProfitListEntity(profitId);
+    }
 }

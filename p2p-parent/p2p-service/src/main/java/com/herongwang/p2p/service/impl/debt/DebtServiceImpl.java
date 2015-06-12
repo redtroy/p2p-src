@@ -93,6 +93,7 @@ public class DebtServiceImpl implements IDebtService
             }
             condition.addCondition("name", query.getName());
             condition.addCondition("customerId", query.getCustomerId());//会员ID
+            condition.addCondition("debtNo", query.getDebtNo());//标的号
             condition.setPage(query);
             debtList = DebtDao.query(condition);
             query.setPage(condition);
