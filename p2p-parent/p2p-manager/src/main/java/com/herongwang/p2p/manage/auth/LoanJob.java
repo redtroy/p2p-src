@@ -308,7 +308,9 @@ public class LoanJob
                         RepayPlanEntity rpe = rpList.get(i);
                         if (pl.getSequence().equals(rpe.getSequence()))
                         {
-                            //                            repay(rpe.getPlanId(),f.getOrderId(),f.getDebtId());
+                            repayPlanService.repay(rpe.getPlanId(),
+                                    f.getOrderId(),
+                                    f.getDebtId());
                         }
                     }
                 }
@@ -319,7 +321,10 @@ public class LoanJob
         {
             String profitId = loanQuery.getOrderNo();
             ProfitListEntity pl = profitService.getProfitListEntity(profitId);
+            pl.setLoanNo(loanQuery.getLoanNo());
+            profitService.update(pl);
             
+            repayPlanService.refundAudit(null, loanQuery.getBatchNo());
         }
         //更新转账对账时间
         p.setValue(endTime);
