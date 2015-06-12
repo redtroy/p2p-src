@@ -295,6 +295,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                         for (int i = 0; i < list.size(); i++)
                         {
                             String listmlib = "";
+                            int k = 0;
                             for (Map<String, String> maplist : list.get(i))
                             {
                                 if (maplist.get("loanNo") == null
@@ -310,6 +311,13 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                                 {
                                     listmlib = listmlib + ","
                                             + maplist.get("loanNo");
+                                    if (k == 199)
+                                    {
+                                        k = -1;
+                                        listmb.add(listmlib);
+                                        listmlib = "";
+                                    }
+                                    k++;
                                 }
                             }
                             if (listmlib.length() > 1)
