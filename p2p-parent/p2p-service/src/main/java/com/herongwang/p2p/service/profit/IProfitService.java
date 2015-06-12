@@ -31,5 +31,13 @@ public interface IProfitService
     public RepayPlanModel FinancingProfit(String debtId, BigDecimal amount,
             String customerId);
     
-    public void update(ProfitListEntity entity);
+    /**
+     * 根据id获取收益明细
+     * @param profitId
+     * @return
+     */
+    public ProfitListEntity getProfitListEntity(String profitId);
+
+public void update(ProfitListEntity entity);
+    
 }
