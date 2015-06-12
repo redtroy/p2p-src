@@ -14,7 +14,7 @@ public class AuditJob
     {
         try
         {
-            replan.refundAudit("test", "4rOKGlQhaCif8cOkhcxcm6IwCxqJRNnB");
+            replan.refundAudit("test", null);
         }
         catch (Exception e)
         {
