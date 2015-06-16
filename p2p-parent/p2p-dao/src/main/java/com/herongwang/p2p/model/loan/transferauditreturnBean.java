@@ -2,136 +2,136 @@ package com.herongwang.p2p.model.loan;
 
 public class transferauditreturnBean
 {
-    private String loanNoList;
+    private String LoanNoList;
     
-    private String loanNoListFail;
+    private String LoanNoListFail;
     
-    private String auditType;
+    private String AuditType;
     
-    private String platformMoneymoremore;
+    private String PlatformMoneymoremore;
     
-    private String randomTimeStamp;
+    private String RandomTimeStamp;
     
-    private String remark1;
+    private String Remark1;
     
-    private String remark2;
+    private String Remark2;
     
-    private String remark3;
+    private String Remark3;
     
-    private String resultCode;
+    private String ResultCode;
     
-    private String message;
+    private String Message;
     
-    private String verifySignature;
+    private String VerifySignature;
     
     public String getLoanNoList()
     {
-        return loanNoList;
+        return LoanNoList;
     }
     
     public void setLoanNoList(String loanNoList)
     {
-        this.loanNoList = loanNoList;
+        LoanNoList = loanNoList;
     }
     
     public String getLoanNoListFail()
     {
-        return loanNoListFail;
+        return LoanNoListFail;
     }
     
     public void setLoanNoListFail(String loanNoListFail)
     {
-        this.loanNoListFail = loanNoListFail;
+        LoanNoListFail = loanNoListFail;
     }
     
     public String getAuditType()
     {
-        return auditType;
+        return AuditType;
     }
     
     public void setAuditType(String auditType)
     {
-        this.auditType = auditType;
+        AuditType = auditType;
     }
     
     public String getPlatformMoneymoremore()
     {
-        return platformMoneymoremore;
+        return PlatformMoneymoremore;
     }
     
     public void setPlatformMoneymoremore(String platformMoneymoremore)
     {
-        this.platformMoneymoremore = platformMoneymoremore;
+        PlatformMoneymoremore = platformMoneymoremore;
     }
     
     public String getRandomTimeStamp()
     {
-        return randomTimeStamp;
+        return RandomTimeStamp;
     }
     
     public void setRandomTimeStamp(String randomTimeStamp)
     {
-        this.randomTimeStamp = randomTimeStamp;
+        RandomTimeStamp = randomTimeStamp;
     }
     
     public String getRemark1()
     {
-        return remark1;
+        return Remark1;
     }
     
     public void setRemark1(String remark1)
     {
-        this.remark1 = remark1;
+        Remark1 = remark1;
     }
     
     public String getRemark2()
     {
-        return remark2;
+        return Remark2;
     }
     
     public void setRemark2(String remark2)
     {
-        this.remark2 = remark2;
+        Remark2 = remark2;
     }
     
     public String getRemark3()
     {
-        return remark3;
+        return Remark3;
     }
     
     public void setRemark3(String remark3)
     {
-        this.remark3 = remark3;
+        Remark3 = remark3;
     }
     
     public String getResultCode()
     {
-        return resultCode;
+        return ResultCode;
     }
     
     public void setResultCode(String resultCode)
     {
-        this.resultCode = resultCode;
+        ResultCode = resultCode;
     }
     
     public String getMessage()
     {
-        return message;
+        return Message;
     }
     
     public void setMessage(String message)
     {
-        this.message = message;
+        Message = message;
     }
     
     public String getVerifySignature()
     {
-        return verifySignature;
+        return VerifySignature;
     }
     
     public void setVerifySignature(String verifySignature)
     {
-        this.verifySignature = verifySignature;
+        VerifySignature = verifySignature;
     }
     
 }

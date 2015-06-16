@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import util.RsaHelper;
 
@@ -39,6 +40,7 @@ import com.herongwang.p2p.model.post.TransferModel;
 import com.herongwang.p2p.service.account.IAccountService;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
+import com.herongwang.p2p.service.loan.ILoanService;
 import com.herongwang.p2p.service.orders.IOrdersService;
 import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.post.IPostService;
@@ -88,6 +90,9 @@ public class LoanController extends BaseController
     
     @Autowired
     IInvestOrderService investOrderService;
+    
+    @Autowired
+    ILoanService loanService;
     
     /*----------------------------------------------充值--------------------------------*/
     @RequestMapping("/recharge")
@@ -184,6 +189,8 @@ public class LoanController extends BaseController
     @RequestMapping("/returnURL")
     public String returnURL(ModelMap map, LoanModel result) throws Exception
     {
+        String message = Common.JSONEncode(result);
+        loanService.addOrder(message, "LoanModel", "充值跳转页面返回报文");
         DecimalFormat df = new DecimalFormat("######0.00");
         UsersEntity user = this.getUsersEntity();
         if (user == null)
@@ -219,7 +226,7 @@ public class LoanController extends BaseController
                 orders.setLoanNo(result.getLoanNo());
                 orders.setArriveTime(new Date());
                 orders.setFeeWithdraws(multiply(new BigDecimal(
-                        result.getFeeWithdraws())));
+                        null == result.getFee() ? 0 : result.getFee())));
                 ordersService.updateOrders(orders);
                 
                 //添加资金明细
@@ -255,6 +262,8 @@ public class LoanController extends BaseController
     @RequestMapping("/notifyURL")
     public void notifyURL(ModelMap map, LoanModel result) throws Exception
     {
+        String message = Common.JSONEncode(result);
+        loanService.addOrder(message, "LoanModel", "充值后台返回报文");
         DecimalFormat df = new DecimalFormat("######0.00");
         //获取双乾参数
         Loan loan = parametersService.getLoan();
@@ -284,7 +293,8 @@ public class LoanController extends BaseController
                 orders.setLoanNo(result.getLoanNo());
                 orders.setArriveTime(new Date());
                 orders.setFeeWithdraws(multiply(new BigDecimal(
-                        result.getFeeWithdraws())));
+                        null == result.getFee() ? 0 : result.getFee())));
+                ordersService.updateOrders(orders);
                 ordersService.updateOrders(orders);
                 
                 //添加资金明细
@@ -362,7 +372,7 @@ public class LoanController extends BaseController
                     + "loan/toloanwithdraws.action";
             String ReturnURL = basePath + "loan/withdrawReturnURL.htm";
             String NotifyURL = "http://61.132.53.150:7001/p2p-website/loan/withdrawNotifyURL.htm";
-            String WithdrawMoneymoremore = "m31333";
+            String WithdrawMoneymoremore = user.getMoneymoremoreId();
             String PlatformMoneymoremore = loan.getMoremoreId();
             String OrderNo = orders.getOrdersNo();//平台的提现订单号
             String Amount = order.getOrderAmount();//金额
@@ -430,6 +440,8 @@ public class LoanController extends BaseController
     public String withdrawReturnURL(ModelMap map, LoanModel result)
             throws Exception
     {
+        String message = Common.JSONEncode(result);
+        loanService.addOrder(message, "LoanModel", "提现跳转页面返回报文");
         DecimalFormat df = new DecimalFormat("######0.00");
         UsersEntity user = this.getUsersEntity();
         if (user == null)
@@ -480,7 +492,7 @@ public class LoanController extends BaseController
                 deal.setCustomerId(order.getCustomerId());
                 deal.setAccountId(account.getAccountId());
                 deal.setOrderId(order.getOrderId());
-                deal.setType(1);
+                deal.setType(2);
                 deal.setCreateTime(new Date());
                 deal.setStatus(1);
                 deal.setAmount(order.getAmount());
@@ -509,6 +521,8 @@ public class LoanController extends BaseController
     @RequestMapping("/withdrawNotifyURL")
     public void withdrawNotifyURL(LoanModel result) throws Exception
     {
+        String message = Common.JSONEncode(result);
+        loanService.addOrder(message, "LoanModel", "提现后台返回报文");
         DecimalFormat df = new DecimalFormat("######0.00");
         UsersEntity user = this.getUsersEntity();
         if (user == null)
@@ -650,7 +664,8 @@ public class LoanController extends BaseController
     public String authorizeReturnURL(ModelMap map, LoanModel result)
             throws Exception
     {
-        
+        String message = Common.JSONEncode(result);
+        loanService.addOrder(message, "LoanModel", "授权跳转页面返回报文");
         UsersEntity user = this.getUsersEntity();
         if (user == null)
         {
@@ -712,7 +727,8 @@ public class LoanController extends BaseController
     @RequestMapping("/authorizeNotifyURL")
     public void authorizeNotifyURL(LoanModel result) throws Exception
     {
-        
+        String message = Common.JSONEncode(result);
+        loanService.addOrder(message, "LoanModel", "授权后台返回报文");
         UsersEntity user = this.getUsersEntity();
         if (user == null)
         {
@@ -793,6 +809,8 @@ public class LoanController extends BaseController
             String platformType = "1";//1.托管账户 2.自有账户
             
             String[] result = postService.balanceQuery(PlatformId, platformType);
+            String message = Common.JSONEncode(result);
+            loanService.addOrder(message, "String[]", "余额查询对账处理。");
             String[] balance = result[1].split("\\|");
             
             map.put("balance1", balance[0]);
@@ -1009,8 +1027,12 @@ public class LoanController extends BaseController
      * @return
      */
     @RequestMapping("registerbindreturn")
-    public String registerbindreturn(LoanRegisterBindReturnBean lb, ModelMap map)
+    public String registerbindreturn(LoanRegisterBindReturnBean lb,
+            ModelMap map, RedirectAttributes ra)
     {
+        loanService.addOrder(Common.JSONEncode(lb),
+                "LoanRegisterBindReturnBean",
+                "开户页面返回Model");
         if ("88".equals(lb.getResultCode()))
         {
             map.put("model", lb);
@@ -1028,7 +1050,8 @@ public class LoanController extends BaseController
         }
         else
         {
-            return "redirect:/user/memberInfo.htm?message=" + lb.getMessage();
+            ra.addAttribute("message",
+                    Common.UrlEncoder(lb.getMessage(), "utf-8"));
         }
         return "redirect:/user/memberInfo.htm";
     }
@@ -1074,7 +1097,7 @@ public class LoanController extends BaseController
             tf.setAction("1");
             tf.setTransferType("2");
             tf.setReturnURL(getBasePath(request) + "loan/transferReturn.htm");
-            tf.setNotifyURL(getBasePath(request) + "loan/transferNotify.htm");
+            tf.setNotifyURL("http://61.132.53.150:7001/p2p-website/loan/transferNotify.htm");
             String dataStr = LoanJsonList + tf.getPlatformMoneymoremore()
                     + tf.getTransferAction() + tf.getAction()
                     + tf.getTransferType() + tf.getNeedAudit()
@@ -1108,6 +1131,10 @@ public class LoanController extends BaseController
         UsersEntity user = getUsersEntity();
         try
         {
+            String message = Common.JSONEncode(lr);
+            loanService.addOrder(message,
+                    "LoanTransferReturnBean",
+                    "转账跳转页面返回报文");
             String json = Common.UrlDecoder(lr.getLoanJsonList(), "utf-8");
             List<Object> list = Common.JSONDecodeList(json, LoanInfoBean.class);
             if (list.size() == 1 && "88".equals(lr.getResultCode()))
@@ -1130,7 +1157,7 @@ public class LoanController extends BaseController
             else
             {
                 AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
-                map.put("title", "投资失败");
+                map.put("title", "投资失败:" + lr.getMessage());
                 map.put("orderNo", "无");
                 map.put("orderAmount", "0");
                 map.put("Fee", "0");
@@ -1159,6 +1186,8 @@ public class LoanController extends BaseController
         UsersEntity user = getUsersEntity();
         try
         {
+            String message = Common.JSONEncode(lr);
+            loanService.addOrder(message, "LoanTransferReturnBean", "转账后台返回报文");
             String json = Common.UrlDecoder(lr.getLoanJsonList(), "utf-8");
             List<Object> list = Common.JSONDecodeList(json, LoanInfoBean.class);
             if (list.size() == 1 && "88".equals(lr.getResultCode()))
@@ -1211,7 +1240,8 @@ public class LoanController extends BaseController
         }
         catch (Exception e)
         {
-            // TODO: handle exception
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            e.printStackTrace();
         }
         return "site/test/loanrelease";
     }
@@ -1229,7 +1259,8 @@ public class LoanController extends BaseController
         }
         catch (Exception e)
         {
-            // TODO: handle exception
+            e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
         }
         return "site/test/releasereturn";
     }
@@ -1247,7 +1278,8 @@ public class LoanController extends BaseController
         }
         catch (Exception e)
         {
-            // TODO: handle exception
+            e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
         }
         return "";
     }
@@ -1279,7 +1311,8 @@ public class LoanController extends BaseController
         }
         catch (Exception e)
         {
-            // TODO: handle exception
+            e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
         }
         return "site/test/loantransferaudit";
     }
@@ -1297,7 +1330,8 @@ public class LoanController extends BaseController
         }
         catch (Exception e)
         {
-            // TODO: handle exception
+            e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
         }
         return "site/test/transferauditreturn";
     }
@@ -1315,7 +1349,8 @@ public class LoanController extends BaseController
         }
         catch (Exception e)
         {
-            // TODO: handle exception
+            e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
         }
         return "";
     }

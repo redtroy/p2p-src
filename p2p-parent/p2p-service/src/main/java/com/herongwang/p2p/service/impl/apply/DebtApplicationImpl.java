@@ -10,6 +10,7 @@ import com.herongwang.p2p.dao.apply.IDebtApplicationDao;
 import com.herongwang.p2p.entity.apply.DebtApplicationEntity;
 import com.herongwang.p2p.service.apply.IDebtApplicationService;
 import com.sxj.util.exception.ServiceException;
+import com.sxj.util.logger.SxjLogger;
 import com.sxj.util.persistent.QueryCondition;
 
 @Service
@@ -34,6 +35,7 @@ public class DebtApplicationImpl implements IDebtApplicationService
         catch (Exception e)
         {
             e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
         }
         
     }
@@ -49,6 +51,7 @@ public class DebtApplicationImpl implements IDebtApplicationService
         }
         catch (Exception e)
         {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
             e.printStackTrace();
         }
         
@@ -87,6 +90,7 @@ public class DebtApplicationImpl implements IDebtApplicationService
         }
         catch (Exception e)
         {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
             e.printStackTrace();
         }
         

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.herongwang.p2p.dao.loan.ILoanDao">
+	<resultMap id="LoanInfo" type="com.herongwang.p2p.entity.loan.LoanEntity">
+		<id property="loanId" column="loanId" jdbcType="VARCHAR" />
+		<result property="message" column="message" jdbcType="VARCHAR" />
+		<result property="className" column="className" jdbcType="VARCHAR" />
+		<result property="createTime" column="createTime" jdbcType="TIMESTAMP" />
+	    <result property="remark" column="remark" jdbcType="VARCHAR" />
+	</resultMap>
+    <!-- 条件查询订单列表 -->
+	<select id="query" resultMap="LoanInfo"
+		parameterType="com.sxj.util.persistent.QueryCondition">
+		<![CDATA[select * from LoanInfo i ]]>
+		<![CDATA[ ORDER BY i.createTime DESC]]>
+	</select>
+</mapper>

@@ -2,7 +2,9 @@ package com.herongwang.p2p.service.impl.debt;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -93,6 +95,7 @@ public class DebtServiceImpl implements IDebtService
             }
             condition.addCondition("name", query.getName());
             condition.addCondition("customerId", query.getCustomerId());//会员ID
+            condition.addCondition("debtNo", query.getDebtNo());//标的号
             condition.setPage(query);
             debtList = DebtDao.query(condition);
             query.setPage(condition);
@@ -186,6 +189,8 @@ public class DebtServiceImpl implements IDebtService
                     repayPlan.setStatus(0);
                     repayPlan.setCreateTime(new Date());
                     repayPlan.setUpdateTime(new Date());
+                    repayPlan.setRedate(returnDate(i + 1));
+                    repayPlan.setAuditStatus(0);
                     repayPlan.setPrepaidStatus(0);
                     reList.add(repayPlan);
                     
@@ -204,6 +209,8 @@ public class DebtServiceImpl implements IDebtService
                 repayPlan.setStatus(0);
                 repayPlan.setCreateTime(new Date());
                 repayPlan.setUpdateTime(new Date());
+                repayPlan.setRedate(returnDate(prift.getMonthProfit().size()));
+                repayPlan.setAuditStatus(0);
                 repayPlan.setPrepaidStatus(0);
                 reList.add(repayPlan);
             }
@@ -313,4 +320,23 @@ public class DebtServiceImpl implements IDebtService
         }
     }
     
+    public Date returnDate(int num)
+    {
+        Calendar c = Calendar.getInstance();//获得一个日历的实例   
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try
+        {
+            date = sdf.parse(sdf.format(new Date()));//初始日期   
+            c.setTime(date);//设置日历时间   
+            c.add(Calendar.MONTH, num);//在日历的月份上增加6个月   
+            String strDate = sdf.format(c.getTime());//的到你想要得6个月后的日期   
+            date = sdf.parse(strDate);
+        }
+        catch (Exception e)
+        {
+            
+        }
+        return date;
+    }
 }

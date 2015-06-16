@@ -55,6 +55,7 @@ public class UserController extends BaseController
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new WebException("查询会员信息错误", e);
         }
@@ -69,6 +70,7 @@ public class UserController extends BaseController
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new WebException("改变会员状态错误", e);
         }

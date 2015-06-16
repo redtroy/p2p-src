@@ -133,7 +133,10 @@ public class InvestOrderServiceImpl implements IInvestOrderService
             list = profitListDao.query(condition);
             if (CollectionUtils.isEmpty(list))
             {
-                profitListDao.addProfitList(profits);
+                for (ProfitListEntity pro : profits)
+                {
+                    profitListDao.addProfit(pro);
+                }
                 //调用支付接口
                 if (io.getStatus() == 1)
                 {

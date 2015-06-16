@@ -341,4 +341,26 @@ public class ProfitServiceImpl implements IProfitService
         }
         return profits;
     }
+    
+    @Override
+    @Transactional
+    public void update(ProfitListEntity entity) throws ServiceException
+    {
+        try
+        {
+            profitListDao.updateProfitList(entity);
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error("收益明细更新出错", e.getClass());
+            throw new ServiceException();
+        }
+        
+    }
+    
+    @Override
+    public ProfitListEntity getProfitListEntity(String profitId)
+    {
+        return profitListDao.getProfitListEntity(profitId);
+    }
 }

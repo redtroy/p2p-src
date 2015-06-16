@@ -49,6 +49,9 @@ LEFT JOIN PARAMETERS P1 ON P1.TYPE = 'REPAYMENTTYPE' AND P1.`VALUE` = d.repayTyp
 		<if test="condition.customerId != null and condition.customerId != ''">
 			<![CDATA[AND u.customerId =#{condition.customerId}]]>
 		</if>
+		<if test="condition.debtNo != null and condition.debtNo != ''">
+			<![CDATA[AND d.debtNo =#{condition.debtNo}]]>
+		</if>
 		<![CDATA[ ORDER BY d.createTime DESC]]>
 	</select>
 	<!-- 条件查询投标信息 -->

@@ -16,6 +16,7 @@
 		<result property="createTime" column="createTime" jdbcType="TIMESTAMP" />
 		<result property="updateTime" column="updateTime" jdbcType="TIMESTAMP" />
 		<result property="fee" column="fee" jdbcType="INTEGER" />
+		<result property="loanNo" column="loanNo" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<select id="query" resultMap="ProfitListEntity"

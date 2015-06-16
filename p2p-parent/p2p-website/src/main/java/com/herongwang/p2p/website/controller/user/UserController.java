@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.herongwang.p2p.entity.users.UsersEntity;
+import com.herongwang.p2p.loan.util.Common;
 import com.herongwang.p2p.service.account.IAccountService;
 import com.herongwang.p2p.service.users.IUserService;
 import com.herongwang.p2p.website.controller.BaseController;
@@ -55,6 +56,10 @@ public class UserController extends BaseController
     {
         try
         {
+            if (message != null && !"".equals(message))
+            {
+                message = Common.UrlDecoder(message, "utf-8");
+            }
             if (getUsersEntity() == null)
             {
                 return LOGIN;

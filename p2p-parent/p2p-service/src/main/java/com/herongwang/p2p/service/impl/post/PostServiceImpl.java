@@ -24,10 +24,13 @@ import com.allinpay.ets.client.PaymentResult;
 import com.allinpay.ets.client.RequestOrder;
 import com.allinpay.ets.client.SecurityUtil;
 import com.allinpay.ets.client.StringUtil;
+import com.herongwang.p2p.dao.financing.IFinancingOrdersDao;
+import com.herongwang.p2p.dao.users.IUsersDao;
 import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.herongwang.p2p.entity.orders.OrdersEntity;
 import com.herongwang.p2p.entity.parameters.ParametersEntity;
+import com.herongwang.p2p.entity.profitlist.ProfitListEntity;
 import com.herongwang.p2p.entity.tl.TLBillEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.loan.util.Common;
@@ -40,20 +43,26 @@ import com.herongwang.p2p.model.loan.LoanRegisterBindReturnBean;
 import com.herongwang.p2p.model.loan.LoanReturnInfoBean;
 import com.herongwang.p2p.model.loan.LoanTransferReturnBean;
 import com.herongwang.p2p.model.loan.LoanWithdrawsOrderQueryBean;
+import com.herongwang.p2p.model.loan.transferauditreturnBean;
 import com.herongwang.p2p.model.order.OrderModel;
 import com.herongwang.p2p.model.order.ResultsModel;
 import com.herongwang.p2p.model.post.LoanModel;
 import com.herongwang.p2p.model.post.LoanReleaseModel;
+import com.herongwang.p2p.model.post.LoanTransferAuditModel;
 import com.herongwang.p2p.model.post.RegisterModel;
 import com.herongwang.p2p.model.post.TransferModel;
 import com.herongwang.p2p.service.account.IAccountService;
 import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
+import com.herongwang.p2p.service.loan.ILoanService;
 import com.herongwang.p2p.service.orders.IOrdersService;
 import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.post.IPostService;
+import com.herongwang.p2p.service.profit.IProfitService;
 import com.herongwang.p2p.service.tl.ITLBillService;
+import com.sxj.util.exception.ServiceException;
+import com.sxj.util.logger.SxjLogger;
 
 @Service
 public class PostServiceImpl implements IPostService
@@ -78,6 +87,18 @@ public class PostServiceImpl implements IPostService
     
     @Autowired
     IInvestOrderService investOrderService;
+    
+    @Autowired
+    private IFinancingOrdersDao financingOrder;
+    
+    @Autowired
+    private IUsersDao userDao;
+    
+    @Autowired
+    private IProfitService proftService;
+    
+    @Autowired
+    private ILoanService loanService;
     
     private final String SubmitURLPrefix = "http://218.4.234.150:88/main/";
     
@@ -143,6 +164,7 @@ public class PostServiceImpl implements IPostService
         }
         catch (Exception e)
         {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
             e.printStackTrace();
         }
         return strSignMsg;
@@ -568,6 +590,7 @@ public class PostServiceImpl implements IPostService
         }
         catch (Exception e)
         {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
             e.printStackTrace();
         }
         return null;
@@ -622,11 +645,11 @@ public class PostServiceImpl implements IPostService
                             if (loanobjectlist.get(i) instanceof LoanTransferReturnBean)
                             {
                                 LoanTransferReturnBean ltrb = (LoanTransferReturnBean) loanobjectlist.get(i);
-                                System.out.println(ltrb);
-                                
                                 ltrb.setLoanJsonList(Common.UrlDecoder(ltrb.getLoanJsonList(),
                                         "utf-8"));
-                                
+                                loanService.addOrder(Common.JSONEncode(ltrb),
+                                        "LoanTransferReturnBean",
+                                        "转账页面返回Model");
                                 String publickey = Common.publicKey;
                                 if (!"88".equals(ltrb.getResultCode()))
                                 {
@@ -661,8 +684,10 @@ public class PostServiceImpl implements IPostService
                                                 if (loaninfolist.get(j) instanceof LoanReturnInfoBean)
                                                 {
                                                     LoanReturnInfoBean lrib = (LoanReturnInfoBean) loaninfolist.get(j);
-                                                    System.out.println(lrib);
-                                                    
+                                                    ProfitListEntity entity = new ProfitListEntity();
+                                                    entity.setProfitId(lrib.getOrderNo());
+                                                    entity.setLoanNo(lrib.getLoanNo());
+                                                    proftService.update(entity);
                                                     // 二次分配列表
                                                     if (StringUtils.isNotBlank(lrib.getSecondaryJsonList()))
                                                     {
@@ -689,13 +714,14 @@ public class PostServiceImpl implements IPostService
                             }
                         }
                     }
+                    return "ok";
                 }
-                return "ok";
             }
         }
         catch (Exception e)
         {
             e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
         }
         return "false";
     }
@@ -708,20 +734,20 @@ public class PostServiceImpl implements IPostService
     }
     
     @Override
-    public List<LoanOrderQueryBean> orderQuery(LoanModel loan,
-            String submitURLPrefix) throws Exception
+    public List<LoanOrderQueryBean> orderQuery(LoanModel loan, String privatekey)
+            throws Exception
     {
         List<LoanOrderQueryBean> list = new ArrayList<LoanOrderQueryBean>();
         String SubmitURL = SubmitURLPrefix + "loan/loanorderquery.action";
         
-        String privatekey = Common.privateKeyPKCS8;
         String PlatformMoneymoremore = loan.getPlatformMoneymoremore();
         String Action = "";
-        String LoanNo = loan.getLoanNo();
-        String OrderNo = loan.getOrderNo();
-        String BatchNo = loan.getBatchNo();
-        String BeginTime = loan.getBeginTime();
-        String EndTime = loan.getEndTime();
+        String LoanNo = null == loan.getLoanNo() ? "" : loan.getLoanNo();
+        String OrderNo = null == loan.getOrderNo() ? "" : loan.getOrderNo();
+        String BatchNo = null == loan.getBatchNo() ? "" : loan.getBatchNo();
+        String BeginTime = null == loan.getBeginTime() ? ""
+                : loan.getBeginTime();
+        String EndTime = null == loan.getEndTime() ? "" : loan.getEndTime();
         String dataStr = PlatformMoneymoremore + Action + LoanNo + OrderNo
                 + BatchNo + BeginTime + EndTime;
         RsaHelper rsa = RsaHelper.getInstance();
@@ -771,11 +797,12 @@ public class PostServiceImpl implements IPostService
         String privatekey = Common.privateKeyPKCS8;
         String PlatformMoneymoremore = loan.getPlatformMoneymoremore();
         String Action = "1";
-        String LoanNo = loan.getLoanNo();
-        String OrderNo = loan.getOrderNo();
-        String BatchNo = loan.getBatchNo();
-        String BeginTime = loan.getBeginTime();
-        String EndTime = loan.getEndTime();
+        String LoanNo = null == loan.getLoanNo() ? "" : loan.getLoanNo();
+        String OrderNo = null == loan.getOrderNo() ? "" : loan.getOrderNo();
+        String BatchNo = null == loan.getBatchNo() ? "" : loan.getBatchNo();
+        String BeginTime = null == loan.getBeginTime() ? ""
+                : loan.getBeginTime();
+        String EndTime = null == loan.getEndTime() ? "" : loan.getEndTime();
         String dataStr = PlatformMoneymoremore + Action + LoanNo + OrderNo
                 + BatchNo + BeginTime + EndTime;
         RsaHelper rsa = RsaHelper.getInstance();
@@ -824,11 +851,12 @@ public class PostServiceImpl implements IPostService
         String privatekey = Common.privateKeyPKCS8;
         String PlatformMoneymoremore = loan.getPlatformMoneymoremore();
         String Action = "2";
-        String LoanNo = loan.getLoanNo();
-        String OrderNo = loan.getOrderNo();
-        String BatchNo = loan.getBatchNo();
-        String BeginTime = loan.getBeginTime();
-        String EndTime = loan.getEndTime();
+        String LoanNo = null == loan.getLoanNo() ? "" : loan.getLoanNo();
+        String OrderNo = null == loan.getOrderNo() ? "" : loan.getOrderNo();
+        String BatchNo = null == loan.getBatchNo() ? "" : loan.getBatchNo();
+        String BeginTime = null == loan.getBeginTime() ? ""
+                : loan.getBeginTime();
+        String EndTime = null == loan.getEndTime() ? "" : loan.getEndTime();
         String dataStr = PlatformMoneymoremore + Action + LoanNo + OrderNo
                 + BatchNo + BeginTime + EndTime;
         RsaHelper rsa = RsaHelper.getInstance();
@@ -890,5 +918,45 @@ public class PostServiceImpl implements IPostService
         
         resultarr = HttpClientUtil.doPostQueryCmd(SubmitURL, req);
         return resultarr;
+    }
+    
+    @Override
+    public String audit(LoanTransferAuditModel ltsa) throws ServiceException
+    {
+        try
+        {
+            Map<String, String> req = new TreeMap<String, String>();
+            req.put("LoanNoList", ltsa.getLoanNoList());
+            req.put("PlatformMoneymoremore", ltsa.getPlatformMoneymoremore());
+            req.put("AuditType", ltsa.getAuditType());
+            req.put("ReturnURL", ltsa.getReturnURL());
+            req.put("NotifyURL", ltsa.getNotifyURL());
+            req.put("SignInfo", ltsa.getSignInfo());
+            req.put("Remark3", ltsa.getRemark3());
+            String[] resultarr = HttpClientUtil.doPostQueryCmd(SubmitURLPrefix
+                    + "loan/toloantransferaudit.action", req);
+            if (StringUtils.isNotBlank(resultarr[1])
+                    && (resultarr[1].startsWith("[") || resultarr[1].startsWith("{")))
+            {
+                
+                transferauditreturnBean tfb = (transferauditreturnBean) Common.JSONDecode(resultarr[1],
+                        transferauditreturnBean.class);
+                loanService.addOrder(Common.JSONEncode(tfb),
+                        "transferauditreturnBean",
+                        "审核页面返回Model");
+                if ("88".equals(tfb.getResultCode()))
+                {
+                    return "ok";
+                }
+                
+            }
+            
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            e.printStackTrace();
+        }
+        return "false";
     }
 }
