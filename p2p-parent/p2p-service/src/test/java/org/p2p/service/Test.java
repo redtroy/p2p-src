@@ -23,7 +23,7 @@ public class Test
     {
     }
     
-    @Test
+    @org.junit.Test
     public void al()
     {
         try
