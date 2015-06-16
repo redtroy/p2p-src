@@ -10,6 +10,7 @@
 <script src="${b.staticPath}js/jquery-1.10.2.min.js"></script> 
 <script type="text/javascript" src="${b.staticPath}js/lightbox-2.6.min.js"></script>
 <script type="text/javascript" src="${b.staticPath}js/modernizr.custom.js"></script>
+ <@b.dialog/>
 <script>
 var min=${model.minInvest};
   $(function(){
@@ -45,7 +46,15 @@ var min=${model.minInvest};
 					   $("#invest_amount").val(je);
 					   $("#invest_form").submit();	
 				   }else{
-					   alert("该账户还没授权，请进行授权操作！");
+					   var success = dialog({
+							title : '消息',
+							cancel : false,
+							ok : function() {
+								window.location.href = "${basePath}loan/authorize.htm?type=1";
+							}
+						});
+					   success.content('该账户还没授权，请进行授权操作！');
+						success.showModal();
 					   return false;
 				   }
 			   })

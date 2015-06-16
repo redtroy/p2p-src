@@ -90,14 +90,22 @@ function postInfo() {
       <td><#if authorizeType1==1>
       		已开启
       	<#else>
-      		<input type="checkbox" value="未开启" id="authorizeType1"/>
+      		<#if type==1>
+      		<input type="checkbox" value="未开启" checked="checked" id="authorizeType1"/>
+      		<#else>
+      		<input type="checkbox" value="未开启"  id="authorizeType1"/>
+      		 </#if>
       </#if>
       </td>
     </tr><th>二次分配审核授权</th>
       <td><#if authorizeType3==1>
       		已开启
       	<#else>
+      	<#if type==1>
+      		<input type="checkbox" value="未开启"  checked="checked" id="authorizeType3"/>
+      		<#else>
       		<input type="checkbox" value="未开启" id="authorizeType3"/>
+      		 </#if>
       </#if>
       </td>
     </tr>

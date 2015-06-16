@@ -486,6 +486,26 @@ public class LoanController extends BaseController
                 deal.setFrozenAmount(account.getFozenAmount());
                 deal.setRemark("提现" + result.getAmount() + "元成功！");
                 fundDetailService.addFundDetail(deal);
+                if (null != result.getFeeWithdraws()
+                        && result.getFeeWithdraws() > 0)
+                {
+                    //添加资金明细
+                    deal = new FundDetailEntity();
+                    deal.setCustomerId(order.getCustomerId());
+                    deal.setAccountId(account.getAccountId());
+                    deal.setOrderId(order.getOrderId());
+                    deal.setType(12);
+                    deal.setCreateTime(new Date());
+                    deal.setStatus(1);
+                    deal.setAmount(this.multiply(new BigDecimal(
+                            result.getFeeWithdraws())));
+                    deal.setBalance(account.getBalance());
+                    deal.setDueAmount(account.getDueAmount());
+                    deal.setFrozenAmount(account.getFozenAmount());
+                    deal.setRemark("提现手续费" + result.getFeeWithdraws()
+                            + "元，该金额从提现金额中扣除。");
+                    fundDetailService.addFundDetail(deal);
+                }
                 
                 account.setBalance(account.getBalance()
                         .subtract(this.multiply(new BigDecimal(
@@ -534,24 +554,50 @@ public class LoanController extends BaseController
             OrdersEntity order = ordersService.getOrdersEntityByNo(result.getOrderNo());
             if (null != order && order.getStatus() == 0)
             {
+                //更新订单未支付成功！
                 order.setStatus(1);
                 order.setLoanNo(result.getLoanNo());
                 order.setArriveTime(new Date());
+                
                 order.setFeeWithdraws(multiply(new BigDecimal(
                         result.getFeeWithdraws())));
                 ordersService.updateOrders(order);
                 
-                FundDetailEntity query = new FundDetailEntity();
-                query.setOrderId(order.getOrderId());
-                query.setType(2);
-                List<FundDetailEntity> list = fundDetailService.queryFundDetail(query);
-                if (null != list && list.size() > 0)
+                //添加资金明细
+                FundDetailEntity deal = new FundDetailEntity();
+                deal.setCustomerId(order.getCustomerId());
+                deal.setAccountId(account.getAccountId());
+                deal.setOrderId(order.getOrderId());
+                deal.setType(2);
+                deal.setCreateTime(new Date());
+                deal.setStatus(1);
+                deal.setAmount(order.getAmount());
+                deal.setBalance(account.getBalance());
+                deal.setDueAmount(account.getDueAmount());
+                deal.setFrozenAmount(account.getFozenAmount());
+                deal.setRemark("提现" + result.getAmount() + "元成功！");
+                fundDetailService.addFundDetail(deal);
+                if (null != result.getFeeWithdraws()
+                        && result.getFeeWithdraws() > 0)
                 {
-                    FundDetailEntity deal = list.get(0);
+                    //添加资金明细
+                    deal = new FundDetailEntity();
+                    deal.setCustomerId(order.getCustomerId());
+                    deal.setAccountId(account.getAccountId());
+                    deal.setOrderId(order.getOrderId());
+                    deal.setType(12);
+                    deal.setCreateTime(new Date());
                     deal.setStatus(1);
-                    deal.setRemark("提现" + result.getAmount() + "元成功！");
-                    fundDetailService.updateFundDetail(deal);
+                    deal.setAmount(this.multiply(new BigDecimal(
+                            result.getFeeWithdraws())));
+                    deal.setBalance(account.getBalance());
+                    deal.setDueAmount(account.getDueAmount());
+                    deal.setFrozenAmount(account.getFozenAmount());
+                    deal.setRemark("提现手续费" + result.getFeeWithdraws()
+                            + "元，该金额从提现金额中扣除。");
+                    fundDetailService.addFundDetail(deal);
                 }
+                
                 account.setBalance(account.getBalance()
                         .subtract(this.multiply(new BigDecimal(
                                 result.getAmount()))));
@@ -563,8 +609,8 @@ public class LoanController extends BaseController
     
     /*----------------------------------------------授权--------------------------------*/
     @RequestMapping("/authorize")
-    public String authorize(HttpServletRequest request, ModelMap map)
-            throws WebException
+    public String authorize(HttpServletRequest request, ModelMap map,
+            String type) throws WebException
     {
         UsersEntity user = this.getUsersEntity();
         if (user == null)
@@ -580,7 +626,7 @@ public class LoanController extends BaseController
         String authorizeType3 = user.getAllocationStatus().toString();
         String ReturnURL = basePath + "loan/authorizeReturnURL.htm";
         String NotifyURL = loan.getServiceIp()
-                + "/p2p-website/loan/authorizeNotifyURL.htm";
+                + "p2p-website/loan/authorizeNotifyURL.htm";
         String SubmitURL = loan.getSubmitURL() + "loan/toloanauthorize.action";
         String MoneymoremoreId = user.getMoneymoremoreId();
         String PlatformMoneymoremore = loan.getMoremoreId();
@@ -593,6 +639,7 @@ public class LoanController extends BaseController
         map.put("PlatformMoneymoremore", PlatformMoneymoremore);
         map.put("ReturnURL", ReturnURL);
         map.put("NotifyURL", NotifyURL);
+        map.put("type", type);
         if (StringUtils.isEmpty(user.getMoneymoremoreId()))
         {
             map.put("moneyType", 0);
@@ -1357,5 +1404,22 @@ public class LoanController extends BaseController
             SxjLogger.error(e.getMessage(), e, this.getClass());
         }
         return "";
+    }
+    
+    /**
+     * 审核后台通知信息
+     */
+    @RequestMapping("receive")
+    public @ResponseBody void receive(LoanModel result) throws WebException
+    {
+        try
+        {
+            
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+        }
     }
 }
