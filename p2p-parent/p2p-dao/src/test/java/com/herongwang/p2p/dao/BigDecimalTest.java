@@ -18,9 +18,10 @@ public class BigDecimalTest
     {
     }
     
+    @Test
     public void testInvest()
     {
-        BigDecimal yearRatio = new BigDecimal("0.22");
+        BigDecimal yearRatio = new BigDecimal("0.098");
         BigDecimal monthRatio = yearRatio.divide(new BigDecimal("12"),
                 128,
                 BigDecimal.ROUND_HALF_UP);
@@ -44,7 +45,7 @@ public class BigDecimalTest
              * 计算当月利息
              */
             BigDecimal profit = money.multiply(monthRatio);
-            BigDecimal fee = profit.multiply(new BigDecimal("0.09"));
+            BigDecimal fee = profit.multiply(new BigDecimal("0.08"));
             BigDecimal subtract = profit.subtract(fee);
             money = money.subtract(monthMoney.subtract(profit)).setScale(2,
                     BigDecimal.ROUND_HALF_UP);
@@ -68,7 +69,6 @@ public class BigDecimalTest
         
     }
     
-    @Test
     public void testLoan()
     {
         BigDecimal yearRatio = new BigDecimal("0.12");

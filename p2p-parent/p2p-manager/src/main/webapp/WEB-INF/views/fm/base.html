@@ -219,41 +219,6 @@ var refreshElastislide=function($container,$carousel,data,empty){
 	$container.show();
 	
 }
-
-function loadUpload(id,url,isMulti,text,fn){
-	  $("#"+id).uploadify({
-	        swf: '${basePath}upload/uploadify.swf',
-	        uploader: url,
-	        fileTypeExts: '*.jpg',
-	        auto: true,
-	        multi: false,
-	        simUploadLimit:1,
-	        height:30,
-	        width:200,
-	        buttonText:text,
-	        onUploadSuccess : function(file, data, response) {
-	        	fn(data);
-	        }
-	        
-	    });
-}
-function loadUploadMember(id,url,isMulti,text,fn){
-	  $("#"+id).uploadify({
-	        swf: '${basePath}upload/uploadify.swf',
-	        uploader: url,
-	        fileTypeExts: '*.jpg',
-	        auto: true,
-	        multi: false,
-	        simUploadLimit:1,
-	        height:30,
-	        width:100,
-	        buttonText:text,
-	        onUploadSuccess : function(file, data, response) {
-	        	fn(data);
-	        }
-	        
-	    });
-}
 </script>
 </#macro>
 <#macro header>
