@@ -141,7 +141,7 @@
         <property name="jobDetail">
             <ref bean="studyDetail" />
         </property>
-        <property name="cronExpression" value="0 29 16 * * ?" />  
+        <property name="cronExpression" value="0 48 15 * * ?" />  
     </bean>
      <bean id="auditJobTrigger"
         class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">

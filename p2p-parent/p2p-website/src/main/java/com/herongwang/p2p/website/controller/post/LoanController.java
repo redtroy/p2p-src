@@ -1228,7 +1228,7 @@ public class LoanController extends BaseController
         {
             String message = Common.JSONEncode(lr);
             loanService.addOrder(message, "LoanTransferReturnBean", "转账后台返回报文");
-            String json = Common.UrlDecoder(lr.getLoanJsonList(), "utf-8");
+            /*String json = Common.UrlDecoder(lr.getLoanJsonList(), "utf-8");
             List<Object> list = Common.JSONDecodeList(json, LoanInfoBean.class);
             if (list.size() == 1 && "88".equals(lr.getResultCode()))
             {
@@ -1239,7 +1239,7 @@ public class LoanController extends BaseController
                         order.getOrderId(),
                         loan.getLoanNo());
                 
-            }
+            }*/
             
         }
         catch (Exception e)
