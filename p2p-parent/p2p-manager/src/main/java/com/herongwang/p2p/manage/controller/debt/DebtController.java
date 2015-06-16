@@ -412,7 +412,7 @@ public class DebtController extends BaseController
                     ltsa.setReturnURL(getBasePath(request)
                             + "tender/loanTransferAuditModelReturn.htm");
                     ltsa.setNotifyURL(l.getServiceIp()
-                            + "p2p-website/post/receive.htm");
+                            + "p2p-website/loan/receive.htm");
                     String dataStr = ltsa.getLoanNoList()
                             + ltsa.getPlatformMoneymoremore()
                             + ltsa.getAuditType() + ltsa.getRandomTimeStamp()
@@ -450,7 +450,7 @@ public class DebtController extends BaseController
                 tf.setNeedAudit("1");
                 tf.setReturnURL("");
                 tf.setNotifyURL(l.getServiceIp()
-                        + "p2p-website/post/receive.htm");
+                        + "p2p-website/loan/receive.htm");
                 //                tf.setRemark1(Common.UrlEncoder(ids, "utf-8"));//还款单的ID
                 //                tf.setRemark2(orderId);//投资订单号
                 //                tf.setRemark3(debtId);//标的ID
