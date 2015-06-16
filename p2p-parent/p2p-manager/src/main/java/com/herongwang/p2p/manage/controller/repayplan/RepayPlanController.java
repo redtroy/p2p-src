@@ -161,7 +161,7 @@ public class RepayPlanController extends BaseController
     public String transferPost(String ids, String orderId, String debtId,
             String payManId, String url)
     {
-        String privatekey = Common.privateKeyPKCS8;
+        
         //        List<Map<String, String>> list = repayPlanService.getTransferList(ids,
         //                orderId,
         //                debtId);
@@ -242,7 +242,6 @@ public class RepayPlanController extends BaseController
     {
         try
         {
-            String privatekey = Common.privateKeyPKCS8;
             //            List<Map<String, String>> list = repayPlanService.getTransferList(ids,
             //                    orderId,
             //                    debtId);

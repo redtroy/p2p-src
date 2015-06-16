@@ -23,7 +23,6 @@ public class Test
     {
     }
     
-    @Test
     public void al()
     {
         try

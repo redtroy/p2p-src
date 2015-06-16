@@ -30,10 +30,12 @@ import com.herongwang.p2p.loan.util.Common;
 import com.herongwang.p2p.loan.util.RsaHelper;
 import com.herongwang.p2p.model.loan.LoanInfoBean;
 import com.herongwang.p2p.model.loan.LoanInfoSecondaryBean;
+import com.herongwang.p2p.model.post.Loan;
 import com.herongwang.p2p.model.post.LoanTransferAuditModel;
 import com.herongwang.p2p.model.post.TransferModel;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
 import com.herongwang.p2p.service.impl.post.PostServiceImpl;
+import com.herongwang.p2p.service.parameters.IParametersService;
 import com.herongwang.p2p.service.repayplan.IRepayPlanService;
 import com.sxj.util.exception.ServiceException;
 import com.sxj.util.logger.SxjLogger;
@@ -71,24 +73,23 @@ public class RepayPlanServiceImpl implements IRepayPlanService
     @Autowired
     private PostServiceImpl postService;
     
+    @Autowired
+    IParametersService parametersService;
+    
     @Override
     public void addRepayPlan(RepayPlanEntity plan) throws ServiceException
     {
-        // TODO Auto-generated method stub
-        
     }
     
     @Override
     public void updateRepayPlan(RepayPlanEntity plan) throws ServiceException
     {
-        // TODO Auto-generated method stub
         
     }
     
     @Override
     public RepayPlanEntity getRepayPlan(String id) throws ServiceException
     {
-        // TODO Auto-generated method stub
         return null;
     }
     
@@ -120,7 +121,6 @@ public class RepayPlanServiceImpl implements IRepayPlanService
     @Override
     public void delRepayPlan(String id) throws ServiceException
     {
-        // TODO Auto-generated method stub
         
     }
     
@@ -133,6 +133,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
     {
         try
         {
+            Loan loan = parametersService.getLoan();
             //获取到还款计划
             List<RepayPlanEntity> planlist = repayPlanDao.getRepayPlanList(ids.split(","));
             BigDecimal monthAmount = new BigDecimal(0);
@@ -164,7 +165,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
             {
                 //余额足够直接还款
                 //乾多多平台操作
-                String privatekey = Common.privateKeyPKCS8;
+                String privatekey = loan.getPrivatekey();
                 List<List<Map<String, String>>> list = getTransferList(ids,
                         orderId,
                         debtId);
@@ -178,7 +179,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                         {
                             List<LoanInfoSecondaryBean> listmlisb = new ArrayList<LoanInfoSecondaryBean>();
                             LoanInfoSecondaryBean mlisb = new LoanInfoSecondaryBean();
-                            mlisb.setLoanInMoneymoremore("p1190");
+                            mlisb.setLoanInMoneymoremore(loan.getMoremoreId());
                             mlisb.setAmount(maplist.get("fee"));
                             mlisb.setTransferName("平台手续费");
                             listmlisb.add(mlisb);
@@ -206,7 +207,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                     {
                         String LoanJsonList = Common.JSONEncode(lstmlib);
                         TransferModel tf = new TransferModel();
-                        tf.setPlatformMoneymoremore("p1190");
+                        tf.setPlatformMoneymoremore(loan.getMoremoreId());
                         tf.setTransferAction("2");
                         tf.setAction("2");
                         tf.setTransferType("2");
@@ -279,8 +280,9 @@ public class RepayPlanServiceImpl implements IRepayPlanService
     {
         try
         {
+            Loan loan = parametersService.getLoan();
             List<RepayPlanEntity> rpList = repayPlanDao.getRepayAudit(debtId);
-            String privatekey = Common.privateKeyPKCS8;
+            String privatekey = loan.getPrivatekey();
             RsaHelper rsa = RsaHelper.getInstance();
             if (rpList.size() > 0)
             {
@@ -330,7 +332,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                             for (String loanNo : listmb)
                             {
                                 LoanTransferAuditModel ltsa = new LoanTransferAuditModel();
-                                ltsa.setPlatformMoneymoremore("p1190");
+                                ltsa.setPlatformMoneymoremore(loan.getMoremoreId());
                                 ltsa.setAuditType("1");
                                 ltsa.setLoanNoList(loanNo);
                                 ltsa.setReturnURL(url

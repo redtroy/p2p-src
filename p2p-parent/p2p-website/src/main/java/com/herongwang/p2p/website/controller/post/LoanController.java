@@ -53,23 +53,6 @@ import com.sxj.util.logger.SxjLogger;
 @RequestMapping("/loan")
 public class LoanController extends BaseController
 {
-    public static final String privateKeyPKCS8 = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAJxTqfs4pxfcpD6+lS1P/GpnYLS0"
-            + "hfrgxq/XE8WAVN/njS5TFt6cvic98GFgb0Q7H//esOGdJ5vowHg8ohHTjkvBDkiWKRzlA+Mpasir"
-            + "1hyGBu4tcsG5WwYdT4ZjSpF2FDXADDS8un6FS9FHjPCagTp6fpFm3MTdesf7eWiLlcEzAgMBAAEC"
-            + "gYAlAh18ruXH3WE4xW+VgZkVK5IWVaJeSTZgTH+OwxnUxAGFVQBWBS9zJNOyidztfz3NGlAvqT/G"
-            + "RizCikAoDjhiUK98MIqM+l7S43Q/ASEZ8/w1iTXbX6HsYb8aDGdIWpDiQajEPIqcQXoMZZR2942r"
-            + "Y8+aObuSbrk5IVmIK8uzkQJBAOxuSTcK9O5dy68J0g99CSadPkUUXYovm0r1ruiyYQRbaL6i6L4p"
-            + "3o0Vyy63Vj56qhe2tsRyC8abYoCMVehMi/kCQQCpRA+KkSdWd++9trUEMr6Tsv0fHBm+c7y74uEB"
-            + "9NM8wJ/zfBvXgvdR6tnmMpr4PRkU7twdKjidPTf/DGXkagmLAkEA2bx7etCBXuBMi4fMx2zMN56K"
-            + "UU3/ExritjbqfOyCAmQ4Y5BeLXsbtOzEMOKw71tCOBKR4Ppys9Y38dDL8OJF6QJBAJgPP5LxIZDJ"
-            + "gENDLs0NtS1Ev6ZB/VKd8LAteoviYB4Uwdzf4rcxvXMG8yec0KEvaifnCTDeLCv9wh9LCQIwzE8C"
-            + "QC/K4FmKZf51Y6HmSxLI/0FtzOHPjTc3z2v6JdBTur5fQRXHUB86JcztiDMi3+5LZVg8gTJ1fzM8"
-            + "/S93FKFLK84=";
-    
-    public static final String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCcU6n7OKcX3KQ+vpUtT/xqZ2C0tIX64Mav1xPF"
-            + "gFTf540uUxbenL4nPfBhYG9EOx//3rDhnSeb6MB4PKIR045LwQ5Ilikc5QPjKWrIq9YchgbuLXLB"
-            + "uVsGHU+GY0qRdhQ1wAw0vLp+hUvRR4zwmoE6en6RZtzE3XrH+3loi5XBMwIDAQAB";
-    
     @Autowired
     IOrdersService ordersService;
     
@@ -523,12 +506,12 @@ public class LoanController extends BaseController
     {
         String message = Common.JSONEncode(result);
         loanService.addOrder(message, "LoanModel", "提现后台返回报文");
-        DecimalFormat df = new DecimalFormat("######0.00");
         UsersEntity user = this.getUsersEntity();
         if (user == null)
         {
             return;
         }
+        Loan loan = parametersService.getLoan();
         //获取账户信息
         AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
         RsaHelper rsa = RsaHelper.getInstance();
@@ -543,7 +526,7 @@ public class LoanController extends BaseController
                 + result.getRemark3() + result.getResultCode();
         boolean verifySignature = rsa.verifySignature(result.getSignInfo(),
                 dataStr,
-                publicKey);
+                loan.getPublickey());
         if (verifySignature)
         {
             OrdersEntity order = ordersService.getOrdersEntityByNo(result.getOrderNo());
@@ -854,15 +837,17 @@ public class LoanController extends BaseController
         {
             return LOGIN;
         }
+        Loan loan = parametersService.getLoan();
         String basePath = this.getBasePath(request);
-        String SubmitURL = "http://218.4.234.150:88/main/loan/toloanauthorize.action";
+        String SubmitURL = loan.getSubmitURL()
+                + "main/loan/toloanauthorize.action";
         String ReturnURL = basePath + "loan/fastPayReturnURL.htm";
-        String NotifyURL = basePath + "loan/fastPayNotifyURL.htm";
+        String NotifyURL = "http://61.132.53.150:7001/p2p-website/loan/fastPayNotifyURL.htm";
         
-        String privatekey = privateKeyPKCS8;
-        String publickey = publicKey;
-        String MoneymoremoreId = "m31333";
-        String PlatformMoneymoremore = "p1190";
+        String privatekey = loan.getPrivatekey();
+        String publickey = loan.getPublickey();
+        String MoneymoremoreId = user.getMoneymoremoreId();
+        String PlatformMoneymoremore = loan.getMoremoreId();
         String Action = "2";
         String CardNo = "6222024301056658220";
         String WithholdBeginDate = "";
@@ -978,6 +963,7 @@ public class LoanController extends BaseController
     {
         try
         {
+            Loan loan = parametersService.getLoan();
             UsersEntity user = getUsersEntity();
             rg.setRegisterType("2");
             rg.setMobile(user.getCellphone());
@@ -985,12 +971,11 @@ public class LoanController extends BaseController
             rg.setRealName(user.getName());
             rg.setIdentificationNo(user.getCardNum());
             rg.setLoanPlatformAccount(user.getCustomerNo());
-            rg.setPlatformMoneymoremore("p1190");
+            rg.setPlatformMoneymoremore(loan.getMoremoreId());
             rg.setReturnURL(getBasePath(request)
                     + "loan/registerbindreturn.htm");
-            rg.setNotifyURL(getBasePath(request)
-                    + "loan/registerbindInform.htm");
-            String privatekey = privateKeyPKCS8;
+            rg.setNotifyURL("http://61.132.53.150:7001/p2p-website/loan/registerbindInform.htm");
+            String privatekey = loan.getPrivatekey();
             String dataStr = rg.getRegisterType() + rg.getAccountType()
                     + rg.getMobile() + rg.getEmail() + rg.getRealName()
                     + rg.getIdentificationNo() + rg.getImage1()
@@ -1076,7 +1061,8 @@ public class LoanController extends BaseController
     {
         try
         {
-            String privatekey = privateKeyPKCS8;
+            Loan loan = parametersService.getLoan();
+            String privatekey = loan.getPrivatekey();
             /*List<LoanInfoBean> listmlib = new ArrayList<LoanInfoBean>();
             LoanInfoBean mlib = new LoanInfoBean();
             mlib.setLoanOutMoneymoremore("m31333");//付款人
@@ -1092,7 +1078,7 @@ public class LoanController extends BaseController
             LoanJsonList = Common.JSONEncode(listmlib);*/
             
             TransferModel tf = new TransferModel();
-            tf.setPlatformMoneymoremore("p1190");
+            tf.setPlatformMoneymoremore(loan.getMoremoreId());
             tf.setTransferAction("1");
             tf.setAction("1");
             tf.setTransferType("2");
@@ -1218,21 +1204,27 @@ public class LoanController extends BaseController
     public String loanRelease(ModelMap map, HttpServletRequest request)
             throws WebException
     {
+        UsersEntity user = getUsersEntity();
+        if (null == user)
+        {
+            return LOGIN;
+        }
         try
         {
+            Loan loan = parametersService.getLoan();
             LoanReleaseModel lr = new LoanReleaseModel();
             lr.setAmount("100");
-            lr.setMoneymoremoreId("m31333");
-            lr.setPlatformMoneymoremore("p1190");
+            lr.setMoneymoremoreId(user.getMoneymoremoreId());
+            lr.setPlatformMoneymoremore(loan.getMoremoreId());
             lr.setOrderNo("D2015060110048102");
             lr.setReturnURL(getBasePath(request) + "loan/loanReleaseReturn.htm");
-            lr.setNotifyURL(getBasePath(request) + "loan/loanReleaseNotif.htm");
+            lr.setNotifyURL("http://61.132.53.150:7001/p2p-website/loan/loanReleaseNotif.htm");
             String dataStr = lr.getMoneymoremoreId()
                     + lr.getPlatformMoneymoremore() + lr.getOrderNo()
                     + lr.getAmount() + lr.getRandomTimeStamp()
                     + lr.getRemark1() + lr.getRemark2() + lr.getRemark3()
                     + lr.getReturnURL() + lr.getNotifyURL();
-            String privatekey = privateKeyPKCS8;
+            String privatekey = loan.getPrivatekey();
             RsaHelper rsa = RsaHelper.getInstance();
             String SignInfo = rsa.signData(dataStr, privatekey);
             lr.setSignInfo(SignInfo);
@@ -1288,17 +1280,20 @@ public class LoanController extends BaseController
      * 审核
      */
     @RequestMapping("loanTransferAudit")
-    public String loanTransferAuditModel(ModelMap map) throws WebException
+    public String loanTransferAuditModel(ModelMap map,
+            HttpServletRequest request) throws WebException
     {
         try
         {
+            Loan loan = parametersService.getLoan();
             LoanTransferAuditModel ltsa = new LoanTransferAuditModel();
-            ltsa.setPlatformMoneymoremore("p1190");
+            ltsa.setPlatformMoneymoremore(loan.getMoremoreId());
             ltsa.setAuditType("1");
             ltsa.setLoanNoList("LN11372141506011010551770858");
-            String privatekey = privateKeyPKCS8;
-            ltsa.setReturnURL("http://127.0.0.1:8080/p2p-website/loan/loanTransferAuditModelReturn.htm");
-            ltsa.setNotifyURL("http://127.0.0.1:8080/p2p-website/loan/loanTransferAuditModelNotify.htm");
+            String privatekey = loan.getPrivatekey();
+            ltsa.setReturnURL(getBasePath(request)
+                    + "loan/loanTransferAuditModelReturn.htm");
+            ltsa.setNotifyURL("http://61.132.53.150:7001/p2p-website/loan/loanTransferAuditModelNotify.htm");
             String dataStr = ltsa.getLoanNoList()
                     + ltsa.getPlatformMoneymoremore() + ltsa.getAuditType()
                     + ltsa.getRandomTimeStamp() + ltsa.getRemark1()
