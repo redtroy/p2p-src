@@ -131,14 +131,7 @@ var refreshIviewer=function($viewer,src,$container){
 	$viewer.show();
 }
 var errorImage=function($this){
-	var times=parseInt($($this).attr("times"));
-	if(times<3){
-		$($this).attr("src", $($this).attr("src"));
-		$($this).attr("times",times+1);
-	}else if(times==3){
-		$($this).attr("src", "http://static.menchuang.org.cn/images/bg404.jpg");
-		$($this).attr("times",times+1);
-	}
+	$($this).attr("src", "http://static.menchuang.org.cn/images/bg404.jpg");
 }
 
 var imageSrc=function(src){
@@ -159,20 +152,20 @@ var refreshElastislide=function($container,$carousel,data,empty){
 			for (var i = 0; i < data.length; i++) {
 				var suffix=/\.[^\.]+$/.exec(data[i]);
 				var $img,$a;
-				 $img=$('<img width = "80px" data-image="${basePath}'+data[i]+'80x100.JPG?random='+Math.random()+' alt="" src="'+imageSrc(data[i])+'" onerror="errorImage(this)" times="0"/>');
+				$img=$('<img width = "80px" data-image="${basePath}'+data[i]+'80x100.JPG?random='+Math.random()+' alt="" src="'+imageSrc(data[i])+'" onerror="errorImage(this)" times="0"/>');
 				 $a=$('<a href="javascript:void(0);" class="demo-image" width = "80px" data-image="${basePath}'+data[i]+'"></a>');
-				$a.append($img);
+				 $a.append($img);
 				var $p=$('<p>'+(i+1)+'</p>');
 				var $li=$('<li></li>');
 				$li.append($a);
 				$li.append($p);
-				$carousel.append($li);
+				$carousel.append($li); 
 			}
 		}else{
 			var suffix=/\.[^\.]+$/.exec(data.fileIds);
 			
 			var $img,$a;
-			 $img=$('<img src="${basePath}'+data.fileIds+'80x100.JPG?random='+Math.random()+' width = "80px" src="'+imageSrc(data.fileIds)+'"  onerror="errorImage(this)" times="0"/>');
+			 $img=$('<img src="${basePath}'+data.fileIds+'80x100.JPG?random='+Math.random()+' width = "80px" src="'+imageSrc(data.fileIds)+'" onerror="errorImage(this)" times="0"/>');
 			 $a=$('<a href="javascript:void(0);" class="demo-image" width = "80px" data-image="${basePath}'+data.fileIds+'"></a>');
 			$a.append($img);
 			var $li=$('<li></li>');
