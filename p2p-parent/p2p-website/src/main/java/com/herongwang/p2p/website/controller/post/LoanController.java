@@ -127,7 +127,8 @@ public class LoanController extends BaseController
             String SubmitURL = loan.getSubmitURL()
                     + "loan/toloanrecharge.action";
             String ReturnURL = basePath + "loan/returnURL.htm";
-            String NotifyURL = "http://61.132.53.150:7001/p2p-website/loan/notifyURL.htm";
+            String NotifyURL = loan.getServiceIp()
+                    + "p2p-website/loan/notifyURL.htm";
             String RechargeMoneymoremore = user.getMoneymoremoreId();//用户钱多多标志
             String PlatformMoneymoremore = loan.getMoremoreId();
             String OrderNo = orders.getOrdersNo();
@@ -354,7 +355,8 @@ public class LoanController extends BaseController
             String SubmitURL = loan.getSubmitURL()
                     + "loan/toloanwithdraws.action";
             String ReturnURL = basePath + "loan/withdrawReturnURL.htm";
-            String NotifyURL = "http://61.132.53.150:7001/p2p-website/loan/withdrawNotifyURL.htm";
+            String NotifyURL = loan.getServiceIp()
+                    + "p2p-website/loan/withdrawNotifyURL.htm";
             String WithdrawMoneymoremore = user.getMoneymoremoreId();
             String PlatformMoneymoremore = loan.getMoremoreId();
             String OrderNo = orders.getOrdersNo();//平台的提现订单号
@@ -577,7 +579,8 @@ public class LoanController extends BaseController
         String authorizeType2 = user.getRepaymentStatus().toString();
         String authorizeType3 = user.getAllocationStatus().toString();
         String ReturnURL = basePath + "loan/authorizeReturnURL.htm";
-        String NotifyURL = basePath + "loan/authorizeNotifyURL.htm";
+        String NotifyURL = loan.getServiceIp()
+                + "/p2p-website/loan/authorizeNotifyURL.htm";
         String SubmitURL = loan.getSubmitURL() + "loan/toloanauthorize.action";
         String MoneymoremoreId = user.getMoneymoremoreId();
         String PlatformMoneymoremore = loan.getMoremoreId();
@@ -620,7 +623,8 @@ public class LoanController extends BaseController
             Loan loan = parametersService.getLoan();
             Map<String, String> map = new HashMap<String, String>();
             String ReturnURL = basePath + "loan/authorizeReturnURL.htm";
-            String NotifyURL = basePath + "loan/authorizeNotifyURL.htm";
+            String NotifyURL = loan.getServiceIp()
+                    + "p2p-website/loan/authorizeNotifyURL.htm";
             String MoneymoremoreId = user.getMoneymoremoreId();
             String PlatformMoneymoremore = loan.getMoremoreId();
             String AuthorizeTypeOpen = type.substring(2);
@@ -842,7 +846,8 @@ public class LoanController extends BaseController
         String SubmitURL = loan.getSubmitURL()
                 + "main/loan/toloanauthorize.action";
         String ReturnURL = basePath + "loan/fastPayReturnURL.htm";
-        String NotifyURL = "http://61.132.53.150:7001/p2p-website/loan/fastPayNotifyURL.htm";
+        String NotifyURL = loan.getServiceIp()
+                + "p2p-website/loan/fastPayNotifyURL.htm";
         
         String privatekey = loan.getPrivatekey();
         String publickey = loan.getPublickey();
@@ -974,7 +979,8 @@ public class LoanController extends BaseController
             rg.setPlatformMoneymoremore(loan.getMoremoreId());
             rg.setReturnURL(getBasePath(request)
                     + "loan/registerbindreturn.htm");
-            rg.setNotifyURL("http://61.132.53.150:7001/p2p-website/loan/registerbindInform.htm");
+            rg.setNotifyURL(loan.getServiceIp()
+                    + "p2p-website/loan/registerbindInform.htm");
             String privatekey = loan.getPrivatekey();
             String dataStr = rg.getRegisterType() + rg.getAccountType()
                     + rg.getMobile() + rg.getEmail() + rg.getRealName()
@@ -1083,7 +1089,8 @@ public class LoanController extends BaseController
             tf.setAction("1");
             tf.setTransferType("2");
             tf.setReturnURL(getBasePath(request) + "loan/transferReturn.htm");
-            tf.setNotifyURL("http://61.132.53.150:7001/p2p-website/loan/transferNotify.htm");
+            tf.setNotifyURL(loan.getServiceIp()
+                    + "p2p-website/loan/transferNotify.htm");
             String dataStr = LoanJsonList + tf.getPlatformMoneymoremore()
                     + tf.getTransferAction() + tf.getAction()
                     + tf.getTransferType() + tf.getNeedAudit()
@@ -1218,7 +1225,8 @@ public class LoanController extends BaseController
             lr.setPlatformMoneymoremore(loan.getMoremoreId());
             lr.setOrderNo("D2015060110048102");
             lr.setReturnURL(getBasePath(request) + "loan/loanReleaseReturn.htm");
-            lr.setNotifyURL("http://61.132.53.150:7001/p2p-website/loan/loanReleaseNotif.htm");
+            lr.setNotifyURL(loan.getServiceIp()
+                    + "p2p-website/loan/loanReleaseNotif.htm");
             String dataStr = lr.getMoneymoremoreId()
                     + lr.getPlatformMoneymoremore() + lr.getOrderNo()
                     + lr.getAmount() + lr.getRandomTimeStamp()
@@ -1293,7 +1301,8 @@ public class LoanController extends BaseController
             String privatekey = loan.getPrivatekey();
             ltsa.setReturnURL(getBasePath(request)
                     + "loan/loanTransferAuditModelReturn.htm");
-            ltsa.setNotifyURL("http://61.132.53.150:7001/p2p-website/loan/loanTransferAuditModelNotify.htm");
+            ltsa.setNotifyURL(loan.getServiceIp()
+                    + "p2p-website/loan/loanTransferAuditModelNotify.htm");
             String dataStr = ltsa.getLoanNoList()
                     + ltsa.getPlatformMoneymoremore() + ltsa.getAuditType()
                     + ltsa.getRandomTimeStamp() + ltsa.getRemark1()

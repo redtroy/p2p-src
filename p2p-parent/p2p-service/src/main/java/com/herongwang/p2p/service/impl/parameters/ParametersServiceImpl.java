@@ -86,6 +86,10 @@ public class ParametersServiceImpl implements IParametersService
             {
                 loan.setSubmitURL(p.getText());
             }
+            if (p.getValue().equals("serviceIp"))
+            {
+                loan.setServiceIp(p.getText());
+            }
         }
         return loan;
     }
