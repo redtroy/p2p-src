@@ -21,6 +21,8 @@ public class Loan
     
     private Double feeRate;//上浮费率
     
+    private String serviceIp;//上浮费率
+    
     public String getPrivatekey()
     {
         return privatekey;
@@ -89,6 +91,16 @@ public class Loan
     public void setFeeRate(Double feeRate)
     {
         this.feeRate = feeRate;
+    }
+    
+    public String getServiceIp()
+    {
+        return serviceIp;
+    }
+    
+    public void setServiceIp(String serviceIp)
+    {
+        this.serviceIp = serviceIp;
     }
     
 }

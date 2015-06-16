@@ -21,23 +21,6 @@ import com.google.gson.Gson;
  */
 public class Common
 {
-    public static final String privateKeyPKCS8 = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAJxTqfs4pxfcpD6+lS1P/GpnYLS0"
-            + "hfrgxq/XE8WAVN/njS5TFt6cvic98GFgb0Q7H//esOGdJ5vowHg8ohHTjkvBDkiWKRzlA+Mpasir"
-            + "1hyGBu4tcsG5WwYdT4ZjSpF2FDXADDS8un6FS9FHjPCagTp6fpFm3MTdesf7eWiLlcEzAgMBAAEC"
-            + "gYAlAh18ruXH3WE4xW+VgZkVK5IWVaJeSTZgTH+OwxnUxAGFVQBWBS9zJNOyidztfz3NGlAvqT/G"
-            + "RizCikAoDjhiUK98MIqM+l7S43Q/ASEZ8/w1iTXbX6HsYb8aDGdIWpDiQajEPIqcQXoMZZR2942r"
-            + "Y8+aObuSbrk5IVmIK8uzkQJBAOxuSTcK9O5dy68J0g99CSadPkUUXYovm0r1ruiyYQRbaL6i6L4p"
-            + "3o0Vyy63Vj56qhe2tsRyC8abYoCMVehMi/kCQQCpRA+KkSdWd++9trUEMr6Tsv0fHBm+c7y74uEB"
-            + "9NM8wJ/zfBvXgvdR6tnmMpr4PRkU7twdKjidPTf/DGXkagmLAkEA2bx7etCBXuBMi4fMx2zMN56K"
-            + "UU3/ExritjbqfOyCAmQ4Y5BeLXsbtOzEMOKw71tCOBKR4Ppys9Y38dDL8OJF6QJBAJgPP5LxIZDJ"
-            + "gENDLs0NtS1Ev6ZB/VKd8LAteoviYB4Uwdzf4rcxvXMG8yec0KEvaifnCTDeLCv9wh9LCQIwzE8C"
-            + "QC/K4FmKZf51Y6HmSxLI/0FtzOHPjTc3z2v6JdBTur5fQRXHUB86JcztiDMi3+5LZVg8gTJ1fzM8"
-            + "/S93FKFLK84=";
-    
-    public static final String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCcU6n7OKcX3KQ+vpUtT/xqZ2C0tIX64Mav1xPF"
-            + "gFTf540uUxbenL4nPfBhYG9EOx//3rDhnSeb6MB4PKIR045LwQ5Ilikc5QPjKWrIq9YchgbuLXLB"
-            + "uVsGHU+GY0qRdhQ1wAw0vLp+hUvRR4zwmoE6en6RZtzE3XrH+3loi5XBMwIDAQAB";
-    
     /**
      * 字符串编码
      * 

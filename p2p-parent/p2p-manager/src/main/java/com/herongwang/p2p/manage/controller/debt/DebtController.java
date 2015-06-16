@@ -30,6 +30,7 @@ import com.herongwang.p2p.loan.util.RsaHelper;
 import com.herongwang.p2p.manage.controller.BaseController;
 import com.herongwang.p2p.model.loan.LoanInfoBean;
 import com.herongwang.p2p.model.loan.transferauditreturnBean;
+import com.herongwang.p2p.model.post.Loan;
 import com.herongwang.p2p.model.post.LoanTransferAuditModel;
 import com.herongwang.p2p.model.post.TransferModel;
 import com.herongwang.p2p.service.apply.IDebtApplicationService;
@@ -313,6 +314,7 @@ public class DebtController extends BaseController
     {
         try
         {
+            Loan loan = parametersService.getLoan();
             List<InvestOrderEntity> list = investOderService.queryListInvest(debtId);
             if (list.size() > 0)
             {
@@ -331,15 +333,15 @@ public class DebtController extends BaseController
                             loanNoList.length() - 1);
                 }
                 LoanTransferAuditModel ltsa = new LoanTransferAuditModel();
-                ltsa.setPlatformMoneymoremore("p1190");
+                ltsa.setPlatformMoneymoremore(loan.getMoremoreId());
                 ltsa.setAuditType("1");
                 ltsa.setLoanNoList(loanNoList);
                 ltsa.setRemark3(debtId);//存放DebtId
-                String privatekey = Common.privateKeyPKCS8;
+                String privatekey = loan.getPrivatekey();
                 ltsa.setReturnURL(getBasePath(request)
                         + "tender/loanTransferAuditModelReturn.htm");
-                ltsa.setNotifyURL(getBasePath(request)
-                        + "tender/loanTransferAuditModelNotify.htm");
+                ltsa.setNotifyURL(loan.getServiceIp()
+                        + "p2p-manager/tender/loanTransferAuditModelNotify.htm");
                 String dataStr = ltsa.getLoanNoList()
                         + ltsa.getPlatformMoneymoremore() + ltsa.getAuditType()
                         + ltsa.getRandomTimeStamp() + ltsa.getRemark1()
@@ -368,8 +370,9 @@ public class DebtController extends BaseController
     {
         try
         {
+            Loan l = parametersService.getLoan();
             List<InvestOrderEntity> list = investOderService.queryListInvest(debtId);
-            String privatekey = Common.privateKeyPKCS8;
+            String privatekey = l.getPrivatekey();
             RsaHelper rsa = RsaHelper.getInstance();
             if (list.size() > 0)
             {
@@ -402,13 +405,14 @@ public class DebtController extends BaseController
                     }
                     
                     LoanTransferAuditModel ltsa = new LoanTransferAuditModel();
-                    ltsa.setPlatformMoneymoremore("p1190");
+                    ltsa.setPlatformMoneymoremore(l.getMoremoreId());
                     ltsa.setAuditType("1");
                     ltsa.setLoanNoList(loanNo);
                     ltsa.setRemark3(debtId);//存放DebtId
                     ltsa.setReturnURL(getBasePath(request)
                             + "tender/loanTransferAuditModelReturn.htm");
-                    ltsa.setNotifyURL("http://61.132.53.150:7001/p2p-website/post/receive.htm");
+                    ltsa.setNotifyURL(l.getServiceIp()
+                            + "p2p-website/post/receive.htm");
                     String dataStr = ltsa.getLoanNoList()
                             + ltsa.getPlatformMoneymoremore()
                             + ltsa.getAuditType() + ltsa.getRandomTimeStamp()
@@ -428,7 +432,7 @@ public class DebtController extends BaseController
                 LoanInfoBean mlib = new LoanInfoBean();
                 mlib.setLoanOutMoneymoremore(userService.getUserById(financeOrder.getCustomerId())
                         .getMoneymoremoreId());//付款人
-                mlib.setLoanInMoneymoremore("p1190");//收款人
+                mlib.setLoanInMoneymoremore(l.getMoremoreId());//收款人
                 mlib.setOrderNo(financeOrder.getOrderId());//订单号,投资人收益明细的ID
                 mlib.setBatchNo(debtId);//标号
                 mlib.setAmount((financeOrder.getAmount()
@@ -439,13 +443,14 @@ public class DebtController extends BaseController
                 listmlib.add(mlib);
                 String LoanJsonList = Common.JSONEncode(listmlib);
                 TransferModel tf = new TransferModel();
-                tf.setPlatformMoneymoremore("p1190");
+                tf.setPlatformMoneymoremore(l.getMoremoreId());
                 tf.setTransferAction("3");
                 tf.setAction("2");
                 tf.setTransferType("2");
                 tf.setNeedAudit("1");
                 tf.setReturnURL("");
-                tf.setNotifyURL("http://61.132.53.150:7001/p2p-website/post/receive.htm");
+                tf.setNotifyURL(l.getServiceIp()
+                        + "p2p-website/post/receive.htm");
                 //                tf.setRemark1(Common.UrlEncoder(ids, "utf-8"));//还款单的ID
                 //                tf.setRemark2(orderId);//投资订单号
                 //                tf.setRemark3(debtId);//标的ID

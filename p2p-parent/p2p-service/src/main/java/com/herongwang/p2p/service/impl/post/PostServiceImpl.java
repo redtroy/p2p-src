@@ -46,6 +46,7 @@ import com.herongwang.p2p.model.loan.LoanWithdrawsOrderQueryBean;
 import com.herongwang.p2p.model.loan.transferauditreturnBean;
 import com.herongwang.p2p.model.order.OrderModel;
 import com.herongwang.p2p.model.order.ResultsModel;
+import com.herongwang.p2p.model.post.Loan;
 import com.herongwang.p2p.model.post.LoanModel;
 import com.herongwang.p2p.model.post.LoanReleaseModel;
 import com.herongwang.p2p.model.post.LoanTransferAuditModel;
@@ -99,8 +100,6 @@ public class PostServiceImpl implements IPostService
     
     @Autowired
     private ILoanService loanService;
-    
-    private final String SubmitURLPrefix = "http://218.4.234.150:88/main/";
     
     @Override
     public String getSignMsg(OrderModel orderModel) throws Exception
@@ -516,11 +515,11 @@ public class PostServiceImpl implements IPostService
     {
         try
         {
-            
-            String SubmitURL = SubmitURLPrefix
+            Loan loan = parametersService.getLoan();
+            String SubmitURL = loan.getSubmitURL()
                     + "loan/toloanregisterbind.action";
             
-            String privatekey = Common.privateKeyPKCS8;
+            String privatekey = loan.getPrivatekey();
             
             String dataStr = rg.getRegisterType() + rg.getAccountType()
                     + rg.getMobile() + rg.getEmail() + rg.getRealName()
@@ -565,7 +564,7 @@ public class PostServiceImpl implements IPostService
                             LoanRegisterBindReturnBean.class);
                     if (lrbrb != null)
                     {
-                        String publickey = Common.publicKey;
+                        String publickey = loan.getPublickey();
                         
                         dataStr = lrbrb.getAccountType()
                                 + lrbrb.getAccountNumber() + lrbrb.getMobile()
@@ -601,8 +600,8 @@ public class PostServiceImpl implements IPostService
     {
         try
         {
-            
-            String SubmitURL = SubmitURLPrefix + "loan/loan.action";
+            Loan loan = parametersService.getLoan();
+            String SubmitURL = loan.getSubmitURL() + "loan/loan.action";
             
             String dataStr = "";
             // 签名
@@ -630,7 +629,6 @@ public class PostServiceImpl implements IPostService
                 
                 String[] resultarr = HttpClientUtil.doPostQueryCmd(SubmitURL,
                         req);
-                System.out.println(resultarr[1]);
                 
                 if (StringUtils.isNotBlank(resultarr[1])
                         && (resultarr[1].startsWith("[") || resultarr[1].startsWith("{")))
@@ -650,7 +648,7 @@ public class PostServiceImpl implements IPostService
                                 loanService.addOrder(Common.JSONEncode(ltrb),
                                         "LoanTransferReturnBean",
                                         "转账页面返回Model");
-                                String publickey = Common.publicKey;
+                                String publickey = loan.getPublickey();
                                 if (!"88".equals(ltrb.getResultCode()))
                                 {
                                     return "false";
@@ -729,7 +727,6 @@ public class PostServiceImpl implements IPostService
     @Override
     public String loanRelease(LoanReleaseModel lr)
     {
-        // TODO Auto-generated method stub
         return null;
     }
     
@@ -737,8 +734,9 @@ public class PostServiceImpl implements IPostService
     public List<LoanOrderQueryBean> orderQuery(LoanModel loan, String privatekey)
             throws Exception
     {
+        Loan l = parametersService.getLoan();
         List<LoanOrderQueryBean> list = new ArrayList<LoanOrderQueryBean>();
-        String SubmitURL = SubmitURLPrefix + "loan/loanorderquery.action";
+        String SubmitURL = l.getSubmitURL() + "loan/loanorderquery.action";
         
         String PlatformMoneymoremore = loan.getPlatformMoneymoremore();
         String Action = "";
@@ -791,10 +789,11 @@ public class PostServiceImpl implements IPostService
     public List<LoanRechargeOrderQueryBean> rechargeOrderQuery(LoanModel loan,
             String submitURLPrefix) throws Exception
     {
+        Loan l = parametersService.getLoan();
         List<LoanRechargeOrderQueryBean> list = new ArrayList<LoanRechargeOrderQueryBean>();
-        String SubmitURL = SubmitURLPrefix + "loan/loanorderquery.action";
+        String SubmitURL = l.getSubmitURL() + "loan/loanorderquery.action";
         
-        String privatekey = Common.privateKeyPKCS8;
+        String privatekey = l.getPrivatekey();
         String PlatformMoneymoremore = loan.getPlatformMoneymoremore();
         String Action = "1";
         String LoanNo = null == loan.getLoanNo() ? "" : loan.getLoanNo();
@@ -846,9 +845,10 @@ public class PostServiceImpl implements IPostService
             LoanModel loan, String submitURLPrefix) throws Exception
     {
         List<LoanWithdrawsOrderQueryBean> list = new ArrayList<LoanWithdrawsOrderQueryBean>();
-        String SubmitURL = SubmitURLPrefix + "loan/loanorderquery.action";
+        Loan l = parametersService.getLoan();
+        String SubmitURL = l.getSubmitURL() + "loan/loanorderquery.action";
         
-        String privatekey = Common.privateKeyPKCS8;
+        String privatekey = l.getPrivatekey();
         String PlatformMoneymoremore = loan.getPlatformMoneymoremore();
         String Action = "2";
         String LoanNo = null == loan.getLoanNo() ? "" : loan.getLoanNo();
@@ -901,9 +901,10 @@ public class PostServiceImpl implements IPostService
             throws Exception
     {
         String[] resultarr = null;
-        String SubmitURL = SubmitURLPrefix + "loan/balancequery.action";
-        String PlatformMoneymoremore = "p1190";
-        String privatekey = Common.privateKeyPKCS8;
+        Loan l = parametersService.getLoan();
+        String SubmitURL = l.getSubmitURL() + "loan/balancequery.action";
+        String PlatformMoneymoremore = l.getMoremoreId();
+        String privatekey = l.getPrivatekey();
         
         String dataStr = PlatformId + platformType + PlatformMoneymoremore;
         // 签名
@@ -925,6 +926,7 @@ public class PostServiceImpl implements IPostService
     {
         try
         {
+            Loan l = parametersService.getLoan();
             Map<String, String> req = new TreeMap<String, String>();
             req.put("LoanNoList", ltsa.getLoanNoList());
             req.put("PlatformMoneymoremore", ltsa.getPlatformMoneymoremore());
@@ -933,7 +935,7 @@ public class PostServiceImpl implements IPostService
             req.put("NotifyURL", ltsa.getNotifyURL());
             req.put("SignInfo", ltsa.getSignInfo());
             req.put("Remark3", ltsa.getRemark3());
-            String[] resultarr = HttpClientUtil.doPostQueryCmd(SubmitURLPrefix
+            String[] resultarr = HttpClientUtil.doPostQueryCmd(l.getSubmitURL()
                     + "loan/toloantransferaudit.action", req);
             if (StringUtils.isNotBlank(resultarr[1])
                     && (resultarr[1].startsWith("[") || resultarr[1].startsWith("{")))
