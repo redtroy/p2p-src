@@ -26,13 +26,23 @@
 	function balance() {
 		$.post("${basePath}loan/balanceQuery.htm", {}, function(data) {
 			
-			if (data.moneyType != "1") {
+			if (data.moneyType == "0") {
 				var success = dialog({
 					title : '消息',
 					content : '您未开户，请开户！',
 					cancel : false,
 					ok : function() {
 						window.location.href = "${basePath}user/memberInfo.htm";
+					}
+				});
+				success.showModal();
+				return;
+			}else if (data.moneyType == "999"){
+				var success = dialog({
+					title : '消息',
+					content : '您的账户资金未发生变动！',
+					cancel : false,
+					ok : function() {
 					}
 				});
 				success.showModal();

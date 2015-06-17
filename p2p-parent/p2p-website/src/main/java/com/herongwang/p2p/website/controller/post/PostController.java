@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -69,6 +70,14 @@ public class PostController extends BaseController
         if (account.getBalance().compareTo(order.getAmount()) < 0)
         {
             map.put("title", "余额不足，请充值");
+            if (StringUtils.isEmpty(user.getMoneymoremoreId()))
+            {
+                map.put("moneyType", 0);
+            }
+            else
+            {
+                map.put("moneyType", 1);
+            }
             return "site/loan/recharge";
         }
         List<LoanInfoBean> listmlib = new ArrayList<LoanInfoBean>();

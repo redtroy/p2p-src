@@ -850,23 +850,34 @@ public class LoanController extends BaseController
             map.put("balance1", balance[0]);
             map.put("balance2", balance[1]);
             map.put("balance3", balance[2]);
-            //添加资金明细
-            FundDetailEntity deal = new FundDetailEntity();
-            deal.setCustomerId(user.getCustomerId());
-            deal.setAccountId(account.getAccountId());
-            deal.setType(13);
-            deal.setCreateTime(new Date());
-            deal.setStatus(1);
-            deal.setAmount((account.getBalance().subtract(multiply(new BigDecimal(
-                    balance[0])))).abs());
-            deal.setBalance(account.getBalance());
-            deal.setDueAmount(account.getDueAmount());
-            deal.setFrozenAmount(account.getFozenAmount());
-            deal.setRemark("对账，资金以托管账户金额为准！");
-            fundDetailService.addFundDetail(deal);
-            account.setBalance(multiply(new BigDecimal(balance[0])));
-            account.setFozenAmount(multiply(new BigDecimal(balance[2])));
-            accountService.updateAccount(account);
+            BigDecimal b1 = account.getBalance()
+                    .subtract(multiply(new BigDecimal(balance[0])))
+                    .abs();
+            if (b1.compareTo(new BigDecimal(0)) > 0)
+            {
+                
+                //添加资金明细
+                FundDetailEntity deal = new FundDetailEntity();
+                deal.setCustomerId(user.getCustomerId());
+                deal.setAccountId(account.getAccountId());
+                deal.setType(13);
+                deal.setCreateTime(new Date());
+                deal.setStatus(1);
+                deal.setAmount((account.getBalance().subtract(multiply(new BigDecimal(
+                        balance[0])))).abs());
+                deal.setBalance(account.getBalance());
+                deal.setDueAmount(account.getDueAmount());
+                deal.setFrozenAmount(account.getFozenAmount());
+                deal.setRemark("对账，资金以托管账户金额为准！");
+                fundDetailService.addFundDetail(deal);
+                account.setBalance(multiply(new BigDecimal(balance[0])));
+                account.setFozenAmount(multiply(new BigDecimal(balance[2])));
+                accountService.updateAccount(account);
+            }
+            else
+            {
+                map.put("moneyType", "999");
+            }
             return map;
         }
         catch (Exception e)

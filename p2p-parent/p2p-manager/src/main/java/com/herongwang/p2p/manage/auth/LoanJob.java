@@ -115,9 +115,13 @@ public class LoanJob
                 String[] balance = result[1].split("\\|");
                 
                 String b1 = balance[0];
-                if (StringUtils.isNotEmpty(b1))
+                BigDecimal b2 = new BigDecimal(b1);
+                BigDecimal b3 = account.getBalance()
+                        .subtract(multiply(b2))
+                        .abs();
+                if (StringUtils.isNotEmpty(b1)
+                        && b3.compareTo(new BigDecimal(0)) > 0)
                 {
-                    BigDecimal b2 = new BigDecimal(b1);
                     //添加资金明细
                     FundDetailEntity deal = new FundDetailEntity();
                     deal.setCustomerId(user.getCustomerId());
