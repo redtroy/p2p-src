@@ -92,8 +92,9 @@ public class PostController extends BaseController
         mlib.setBatchNo(debt.getDebtNo());//标号
         mlib.setAmount(this.divide(order.getAmount()).toString());
         mlib.setFullAmount(this.divide(debt.getAmount()).toString());
-        mlib.setTransferName("投标");
-        mlib.setRemark("测试");
+        mlib.setTransferName(Common.UrlEncoder("投标", "utf-8"));
+        mlib.setRemark(Common.UrlEncoder("对" + debt.getTitle() + "标投资。",
+                "utf-8"));
         mlib.setSecondaryJsonList("");
         listmlib.add(mlib);
         String LoanJsonList = Common.JSONEncode(listmlib);

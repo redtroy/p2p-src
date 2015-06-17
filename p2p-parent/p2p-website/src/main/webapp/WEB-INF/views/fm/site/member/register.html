@@ -12,7 +12,15 @@
   var validform;
   $(function(){
 	   validform = $("#member_register").Validform({
-			tiptype : 3
+			tiptype : 3,
+			datatype:{
+				phone : function (gets){
+					var reg1 = /^0{0,1}(13[0-9]|15[0-9]|18[0-9]|17[0-9])[0-9]{8}?$/;
+					if(!reg1.test(gets)){
+						return "请正确输入您的手机号！";
+					}
+				}
+			}
 		});
   })
   function sub(){
@@ -109,12 +117,12 @@
       </div>
       <div class="item">
           <label><span class="color-red mr5 fb">*</span>联系人手机</label>
-          <input class="input" type="text" autocomplete="off" placeholder="" datatype="m" errormsg="请正确输入您的手机号！" nullmsg="请正确输入您的手机号！" ajaxurl="${basePath}user/checkPhone.htm" id="cellphone" name="cellphone" value="" />
+          <input class="input" type="text" autocomplete="off" placeholder="" datatype="phone" nullmsg="请正确输入您的手机号！" ajaxurl="${basePath}user/checkPhone.htm" id="cellphone" name="cellphone" value="" />
           <span onclick="sendMs();return false;" class="button button-gray f12 ml10" id="sendMs" status="">获取短信验证码</span>
         </div>
       <div class="item">
           <label><span class="color-red mr5 fb">*</span>手机验证码</label>
-          <input class="input input-w50h30" type="text" autocomplete="off"  datatype="*"  nullmsg="请正确输入您的验证码！" placeholder="" id="ms"  name="ms" value=""/>
+          <input class="input input-w50h30" style="width: 60px;height: 18px" type="text" autocomplete="off"  datatype="*"  nullmsg="请正确输入您的验证码！" placeholder="" id="ms"  name="ms" value=""/>
         </div>
 	  </form>
       <div class="item">
