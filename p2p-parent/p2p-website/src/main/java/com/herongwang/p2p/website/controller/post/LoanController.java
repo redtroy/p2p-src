@@ -138,6 +138,11 @@ public class LoanController extends BaseController
             String CardNo = "";
             String RandomTimeStamp = "";
             String Remark1 = "";
+            if (StringUtils.isNotEmpty(order.getExt1()))//投资跳转过来的
+            {
+                Remark1 = order.getExt1();
+                ReturnURL = basePath + "loan/returnOrderURL.htm";
+            }
             String Remark2 = "";
             String Remark3 = "";
             map.put("SubmitURL", SubmitURL);
@@ -145,6 +150,7 @@ public class LoanController extends BaseController
             map.put("NotifyURL", NotifyURL);
             map.put("OrderNo", OrderNo);
             map.put("Amount", Amount);
+            map.put("Remark1", Remark1);
             map.put("RandomTimeStamp", RandomTimeStamp);
             map.put("RechargeMoneymoremore", RechargeMoneymoremore);
             map.put("PlatformMoneymoremore", PlatformMoneymoremore);
@@ -240,6 +246,91 @@ public class LoanController extends BaseController
         map.put("payAmount", result.getAmount());
         map.put("balance", this.divide(account.getBalance()));
         return "site/loan/results";
+    }
+    
+    /**
+     * 投资余额不足充值回调方法
+     * @param map
+     * @param result
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/returnOrderURL")
+    public String returnOrderURL(ModelMap map, LoanModel result,
+            RedirectAttributes ra) throws Exception
+    {
+        String message = Common.JSONEncode(result);
+        loanService.addOrder(message, "LoanModel", "充值跳转页面返回报文");
+        DecimalFormat df = new DecimalFormat("######0.00");
+        UsersEntity user = this.getUsersEntity();
+        if (user == null)
+        {
+            return LOGIN;
+        }
+        //获取账户信息
+        AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
+        //获取双乾参数
+        Loan loan = parametersService.getLoan();
+        String fee = result.getFee() == null ? "" : result.getFee().toString();
+        String amount = df.format(result.getAmount());
+        //生成返回签名
+        String dataStr = result.getRechargeMoneymoremore()
+                + result.getPlatformMoneymoremore() + result.getLoanNo()
+                + result.getOrderNo() + amount + fee + result.getRechargeType()
+                + result.getFeeType() + result.getCardNoList()
+                + result.getRandomTimeStamp() + result.getRemark1()
+                + result.getRemark2() + result.getRemark3()
+                + result.getResultCode();
+        // 验证签名签名
+        RsaHelper rsa = RsaHelper.getInstance();
+        boolean verifySignature = rsa.verifySignature(result.getSignInfo(),
+                dataStr,
+                loan.getPublickey());
+        if (verifySignature)
+        {
+            OrdersEntity orders = ordersService.getOrdersEntityByNo(result.getOrderNo());
+            if (orders.getStatus() != 1)
+            {
+                //更新订单未支付成功！
+                orders.setStatus(1);
+                orders.setLoanNo(result.getLoanNo());
+                orders.setArriveTime(new Date());
+                orders.setFeeWithdraws(multiply(new BigDecimal(
+                        null == result.getFee() ? 0 : result.getFee())));
+                ordersService.updateOrders(orders);
+                
+                //添加资金明细
+                FundDetailEntity deal = new FundDetailEntity();
+                deal.setCustomerId(user.getCustomerId());
+                deal.setAccountId(account.getAccountId());
+                deal.setOrderId(orders.getOrderId());
+                deal.setType(1);
+                deal.setCreateTime(new Date());
+                deal.setStatus(1);
+                deal.setAmount(orders.getAmount());
+                deal.setBalance(account.getBalance());
+                deal.setDueAmount(account.getDueAmount());
+                deal.setFrozenAmount(account.getFozenAmount());
+                deal.setRemark("充值" + amount + "元成功！");
+                fundDetailService.addFundDetail(deal);
+                
+                //更新账户金额
+                account.setBalance(account.getBalance().add(orders.getAmount()));
+                accountService.updateAccount(account);
+            }
+            ra.addAttribute("orderId", result.getRemark1());
+            return "redirect:/post/investPost.htm";
+        }
+        else
+        {
+            map.put("title", result.getMessage());
+            map.put("orderNo", result.getOrderNo());
+            map.put("orderAmount", result.getAmount());
+            map.put("Fee", result.getFee() == null ? 0 : result.getFee());
+            map.put("payAmount", result.getAmount());
+            map.put("balance", this.divide(account.getBalance()));
+            return "site/loan/results";
+        }
     }
     
     @ResponseBody
