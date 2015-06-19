@@ -69,7 +69,11 @@
 				</#if>
 				</#if>
 				<div class="tc">
-					<span class="button button-brown fontYH" onclick="order();">生成订单</span>
+				<#if type==1>
+		        	<span class="button button-brown fontYH" onclick="order();">生成订单</span>
+		        <#else>
+					<span class="button button-brown fontYH">生成订单</span>
+				</#if>
 				</div>
 			</div>
 		</div>

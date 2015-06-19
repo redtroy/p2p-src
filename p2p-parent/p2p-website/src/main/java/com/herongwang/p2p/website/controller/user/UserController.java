@@ -15,9 +15,11 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.herongwang.p2p.entity.admin.AdminEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.loan.util.Common;
 import com.herongwang.p2p.service.account.IAccountService;
+import com.herongwang.p2p.service.admin.IAdminService;
 import com.herongwang.p2p.service.users.IUserService;
 import com.herongwang.p2p.website.controller.BaseController;
 import com.herongwang.p2p.website.login.SupervisorShiroRedisCache;
@@ -42,6 +44,9 @@ public class UserController extends BaseController
     private IAccountService accountService;
     
     @Autowired
+    private IAdminService adminService;
+    
+    @Autowired
     private RedisConcurrent redisConcurrent;
     
     @RequestMapping("register")
@@ -56,6 +61,7 @@ public class UserController extends BaseController
     {
         try
         {
+            AdminEntity admin = adminService.gitAdminEntity("1");
             if (message != null && !"".equals(message))
             {
                 message = Common.UrlDecoder(message, "utf-8");
@@ -68,6 +74,7 @@ public class UserController extends BaseController
             user = userService.getUserById(user.getCustomerId());
             map.put("user", user);
             map.put("message", message);
+            map.put("type", admin.getStatus());
         }
         catch (Exception e)
         {
@@ -81,6 +88,8 @@ public class UserController extends BaseController
     public String saveUser(UsersEntity user, ModelMap map, String ms,
             HttpServletRequest request) throws WebException
     {
+        AdminEntity admin = adminService.gitAdminEntity("1");
+        map.put("type", admin.getStatus());
         Map<String, String> mappost = new HashMap<String, String>();
         String password = user.getPassword();
         try

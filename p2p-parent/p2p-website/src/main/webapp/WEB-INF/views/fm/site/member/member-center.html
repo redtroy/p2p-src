@@ -140,7 +140,17 @@ function openaccount(){
   </tbody>
   </table>
   </form>
-<div class="tc"> <a href="javascript:sub();" class="button button-orange">确认个人资料</a>&nbsp;<a href="javascript:editPassWord('${user.customerId}');" class="button button-orange">修改密码</a>&nbsp;<#if (user.moneymoremoreId??)><#else><a href="javascript:openaccount();" class="button button-orange">开户</a></#if></div>
+<div class="tc"> 
+	<a href="javascript:sub();" class="button button-orange">确认个人资料</a>&nbsp;
+	<a href="javascript:editPassWord('${user.customerId}');" class="button button-orange">修改密码</a>&nbsp;
+	<#if (user.moneymoremoreId??)><#else>
+		<#if type==1>
+			<a href="javascript:openaccount();" class="button button-orange">开户</a>
+		<#else>
+			<a href="javascript:void();"  class="button button-orange">开户</a>
+		</#if>
+	</#if>
+</div>
 
 
           <div class="ly-clearFix">

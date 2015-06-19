@@ -110,7 +110,13 @@ function postInfo() {
       </td>
     </tr>
   </table>
-        <div class="tc"> <a class="button button-orange" href="javascript:void(0)" onclick="postInfo();">授权</a>&nbsp;</div>
+        <div class="tc"> 
+        <#if type==1>
+        	<a class="button button-orange" href="javascript:void(0)" onclick="postInfo();">授权</a>&nbsp;
+        <#else>
+			<a class="button button-orange" href="javascript:void(0)">授权</a>&nbsp;
+		</#if>
+        </div>
         </div>
       </div>
     </div>

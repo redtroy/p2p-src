@@ -67,7 +67,12 @@
 	        <td class="color-red">${balance}元</td>
 	      </tr>
 	  </table>
-        <div class="tc"> <a href="javascript:postInfo();" class="button button-orange">确认提现</a></div>
+        <div class="tc"> 
+        <#if type==1>
+        	<a href="javascript:postInfo();" class="button button-orange">确认提现</a>
+        <#else>
+			<a href="javascript:void();" class="button button-orange">确认提现</a>
+		</#if>
         </div>
       </div>
     </div>

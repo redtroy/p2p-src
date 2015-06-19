@@ -79,7 +79,7 @@ public class PostController extends BaseController
                 map.put("moneyType", 1);
             }
             map.put("ext1", orderId);//投资订单id
-            map.put("moneyAmount", order.getAmount());//订单金额
+            map.put("moneyAmount", this.divide(order.getAmount()));//订单金额
             
             return "site/loan/recharge";
         }

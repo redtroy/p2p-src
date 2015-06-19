@@ -31,4 +31,26 @@ public class AdminServiceImpl implements IAdminService
         return null;
     }
     
+    @Override
+    public AdminEntity gitAdminEntity(String id)
+    {
+        try
+        {
+            return adminDao.getAdminEntity(id);
+        }
+        catch (Exception e)
+        {
+            SxjLogger.error(e.getMessage(), e, this.getClass());
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    @Override
+    public void updateAdmin(AdminEntity admin)
+    {
+        adminDao.updateAdminEntity(admin);
+        
+    }
+    
 }

@@ -19,8 +19,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.herongwang.p2p.entity.admin.AdminEntity;
 import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
+import com.herongwang.p2p.service.admin.IAdminService;
 import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
 import com.herongwang.p2p.service.users.IUserService;
@@ -41,6 +43,9 @@ public class BasicController extends BaseController
     
     @Autowired
     private IInvestOrderService investService;
+    
+    @Autowired
+    private IAdminService adminService;
     
     @Autowired
     private IDebtService debtService;
@@ -86,6 +91,8 @@ public class BasicController extends BaseController
     public String login(String account, String password, HttpSession session,
             HttpServletRequest request, ModelMap map)
     {
+        AdminEntity admin = adminService.gitAdminEntity("1");
+        map.put("type", admin.getStatus());
         if (account == null || account == "")
         {
             return LOGIN;

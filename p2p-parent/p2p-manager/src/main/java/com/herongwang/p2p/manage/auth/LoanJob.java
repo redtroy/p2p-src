@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.herongwang.p2p.dao.financing.IFinancingOrdersDao;
 import com.herongwang.p2p.entity.account.AccountEntity;
+import com.herongwang.p2p.entity.admin.AdminEntity;
 import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
@@ -25,6 +26,7 @@ import com.herongwang.p2p.model.loan.LoanWithdrawsOrderQueryBean;
 import com.herongwang.p2p.model.post.Loan;
 import com.herongwang.p2p.model.post.LoanModel;
 import com.herongwang.p2p.service.account.IAccountService;
+import com.herongwang.p2p.service.admin.IAdminService;
 import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
@@ -77,14 +79,22 @@ public class LoanJob
     @Autowired
     private IRepayPlanService repayPlanService;
     
+    @Autowired
+    private IAdminService adminService;
+    
     protected void execute()
     {
         try
         {
-            updateOrderQuery();
-            updateRecharge();
-            updateWithdraws();
-            updateAccount();
+            AdminEntity user = adminService.gitAdminEntity("1");
+            if (null != user && user.getStatus().equals("1"))
+            {
+                updateOrderQuery();
+                updateRecharge();
+                updateWithdraws();
+                updateAccount();
+            }
+            
         }
         catch (Exception e)
         {

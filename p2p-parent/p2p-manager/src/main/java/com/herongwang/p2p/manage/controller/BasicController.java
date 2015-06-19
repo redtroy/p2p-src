@@ -413,6 +413,30 @@ public class BasicController extends BaseController
         return getUsersEntity().getUserName();
     }
     
+    /**
+     * 更新开关状态
+     * @param request
+     * @return
+     */
+    @RequestMapping("switchLoan")
+    public @ResponseBody AdminEntity switchLoan(HttpServletRequest request,
+            String type)
+    {
+        AdminEntity admin = adminService.gitAdminEntity("1");
+        if (!type.equals("9"))
+        {
+            admin.setUserId("1");
+            Integer status = 0;
+            if (admin.getStatus() == 0)
+            {
+                status = 1;
+            }
+            admin.setStatus(status);
+            adminService.updateAdmin(admin);
+        }
+        return admin;
+    }
+    
     private String stringDate()
     {
         Calendar cal = Calendar.getInstance();

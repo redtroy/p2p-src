@@ -218,10 +218,20 @@ var refreshElastislide=function($container,$carousel,data,empty){
   <Script>
   $.post("${basePath}userName.htm",function(data){
 	  $("#headName").html(data+"，您好！");
+	  switchLoan("9");
   })
+  function switchLoan(type){
+	  $.post("${basePath}switchLoan.htm",{type:type},function(data){
+		  if(data.status==1){
+			  $("#switchLoan").html("<a href='javascript:void(0)' onclick='switchLoan(1);'>关闭|</a>");
+		  }else if(data.status==0){
+			  $("#switchLoan").html("<a href='javascript:void(0)' onclick='switchLoan(0);'>开启|</a>");
+		  }
+	  })
+  }
   </Script>
   <div class="fence-wide">
-    <p class="ly-right logOut"><span id="headName">杜金鑫，您好！</span><a href="${basePath}logout.htm">退出当前帐户</a></p>
+    <p class="ly-right logOut"><span id="headName"></span><span id="switchLoan"></span><a href="${basePath}logout.htm">退出当前帐户</a></p>
     <h1 class="fontYH fb ly-left" title="和融网">管理平台</h1>
   </div>
 </#macro>

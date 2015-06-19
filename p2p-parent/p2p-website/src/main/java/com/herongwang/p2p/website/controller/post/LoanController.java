@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import util.RsaHelper;
 
 import com.herongwang.p2p.entity.account.AccountEntity;
+import com.herongwang.p2p.entity.admin.AdminEntity;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.herongwang.p2p.entity.investorder.InvestOrderEntity;
 import com.herongwang.p2p.entity.orders.OrdersEntity;
@@ -38,6 +39,7 @@ import com.herongwang.p2p.model.post.LoanTransferAuditModel;
 import com.herongwang.p2p.model.post.RegisterModel;
 import com.herongwang.p2p.model.post.TransferModel;
 import com.herongwang.p2p.service.account.IAccountService;
+import com.herongwang.p2p.service.admin.IAdminService;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
 import com.herongwang.p2p.service.investorder.IInvestOrderService;
 import com.herongwang.p2p.service.loan.ILoanService;
@@ -75,6 +77,9 @@ public class LoanController extends BaseController
     IInvestOrderService investOrderService;
     
     @Autowired
+    private IAdminService adminService;
+    
+    @Autowired
     ILoanService loanService;
     
     /*----------------------------------------------充值--------------------------------*/
@@ -95,6 +100,7 @@ public class LoanController extends BaseController
         {
             map.put("moneyType", 1);
         }
+        map.put("moneyAmount", "0");//订单金额
         return "site/loan/recharge";
     }
     
@@ -102,6 +108,8 @@ public class LoanController extends BaseController
     public String rechargeList(HttpServletRequest request, ModelMap map,
             OrderModel order) throws WebException
     {
+        AdminEntity admin = adminService.gitAdminEntity("1");
+        map.put("type", admin.getStatus());
         BigDecimal m = this.multiply(new BigDecimal(order.getOrderAmount()));
         UsersEntity user = this.getUsersEntity();
         if (user == null)
@@ -112,6 +120,7 @@ public class LoanController extends BaseController
         Loan loan = parametersService.getLoan();
         try
         {
+            
             String basePath = this.getBasePath(request);
             
             //生成充值订单
@@ -423,7 +432,8 @@ public class LoanController extends BaseController
     {
         UsersEntity users = this.getUsersEntity();
         String basePath = this.getBasePath(request);
-        
+        AdminEntity admin = adminService.gitAdminEntity("1");
+        map.put("type", admin.getStatus());
         try
         {
             //获取双乾参数
@@ -703,6 +713,8 @@ public class LoanController extends BaseController
     public String authorize(HttpServletRequest request, ModelMap map,
             String type) throws WebException
     {
+        AdminEntity admin = adminService.gitAdminEntity("1");
+        map.put("type", admin.getStatus());
         UsersEntity user = this.getUsersEntity();
         if (user == null)
         {

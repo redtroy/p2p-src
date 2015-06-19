@@ -8,9 +8,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.herongwang.p2p.entity.admin.AdminEntity;
 import com.herongwang.p2p.entity.profitlist.ProfitListEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.model.profit.ProfitModel;
+import com.herongwang.p2p.service.admin.IAdminService;
 import com.herongwang.p2p.service.profit.IProfitService;
 import com.herongwang.p2p.website.controller.BaseController;
 import com.sxj.util.exception.WebException;
@@ -18,10 +20,13 @@ import com.sxj.util.logger.SxjLogger;
 
 @Controller
 @RequestMapping("/profit")
-public class ProfitController  extends BaseController
+public class ProfitController extends BaseController
 {
     @Autowired
     private IProfitService profitService;
+    
+    @Autowired
+    private IAdminService adminService;
     
     /**
      * 预算收益
@@ -37,9 +42,12 @@ public class ProfitController  extends BaseController
     {
         try
         {
-            UsersEntity user=getUsersEntity();
+            AdminEntity admin = adminService.gitAdminEntity("1");
+            map.put("type", admin.getStatus());
+            UsersEntity user = getUsersEntity();
             ProfitModel pm = profitService.calculatingProfit(debtId,
-                    new BigDecimal(amount).multiply(new BigDecimal(100)),user.getCustomerId());
+                    new BigDecimal(amount).multiply(new BigDecimal(100)),
+                    user.getCustomerId());
             map.put("pm", pm);
             map.put("debtId", debtId);
         }
@@ -50,6 +58,7 @@ public class ProfitController  extends BaseController
         }
         return "site/profit/profit";
     }
+    
     /**
      * 收益详情
      * @param map
@@ -64,7 +73,7 @@ public class ProfitController  extends BaseController
     {
         try
         {
-           List<ProfitListEntity> list= profitService.queryProfit(orderId);
+            List<ProfitListEntity> list = profitService.queryProfit(orderId);
             map.put("list", list);
         }
         catch (Exception e)

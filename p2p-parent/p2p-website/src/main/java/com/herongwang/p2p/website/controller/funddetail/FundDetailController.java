@@ -10,9 +10,11 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.herongwang.p2p.entity.account.AccountEntity;
+import com.herongwang.p2p.entity.admin.AdminEntity;
 import com.herongwang.p2p.entity.funddetail.FundDetailEntity;
 import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.service.account.IAccountService;
+import com.herongwang.p2p.service.admin.IAdminService;
 import com.herongwang.p2p.service.funddetail.IFundDetailService;
 import com.herongwang.p2p.website.controller.BaseController;
 import com.sxj.util.exception.WebException;
@@ -28,6 +30,9 @@ public class FundDetailController extends BaseController
     @Autowired
     IAccountService accountService;
     
+    @Autowired
+    private IAdminService adminService;
+    
     /**
      * 资金明细
      * @param session
@@ -39,11 +44,14 @@ public class FundDetailController extends BaseController
     public String queryFundDetail(HttpSession session, ModelMap map,
             FundDetailEntity query) throws WebException
     {
+        AdminEntity admin = adminService.gitAdminEntity("1");
+        map.put("type", admin.getStatus());
         //会员信息传到页面
         try
         {
             UsersEntity user = getUsersEntity();
-            if(user==null){
+            if (user == null)
+            {
                 return LOGIN;
             }
             AccountEntity account = accountService.getAccountByCustomerId(user.getCustomerId());
