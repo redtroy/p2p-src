@@ -937,15 +937,15 @@ public class PostServiceImpl implements IPostService
             req.put("Remark3", ltsa.getRemark3());
             String[] resultarr = HttpClientUtil.doPostQueryCmd(l.getSubmitURL()
                     + "loan/toloantransferaudit.action", req);
+            loanService.addOrder(Common.JSONEncode(resultarr),
+                    "transferauditreturnBean",
+                    "审核页面返回Model");
             if (StringUtils.isNotBlank(resultarr[1])
                     && (resultarr[1].startsWith("[") || resultarr[1].startsWith("{")))
             {
                 
                 transferauditreturnBean tfb = (transferauditreturnBean) Common.JSONDecode(resultarr[1],
                         transferauditreturnBean.class);
-                loanService.addOrder(Common.JSONEncode(tfb),
-                        "transferauditreturnBean",
-                        "审核页面返回Model");
                 if ("88".equals(tfb.getResultCode()))
                 {
                     return "ok";

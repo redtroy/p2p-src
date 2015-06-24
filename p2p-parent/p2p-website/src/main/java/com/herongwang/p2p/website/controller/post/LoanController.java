@@ -227,7 +227,9 @@ public class LoanController extends BaseController
                 orders.setFeeWithdraws(multiply(new BigDecimal(
                         null == result.getFee() ? 0 : result.getFee())));
                 ordersService.updateOrders(orders);
-                
+                //更新账户金额
+                account.setBalance(account.getBalance().add(orders.getAmount()));
+                accountService.updateAccount(account);
                 //添加资金明细
                 FundDetailEntity deal = new FundDetailEntity();
                 deal.setCustomerId(user.getCustomerId());
@@ -243,9 +245,6 @@ public class LoanController extends BaseController
                 deal.setRemark("充值" + amount + "元成功！");
                 fundDetailService.addFundDetail(deal);
                 
-                //更新账户金额
-                account.setBalance(account.getBalance().add(orders.getAmount()));
-                accountService.updateAccount(account);
             }
         }
         map.put("title", "账户充值");
@@ -307,7 +306,9 @@ public class LoanController extends BaseController
                 orders.setFeeWithdraws(multiply(new BigDecimal(
                         null == result.getFee() ? 0 : result.getFee())));
                 ordersService.updateOrders(orders);
-                
+                //更新账户金额
+                account.setBalance(account.getBalance().add(orders.getAmount()));
+                accountService.updateAccount(account);
                 //添加资金明细
                 FundDetailEntity deal = new FundDetailEntity();
                 deal.setCustomerId(user.getCustomerId());
@@ -323,9 +324,6 @@ public class LoanController extends BaseController
                 deal.setRemark("充值" + amount + "元成功！");
                 fundDetailService.addFundDetail(deal);
                 
-                //更新账户金额
-                account.setBalance(account.getBalance().add(orders.getAmount()));
-                accountService.updateAccount(account);
             }
             ra.addAttribute("orderId", result.getRemark1());
             return "redirect:/post/investPost.htm";
@@ -380,7 +378,9 @@ public class LoanController extends BaseController
                         null == result.getFee() ? 0 : result.getFee())));
                 ordersService.updateOrders(orders);
                 ordersService.updateOrders(orders);
-                
+                //更新账户金额
+                account.setBalance(account.getBalance().add(orders.getAmount()));
+                accountService.updateAccount(account);
                 //添加资金明细
                 FundDetailEntity deal = new FundDetailEntity();
                 deal.setCustomerId(orders.getCustomerId());
@@ -396,9 +396,6 @@ public class LoanController extends BaseController
                 deal.setRemark("充值" + result.getAmount() + "元成功！");
                 fundDetailService.addFundDetail(deal);
                 
-                //更新账户金额
-                account.setBalance(account.getBalance().add(orders.getAmount()));
-                accountService.updateAccount(account);
             }
         }
     }
@@ -572,7 +569,14 @@ public class LoanController extends BaseController
                 order.setFeeWithdraws(multiply(new BigDecimal(
                         result.getFeeWithdraws())));
                 ordersService.updateOrders(order);
+                //更新账户
+                account.setBalance(account.getBalance()
+                        .subtract(this.multiply(new BigDecimal(
+                                result.getAmount()))));
+                accountService.updateAccount(account);
                 
+                BigDecimal feeWithdraws = this.multiply(new BigDecimal(
+                        result.getFeeWithdraws()));
                 //添加资金明细
                 FundDetailEntity deal = new FundDetailEntity();
                 deal.setCustomerId(order.getCustomerId());
@@ -584,12 +588,29 @@ public class LoanController extends BaseController
                 deal.setAmount(order.getAmount());
                 deal.setBalance(account.getBalance());
                 deal.setDueAmount(account.getDueAmount());
-                deal.setFrozenAmount(account.getFozenAmount());
-                deal.setRemark("提现" + result.getAmount() + "元成功！");
+                deal.setFrozenAmount(account.getFozenAmount()
+                        .add(order.getAmount()));
+                deal.setRemark("提现冻结" + result.getAmount() + "元！");
                 fundDetailService.addFundDetail(deal);
-                if (null != result.getFeeWithdraws()
-                        && result.getFeeWithdraws() > 0)
+                //添加资金明细
+                deal = new FundDetailEntity();
+                deal.setCustomerId(order.getCustomerId());
+                deal.setAccountId(account.getAccountId());
+                deal.setOrderId(order.getOrderId());
+                deal.setType(2);
+                deal.setCreateTime(new Date());
+                deal.setStatus(1);
+                deal.setAmount(order.getAmount().subtract(feeWithdraws));
+                deal.setBalance(account.getBalance());
+                deal.setDueAmount(account.getDueAmount());
+                deal.setFrozenAmount(account.getFozenAmount());
+                deal.setRemark("提现到账金额"
+                        + divide(order.getAmount().subtract(feeWithdraws))
+                        + "元！");
+                fundDetailService.addFundDetail(deal);
+                if (null != feeWithdraws && result.getFeeWithdraws() > 0)
                 {
+                    
                     //添加资金明细
                     deal = new FundDetailEntity();
                     deal.setCustomerId(order.getCustomerId());
@@ -598,8 +619,7 @@ public class LoanController extends BaseController
                     deal.setType(12);
                     deal.setCreateTime(new Date());
                     deal.setStatus(1);
-                    deal.setAmount(this.multiply(new BigDecimal(
-                            result.getFeeWithdraws())));
+                    deal.setAmount(feeWithdraws);
                     deal.setBalance(account.getBalance());
                     deal.setDueAmount(account.getDueAmount());
                     deal.setFrozenAmount(account.getFozenAmount());
@@ -608,10 +628,6 @@ public class LoanController extends BaseController
                     fundDetailService.addFundDetail(deal);
                 }
                 
-                account.setBalance(account.getBalance()
-                        .subtract(this.multiply(new BigDecimal(
-                                result.getAmount()))));
-                accountService.updateAccount(account);
             }
         }
         map.put("title", "账户提现");

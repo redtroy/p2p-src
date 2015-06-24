@@ -368,6 +368,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             SxjLogger.error("转账审核失败", e.getClass());
             throw new ServiceException("转账审核失败");
         }
