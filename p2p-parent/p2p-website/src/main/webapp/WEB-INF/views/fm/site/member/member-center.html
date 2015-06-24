@@ -48,7 +48,11 @@ function editPassWord(id){
 	var d = dialog({
 	    title: '修改密码',
 	    content: content,
+	    cancelValue : '取消1',
 	    okValue:'确 定',
+		cancel : function() {
+			
+		},
 	    ok:function(){
 	    	var oldPwd=$("#oldPwd").val();
 	    	var pwd=$("#pwd").val();
@@ -77,11 +81,7 @@ function editPassWord(id){
 		    		success.showModal();
 	    		}
 	    	})
-	    },
-	    cancelValue : '取消',
-		cancel : function() {
-			
-		}
+	    }
 	});
 	d.showModal();	
 }
@@ -110,13 +110,28 @@ $(document).ready(function() {
 	validform = $("#centerInfo").Validform({
 		tiptype : 3,
 		datatype : {
-			userName : function(gets){
-				var reg1 = /^[\u4e00-\u9fa5]{0,4}$/;
+			"userName" : function(gets){
+				var reg1 = /^[\u4e00-\u9fa5]{2,4}$/;
 				if(!reg1.test(gets)){
-					return "请输入您的最多4位中文名！";
+					return "请输入您的最多2~4位中文名！";
 				}
-				if(reg1.length>10){
+				if(gets.length>10){
 					return "您输入的中文名过长！";
+				}
+				if(!gets){
+					return "请输入您的姓名！";
+				}
+			},
+			"userCardName" : function(gets,obj,curform,datatype){
+				var reg1 = /^[\u4e00-\u9fa5]{2,4}$/;
+				if(!reg1.test(gets)){
+					return "请输入您的最多2~4位中文名！";
+				}
+				if(gets.length>10){
+					return "您输入的中文名过长！";
+				}
+				if(!gets){
+					return "请输入您的银行卡姓名！";
 				}
 			},
 			"idcard":function(gets,obj,curform,datatype){
@@ -210,11 +225,11 @@ $(document).ready(function() {
     </tr>
      <tr title="身份证号码必须和会员姓名对应">
       <th>身份证号</th>
-      <td><input type="text" id="textfield9" name="cardNum" datatype="idcard" errormsg="身份证号码不符合规范！" nullmsg="请输入您的身份证号码！" class=" input input-w180h30" value="${user.cardNum}"/></td>
+      <td><input type="text" name="cardNum" datatype="idcard" errormsg="身份证号码不符合规范！" nullmsg="请输入您的身份证号码！" class=" input input-w180h30" value="${user.cardNum}"/></td>
     </tr>
     <tr title="银行卡姓名必须和关联银行卡对应">
       <th>银行卡姓名</th>
-      <td><input type="text" id="textfield9" name="cardHolder" datatype="userName" nullmsg="请输入您的银行卡姓名！" class=" input input-w180h30" value="${user.cardHolder}"/></td>
+      <td><input type="text" name="cardHolder" datatype="userCardName" nullmsg="请输入您的银行卡姓名！" class=" input input-w180h30" value="${user.cardHolder}"/></td>
     </tr>
     <tr title="关联银行卡必须和银行卡姓名对应">
       <th>关联银行卡</th>
