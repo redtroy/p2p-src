@@ -342,7 +342,7 @@ public class LoanController extends BaseController
     
     @ResponseBody
     @RequestMapping("/notifyURL")
-    public void notifyURL(ModelMap map, LoanModel result) throws Exception
+    public String notifyURL(ModelMap map, LoanModel result) throws Exception
     {
         String message = Common.JSONEncode(result);
         loanService.addOrder(message, "LoanModel", "充值后台返回报文");
@@ -398,6 +398,7 @@ public class LoanController extends BaseController
                 
             }
         }
+        return "SUCCESS";
     }
     
     /*----------------------------------------------提现--------------------------------*/
@@ -641,14 +642,14 @@ public class LoanController extends BaseController
     
     @ResponseBody
     @RequestMapping("/withdrawNotifyURL")
-    public void withdrawNotifyURL(LoanModel result) throws Exception
+    public String withdrawNotifyURL(LoanModel result) throws Exception
     {
         String message = Common.JSONEncode(result);
         loanService.addOrder(message, "LoanModel", "提现后台返回报文");
         UsersEntity user = this.getUsersEntity();
         if (user == null)
         {
-            return;
+            return "SUCCESS";
         }
         Loan loan = parametersService.getLoan();
         //获取账户信息
@@ -722,6 +723,7 @@ public class LoanController extends BaseController
             }
             
         }
+        return "SUCCESS";
     }
     
     /*----------------------------------------------授权--------------------------------*/
@@ -878,14 +880,14 @@ public class LoanController extends BaseController
     
     @ResponseBody
     @RequestMapping("/authorizeNotifyURL")
-    public void authorizeNotifyURL(LoanModel result) throws Exception
+    public String authorizeNotifyURL(LoanModel result) throws Exception
     {
         String message = Common.JSONEncode(result);
         loanService.addOrder(message, "LoanModel", "授权后台返回报文");
         UsersEntity user = this.getUsersEntity();
         if (user == null)
         {
-            return;
+            return "SUCCESS";
         }
         //获取双乾参数
         Loan loan = parametersService.getLoan();
@@ -930,6 +932,7 @@ public class LoanController extends BaseController
             u.setAllocationStatus(allocationStatus);
             userService.updateUser(u);
         }
+        return "SUCCESS";
     }
     
     /*----------------------------------------------余额查询--------------------------------*/
@@ -1382,7 +1385,7 @@ public class LoanController extends BaseController
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new WebException("投资返回信息失败", e);
         }
-        return "";
+        return "SUCCESS";
     }
     
     /**
@@ -1544,16 +1547,8 @@ public class LoanController extends BaseController
      * 审核后台通知信息
      */
     @RequestMapping("receive")
-    public @ResponseBody void receive(LoanModel result) throws WebException
+    public @ResponseBody String receive(LoanModel result) throws WebException
     {
-        try
-        {
-            
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            SxjLogger.error(e.getMessage(), e, this.getClass());
-        }
+        return "SUCCESS";
     }
 }
