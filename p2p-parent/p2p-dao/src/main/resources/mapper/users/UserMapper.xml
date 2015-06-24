@@ -47,6 +47,7 @@
 		<if test="condition.repaymentStatus != null">
 		 <![CDATA[AND repaymentStatus =#{condition.repaymentStatus}]]>
 		 </if>
+		  <![CDATA[ ORDER BY registerTime DESC ]]>
 	</select>
     
 	<!-- 条件查询会员 

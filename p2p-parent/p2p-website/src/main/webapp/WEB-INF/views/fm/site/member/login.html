@@ -30,9 +30,9 @@
          <form id="login_form" action="${basePath}login.htm" method="post">
         <div class="item">
           <label class="f16">用户帐号	</label>
-          <input class="input" type="text" autocomplete="off" name="account" placeholder="请填写您的注册邮箱" title="" value="" style="color:#999;font-size:12px;" />
+          <input class="input" type="text" autocomplete="off" name="account" placeholder="请填写您的注册邮箱" title="" value="" style="font-size:12px;color: black;" />
           <#if message??>
-	       <div class="msg-error"><span class="icon16 icon-error"></span>${message}</div>
+	       <div class="msg-error"><span class="icon16 icon-error color-red">${message}</span></div>
     	  </#if>
         </div>
         <div class="item">

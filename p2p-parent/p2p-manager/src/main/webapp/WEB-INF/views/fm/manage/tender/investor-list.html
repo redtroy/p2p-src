@@ -82,13 +82,15 @@ $.post("${basePath}investOrder/orderList.htm?id=${debtId}",params, function(data
             <col width="10%" />
             <col width="10%" />
             <col width="10%" />
-            <col width="15%" />
+            <col width="10%" />
+            <col width="5%" />
             <tr>
               <th>借款标</th>
               <th>客户名称</th>
               <th>投资金额</th>
               <th>利息 </th>
               <th>投资时间</th>
+              <th>状态</th>
             </tr>
             <#list list as order>
              <tr>
@@ -97,6 +99,7 @@ $.post("${basePath}investOrder/orderList.htm?id=${debtId}",params, function(data
               <td>${order.amount/100}</td>
               <td>${order.dueProfitAmount/100}</td>
               <td><#if (order.createTime??)> ${order.createTime?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
+              <td><#if (order.status==1)>已支付<#else>未支付</#if></td>
             </tr>
             </#list>
           </table>

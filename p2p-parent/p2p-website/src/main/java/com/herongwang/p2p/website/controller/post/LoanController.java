@@ -956,7 +956,11 @@ public class LoanController extends BaseController
             BigDecimal b1 = account.getBalance()
                     .subtract(multiply(new BigDecimal(balance[0])))
                     .abs();
-            if (b1.compareTo(new BigDecimal(0)) > 0)
+            BigDecimal b2 = account.getFozenAmount()
+                    .subtract(multiply(new BigDecimal(balance[2])))
+                    .abs();
+            if (b1.compareTo(new BigDecimal(0)) > 0
+                    || b2.compareTo(new BigDecimal(0)) > 0)
             {
                 
                 //添加资金明细

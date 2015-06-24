@@ -142,20 +142,31 @@ public class UserController extends BaseController
     }
     
     @RequestMapping("editPassword")
-    public @ResponseBody String editPassword(String id, String password)
-            throws WebException
+    public @ResponseBody String editPassword(String id, String password,
+            String oldPwd) throws WebException
     {
         try
         {
+            UsersEntity u = getUsersEntity();
             password = EncryptUtil.md5Hex(password);
-            UsersEntity user = new UsersEntity();
-            user.setCustomerId(id);
-            user.setPassword(password);
-            userService.updateUser(user);
-            return "ok";
+            oldPwd = EncryptUtil.md5Hex(oldPwd);
+            if (oldPwd.equals(u.getPassword()))
+            {
+                UsersEntity user = new UsersEntity();
+                user.setCustomerId(id);
+                user.setPassword(password);
+                userService.updateUser(user);
+                return "ok";
+            }
+            else
+            {
+                return "X";
+            }
+            
         }
         catch (Exception e)
         {
+            
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new WebException("查询会员信息错误", e);
         }

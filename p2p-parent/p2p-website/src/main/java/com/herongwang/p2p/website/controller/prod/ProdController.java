@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.herongwang.p2p.entity.account.AccountEntity;
 import com.herongwang.p2p.entity.debt.DebtEntity;
+import com.herongwang.p2p.entity.users.UsersEntity;
 import com.herongwang.p2p.service.account.IAccountService;
 import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.website.controller.BaseController;
@@ -49,6 +50,7 @@ public class ProdController extends BaseController
     {
         try
         {
+            UsersEntity user = getUsersEntity();
             AccountEntity account = null;
             BigDecimal amountMax;
             DebtEntity debt = debtService.getDebtEntity(debtId);
@@ -64,6 +66,15 @@ public class ProdController extends BaseController
             if (getUsersEntity() != null)
             {
                 account = acountService.getAccountByCustomerId(getUsersEntity().getCustomerId());
+            }
+            if (user.getCustomerId().equals(debt.getCustomerId()))
+            {
+                
+                map.put("type", "true");
+            }
+            else
+            {
+                map.put("type", "false");
             }
             map.put("model", debt);
             map.put("account", account);

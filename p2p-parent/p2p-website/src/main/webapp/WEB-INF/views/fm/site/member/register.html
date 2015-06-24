@@ -78,6 +78,9 @@
 	  if (status=="button-disable"){
 		  return false;
 	  }
+	  if (!validform.check()){
+		  return false;
+	  }
 	  $.post("${basePath}user/checkMs.htm",{phoneNo:phoneNo},function(data){
 		   if (data.status=='n'){
 			   obj.removeClass("Validform_right");
@@ -122,7 +125,7 @@
         </div>
       <div class="item">
           <label><span class="color-red mr5 fb">*</span>手机验证码</label>
-          <input class="input input-w50h30" style="width: 60px;height: 18px" type="text" autocomplete="off"  datatype="*"  nullmsg="请正确输入您的验证码！" placeholder="" id="ms"  name="ms" value=""/>
+          <input class="input input-w50h30" style="width: 60px;height: 18px" type="text" autocomplete="off"  placeholder="" id="ms"  name="ms" value=""/>
         </div>
 	  </form>
       <div class="item">

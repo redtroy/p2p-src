@@ -22,23 +22,58 @@ var min=${model.minInvest};
 	  })
   })
   function sub(){
+	  if(${type}){
+		  var success = dialog({
+				title : '消息',
+				content : '您不能投自己的融资标！',
+				cancel : false,
+				ok : function() {
+				}
+			});
+			success.showModal();
+			return;
+	  }
 	  $.post("${basePath}checkLogin.htm",function(data){
 		  if (data=="ok"){
 			  var max=${amountMax}/100;
 			  var min=${model.minInvest};
 			  if (min==null || min==""){
-				  alert('最小投资金额不存在！请联系管理员！');
+				  var success = dialog({
+						title : '消息',
+						content : '您不能投自己的融资标！',
+						cancel : false,
+						ok : function() {
+						}
+					});
+					success.content('最小投资金额不存在！请联系管理员！');
+					success.showModal();
 				  return false;
 			  }
 			   var fs=$("#fs").val();//获取份数
 			   var zz=/^[1-9]*[1-9][0-9]*$/;
 			   if (!fs.match(zz)){
-				   alert('请输入正确格式！');
+				   var success = dialog({
+						title : '消息',
+						content : '您不能投自己的融资标！',
+						cancel : false,
+						ok : function() {
+						}
+					});
+				   success.content('请输入正确格式！');
+					success.showModal();
 				return false;
 			   }
 			   var je=fs*min/100;               //获取金额
 			   if (je>max){
-				   alert("投资金额不能超过最大可投金额");
+				   var success = dialog({
+						title : '消息',
+						content : '您不能投自己的融资标！',
+						cancel : false,
+						ok : function() {
+						}
+					});
+				   success.content('投资金额不能超过最大可投金额！');
+					success.showModal();
 				   return false;
 			   }
 			   $.post("${basePath}checkAudit.htm",function(data1){

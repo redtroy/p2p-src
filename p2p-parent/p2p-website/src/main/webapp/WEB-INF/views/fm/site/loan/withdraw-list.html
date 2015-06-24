@@ -8,18 +8,13 @@
 <@b.validate/> <@b.dialog/>
 <script>
 	function postInfo() {
-		/* alert("inputCharset=1&pickupUrl=${pickupUrl}&receiveUrl=${receiveUrl}&version=v1.0&"
-				+"language=1&signType=1&merchantId=${merchantId}&orderNo=${orderNo}&"
-				+"orderAmount=${orderAmount}&orderCurrency=0&orderDatetime=${orderDatetime}&"
-				+"orderExpireDatetime=${orderExpireDatetime}&productName=充值&payType=${payType}==${signMsg}"); */
-		//alert($("#postForm")[0].action);
 		$("#postForm").submit();
 	}
 </script>
 </head>
 
 <body>
-  <@b.header />
+  <@b.headerIndex />
 <div class="fence-wide memCenter">
   <div class="yard-1100 memCont ly-clearFix">
     <@b.leftMenu />
