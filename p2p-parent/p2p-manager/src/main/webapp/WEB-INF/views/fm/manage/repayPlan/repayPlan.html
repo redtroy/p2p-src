@@ -41,6 +41,7 @@
 		}
 		var orderId = $("#orderId").val();
 		var debtId = $("#debtId").val();
+		var sLoad = dialog();
 		var d = dialog({
 			title : '消息',
 			content : '请确实是否进行还款！',
@@ -48,6 +49,7 @@
 			ok : function() {
 				var arrId="";
 				var xh="";
+				sLoad.showModal();
 				$(arrChk).each(function(index) {
 					if (arrId==""){
 						arrId=	$(this).val();
@@ -63,6 +65,7 @@
 					orderId : orderId,
 					debtId:debtId
 				}, function(data) {
+					sLoad.close().remove();
 					if (data.flag == 'ok') {
 						//还款
 						success.content('还款成功！');

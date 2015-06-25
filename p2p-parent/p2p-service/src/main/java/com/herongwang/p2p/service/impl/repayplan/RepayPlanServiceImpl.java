@@ -265,11 +265,13 @@ public class RepayPlanServiceImpl implements IRepayPlanService
         }
         catch (ServiceException e)
         {
+            e.printStackTrace();
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new ServiceException(e.getMessage());
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new ServiceException("验证余额错误", e);
         }

@@ -629,7 +629,9 @@ public class PostServiceImpl implements IPostService
                 
                 String[] resultarr = HttpClientUtil.doPostQueryCmd(SubmitURL,
                         req);
-                
+                loanService.addOrder(Common.JSONEncode(resultarr),
+                        "LoanTransferReturnBean",
+                        "转账页面返回Model");
                 if (StringUtils.isNotBlank(resultarr[1])
                         && (resultarr[1].startsWith("[") || resultarr[1].startsWith("{")))
                 {
@@ -645,9 +647,7 @@ public class PostServiceImpl implements IPostService
                                 LoanTransferReturnBean ltrb = (LoanTransferReturnBean) loanobjectlist.get(i);
                                 ltrb.setLoanJsonList(Common.UrlDecoder(ltrb.getLoanJsonList(),
                                         "utf-8"));
-                                loanService.addOrder(Common.JSONEncode(ltrb),
-                                        "LoanTransferReturnBean",
-                                        "转账页面返回Model");
+                                
                                 String publickey = loan.getPublickey();
                                 if (!"88".equals(ltrb.getResultCode()))
                                 {
@@ -956,6 +956,7 @@ public class PostServiceImpl implements IPostService
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             SxjLogger.error(e.getMessage(), e, this.getClass());
             e.printStackTrace();
         }
