@@ -341,7 +341,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                                 ltsa.setReturnURL(url
                                         + "tender/loanTransferAuditModelReturn.htm");
                                 ltsa.setNotifyURL(loan.getServiceIp()
-                                        + "p2p-website/laon/receive.htm");
+                                        + "p2p-website/loan/receive.htm");
                                 String dataStr = ltsa.getLoanNoList()
                                         + ltsa.getPlatformMoneymoremore()
                                         + ltsa.getAuditType()
