@@ -298,7 +298,13 @@ public class FundDetailServiceImpl implements IFundDetailService
                 list.add(fd2);//融资利息
                 
             }
-            fundDetailDao.addFundDetailList(list);//插入总金额明细
+            //插入总金额明细
+            for (int i = 0; i < list.size(); i++)
+            {
+                FundDetailEntity f = list.get(i);
+                fundDetailDao.addFundDetail(f);
+            }
+            //            fundDetailDao.addFundDetailList(list);//插入总金额明细
         }
         catch (ServiceException e)
         {
@@ -369,93 +375,15 @@ public class FundDetailServiceImpl implements IFundDetailService
                 fd2.setRemark("偿还" + debt.getTitle() + "融资第"
                         + repayPlan.getSequence() + "期利息");
                 list.add(fd2);//融资利息
-                //获取到所有的投资人
-                //                List<InvestOrderEntity> investOrser = investOrderDao.queryInvestorderList(debt.getDebtId());
-                //                for (InvestOrderEntity investOrderEntity : investOrser)
-                //                {
-                //                    //投资人账户
-                //                    AccountEntity InvestAccount = accountDao.getAcoountByCustomerId(investOrderEntity.getCustomerId());
-                //                    //收益明细
-                //                    QueryCondition<ProfitListEntity> condition = new QueryCondition<ProfitListEntity>();
-                //                    condition.addCondition("orderId",
-                //                            investOrderEntity.getOrderId());//会员id
-                //                    List<ProfitListEntity> profit = profitListDao.query(condition);
-                //                    
-                //                    for (ProfitListEntity profitListEntity : profit)
-                //                    {
-                //                        if (profitListEntity.getSequence() == repayPlan.getSequence())
-                //                        {
-                //                            FundDetailEntity investDetail = new FundDetailEntity();
-                //                            investDetail.setCustomerId(investOrderEntity.getCustomerId());//用户ID
-                //                            investDetail.setAccountId(InvestAccount.getAccountId());
-                //                            investDetail.setOrderId(investOrderEntity.getOrderId());
-                //                            investDetail.setAmount(profitListEntity.getMonthCapital());//月本金
-                //                            investDetail.setBalance(InvestAccount.getBalance());
-                //                            investDetail.setFrozenAmount(InvestAccount.getFozenAmount());
-                //                            investDetail.setDueAmount(InvestAccount.getDueAmount());
-                //                            investDetail.setCreateTime(new Date());
-                //                            investDetail.setStatus(1);//
-                //                            investDetail.setType(9);//投资本金
-                //                            investDetail.setRemark("被偿还投资" + debt.getTitle() + "第"
-                //                                    + profitListEntity.getSequence() + "期本金");
-                //                            list.add(investDetail);//投资本金
-                //                            FundDetailEntity investDetail2 = new FundDetailEntity();
-                //                            investDetail2.setCustomerId(investOrderEntity.getCustomerId());//用户ID
-                //                            investDetail2.setAccountId(InvestAccount.getAccountId());
-                //                            investDetail2.setOrderId(investOrderEntity.getOrderId());
-                //                            investDetail2.setAmount(profitListEntity.getMonthProfit());//月利息
-                //                            investDetail2.setBalance(InvestAccount.getBalance());
-                //                            investDetail2.setFrozenAmount(InvestAccount.getFozenAmount());
-                //                            investDetail2.setDueAmount(InvestAccount.getDueAmount());
-                //                            investDetail2.setCreateTime(new Date());
-                //                            investDetail2.setStatus(1);//
-                //                            investDetail2.setType(10);//投资利息
-                //                            investDetail2.setRemark("被偿还投资" + debt.getTitle()
-                //                                    + "第" + profitListEntity.getSequence()
-                //                                    + "期利息");
-                //                            FundDetailEntity investDetail3 = new FundDetailEntity();
-                //                            investDetail3.setCustomerId(investOrderEntity.getCustomerId());//用户ID
-                //                            investDetail3.setAccountId(InvestAccount.getAccountId());
-                //                            investDetail3.setOrderId(investOrderEntity.getOrderId());
-                //                            investDetail3.setAmount(profitListEntity.getFee());//月利息手续费
-                //                            investDetail3.setBalance(InvestAccount.getBalance());
-                //                            investDetail3.setFrozenAmount(InvestAccount.getFozenAmount());
-                //                            investDetail3.setDueAmount(InvestAccount.getDueAmount());
-                //                            investDetail3.setCreateTime(new Date());
-                //                            investDetail3.setStatus(0);//
-                //                            investDetail3.setType(11);//收益管理费
-                //                            investDetail3.setRemark("投资" + debt.getTitle()
-                //                                    + "第" + profitListEntity.getSequence()
-                //                                    + "期利息手续费");
-                //                            list.add(investDetail3);//投资利息 
-                //                        }
-                //                    }
-                //                }
             }
             
-            fundDetailDao.addFundDetailList(list);//插入总金额明细
-            //获取到当前会员折扣
-            //            List<DiscountEntity> list = discountService.getDiscountByCustomerId(io.getCustomerId());
-            //            //重新设置对象
-            //            if (!CollectionUtils.isEmpty(list))
-            //            {
-            //                for (DiscountEntity discountEntity : list)
-            //                {
-            //                    if (discountEntity.getType() == 0
-            //                            && discountEntity.getFee() != 0)
-            //                    {
-            //                        fd.setDetailId(null);
-            //                        BigDecimal fee = new BigDecimal(discountEntity.getFee()).divide(new BigDecimal(
-            //                                100),
-            //                                2,
-            //                                BigDecimal.ROUND_HALF_UP);
-            //                        fd.setAmount(io.getAmount().multiply(fee));
-            //                        fd.setType(5);
-            //                        fd.setRemark("投资" + debt.getCapitalUses() + ",手续费冻结");
-            //                        fundDetailDao.addFundDetail(fd);//插入手续费
-            //                    }
-            //                }
-            //            }
+            //插入总金额明细
+            for (int i = 0; i < list.size(); i++)
+            {
+                FundDetailEntity f = list.get(i);
+                fundDetailDao.addFundDetail(f);
+            }
+            //            fundDetailDao.addFundDetailList(list);//插入总金额明细
         }
         catch (ServiceException e)
         {

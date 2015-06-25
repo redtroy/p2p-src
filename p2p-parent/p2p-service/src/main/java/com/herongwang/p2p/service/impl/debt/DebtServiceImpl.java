@@ -214,7 +214,13 @@ public class DebtServiceImpl implements IDebtService
                 repayPlan.setPrepaidStatus(0);
                 reList.add(repayPlan);
             }
-            repayDao.addRepayPlanList(reList);
+            //插入还款计划
+            for (int i = 0; i < reList.size(); i++)
+            {
+                RepayPlanEntity f = reList.get(i);
+                repayDao.addRepayPlan(f);
+            }
+            //            repayDao.addRepayPlanList(reList);
             //根据会员ID 查询账户
             AccountEntity account = accountDao.getAcoountByCustomerId(debt.getCustomerId());
             account.setBalance(account.getBalance()

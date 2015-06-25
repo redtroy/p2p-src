@@ -300,6 +300,7 @@ public class DebtController extends BaseController
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             SxjLogger.error("满标审核失败", e.getClass());
             throw new WebException(e);
         }
