@@ -291,6 +291,10 @@ public class RepayPlanServiceImpl implements IRepayPlanService
             {
                 for (RepayPlanEntity rp : rpList)
                 {
+                    if (null != rp.getStatus() && rp.getStatus() == 1)
+                    {
+                        continue;
+                    }
                     List<List<Map<String, String>>> list = getTransferList(rp.getPlanId(),
                             rp.getOrderId(),
                             rp.getDebtId());
