@@ -965,6 +965,10 @@ public class PostServiceImpl implements IPostService
                 {
                     return "ok";
                 }
+                else
+                {
+                    System.out.println(tfb.getMessage());
+                }
                 
             }
             

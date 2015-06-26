@@ -364,6 +364,8 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                     List<Integer> xhlist = new ArrayList<Integer>();
                     xhlist.add(rp.getSequence());
                     investGetMoney(rp.getDebtId(), xhlist);
+                    //更新成功还计划
+                    updateRepayPlanBySeq(rp);
                 }
             }
         }
@@ -375,6 +377,17 @@ public class RepayPlanServiceImpl implements IRepayPlanService
         }
         
         return "ok";
+    }
+    
+    /**
+     * 更新审核解冻成功还款计划
+     * @param rp
+     */
+    @Transactional
+    public void updateRepayPlanBySeq(RepayPlanEntity rp)
+    {
+        rp.setAuditStatus(1);
+        repayPlanDao.updateRepayPlan(rp);
     }
     
     @Override
