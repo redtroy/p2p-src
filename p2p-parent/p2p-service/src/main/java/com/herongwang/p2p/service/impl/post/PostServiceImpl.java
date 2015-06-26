@@ -596,6 +596,7 @@ public class PostServiceImpl implements IPostService
     }
     
     @Override
+    @Transactional
     public String transfer(TransferModel tf)
     {
         try
@@ -731,6 +732,7 @@ public class PostServiceImpl implements IPostService
     }
     
     @Override
+    @Transactional
     public List<LoanOrderQueryBean> orderQuery(LoanModel loan, String privatekey)
             throws Exception
     {
@@ -762,6 +764,9 @@ public class PostServiceImpl implements IPostService
         req.put("SignInfo", SignInfo);
         
         String[] resultarr = HttpClientUtil.doPostQueryCmd(SubmitURL, req);
+        loanService.addOrder(Common.JSONEncode(resultarr),
+                "LoanTransferReturnBean",
+                "转账对账返回Model");
         if (StringUtils.isNotBlank(resultarr[1])
                 && (resultarr[1].startsWith("[") || resultarr[1].startsWith("{")))
         {
@@ -786,6 +791,7 @@ public class PostServiceImpl implements IPostService
     }
     
     @Override
+    @Transactional
     public List<LoanRechargeOrderQueryBean> rechargeOrderQuery(LoanModel loan,
             String submitURLPrefix) throws Exception
     {
@@ -818,6 +824,9 @@ public class PostServiceImpl implements IPostService
         req.put("SignInfo", SignInfo);
         
         String[] resultarr = HttpClientUtil.doPostQueryCmd(SubmitURL, req);
+        loanService.addOrder(Common.JSONEncode(resultarr),
+                "LoanTransferReturnBean",
+                "转账页面返回Model");
         if (StringUtils.isNotBlank(resultarr[1])
                 && (resultarr[1].startsWith("[") || resultarr[1].startsWith("{")))
         {
@@ -841,6 +850,7 @@ public class PostServiceImpl implements IPostService
     }
     
     @Override
+    @Transactional
     public List<LoanWithdrawsOrderQueryBean> withdrawsOrderQuery(
             LoanModel loan, String submitURLPrefix) throws Exception
     {
@@ -873,6 +883,9 @@ public class PostServiceImpl implements IPostService
         req.put("SignInfo", SignInfo);
         
         String[] resultarr = HttpClientUtil.doPostQueryCmd(SubmitURL, req);
+        loanService.addOrder(Common.JSONEncode(resultarr),
+                "LoanWithdrawsOrderQueryBean",
+                "提现对账返回Model");
         if (StringUtils.isNotBlank(resultarr[1])
                 && (resultarr[1].startsWith("[") || resultarr[1].startsWith("{")))
         {
@@ -897,6 +910,7 @@ public class PostServiceImpl implements IPostService
     }
     
     @Override
+    @Transactional
     public String[] balanceQuery(String PlatformId, String platformType)
             throws Exception
     {
@@ -922,6 +936,7 @@ public class PostServiceImpl implements IPostService
     }
     
     @Override
+    @Transactional
     public String audit(LoanTransferAuditModel ltsa) throws ServiceException
     {
         try
@@ -956,7 +971,6 @@ public class PostServiceImpl implements IPostService
         }
         catch (Exception e)
         {
-            e.printStackTrace();
             SxjLogger.error(e.getMessage(), e, this.getClass());
             e.printStackTrace();
         }

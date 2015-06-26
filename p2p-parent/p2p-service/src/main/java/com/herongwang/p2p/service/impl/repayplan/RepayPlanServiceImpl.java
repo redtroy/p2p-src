@@ -42,7 +42,6 @@ import com.sxj.util.logger.SxjLogger;
 import com.sxj.util.persistent.QueryCondition;
 
 @Service
-@Transactional
 public class RepayPlanServiceImpl implements IRepayPlanService
 {
     
@@ -214,7 +213,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                         tf.setNeedAudit("");
                         tf.setReturnURL("");
                         tf.setNotifyURL(loan.getServiceIp()
-                                + "p2p-website/loan/transferNotify.htm");
+                                + "p2p-website/loan/receive.htm");
                         tf.setRemark1(lstmlib.get(0).getRemark());//还款单的ID
                         //                tf.setRemark2(orderId);//投资订单号
                         //                tf.setRemark3(debtId);//标的ID
@@ -341,7 +340,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                                 ltsa.setReturnURL(url
                                         + "tender/loanTransferAuditModelReturn.htm");
                                 ltsa.setNotifyURL(loan.getServiceIp()
-                                        + "p2p-website/loan/transferNotify.htm");
+                                        + "p2p-website/loan/receive.htm");
                                 String dataStr = ltsa.getLoanNoList()
                                         + ltsa.getPlatformMoneymoremore()
                                         + ltsa.getAuditType()
@@ -379,6 +378,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
     }
     
     @Override
+    @Transactional
     public String repay(String ids, String orderId, String debtId)
             throws ServiceException
     {
@@ -420,6 +420,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
     }
     
     @Override
+    @Transactional
     public String saveRepayPlan(String[] ids, String orderId, String debtId)
             throws ServiceException
     {
@@ -501,6 +502,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
     }
     
     //投资方收款并生成明细
+    @Transactional
     public void investGetMoney(String debtId, List<Integer> xhlist)
     {
         //投资方收款
