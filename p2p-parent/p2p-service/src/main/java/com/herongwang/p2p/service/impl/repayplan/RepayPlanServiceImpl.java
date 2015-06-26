@@ -214,7 +214,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                         tf.setNeedAudit("");
                         tf.setReturnURL("");
                         tf.setNotifyURL(loan.getServiceIp()
-                                + "p2p-website/loan/receive.htm");
+                                + "p2p-website/loan/transferNotify.htm");
                         tf.setRemark1(lstmlib.get(0).getRemark());//还款单的ID
                         //                tf.setRemark2(orderId);//投资订单号
                         //                tf.setRemark3(debtId);//标的ID
@@ -291,10 +291,6 @@ public class RepayPlanServiceImpl implements IRepayPlanService
             {
                 for (RepayPlanEntity rp : rpList)
                 {
-                    if (null != rp.getStatus() && rp.getStatus() == 1)
-                    {
-                        continue;
-                    }
                     List<List<Map<String, String>>> list = getTransferList(rp.getPlanId(),
                             rp.getOrderId(),
                             rp.getDebtId());
@@ -345,7 +341,7 @@ public class RepayPlanServiceImpl implements IRepayPlanService
                                 ltsa.setReturnURL(url
                                         + "tender/loanTransferAuditModelReturn.htm");
                                 ltsa.setNotifyURL(loan.getServiceIp()
-                                        + "p2p-website/loan/receive.htm");
+                                        + "p2p-website/loan/transferNotify.htm");
                                 String dataStr = ltsa.getLoanNoList()
                                         + ltsa.getPlatformMoneymoremore()
                                         + ltsa.getAuditType()
