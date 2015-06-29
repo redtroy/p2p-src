@@ -23,7 +23,7 @@ public class SendMsServiceImpl implements ISendMsService
             String sn = "DXX-WSS-11M-06110";
             String pwd = "502503";
             String mobiles = phones;
-            content = URLEncoder.encode(content + "（平台注册验证码，10分钟有效）【和融网】",
+            content = URLEncoder.encode(content + "（平台注册验证码，10分钟有效）【天天赚】",
                     "utf8");
             Client client = new Client(sn, pwd);
             String result_mt = client.mdSmsSend_u(mobiles, content, "", "", "");
