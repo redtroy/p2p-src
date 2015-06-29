@@ -158,8 +158,14 @@
 			<div class="yard-1000 ly-left">
 				<div class="rightSide">
 					<div class="heading fontYH f20">
-						<a href="javascript:saveRepay(0);"
-							class="button button-green f12 ly-right">立即还款</a>还款计划
+					<#if type==1>
+		          <a href="javascript:saveRepay(0);"
+							class="button button-green f12 ly-right">立即还款</a>
+		          <#else>
+		          	<a href="javascript:void(0);"
+							class="button button-green f12 ly-right">立即还款</a>
+		          </#if>
+						还款计划
 					</div>
 					<div class="mainBox">
 						<input type="hidden" value="${orderId}" id="orderId" />

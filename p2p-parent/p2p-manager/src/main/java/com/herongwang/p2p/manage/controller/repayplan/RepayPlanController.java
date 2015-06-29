@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.herongwang.p2p.entity.admin.AdminEntity;
 import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
 import com.herongwang.p2p.entity.repayPlan.RepayPlanEntity;
 import com.herongwang.p2p.loan.util.Common;
 import com.herongwang.p2p.manage.controller.BaseController;
 import com.herongwang.p2p.model.loan.LoanTransferReturnBean;
+import com.herongwang.p2p.service.admin.IAdminService;
 import com.herongwang.p2p.service.financing.IFinancingOrdersService;
 import com.herongwang.p2p.service.impl.post.PostServiceImpl;
 import com.herongwang.p2p.service.loan.ILoanService;
@@ -42,6 +44,9 @@ public class RepayPlanController extends BaseController
     @Autowired
     private ILoanService loanService;
     
+    @Autowired
+    private IAdminService adminService;
+    
     /**
      * 还款计划
      * @param entity
@@ -53,12 +58,14 @@ public class RepayPlanController extends BaseController
     {
         try
         {
+            AdminEntity admin = adminService.gitAdminEntity("1");
             FinancingOrdersEntity order = financingOrdersService.getOrderByDebtId(debtId);
             List<RepayPlanEntity> list = repayPlanService.queryRepayPlan(order);
             map.put("repayPlan", list);
             //map.put("orderId", entity.getOrderId());
             map.put("orderId", order.getOrderId());
             map.put("debtId", debtId);
+            map.put("type", admin.getStatus());
             return "manage/repayPlan/repayPlan";
         }
         catch (Exception e)

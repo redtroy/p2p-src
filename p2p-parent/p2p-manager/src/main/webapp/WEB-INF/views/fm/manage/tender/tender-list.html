@@ -202,7 +202,11 @@ function shenhe(id){
               <td>${tender.statusText}</td>
               <td>
               <#if (tender.status==3)>
-	          <a href="javascript:shenhe('${tender.debtId}');" class=" button btn-link">审核</a>
+	             <#if type==1>
+		          <a href="javascript:shenhe('${tender.debtId}');" class=" button btn-link">审核</a>
+		          <#else>
+		          	<a href="javascript:void();" class=" button btn-link">审核</a>
+		          </#if>
 			</#if>
 			 <#if (tender.status==4)>
 	          <a href="${basePath}repayPlan/queryRepayPlan.htm?debtId=${tender.debtId}" class=" button btn-link">还款</a>

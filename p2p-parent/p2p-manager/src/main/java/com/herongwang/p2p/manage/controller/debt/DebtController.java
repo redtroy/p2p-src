@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.druid.util.StringUtils;
+import com.herongwang.p2p.entity.admin.AdminEntity;
 import com.herongwang.p2p.entity.apply.DebtApplicationEntity;
 import com.herongwang.p2p.entity.debt.DebtEntity;
 import com.herongwang.p2p.entity.financing.FinancingOrdersEntity;
@@ -33,6 +34,7 @@ import com.herongwang.p2p.model.loan.transferauditreturnBean;
 import com.herongwang.p2p.model.post.Loan;
 import com.herongwang.p2p.model.post.LoanTransferAuditModel;
 import com.herongwang.p2p.model.post.TransferModel;
+import com.herongwang.p2p.service.admin.IAdminService;
 import com.herongwang.p2p.service.apply.IDebtApplicationService;
 import com.herongwang.p2p.service.debt.IDebtService;
 import com.herongwang.p2p.service.financing.IFinancingOrdersService;
@@ -73,6 +75,9 @@ public class DebtController extends BaseController
     @Autowired
     private IPostService postService;
     
+    @Autowired
+    private IAdminService adminService;
+    
     /**
      * 借款标列表
      * @param entity
@@ -84,6 +89,7 @@ public class DebtController extends BaseController
     {
         try
         {
+            AdminEntity admin = adminService.gitAdminEntity("1");
             if (entity != null)
             {
                 entity.setPagable(true);
@@ -101,6 +107,7 @@ public class DebtController extends BaseController
             map.put("list", list);
             map.put("query", entity);
             map.put("message", message);
+            map.put("type", admin.getStatus());
             return "manage/tender/tender-list";
         }
         catch (Exception e)
