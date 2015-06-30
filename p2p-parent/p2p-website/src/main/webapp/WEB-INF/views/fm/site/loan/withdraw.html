@@ -13,6 +13,7 @@
 			tiptype : 3,
 			datatype:{
 				amount : function (gets){
+					alert(gets<=1);
 					var reg1 = /^[0-9]+(.[0-9]{0,2})?$/;
 					if(gets>${balance}){
 						return "提现金额不能大于账户余额！";
@@ -20,7 +21,7 @@
 						return "您输入的金额太多，请重新输入！";
 					}else if(!reg1.test(gets)){
 						return "请输入不超过两位小数数字！";
-					}else if(!gets>1){
+					}else if(gets<=1){
 						return "提现要大于1元！";
 					}
 				}
