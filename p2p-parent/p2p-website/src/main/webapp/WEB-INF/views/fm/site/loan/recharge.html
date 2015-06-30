@@ -20,8 +20,8 @@
 						return "您输入的金额太多，请重新输入！";
 					}else if(!reg1.test(gets)){
 						return "请输入不超过两位小数数字！";
-					}else if(gets<1){
-						return "充值最小金额为1元！";
+					}else if(gets<=1){
+						return "充值金额要大于1元！";
 					}
 				}
 			}
