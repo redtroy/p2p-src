@@ -57,7 +57,7 @@
 	</select>
 		<select id="queryDueProfitAmount" resultType="java.lang.Integer"
 		parameterType="String">
-		<![CDATA[SELECT SUM(dueProfitAmount) FROM InvestOrder]]>
+		<![CDATA[SELECT SUM(dueProfitAmount) FROM InvestOrder where status=1]]>
 	</select>
 	<select id="queryAllAmount" resultType="java.lang.Integer"
 		parameterType="String">
