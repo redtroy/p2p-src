@@ -61,6 +61,10 @@ public class InvestOrderController extends BaseController
         try
         {
             UsersEntity user = getUsersEntity();
+            if (user == null)
+            {
+                return LOGIN;
+            }
             InvestOrderEntity io = ivestService.addOrder(debtId,
                     amount,
                     user.getCustomerId());

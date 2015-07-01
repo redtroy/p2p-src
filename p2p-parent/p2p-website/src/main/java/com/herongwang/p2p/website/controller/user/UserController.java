@@ -71,6 +71,10 @@ public class UserController extends BaseController
                 return LOGIN;
             }
             UsersEntity user = getUsersEntity();
+            if (user == null)
+            {
+                return LOGIN;
+            }
             user = userService.getUserById(user.getCustomerId());
             map.put("user", user);
             map.put("message", message);
@@ -148,6 +152,10 @@ public class UserController extends BaseController
         try
         {
             UsersEntity u = getUsersEntity();
+            if (u == null)
+            {
+                return LOGIN;
+            }
             password = EncryptUtil.md5Hex(password);
             oldPwd = EncryptUtil.md5Hex(oldPwd);
             if (oldPwd.equals(u.getPassword()))

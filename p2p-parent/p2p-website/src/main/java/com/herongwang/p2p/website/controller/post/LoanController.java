@@ -247,7 +247,7 @@ public class LoanController extends BaseController
                 
             }
         }
-        map.put("title", "账户充值");
+        map.put("title", "账户充值:" + result.getResultCode());
         map.put("orderNo", result.getOrderNo());
         map.put("orderAmount", result.getAmount());
         map.put("Fee", result.getFee() == null ? 0 : result.getFee());
@@ -429,6 +429,10 @@ public class LoanController extends BaseController
             OrderModel order) throws WebException
     {
         UsersEntity users = this.getUsersEntity();
+        if (users == null)
+        {
+            return LOGIN;
+        }
         String basePath = this.getBasePath(request);
         AdminEntity admin = adminService.gitAdminEntity("1");
         map.put("type", admin.getStatus());
@@ -649,7 +653,7 @@ public class LoanController extends BaseController
         UsersEntity user = this.getUsersEntity();
         if (user == null)
         {
-            return "SUCCESS";
+            return LOGIN;
         }
         Loan loan = parametersService.getLoan();
         //获取账户信息
@@ -1154,6 +1158,10 @@ public class LoanController extends BaseController
         {
             Loan loan = parametersService.getLoan();
             UsersEntity user = getUsersEntity();
+            if (user == null)
+            {
+                return LOGIN;
+            }
             rg.setRegisterType("2");
             rg.setMobile(user.getCellphone());
             rg.setEmail(user.getEmail());

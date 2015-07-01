@@ -51,6 +51,10 @@ public class ProdController extends BaseController
         try
         {
             UsersEntity user = getUsersEntity();
+            if (user == null)
+            {
+                return LOGIN;
+            }
             AccountEntity account = null;
             BigDecimal amountMax;
             DebtEntity debt = debtService.getDebtEntity(debtId);
@@ -82,6 +86,7 @@ public class ProdController extends BaseController
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             SxjLogger.error(e.getMessage(), e, this.getClass());
             throw new WebException("查询标的详情错误", e);
         }
