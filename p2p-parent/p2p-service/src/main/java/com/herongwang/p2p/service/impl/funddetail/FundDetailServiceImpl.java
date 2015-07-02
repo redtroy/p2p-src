@@ -329,10 +329,11 @@ public class FundDetailServiceImpl implements IFundDetailService
                 //生成还款资金明细
                 FundDetailEntity fd = new FundDetailEntity();
                 //获取融资用户信息
-                if (blance.intValue() >= repayPlan.getMonthCapital().intValue())
-                {
-                    blance = blance.subtract(repayPlan.getMonthCapital());
-                }
+                /* if (blance.intValue() >= repayPlan.getMonthCapital().intValue())
+                 {
+                     blance = blance.subtract(repayPlan.getMonthCapital());
+                 }*/
+                blance = blance.subtract(repayPlan.getMonthCapital());
                 DebtEntity debt = debtService.getDebtEntity(repayPlan.getDebtId());
                 AccountEntity account = accountDao.getAcoountByCustomerId(debt.getCustomerId());
                 fd.setCustomerId(debt.getCustomerId());//用户ID
@@ -357,10 +358,11 @@ public class FundDetailServiceImpl implements IFundDetailService
                 }
                 list.add(fd);//融资本金
                 FundDetailEntity fd2 = new FundDetailEntity();
-                if (blance.intValue() >= repayPlan.getMonthProfit().intValue())
+                /*if (blance.intValue() >= repayPlan.getMonthProfit().intValue())
                 {
                     blance = blance.subtract(repayPlan.getMonthProfit());
-                }
+                }*/
+                blance = blance.subtract(repayPlan.getMonthProfit());
                 //融资利息
                 fd2.setCustomerId(debt.getCustomerId());//用户ID
                 fd2.setAccountId(account.getAccountId());
