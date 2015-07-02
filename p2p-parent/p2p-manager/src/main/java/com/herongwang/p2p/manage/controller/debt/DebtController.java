@@ -500,8 +500,9 @@ public class DebtController extends BaseController
         {
             loanService.addOrder(Common.JSONEncode(tfb),
                     "transferauditreturnBean",
-                    "审核页面返回Model");
-            if ("88".equals(tfb.getResultCode()))
+                    "满标审核页面返回Model");
+            DebtEntity d = debtService.getDebtEntity(tfb.getRemark3());
+            if ("88".equals(tfb.getResultCode()) && d.getStatus() == 3)
             {
                 return "redirect:/tender/audit.htm?debtId=" + tfb.getRemark3();
             }
