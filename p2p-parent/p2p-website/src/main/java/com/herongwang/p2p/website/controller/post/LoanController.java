@@ -247,7 +247,7 @@ public class LoanController extends BaseController
                 
             }
         }
-        map.put("title", "账户充值:" + result.getResultCode());
+        map.put("title", "账户充值:" + result.getMessage());
         map.put("orderNo", result.getOrderNo());
         map.put("orderAmount", result.getAmount());
         map.put("Fee", result.getFee() == null ? 0 : result.getFee());
@@ -985,7 +985,9 @@ public class LoanController extends BaseController
             if (b1.compareTo(new BigDecimal(0)) > 0
                     || b2.compareTo(new BigDecimal(0)) > 0)
             {
-                
+                account.setBalance(multiply(new BigDecimal(balance[0])));
+                account.setFozenAmount(multiply(new BigDecimal(balance[2])));
+                accountService.updateAccount(account);
                 //添加资金明细
                 FundDetailEntity deal = new FundDetailEntity();
                 deal.setCustomerId(user.getCustomerId());
@@ -1000,9 +1002,7 @@ public class LoanController extends BaseController
                 deal.setFrozenAmount(account.getFozenAmount());
                 deal.setRemark("对账，资金以托管账户金额为准！");
                 fundDetailService.addFundDetail(deal);
-                account.setBalance(multiply(new BigDecimal(balance[0])));
-                account.setFozenAmount(multiply(new BigDecimal(balance[2])));
-                accountService.updateAccount(account);
+                
             }
             else
             {
