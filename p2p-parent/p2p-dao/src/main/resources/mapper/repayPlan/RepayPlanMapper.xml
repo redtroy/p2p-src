@@ -58,5 +58,6 @@
 	<if test="debtId != null and debtId != ''">
 			<![CDATA[  AND r.debtId =#{debtId}]]>
 	</if>
+	<![CDATA[ORDER BY sequence]]>
 	</select>
 </mapper>
