@@ -59,7 +59,7 @@ public class PostController extends BaseController
     {
         
         UsersEntity user = this.getUsersEntity();
-        if (user == null)
+        if (user == null || user.getStatus() != 0)
         {
             return LOGIN;
         }

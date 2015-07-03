@@ -31,7 +31,7 @@ public class DebtController extends BaseController
     public String queryDebt(HttpSession session, ModelMap map, DebtEntity query)
     {
         UsersEntity user = getUsersEntity();
-        if (user == null)
+        if (user == null || user.getStatus() != 0)
         {
             return LOGIN;
         }

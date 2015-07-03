@@ -45,7 +45,7 @@ public class ProfitController extends BaseController
             AdminEntity admin = adminService.gitAdminEntity("1");
             map.put("type", admin.getStatus());
             UsersEntity user = getUsersEntity();
-            if (user == null)
+            if (user == null || user.getStatus() != 0)
             {
                 return LOGIN;
             }

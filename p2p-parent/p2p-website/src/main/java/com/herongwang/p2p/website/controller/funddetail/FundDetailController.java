@@ -50,7 +50,7 @@ public class FundDetailController extends BaseController
         try
         {
             UsersEntity user = getUsersEntity();
-            if (user == null)
+            if (user == null || user.getStatus() != 0)
             {
                 return LOGIN;
             }

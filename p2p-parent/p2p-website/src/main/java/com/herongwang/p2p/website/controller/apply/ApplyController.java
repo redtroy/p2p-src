@@ -52,7 +52,6 @@ public class ApplyController extends BaseController
     {
         try
         {
-            // UsersEntity user = getUsersEntity();
             //获取登陆会员ID 
             apply.setAmount(apply.getAmount().multiply(new BigDecimal(100)));
             Map<String, String> map = new HashMap<String, String>();

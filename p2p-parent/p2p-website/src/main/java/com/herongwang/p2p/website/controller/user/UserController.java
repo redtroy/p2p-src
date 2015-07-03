@@ -71,7 +71,7 @@ public class UserController extends BaseController
                 return LOGIN;
             }
             UsersEntity user = getUsersEntity();
-            if (user == null)
+            if (user == null || user.getStatus() != 0)
             {
                 return LOGIN;
             }
@@ -152,7 +152,7 @@ public class UserController extends BaseController
         try
         {
             UsersEntity u = getUsersEntity();
-            if (u == null)
+            if (u == null || u.getStatus() != 0)
             {
                 return LOGIN;
             }

@@ -87,7 +87,7 @@ public class LoanController extends BaseController
     public String recharge(ModelMap map) throws WebException
     {
         UsersEntity user = this.getUsersEntity();
-        if (user == null)
+        if (user == null || user.getStatus() != 0)
         {
             return LOGIN;
         }
@@ -112,7 +112,7 @@ public class LoanController extends BaseController
         map.put("type", admin.getStatus());
         BigDecimal m = this.multiply(new BigDecimal(order.getOrderAmount()));
         UsersEntity user = this.getUsersEntity();
-        if (user == null)
+        if (user == null || user.getStatus() != 0)
         {
             return LOGIN;
         }
@@ -192,7 +192,7 @@ public class LoanController extends BaseController
         loanService.addOrder(message, "LoanModel", "充值跳转页面返回报文");
         DecimalFormat df = new DecimalFormat("######0.00");
         UsersEntity user = this.getUsersEntity();
-        if (user == null)
+        if (user == null || user.getStatus() != 0)
         {
             return LOGIN;
         }
@@ -271,7 +271,7 @@ public class LoanController extends BaseController
         loanService.addOrder(message, "LoanModel", "充值跳转页面返回报文");
         DecimalFormat df = new DecimalFormat("######0.00");
         UsersEntity user = this.getUsersEntity();
-        if (user == null)
+        if (user == null || user.getStatus() != 0)
         {
             return LOGIN;
         }
@@ -406,7 +406,7 @@ public class LoanController extends BaseController
     public String withdraw(ModelMap map) throws WebException
     {
         UsersEntity user = this.getUsersEntity();
-        if (user == null)
+        if (user == null || user.getStatus() != 0)
         {
             return LOGIN;
         }
@@ -429,7 +429,7 @@ public class LoanController extends BaseController
             OrderModel order) throws WebException
     {
         UsersEntity users = this.getUsersEntity();
-        if (users == null)
+        if (users == null || users.getStatus() != 0)
         {
             return LOGIN;
         }
@@ -532,7 +532,7 @@ public class LoanController extends BaseController
         loanService.addOrder(message, "LoanModel", "提现跳转页面返回报文");
         DecimalFormat df = new DecimalFormat("######0.00");
         UsersEntity user = this.getUsersEntity();
-        if (user == null)
+        if (user == null || user.getStatus() != 0)
         {
             return LOGIN;
         }
@@ -651,7 +651,7 @@ public class LoanController extends BaseController
         String message = Common.JSONEncode(result);
         loanService.addOrder(message, "LoanModel", "提现后台返回报文");
         UsersEntity user = this.getUsersEntity();
-        if (user == null)
+        if (user == null || user.getStatus() != 0)
         {
             return LOGIN;
         }
@@ -738,7 +738,7 @@ public class LoanController extends BaseController
         AdminEntity admin = adminService.gitAdminEntity("1");
         map.put("type", admin.getStatus());
         UsersEntity user = this.getUsersEntity();
-        if (user == null)
+        if (user == null || user.getStatus() != 0)
         {
             return LOGIN;
         }
@@ -826,7 +826,7 @@ public class LoanController extends BaseController
         String message = Common.JSONEncode(result);
         loanService.addOrder(message, "LoanModel", "授权跳转页面返回报文");
         UsersEntity user = this.getUsersEntity();
-        if (user == null)
+        if (user == null || user.getStatus() != 0)
         {
             return LOGIN;
         }
@@ -889,7 +889,7 @@ public class LoanController extends BaseController
         String message = Common.JSONEncode(result);
         loanService.addOrder(message, "LoanModel", "授权后台返回报文");
         UsersEntity user = this.getUsersEntity();
-        if (user == null)
+        if (user == null || user.getStatus() != 0)
         {
             return "SUCCESS";
         }
@@ -1025,7 +1025,7 @@ public class LoanController extends BaseController
             throws WebException
     {
         UsersEntity user = this.getUsersEntity();
-        if (user == null)
+        if (user == null || user.getStatus() != 0)
         {
             return LOGIN;
         }
@@ -1089,7 +1089,7 @@ public class LoanController extends BaseController
     {
         
         UsersEntity user = this.getUsersEntity();
-        if (user == null)
+        if (user == null || user.getStatus() != 0)
         {
             return LOGIN;
         }
@@ -1158,7 +1158,7 @@ public class LoanController extends BaseController
         {
             Loan loan = parametersService.getLoan();
             UsersEntity user = getUsersEntity();
-            if (user == null)
+            if (user == null || user.getStatus() != 0)
             {
                 return LOGIN;
             }
@@ -1404,7 +1404,7 @@ public class LoanController extends BaseController
             throws WebException
     {
         UsersEntity user = getUsersEntity();
-        if (null == user)
+        if (user == null || user.getStatus() != 0)
         {
             return LOGIN;
         }
