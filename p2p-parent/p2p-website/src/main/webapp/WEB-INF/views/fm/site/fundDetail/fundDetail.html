@@ -68,12 +68,15 @@
 					<div class="mainBox fontYH">
 						<div class="capInfo mb10 ly-clearFix">
 							<div class="item">
+							<div class="capBox">
 								<label>账户信息</label> <span class="color-green">可用余额：<#if
 									account.balance??>${account.balance/100}<#else>0</#if>元</span><span
 									class="color-red">冻结金额：<#if
 									account.fozenAmount??>${account.fozenAmount/100}<#else>0</#if>元</span><span
 									class="color-blue">待收金额：<#if
 									account.dueAmount??>${account.dueAmount/100}<#else>0</#if>元</span>
+									 </div>
+									 <div class="btnBox">
 									<span><a href="${basePath}loan/recharge.htm" class="button button-orange">充值</a></span>
 									<span><a href="${basePath}loan/withdraw.htm" class="button button-green">提现</a></span>
 									<span><a href="${basePath}loan/authorize.htm" class="button button-brown">授权</a></span>
@@ -82,6 +85,7 @@
 							        <#else>
 										<span><a href="javascript:void(0)" class="button button-blue" style="width: 100px">余额查询</a></span>
 									</#if>
+							</div>
 							</div>
 						</div>
 					</div>
