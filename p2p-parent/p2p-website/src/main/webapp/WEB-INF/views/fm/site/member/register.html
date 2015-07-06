@@ -7,7 +7,7 @@
 <link href="${b.staticPath}style/style.css" rel="stylesheet" type="text/css" />
 <link href="${b.staticPath}style/slide.css" rel="stylesheet" type="text/css" />
 <script src="${b.staticPath}js/jquery1.8.js"></script>
-<@b.validate/>
+<@b.validate/><@b.dialog/>
 <script>
   var validform;
   $(function(){
@@ -26,6 +26,18 @@
   function sub(){
 	  if (!validform.check()){
 		  return false;
+	  }
+	  if(!$("#accord").is(':checked')){
+		  var success = dialog({
+				title : '消息',
+				cancel : false,
+				ok : function() {
+					
+				}
+			});
+		  success.content('请确认服务协议！');
+			success.showModal();
+			return false;
 	  }
 	  $.post("${basePath}user/verification.htm",{phone:$("#cellphone").val(),ms:$("#ms").val()},function(data){
 		  if (data.status=='ok'){
@@ -126,6 +138,9 @@
       <div class="item">
           <label><span class="color-red mr5 fb">*</span>手机验证码</label>
           <input class="input input-w50h30" style="width: 60px;height: 18px" type="text" autocomplete="off"  placeholder="" id="ms"  name="ms" value=""/>
+        </div>
+      <div class="item">
+          <input type="checkbox" id="accord" checked="checked" value=""/>我已阅读并同意<a href="${basePath}accord.htm" class="lnk-green">《服务协议》</a>
         </div>
 	  </form>
       <div class="item">

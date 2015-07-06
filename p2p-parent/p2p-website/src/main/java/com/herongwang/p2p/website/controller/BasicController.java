@@ -312,6 +312,12 @@ public class BasicController extends BaseController
         return "site/products";
     }
     
+    @RequestMapping("accord")
+    public String accord()
+    {
+        return "site/accord";
+    }
+    
     @RequestMapping("lxwm")
     public String lxwm()
     {
